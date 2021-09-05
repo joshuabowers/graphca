@@ -1,0 +1,20 @@
+{
+  "name": "graphca",
+  "version": "1.0.0",
+  "description": "A graphing calculator and analytic calculus engine",
+  "main": "index.js",
+  "repository": "https://github.com/joshuabowers/graphca.git",
+  "author": "Joshua Bowers <joshua.bowers+code@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 14.x"
+  },
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "devDependencies": {
+    "typescript": "^4.4.2"
+  }
+}
