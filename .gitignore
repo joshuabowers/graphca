@@ -111,3 +111,7 @@ dist
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Typescript derived files
+server/**/*.map
+server/**/*.js
