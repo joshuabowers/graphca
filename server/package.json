@@ -17,6 +17,12 @@
     "express": "^4.17.1",
     "express-list-endpoints": "^6.0.0",
     "helmet": "^4.6.0",
-    "heroku-ssl-redirect": "^0.1.1"
+    "heroku-ssl-redirect": "^0.1.1",
+    "node-gyp": "^8.2.0",
+    "nodemon": "^2.0.12"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "nodemon index.js"
   }
 }
