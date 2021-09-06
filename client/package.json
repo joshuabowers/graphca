@@ -17,9 +17,13 @@
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
+    "@types/prettier": "^2",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@types/testing-library__jest-dom": "^5"
+    "@types/testing-library__jest-dom": "^5",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -31,6 +35,16 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write"
     ]
   },
   "browserslist": {
