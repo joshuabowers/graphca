@@ -21,12 +21,12 @@ export const terminalSlice = createSlice({
   name: 'terminal',
   initialState,
   reducers: {
-    keyPressed: (state, action: PayloadAction<string>) => {
+    keyPress: (state, action: PayloadAction<string>) => {
       state.currentLine += action.payload;
     },
 
-    cePressed: (state) => {
-      state.currentLine.slice(0, state.currentLine.length - 1)
+    deleteLast: (state) => {
+      state.currentLine = state.currentLine.slice(0, state.currentLine.length - 1)
     },
 
     calculate: (state) => {
@@ -39,5 +39,5 @@ export const terminalSlice = createSlice({
   }
 })
 
-export const { keyPressed, cePressed, calculate } = terminalSlice.actions
+export const { keyPress, deleteLast, calculate } = terminalSlice.actions
 export default terminalSlice.reducer
