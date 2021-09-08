@@ -1,7 +1,7 @@
 import React from 'react';
 import { Story } from '@storybook/react';
 
-import { Key, KeyProps, Unicode as U } from './index';
+import { Key, KeyProps, Unicode as U, functions } from './index';
 
 export default {
   title: 'Features/Key',
@@ -18,3 +18,6 @@ Icon.args = { label: 'fingerprint', icon: true }
 
 export const Unicode = Template.bind({});
 Unicode.args = { label: U.minus, unicode: true }
+
+export const Functional = Template.bind({});
+Functional.args = { label: functions.eX }
