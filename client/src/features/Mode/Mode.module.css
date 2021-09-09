@@ -1,0 +1,16 @@
+.mode {
+  font-weight: bold;
+}
+
+.functional span span {
+  vertical-align: super;
+  font-size: 75%;
+}
+
+.shift {
+  color: lightskyblue;
+}
+
+.alpha {
+  color: lightgreen;
+}
