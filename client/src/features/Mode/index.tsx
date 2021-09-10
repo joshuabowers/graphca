@@ -5,10 +5,6 @@ import styles from './Mode.module.css';
 
 export type ModeType = 'default' | 'alpha' | 'shift';
 
-/**
- * Modes would be responsible for rendering their 
- * display according to current Key rules.
- */
 export interface ModeProps {
   type?: ModeType,
   displayHint?: 'icon' | 'unicode' | 'functional'
