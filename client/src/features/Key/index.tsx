@@ -6,8 +6,8 @@ import styles from './Key.module.css';
 
 export interface KeyProps {
   default: ModeProps,
-  alpha: ModeProps,
-  shift: ModeProps
+  alpha?: ModeProps,
+  shift?: ModeProps
 }
 
 export const createKeyPress = (value: string) =>
@@ -27,8 +27,8 @@ export const Key = (props: KeyProps) => {
       onClick={handler}
       >
       <div className={styles.meta}>
-        <Mode type='shift' {...props.shift} />
-        <Mode type='alpha' {...props.alpha} />
+        {props.shift ? <Mode type='shift' {...props.shift} /> : <span />}
+        {props.alpha && <Mode type='alpha' {...props.alpha} />}
       </div>
       <div className={styles.primary}>
         <Mode type='default' {...props.default} />

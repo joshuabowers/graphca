@@ -8,6 +8,7 @@ export enum Unicode {
   minus = "\u2212",
   multiplication = "\u00d7",
   division = "\u00f7",
+  shift = "\u21b3",
   i = "\ud835\udc8a",
   e = "\ud835\udc86",
   x = "\ud835\udc99",

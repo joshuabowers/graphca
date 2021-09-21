@@ -1,4 +1,5 @@
 import React from 'react';
+import { Arithmetic } from '../Arithmetic';
 
 export interface CalculatorProps {
 
@@ -8,20 +9,20 @@ export const Calculator = (props: CalculatorProps) => {
   return (
     <main>
       {/* <Keypad>
-        <KeyGroup>
-          <key />
-        </KeyGroup>
+        <Trigonometric />
+        <Numbers />
+        <Arithmetic />
       </Keypad>
-      <GraphTabs>
+      <Tabs>
         <Tab>
           <Graph />
         </Tab>
-      </GraphTabs>
-      <TerminalTabs>
+      </Tabs>
+      <Tabs under>
         <Tab>
           <Terminal />
         </Tab>
-      </TerminalTabs> */}
+      </Tabs> */}
     </main>
   )
 }
