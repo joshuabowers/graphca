@@ -25,5 +25,5 @@ Horizontal.args = { layout: 'horizontal' }
 export const Vertical = Template.bind({})
 Vertical.args = { layout: 'vertical' }
 
-export const Square = Template.bind({})
-Square.args = { layout: 'square' }
+export const Rectangular = Template.bind({})
+Rectangular.args = { layout: 'rectangular' }

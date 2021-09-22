@@ -2,12 +2,13 @@ import React, { useMemo, CSSProperties } from "react";
 import styles from './KeyGroup.module.css'
 
 export interface KeyGroupProps {
-  layout?: 'square' | 'horizontal' | 'vertical'
+  layout?: 'rectangular' | 'horizontal' | 'vertical'
+  columns?: number
   children?: JSX.Element | JSX.Element[]
 }
 
 export interface KeyGroupCSSProps extends CSSProperties {
-  '--sideLength': number;
+  '--columns': number;
 }
 
 const isArray = (x: JSX.Element | JSX.Element[] | unknown): x is JSX.Element[] => {
@@ -15,18 +16,18 @@ const isArray = (x: JSX.Element | JSX.Element[] | unknown): x is JSX.Element[] =
 }
 
 export const KeyGroup = (props: KeyGroupProps) => {
-  const sideLength = useMemo(
-    () => Math.ceil(Math.sqrt(isArray(props.children) ? props.children.length : 1)), 
-    [props.children]
+  const columns = useMemo(
+    () => props.columns ?? Math.ceil(Math.sqrt(isArray(props.children) ? props.children.length : 1)), 
+    [props.columns, props.children]
   )
   const appliedStyles = [
     styles.keyGroup,
-    styles[props.layout || 'square']
+    styles[props.layout || 'rectangular']
   ];
   return (
     <div 
       className={appliedStyles.join(' ')} 
-      style={{'--sideLength': sideLength} as KeyGroupCSSProps}>
+      style={{'--columns': columns} as KeyGroupCSSProps}>
       {props.children}
     </div>
   )
