@@ -1,14 +1,36 @@
 .key {
   --darken: rgba(0,0,0, 30%);
   background-color: var(--background-color);
+  opacity: 0.9;
   color: var(--color);
   font-family: 'Fira Code', monospace;
   font-size: 20px;
-  border: 0.1em solid whitesmoke;
-  border-radius: 0.5em;
+  /* border: 0.1em solid whitesmoke; */
+  border: none;
+  border-radius: 0.5em 0.5em 0.75em 0.75em;
+  box-shadow: 0.2em 0.4em 0.4em var(--darken),
+    inset 0 0 0 var(--darken);
   width: 3.5em;
   margin: 0;
   padding: 0;
+  cursor: pointer;
+  transition: 200ms ease-in-out;
+  transition-property: opacity, box-shadow, transform;
+}
+
+.key:hover {
+  opacity: 1;
+  z-index: 1;
+  transform: scale(1.1);
+  box-shadow: 0.4em 0.8em 0.8em var(--darken);
+}
+
+.key:active {
+  opacity: 1;
+  z-index: -1;
+  transform: scale(0.9);
+  box-shadow: 0 0 0 var(--darken),
+    inset 0.2em 0.4em 0.4em var(--darken);
 }
 
 .meta {

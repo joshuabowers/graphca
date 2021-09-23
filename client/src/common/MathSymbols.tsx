@@ -2,6 +2,7 @@ import React from 'react';
 
 export enum Unicode {
   derivative = "\u2202",
+  delete = "\u232b",
   integral = "\u222b",
   squareRoot = "\u221a",
   plusMinus = "\u00b1",

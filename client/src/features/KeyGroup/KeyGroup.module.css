@@ -3,6 +3,7 @@
   grid-auto-flow: column;
   place-items: center;
   place-content: center; 
+  gap: 0.5em;
 }
 
 .rectangular {

@@ -7,7 +7,8 @@ import styles from './Key.module.css';
 export interface KeyProps {
   default: ModeProps,
   alpha?: ModeProps,
-  shift?: ModeProps
+  shift?: ModeProps,
+  modeOverride?: 'shift' | 'alpha'
 }
 
 export const createKeyPress = (value: string) =>
@@ -15,10 +16,10 @@ export const createKeyPress = (value: string) =>
 
 export const Key = (props: KeyProps) => {
   const dispatch = useAppDispatch();
-  const keyMode: ModeType = 'default' //useAppSelector(state => state.keyMode);
+  const keyMode: ModeType = props.modeOverride ?? 'default' //useAppSelector(state => state.keyMode);
   const currentMode = props[keyMode];
   const handler = () => {
-    if( currentMode.onClick )
+    if( currentMode?.onClick )
       currentMode.onClick(dispatch)
   };
   return (

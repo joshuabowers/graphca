@@ -20,7 +20,7 @@ const numberKeys = [
   ['3', '', ''],
   ['0', '', Unicode.space],
   ['.', Unicode.i, ':'],
-  [Unicode.plusMinus, 'Abs', '']
+  [Unicode.plusMinus, `|${Unicode.x}|`, '']
 ]
 
 export const Numeric = (props: NumericProps) => {

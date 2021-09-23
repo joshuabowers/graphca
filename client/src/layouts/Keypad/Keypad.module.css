@@ -1,0 +1,6 @@
+.keypad {
+  display: grid;
+  grid: auto-flow auto / repeat(3, auto);
+  place-content: center;
+  gap: 0.5em;
+}
