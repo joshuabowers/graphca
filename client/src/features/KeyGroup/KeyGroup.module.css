@@ -6,6 +6,10 @@
   gap: 0.5em;
 }
 
+.fullWidth {
+  grid-column: 1/-1;
+}
+
 .rectangular {
   grid: auto-flow auto / repeat(var(--columns), auto)
 }

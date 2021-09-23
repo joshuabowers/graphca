@@ -4,6 +4,7 @@ import styles from './KeyGroup.module.css'
 export interface KeyGroupProps {
   layout?: 'rectangular' | 'horizontal' | 'vertical'
   columns?: number
+  fullWidth?: boolean
   children?: JSX.Element | JSX.Element[]
 }
 
@@ -24,6 +25,7 @@ export const KeyGroup = (props: KeyGroupProps) => {
     styles.keyGroup,
     styles[props.layout || 'rectangular']
   ];
+  if(props.fullWidth) appliedStyles.push(styles.fullWidth)
   return (
     <div 
       className={appliedStyles.join(' ')} 
