@@ -1,7 +1,12 @@
 import React from 'react'
+import styles from './Graph.module.css';
 
-export const Graph = (props: void) => {
+export interface GraphProps {
+
+}
+
+export const Graph = (props: GraphProps) => {
   return (
-    <canvas />
+    <canvas className={styles.graph} />
   )
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppDispatch, AppDispatch, useAppSelector } from '../../app/hooks';
-import { keyPress } from '../Terminal/terminalSlice';
+import { keyPress } from '../Terminal/Terminal.slice';
 import { Mode, ModeProps, ModeType } from '../Mode';
 import styles from './Key.module.css';
 

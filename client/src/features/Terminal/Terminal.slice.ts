@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface TerminalEntryState {
   type: 'input' | 'output';
   content: string;
+  enteredAt: number;
 }
 
 export interface TerminalState {
@@ -32,7 +33,8 @@ export const terminalSlice = createSlice({
     calculate: (state) => {
       state.history.push({
         type: 'input',
-        content: state.currentLine
+        content: state.currentLine,
+        enteredAt: Date.now()
       });
       state.currentLine = '';
     }

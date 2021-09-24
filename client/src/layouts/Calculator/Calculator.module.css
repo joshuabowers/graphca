@@ -1,0 +1,12 @@
+.calculator {
+  display: grid;
+  grid: 3fr 1fr / auto 1fr;
+  gap: 1em;
+  padding: 1em;
+  width: calc(100% - 2em);
+  height: calc(100% - 2em);
+}
+
+.calculator > :first-child {
+  grid-row: 1 / span 2
+}
