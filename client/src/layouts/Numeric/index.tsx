@@ -1,6 +1,6 @@
 import React from 'react';
 import { KeyGroup } from '../../features/KeyGroup';
-import { Key } from '../../features/Key';
+import { Key, createKeyPress } from '../../features/Key';
 import { Unicode } from '../../common/MathSymbols';
 
 export interface NumericProps {
@@ -30,7 +30,7 @@ export const Numeric = (props: NumericProps) => {
         numberKeys.map((info) => (
           <Key 
             key={info[0]}
-            default={{type: 'default', display: info[0]}}
+            default={{type: 'default', display: info[0], activate: createKeyPress(info[0])}}
             shift={{type: 'shift', display: info[1]}}
             alpha={{type: 'alpha', display: info[2]}}
           />  

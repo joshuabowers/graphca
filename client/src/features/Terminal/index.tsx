@@ -8,9 +8,9 @@ export interface TerminalProps {
 
 export const Terminal = (props: TerminalProps) => {
   const history = useAppSelector((state) => state.terminal.history);
-  const currentLine = useAppSelector((state) => state.terminal.currentLine);
+  const currentLine = useAppSelector((state) => state.terminal.currentLine.join(''));
   return (
-    <ol className={styles.terminal}>
+    <ol reversed start={history.length} className={styles.terminal}>
       {
         history.map((item) => 
           <li key={item.enteredAt}>{item.content}</li>

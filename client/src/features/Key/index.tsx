@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppDispatch, AppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch, AppDispatch } from '../../app/hooks';
 import { keyPress } from '../Terminal/Terminal.slice';
 import { Mode, ModeProps, ModeType } from '../Mode';
 import styles from './Key.module.css';
@@ -18,15 +18,13 @@ export const Key = (props: KeyProps) => {
   const dispatch = useAppDispatch();
   const keyMode: ModeType = props.modeOverride ?? 'default' //useAppSelector(state => state.keyMode);
   const currentMode = props[keyMode];
-  const handler = () => {
-    if( currentMode?.onClick )
-      currentMode.onClick(dispatch)
+  const handler: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    if( currentMode?.activate )
+      currentMode.activate(dispatch)
   };
+  const appliedStyles = [styles.normal, styles[keyMode]].join(' ');
   return (
-    <button
-      className={[styles.key, styles[keyMode]].join(' ')}
-      onClick={handler}
-      >
+    <button onClick={handler} className={appliedStyles}>
       <div className={styles.meta}>
         {props.shift ? <Mode type='shift' {...props.shift} /> : <span />}
         {props.alpha && <Mode type='alpha' {...props.alpha} />}

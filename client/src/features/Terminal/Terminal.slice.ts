@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
 
 export interface TerminalEntryState {
   type: 'input' | 'output';
@@ -8,13 +8,13 @@ export interface TerminalEntryState {
 
 export interface TerminalState {
   name: string;
-  currentLine: string;
+  currentLine: string[];
   history: Array<TerminalEntryState>;
 }
 
 const initialState: TerminalState = {
   name: 'terminal',
-  currentLine: '',
+  currentLine: [],
   history: []
 }
 
@@ -23,23 +23,27 @@ export const terminalSlice = createSlice({
   initialState,
   reducers: {
     keyPress: (state, action: PayloadAction<string>) => {
-      state.currentLine += action.payload;
+      state.currentLine.push(action.payload);
     },
 
     deleteLast: (state) => {
-      state.currentLine = state.currentLine.slice(0, state.currentLine.length - 1)
+      state.currentLine.pop();
+      // state.currentLine = state.currentLine.slice(0, state.currentLine.length - 1)
     },
 
     calculate: (state) => {
       state.history.push({
         type: 'input',
-        content: state.currentLine,
+        content: state.currentLine.join(''),
         enteredAt: Date.now()
       });
-      state.currentLine = '';
+      state.currentLine = [];
     }
   }
 })
 
 export const { keyPress, deleteLast, calculate } = terminalSlice.actions
 export default terminalSlice.reducer
+
+const rawCurrentLine = (state: TerminalState) => state.currentLine;
+export const currentLine = createSelector(rawCurrentLine, (lineParts) => lineParts.join(''));
