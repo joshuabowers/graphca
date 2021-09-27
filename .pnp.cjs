@@ -23,6 +23,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:."
       },
       {
+        "name": "calcula",
+        "reference": "workspace:calcula"
+      },
+      {
         "name": "client",
         "reference": "workspace:client"
       },
@@ -34,6 +38,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?)|$))$)",
     "fallbackExclusionList": [
+      ["calcula", ["workspace:calcula"]],
       ["client", ["workspace:client"]],
       ["graphca", ["workspace:."]],
       ["server", ["workspace:server"]]
@@ -11993,6 +11998,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["responselike", "npm:1.0.2"]
           ],
           "linkType": "HARD",
+        }]
+      ]],
+      ["calcula", [
+        ["workspace:calcula", {
+          "packageLocation": "./calcula/",
+          "packageDependencies": [
+            ["calcula", "workspace:calcula"],
+            ["typescript", "patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=32657b"]
+          ],
+          "linkType": "SOFT",
         }]
       ]],
       ["call-bind", [
@@ -26999,6 +27014,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/typescript-patch-70ef91d456-3109ae2570.zip/node_modules/typescript/",
           "packageDependencies": [
             ["typescript", "patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=32657b"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=32657b", {
+          "packageLocation": "./.yarn/cache/typescript-patch-2d83eeb1af-28ab98313a.zip/node_modules/typescript/",
+          "packageDependencies": [
+            ["typescript", "patch:typescript@npm%3A4.4.3#~builtin<compat/typescript>::version=4.4.3&hash=32657b"]
           ],
           "linkType": "HARD",
         }]

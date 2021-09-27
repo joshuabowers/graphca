@@ -1,0 +1,12 @@
+{
+  "name": "calcula",
+  "version": "1.0.0",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 14.x"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.4.3"
+  }
+}
