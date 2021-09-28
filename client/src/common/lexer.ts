@@ -11,10 +11,7 @@ export const lexer = moo.compile({
       ].map(k => ['kw-' + k, k]))
     )
   },
-  number: {
-    match: /(?:0|[1-9][0-9]*)(?:\.[0-9]*)?/,
-    value: (s) => parseFloat(s)
-  },
+  number: /(?:0|[1-9][0-9]*)(?:\.[0-9]*)?(?:E[0-9]+)?/,
   lparen: '(',
   rparen: ')',
   lbracket: '[',

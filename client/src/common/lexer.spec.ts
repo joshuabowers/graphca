@@ -17,10 +17,10 @@ describe('lexer', () => {
   })
 
   it('recognizes numbers', () => {
-    const input = '0.25 10 1.5',
-      expected = input.split(' ').map(s => ({type: 'number', text: s, value: parseFloat(s)}));
+    const input = '0.25 10 1.5 1.23E5',
+      expected = input.split(' ').map(s => ({type: 'number', text: s}));
     lexer.reset(input);
-    const tokens = Array.from(lexer).map(({type, text, value}) => ({type, text, value})).filter(t => t.type != 'ws');
+    const tokens = Array.from(lexer).map(({type, text}) => ({type, text})).filter(t => t.type != 'ws');
     expect(tokens).toEqual(expected);
   })
 
