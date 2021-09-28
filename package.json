@@ -12,8 +12,7 @@
   "private": true,
   "workspaces": [
     "server",
-    "client",
-    "calcula"
+    "client"
   ],
   "devDependencies": {
     "@types/eslint": "^7",
