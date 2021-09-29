@@ -21,5 +21,6 @@ export const lexer = moo.compile({
   plus: '+',
   minus: '-',
   divide: '/',
-  multiply: '*'
+  multiply: '*',
+  power: '^'
 })
