@@ -6664,6 +6664,7 @@ __metadata:
     husky: ^7.0.2
     lint-staged: ^11.1.2
     node-gyp: ^8.2.0
+    pegase: ^0.3.14
     pnp-webpack-plugin: ^1.7.0
     prettier: ^2.3.2
     react: ^17.0.2
@@ -14610,6 +14611,13 @@ fsevents@^1.2.7:
     safe-buffer: ^5.0.1
     sha.js: ^2.4.8
   checksum: 2c950a100b1da72123449208e231afc188d980177d021d7121e96a2de7f2abbc96ead2b87d03d8fe5c318face097f203270d7e27908af9f471c165a4e8e69c92
+  languageName: node
+  linkType: hard
+
+"pegase@npm:^0.3.14":
+  version: 0.3.14
+  resolution: "pegase@npm:0.3.14"
+  checksum: 5aaf6ff6ab83147159526aa6e7f1feac8b21853b075fc57d16b94ebfdc40dd2e44e19eb1788ac474a02f3497414d8e602df38b2e2f6ac743a231c21c39e96cda
   languageName: node
   linkType: hard
 
