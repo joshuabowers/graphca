@@ -9230,24 +9230,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["@types/moo", [
-        ["npm:0.5.5", {
-          "packageLocation": "./.yarn/cache/@types-moo-npm-0.5.5-7e890a9d88-3ade4daad0.zip/node_modules/@types/moo/",
-          "packageDependencies": [
-            ["@types/moo", "npm:0.5.5"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["@types/nearley", [
-        ["npm:2.11.2", {
-          "packageLocation": "./.yarn/cache/@types-nearley-npm-2.11.2-1e068e00d2-478fe70ee7.zip/node_modules/@types/nearley/",
-          "packageDependencies": [
-            ["@types/nearley", "npm:2.11.2"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["@types/node", [
         ["npm:12.20.23", {
           "packageLocation": "./.yarn/cache/@types-node-npm-12.20.23-b74e287604-037cc98219.zip/node_modules/@types/node/",
@@ -12420,8 +12402,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@testing-library/user-event", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:12.8.3"],
             ["@types/jest", "npm:26.0.24"],
             ["@types/mdx-js__react", "npm:1.5.4"],
-            ["@types/moo", "npm:0.5.5"],
-            ["@types/nearley", "npm:2.11.2"],
             ["@types/node", "npm:12.20.23"],
             ["@types/prettier", "npm:2.3.2"],
             ["@types/react", "npm:17.0.20"],
@@ -12433,8 +12413,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["eslint-config-react-app", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:6.0.0"],
             ["husky", "npm:7.0.2"],
             ["lint-staged", "npm:11.1.2"],
-            ["moo", "npm:0.5.1"],
-            ["nearley", "npm:2.20.1"],
             ["node-gyp", "npm:8.2.0"],
             ["pnp-webpack-plugin", "npm:1.7.0"],
             ["prettier", "npm:2.3.2"],
@@ -14025,15 +14003,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["dir-glob", "npm:3.0.1"],
             ["path-type", "npm:4.0.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["discontinuous-range", [
-        ["npm:1.0.0", {
-          "packageLocation": "./.yarn/cache/discontinuous-range-npm-1.0.0-572abfd975-8ee88d7082.zip/node_modules/discontinuous-range/",
-          "packageDependencies": [
-            ["discontinuous-range", "npm:1.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -20578,15 +20547,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["moo", [
-        ["npm:0.5.1", {
-          "packageLocation": "./.yarn/cache/moo-npm-0.5.1-6281c30315-2d8c013f1f.zip/node_modules/moo/",
-          "packageDependencies": [
-            ["moo", "npm:0.5.1"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["move-concurrently", [
         ["npm:1.0.1", {
           "packageLocation": "./.yarn/cache/move-concurrently-npm-1.0.1-e1e3c7e2cf-4ea3296c15.zip/node_modules/move-concurrently/",
@@ -20706,19 +20666,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/natural-compare-npm-1.4.0-97b75b362d-23ad088b08.zip/node_modules/natural-compare/",
           "packageDependencies": [
             ["natural-compare", "npm:1.4.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["nearley", [
-        ["npm:2.20.1", {
-          "packageLocation": "./.yarn/cache/nearley-npm-2.20.1-2e130941d3-42c2c330c1.zip/node_modules/nearley/",
-          "packageDependencies": [
-            ["nearley", "npm:2.20.1"],
-            ["commander", "npm:2.20.3"],
-            ["moo", "npm:0.5.1"],
-            ["railroad-diagrams", "npm:1.0.0"],
-            ["randexp", "npm:0.4.6"]
           ],
           "linkType": "HARD",
         }]
@@ -23374,31 +23321,11 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
-      ["railroad-diagrams", [
-        ["npm:1.0.0", {
-          "packageLocation": "./.yarn/cache/railroad-diagrams-npm-1.0.0-ab8798413c-9e312af352.zip/node_modules/railroad-diagrams/",
-          "packageDependencies": [
-            ["railroad-diagrams", "npm:1.0.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
       ["ramda", [
         ["npm:0.21.0", {
           "packageLocation": "./.yarn/cache/ramda-npm-0.21.0-db36f27905-e08d63c12e.zip/node_modules/ramda/",
           "packageDependencies": [
             ["ramda", "npm:0.21.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["randexp", [
-        ["npm:0.4.6", {
-          "packageLocation": "./.yarn/cache/randexp-npm-0.4.6-60140c8119-3c0d440a3f.zip/node_modules/randexp/",
-          "packageDependencies": [
-            ["randexp", "npm:0.4.6"],
-            ["discontinuous-range", "npm:1.0.0"],
-            ["ret", "npm:0.1.15"]
           ],
           "linkType": "HARD",
         }]
