@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
-import { parse } from "../../common/parser";
+// import { parse } from "../../common/parser";
 
 export interface TerminalEntryState {
   type: 'input' | 'output';
@@ -35,7 +35,7 @@ export const terminalSlice = createSlice({
     calculate: (state) => {
       state.history.push({
         type: 'input',
-        content: parse(state.currentLine.join('')).input,
+        content: state.currentLine.join(''),
         enteredAt: Date.now()
       });
       state.currentLine = [];
