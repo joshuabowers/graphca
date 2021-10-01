@@ -12414,7 +12414,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["husky", "npm:7.0.2"],
             ["lint-staged", "npm:11.1.2"],
             ["node-gyp", "npm:8.2.0"],
-            ["pegase", "npm:0.3.14"],
+            ["pegase", "npm:0.3.15"],
             ["pnp-webpack-plugin", "npm:1.7.0"],
             ["prettier", "npm:2.3.2"],
             ["react", "npm:17.0.2"],
@@ -21757,10 +21757,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["pegase", [
-        ["npm:0.3.14", {
-          "packageLocation": "./.yarn/cache/pegase-npm-0.3.14-4ddca96ecb-5aaf6ff6ab.zip/node_modules/pegase/",
+        ["npm:0.3.15", {
+          "packageLocation": "./.yarn/cache/pegase-npm-0.3.15-4335807e47-7dc6683a1d.zip/node_modules/pegase/",
           "packageDependencies": [
-            ["pegase", "npm:0.3.14"]
+            ["pegase", "npm:0.3.15"]
           ],
           "linkType": "HARD",
         }]

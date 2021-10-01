@@ -8,7 +8,7 @@ describe('parser', () => {
   it('matches numbers', () => {
     const inputs = '1 10 0 0.25 10.25 1.23E4 1.23E-4'.split(' ');
     inputs.forEach(input => {
-      expect(parser.parse(input).logger.print()).toEqual('')
+      expect(parser.parse(input).log()).toEqual('')
       expect(parser.value(input)).toMatchObject(num(input))
     })
   })

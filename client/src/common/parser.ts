@@ -12,6 +12,8 @@ const callableNodes = new Map(
   functions.map(f => [f, f.toLocaleUpperCase()])
 )
 
+const functional = peg(functions.map(s => `"${s}"`).join(" | "))
+
 // For future reference, used for constructing a left-associative
 // tree structure from a expression list built right recursively.
 const lNode = (term: any, expressionPrime: any): any => {
@@ -60,7 +62,7 @@ factor:
 
 keywords: callable ![a-zA-Z]
 
-callable: "sin" | "cos" | "tan" | "lg" | "ln" | "log"
+callable: ${functional}
 
 $number @raw: (integer ('.' [0-9]+)? ('E' '-'? integer)?)
 $integer @raw: 0 | [1-9][0-9]*
