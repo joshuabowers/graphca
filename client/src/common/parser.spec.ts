@@ -13,6 +13,11 @@ describe('parser', () => {
     })
   })
 
+  it('matches a lengthy number', () => {
+    const input = '1024.01234E-123'
+    expect(parser.value(input)).toMatchObject(num(input))
+  })
+
   it('matches variables', () => {
     const variables = ['x', 'zed', 'y10']
     variables.forEach(v => {
@@ -25,6 +30,7 @@ describe('parser', () => {
 
   it('matches basic arithmetic', () => {
     expect(parser.value('x + 1')).toMatchObject({
+      // "dead": 'beef'
       '$label': 'PLUS', 
       'a': variable('x'), 
       'b': num('1')
@@ -40,22 +46,35 @@ describe('parser', () => {
     })
   })
 
+  it('associates the minus operator to the left', () => {
+    expect(parser.value('7 - 2 - 4')).toMatchObject({
+      // 'dead': 'beef'
+      '$label': 'MINUS',
+      'a': {
+        '$label': 'MINUS',
+        'a': num('7'),
+        'b': num('2')
+      },
+      'b': num('4')
+    })
+  })
+
   it('handles operator precedence and associativity', () => {
     expect(parser.value('1 + 2 * 3 - 4 / n')).toMatchObject({
-      '$label': 'PLUS',
-      'a': num('1'),
-      'b': {
-        '$label': 'MINUS',
-        'a': {
+      '$label': 'MINUS',
+      'a': {
+        '$label': 'PLUS',
+        'a': num('1'),
+        'b': {
           '$label': 'MULTIPLY',
           'a': num('2'),
           'b': num('3')
-        },
-        'b': {
-          '$label': 'DIVIDE',
-          'a': num('4'),
-          'b': variable('n')
         }
+      },
+      'b': {
+        '$label': 'DIVIDE',
+        'a': num('4'),
+        'b': variable('n')
       }
     })
   })
