@@ -1,4 +1,4 @@
-import peg, {Visitor, Node, $visit} from 'pegase'
+import {Visitor, Node, $visit} from 'pegase'
 import React from 'react'
 import styles from './componentVisitor.module.css'
 import { Unicode, MathSymbols } from '../../MathSymbols'
