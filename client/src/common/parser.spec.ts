@@ -30,7 +30,6 @@ describe('parser', () => {
 
   it('matches basic arithmetic', () => {
     expect(parser.value('x + 1')).toMatchObject({
-      // "dead": 'beef'
       '$label': 'PLUS', 
       'a': variable('x'), 
       'b': num('1')
@@ -48,7 +47,6 @@ describe('parser', () => {
 
   it('associates the minus operator to the left', () => {
     expect(parser.value('7 - 2 - 4')).toMatchObject({
-      // 'dead': 'beef'
       '$label': 'MINUS',
       'a': {
         '$label': 'MINUS',
@@ -82,16 +80,16 @@ describe('parser', () => {
   it('matches a function call', () => {
     expect(parser.value('cos(x)')).toMatchObject({
       '$label': 'COS',
-      'args': variable('x')
+      'expression': variable('x')
     })
   })
 
   it('matches functional expressions', () => {
     expect(parser.value('cos(lg(1024*x))')).toMatchObject({
       '$label': 'COS',
-      'args': {
+      'expression': {
         '$label': 'LG',
-        'args': {
+        'expression': {
           '$label': 'MULTIPLY',
           'a': num('1024'),
           'b': variable('x')
@@ -109,7 +107,7 @@ describe('parser', () => {
         'a': num('2'),
         'b': {
           '$label': 'COS',
-          'args': variable('x')
+          'expression': variable('x')
         }
       }
     })
@@ -133,11 +131,11 @@ describe('parser', () => {
   it('matches exponents', () => {
     expect(parser.value('(-x)^2')).toMatchObject({
       '$label': 'EXPONENT',
-      'base': {
+      'a': {
         '$label': 'NEGATE',
         'expression': variable('x')
       },
-      'power': num('2')
+      'b': num('2')
     })
   })
 })

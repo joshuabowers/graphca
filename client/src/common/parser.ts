@@ -42,7 +42,7 @@ productPrime:
 | ''
 
 exponent:
-| <base>negation '^' ^ <power>expression => 'EXPONENT'
+| <a>negation '^' ^ <b>expression => 'EXPONENT'
 | negation
 
 negation:
@@ -50,8 +50,8 @@ negation:
 | grouping
 
 grouping:
-| <f>callable '(' ^ <args>expression ')' ${
-  ({f, args}) => $node(callableNodes.get(f) ?? 'ERROR', {args})
+| <f>callable '(' ^ <>expression ')' ${
+  ({f, expression}) => $node(callableNodes.get(f) ?? 'ERROR', {expression})
 }
 | '(' ^ expression ')'
 | factor

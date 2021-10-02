@@ -11,7 +11,7 @@ const binaryOp = (node: Node, op: MathSymbols) => (
 
 const functional = (node: Node, metaClass: string) => (
   <span className={[styles.functional, styles[metaClass]].join(' ')}>
-    {node.$label.toLocaleLowerCase()}({$visit(node.args)})
+    {node.$label.toLocaleLowerCase()}({$visit(node.expression)})
   </span>
 )
 
@@ -24,7 +24,7 @@ export const componentVisitor: Visitor<JSX.Element> = {
   DIVIDE: (node) => binaryOp(node, Unicode.division),
   EXPONENT: (node) => (
     <span className={styles.exponent}>
-      {$visit(node.base)}^{$visit(node.power)}
+      {$visit(node.a)}^{$visit(node.b)}
     </span>
   ),
   NEGATE: (node) => <span className={styles.negation}>{Unicode.minus}{$visit(node.expression)}</span>,
