@@ -29,7 +29,6 @@ export const terminalSlice = createSlice({
 
     deleteLast: (state) => {
       state.currentLine.pop();
-      // state.currentLine = state.currentLine.slice(0, state.currentLine.length - 1)
     },
 
     calculate: (state) => {

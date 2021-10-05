@@ -1,4 +1,4 @@
-import peg, { $node, $children } from 'pegase';
+import peg, { $node } from 'pegase';
 
 const operators = new Map([
   ['+', 'PLUS'],

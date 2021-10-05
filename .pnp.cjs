@@ -12796,11 +12796,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pegase", "npm:0.3.15"],
             ["pnp-webpack-plugin", "npm:1.7.0"],
             ["prettier", "npm:2.3.2"],
+            ["re-reselect", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:4.0.0"],
             ["react", "npm:17.0.2"],
             ["react-dom", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:17.0.2"],
             ["react-redux", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:7.2.5"],
             ["react-scripts", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:4.0.3"],
             ["redux-logger", "npm:3.0.6"],
+            ["reselect", "npm:4.0.0"],
+            ["reselect-map", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:1.0.6"],
             ["typescript", "patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=32657b"],
             ["web-vitals", "npm:1.1.2"],
             ["webpack-hot-middleware", "npm:2.25.0"]
@@ -24631,6 +24634,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["re-reselect", [
+        ["npm:4.0.0", {
+          "packageLocation": "./.yarn/cache/re-reselect-npm-4.0.0-d3fcbc576b-50d272c2a5.zip/node_modules/re-reselect/",
+          "packageDependencies": [
+            ["re-reselect", "npm:4.0.0"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:4.0.0", {
+          "packageLocation": "./.yarn/__virtual__/re-reselect-virtual-b699fdda1c/0/cache/re-reselect-npm-4.0.0-d3fcbc576b-50d272c2a5.zip/node_modules/re-reselect/",
+          "packageDependencies": [
+            ["re-reselect", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:4.0.0"],
+            ["@types/reselect", null],
+            ["reselect", "npm:4.0.0"]
+          ],
+          "packagePeers": [
+            "@types/reselect",
+            "reselect"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["react", [
         ["npm:17.0.2", {
           "packageLocation": "./.yarn/cache/react-npm-17.0.2-99ba37d931-b254cc17ce.zip/node_modules/react/",
@@ -25867,6 +25892,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/reselect-npm-4.0.0-4189778eed-ac7dfc9ef2.zip/node_modules/reselect/",
           "packageDependencies": [
             ["reselect", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["reselect-map", [
+        ["npm:1.0.6", {
+          "packageLocation": "./.yarn/cache/reselect-map-npm-1.0.6-9697ad2311-9028c7deb3.zip/node_modules/reselect-map/",
+          "packageDependencies": [
+            ["reselect-map", "npm:1.0.6"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:1.0.6", {
+          "packageLocation": "./.yarn/__virtual__/reselect-map-virtual-f8607d8053/0/cache/reselect-map-npm-1.0.6-9697ad2311-9028c7deb3.zip/node_modules/reselect-map/",
+          "packageDependencies": [
+            ["reselect-map", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:1.0.6"],
+            ["@types/reselect", null],
+            ["reselect", "npm:4.0.0"]
+          ],
+          "packagePeers": [
+            "@types/reselect",
+            "reselect"
           ],
           "linkType": "HARD",
         }]

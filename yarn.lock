@@ -7013,11 +7013,14 @@ __metadata:
     pegase: ^0.3.15
     pnp-webpack-plugin: ^1.7.0
     prettier: ^2.3.2
+    re-reselect: ^4.0.0
     react: ^17.0.2
     react-dom: ^17.0.2
     react-redux: ^7.2.5
     react-scripts: 4.0.3
     redux-logger: ^3.0.6
+    reselect: ^4.0.0
+    reselect-map: ^1.0.6
     typescript: ^4.1.2
     web-vitals: ^1.0.1
     webpack-hot-middleware: ^2.25.0
@@ -17146,6 +17149,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"re-reselect@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "re-reselect@npm:4.0.0"
+  peerDependencies:
+    reselect: ">1.0.0"
+  checksum: 50d272c2a5dd4a66d84b990aed92daefb8a8e07830b0ff6864f7c759955cabae710f66f54e66db44d1295ea73546bf747125bbe79bdfaf6161f84485248a9a6c
+  languageName: node
+  linkType: hard
+
 "react-app-polyfill@npm:^2.0.0":
   version: 2.0.0
   resolution: "react-app-polyfill@npm:2.0.0"
@@ -18056,6 +18068,15 @@ fsevents@^1.2.7:
   version: 1.0.0
   resolution: "requires-port@npm:1.0.0"
   checksum: eee0e303adffb69be55d1a214e415cf42b7441ae858c76dfc5353148644f6fd6e698926fc4643f510d5c126d12a705e7c8ed7e38061113bdf37547ab356797ff
+  languageName: node
+  linkType: hard
+
+"reselect-map@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "reselect-map@npm:1.0.6"
+  peerDependencies:
+    reselect: 2.x || 3.x || 4.x
+  checksum: 9028c7deb3fcc785b1d2d2f735c9451431774f4b680cd5140c355fc3a545647efe8ad81754dfeb8929b6e7064f4cf12c5ac7fa33d4fde101134589215ce1edb0
   languageName: node
   linkType: hard
 
