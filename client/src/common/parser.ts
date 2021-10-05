@@ -43,6 +43,7 @@ productPrime:
 
 exponent:
 | <a>negation '^' ^ <b>expression => 'EXPONENT'
+| <expression>negation '!' => 'FACTORIAL'
 | negation
 
 negation:

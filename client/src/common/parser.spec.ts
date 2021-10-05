@@ -143,4 +143,11 @@ describe('parser', () => {
       'b': num('2')
     })
   })
+
+  it('matches factorials', () => {
+    expect(parser.value('n!')).toMatchObject({
+      '$label': 'FACTORIAL',
+      'expression': variable('n')
+    })
+  })
 })

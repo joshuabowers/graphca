@@ -1,4 +1,4 @@
-import { Visitor, Node, $visit, $node } from 'pegase';
+import { Visitor, Node, $visit, $node, $fail } from 'pegase';
 
 type EvaluateFunction = (a: number, b: number) => number
 type EvaluateNumber = (n: number) => number
@@ -27,6 +27,13 @@ const applyFunction = (node: Node, evaluate: EvaluateNumber): Node => {
   }
 }
 
+const factorial = (n: number): number => {
+  if( n < 0 ){ 
+    $fail('factorials undefined for negative numbers')
+    return 0;
+  }
+  return n === 0 ? 1 : n * factorial(n-1);
+}
 export const evaluateVisitor: Visitor<Node> = {
   NUMBER: (node) => {
     node.evaluated = Number(node.value)
@@ -44,5 +51,6 @@ export const evaluateVisitor: Visitor<Node> = {
   TAN: (node) => applyFunction(node, n => Math.tan(n)),
   LG: (node) => applyFunction(node, n => Math.log2(n)),
   LN: (node) => applyFunction(node, n => Math.log(n)),
-  LOG: (node) => applyFunction(node, n => Math.log10(n))
+  LOG: (node) => applyFunction(node, n => Math.log10(n)),
+  FACTORIAL: (node) => applyFunction(node, n => factorial(n))
 }

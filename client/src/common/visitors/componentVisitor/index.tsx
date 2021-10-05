@@ -33,5 +33,6 @@ export const componentVisitor: Visitor<JSX.Element> = {
   TAN: (node) => functional(node, 'trigonometric'),
   LG: (node) => functional(node, 'logarithmic'),
   LN: (node) => functional(node, 'logarithmic'),
-  LOG: (node) => functional(node, 'logarithmic')
+  LOG: (node) => functional(node, 'logarithmic'),
+  FACTORIAL: (node) => <span className={styles.factorial}>{$visit(node.expression)}!</span>
 }

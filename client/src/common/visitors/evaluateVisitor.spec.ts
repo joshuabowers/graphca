@@ -77,6 +77,16 @@ describe('evaluateVisitor', () => {
       expectNumber('lg(1024)', 10)
       expectNumber('ln(10)', 2.302585092994046)
     })
+
+    it('evaluates factorials', () => {
+      expectNumber('5!', 120)
+    })
+
+    it('fails to evaluate a negative number factorial', () => {
+      const output = parser.parse('(-5)!', {visit: evaluateVisitor})
+      expect(output.failures.length).toEqual(1)
+      expect(output.log()).not.toBe(undefined)
+    })
   })
 
   describe('with variables but without context', () => {

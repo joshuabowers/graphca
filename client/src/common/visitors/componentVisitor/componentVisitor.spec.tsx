@@ -58,4 +58,8 @@ describe('componentVisitor', () => {
     expectMarkup('cos(log(x))', '.functional.trigonometric')
     expectMarkup('log(cos(x))', '.functional.logarithmic')
   })
+
+  it('renders factorials', () => {
+    expectMarkup('x!', '.factorial')
+  })
 })
