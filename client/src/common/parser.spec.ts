@@ -13,6 +13,11 @@ describe('parser', () => {
     })
   })
 
+  it('matches a decimal without leading 0', () => {
+    const input = '.25'
+    expect(parser.value(input)).toMatchObject(num(input))
+  })
+
   it('matches a lengthy number', () => {
     const input = '1024.01234E-123'
     expect(parser.value(input)).toMatchObject(num(input))

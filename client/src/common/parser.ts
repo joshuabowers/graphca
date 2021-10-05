@@ -64,7 +64,6 @@ keywords: callable ![a-zA-Z]
 
 callable: ${functional}
 
-$number @raw: (integer ('.' [0-9]+)? ('E' '-'? integer)?)
-$integer @raw: 0 | [1-9][0-9]*
+$number @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
 $variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
 `
