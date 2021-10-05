@@ -35,17 +35,17 @@ export const Functional = (args: FunctionalProps) => (
       alpha={{type:'alpha', display:''}}
     />
     <Key
-      default={{type:'default', display:'sin', activate: createKeyPress('sin')}}
+      default={{type:'default', display:'sin', activate: createKeyPress('sin(')}}
       shift={{type:'shift', display:functional.asin, displayHint:'functional'}}
       alpha={{type:'alpha', display:''}}
     />
     <Key
-      default={{type:'default', display:'cos', activate: createKeyPress('cos')}}
+      default={{type:'default', display:'cos', activate: createKeyPress('cos(')}}
       shift={{type:'shift', display:functional.acos, displayHint:'functional'}}
       alpha={{type:'alpha', display:''}}
     />
     <Key
-      default={{type:'default', display:'tan', activate: createKeyPress('tan')}}
+      default={{type:'default', display:'tan', activate: createKeyPress('tan(')}}
       shift={{type:'shift', display:functional.atan, displayHint:'functional'}}
       alpha={{type:'alpha', display:''}}
     />
@@ -60,17 +60,17 @@ export const Functional = (args: FunctionalProps) => (
       alpha={{type:'alpha', display:''}}
     />
     <Key
-      default={{type:'default', display:'lg', activate: createKeyPress('lg')}}
+      default={{type:'default', display:'lg', activate: createKeyPress('lg(')}}
       shift={{type:'shift', display:functional.base2, displayHint:'functional'}}
       alpha={{type:'alpha', display:''}}
     />
     <Key
-      default={{type:'default', display:'ln', activate: createKeyPress('ln')}}
+      default={{type:'default', display:'ln', activate: createKeyPress('ln(')}}
       shift={{type:'shift', display:functional.eX, displayHint:'functional'}}
       alpha={{type:'alpha', display:''}}
     />
     <Key
-      default={{type:'default', display:'log', activate: createKeyPress('log')}}
+      default={{type:'default', display:'log', activate: createKeyPress('log(')}}
       shift={{type:'shift', display:functional.base10, displayHint:'functional'}}
       alpha={{type:'alpha', display:''}}
     />
