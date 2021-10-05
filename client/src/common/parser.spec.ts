@@ -5,6 +5,11 @@ const num = (val: string) => ({'$label': 'NUMBER', 'value': val})
 const variable = (name: string) => ({'$label': 'VARIABLE', 'name': name})
 
 describe('parser', () => {
+  it('can parse a new expression after a failure', () => {
+    expect(() => parser.value('2 @ 3')).toThrow()
+    expect(() => parser.value('2 + 3')).not.toThrow()
+  })
+
   it('matches numbers', () => {
     const inputs = '1 10 0 0.25 10.25 1.23E4 1.23E-4'.split(' ');
     inputs.forEach(input => {

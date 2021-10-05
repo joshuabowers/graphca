@@ -15,10 +15,15 @@ export interface TerminalProps {
 
 const parse = (entry: TerminalEntryState) => {
   console.log('parsing expression: ', entry.content)
-  return parser.value(
-    entry.content,
-    {visit: [evaluateVisitor, componentVisitor]}
-  ) as JSX.Element
+  try {
+    const parsing = parser.value(
+      entry.content,
+      {visit: [evaluateVisitor, componentVisitor]}
+    ) as JSX.Element  
+    return <div className={styles.result}>{'=>'} {parsing}</div>
+  } catch(err: any) {
+    return <div className={styles.error}>{err.message}</div>
+  }
 }
 
 const getTerminal = (state: RootState) => state.terminal
@@ -45,7 +50,7 @@ export const Terminal = (props: TerminalProps) => {
     <ol reversed start={history.length} className={styles.terminal}>
       {
         history.map((item, key) => 
-          <li key={item.enteredAt}>{item.content}<div>{'=>'} {parsings[key]}</div></li>
+          <li key={item.enteredAt}>{item.content}{parsings[key]}</li>
         )
       }
       <li ref={currentRef}>{currentLine}</li>
