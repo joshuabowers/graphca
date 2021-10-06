@@ -37,7 +37,9 @@ export const Key = (props: KeyProps) => {
   if(activated){ appliedStyles.push(styles.activated) }
 
   return (
-    <button onClick={handler} className={appliedStyles.join(' ')}>
+    <button 
+      onClick={handler}
+      className={appliedStyles.join(' ')}>
       <div className={styles.primary}>
         <Mode type='default' {...props.default} />
       </div>
