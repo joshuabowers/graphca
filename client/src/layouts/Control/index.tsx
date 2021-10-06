@@ -19,7 +19,7 @@ export const Control = (props: ControlProps) => (
       modeOverride='shift'
     />
     <Key 
-      default={{type: 'default', display: 'Alpha'}}
+      default={{type: 'default', display: Unicode.alpha}}
       shift={{type: 'shift', display: 'Lock'}}
       modeOverride='alpha'
     />

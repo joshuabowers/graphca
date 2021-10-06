@@ -1,35 +1,33 @@
 .normal {
+  position: relative;
   --darken: rgba(0,0,0, 30%);
-  background-color: var(--background-color);
-  opacity: 0.9;
-  color: var(--color);
   font-family: 'Fira Code', monospace;
   font-size: 20px;
-  border: none;
+  border: 0.2em solid var(--background-color);
   border-radius: 0.5em 0.5em 0.75em 0.75em;
-  box-shadow: 0.2em 0.4em 0.4em var(--darken),
-    inset 0 0 0 var(--darken);
-  width: 3.5em;
-  margin: 0;
-  padding: 0;
+  background-color: var(--color);
+  width: 3.4em;
+  padding: 0.2em;
   cursor: pointer;
   transition: 200ms ease-in-out;
-  transition-property: opacity, box-shadow, transform;
+  z-index: 0;
+  transition: 200ms ease-in-out;
+  transition-property: box-shadow, background-color, color;
 }
 
 .normal:hover {
-  opacity: 1;
   z-index: 1;
-  transform: scale(1.1);
-  box-shadow: 0.4em 0.8em 0.8em var(--darken),
-    inset 0 0 0 var(--darken);
+  --color: orange;
+  --background-color: hsl(0, 10%, 25%);
+  box-shadow: 0 0 2em var(--color);
 }
 
-.normal:active {
-  opacity: 1;
-  transform: scale(0.9);
-  box-shadow: 0 0 0 var(--darken),
-    inset 0.2em 0.4em 0.4em var(--darken);
+.normal:hover > .primary {
+  box-shadow: inset 0 0 0.25em var(--color);
+}
+
+.normal.activated {
+  --color: lawngreen;
 }
 
 .meta {
@@ -51,6 +49,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--background-color);
+  color: var(--color);
+  border: none;
+  border-radius: 0.5em 0.5em 0.75em 0.75em;
 }
 
 .default {
@@ -59,11 +61,19 @@
 }
 
 .shift {
-  --background-color: lightskyblue;
-  --color: var(--darken);
+  --background-color: gray;
+  --color: hsl(180, 75%, 50%);
+}
+
+.shift:hover {
+  --color: hsl(180, 75%, 75%);
 }
 
 .alpha {
-  --background-color: lightgreen;
-  --color: var(--darken);
+  --background-color: gray;
+  --color: hsl(90, 75%, 50%);
+}
+
+.alpha:hover {
+  --color: hsl(90, 75%, 75%);
 }
