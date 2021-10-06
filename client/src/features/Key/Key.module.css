@@ -1,5 +1,6 @@
 .normal {
   position: relative;
+  z-index: 0;
   font-family: 'Fira Code', monospace;
   font-size: 20px;
   border: 0.2em solid var(--background-color);
@@ -8,7 +9,6 @@
   width: 3.4em;
   padding: 0.2em;
   cursor: pointer;
-  z-index: 0;
 }
 
 .normal, .normal > .primary {
