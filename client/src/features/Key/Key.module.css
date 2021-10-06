@@ -4,7 +4,7 @@
   font-family: 'Fira Code', monospace;
   font-size: 20px;
   border: 0.2em solid var(--background-color);
-  border-radius: 0.5em 0.5em 0.75em 0.75em;
+  border-radius: 0.75em 0.75em 1em 1em;
   background-color: var(--color);
   width: 3.4em;
   padding: 0.2em;
