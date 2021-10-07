@@ -1,0 +1,73 @@
+.normal {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 0;
+  font-family: 'Fira Code', monospace;
+  font-size: 20px;
+  border: 0.2em solid var(--background-color);
+  border-radius: 0.9em 0.9em 1.15em 1.15em;
+  background-color: var(--color);
+  padding: 0.2em;
+  cursor: pointer;
+  display: inline-grid;
+  grid-template-areas: 'toggleKey';
+  place-items: center;
+}
+
+.normal, .normal > [type=checkbox] ~ * {
+  transition: 200ms ease-in;
+  transition-property: box-shadow, background-color, color;
+}
+
+.normal:hover, .normal:focus, .normal.toggled {
+  z-index: 1;
+  box-shadow: 0 0 2em var(--color);
+}
+
+.normal:hover > [type=checkbox] ~ *, .normal > :checked ~ * {
+  box-shadow: inset 0 0 0.25em var(--color);
+}
+
+.normal > [type=checkbox] {
+  opacity: 0;
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+}
+
+.normal > * {
+  grid-area: toggleKey;
+}
+
+.normal > [type=checkbox] ~ * {
+  padding: 0;
+  margin: 0;
+  width: 2.6em;
+  height: 1.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-color);
+  color: var(--color);
+  border: none;
+  border-radius: 0.5em 0.5em 0.75em 0.75em;
+  box-sizing: border-box;
+}
+
+.default {
+  --background-color: gray;
+  --color: whitesmoke;
+}
+
+.normal:hover, .normal:focus {
+  --color: orange;
+  --background-color: hsl(0, 10%, 25%);
+}
+
+.normal.activated, .normal:active {
+  --color: lawngreen;
+}
+
+.toggled {
+  --color: lightskyblue;
+}

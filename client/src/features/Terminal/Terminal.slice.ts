@@ -1,6 +1,4 @@
 import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
-// import { parse } from "../../common/parser";
-
 export interface TerminalEntryState {
   type: 'input' | 'output';
   content: string;
