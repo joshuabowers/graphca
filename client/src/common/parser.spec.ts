@@ -1,3 +1,4 @@
+import { Unicode } from "./MathSymbols";
 import { parser } from "./parser";
 
 // Helper functions for generating tree nodes to check.
@@ -26,6 +27,11 @@ describe('parser', () => {
   it('matches a lengthy number', () => {
     const input = '1024.01234E-123'
     expect(parser.value(input)).toMatchObject(num(input))
+  })
+
+  it('matches pi', () => {
+    const input = Unicode.pi
+    expect(parser.value(input)).toMatchObject({'$label': 'PI'})
   })
 
   it('matches variables', () => {

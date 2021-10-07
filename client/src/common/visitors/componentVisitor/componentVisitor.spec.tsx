@@ -17,6 +17,10 @@ describe('componentVisitor', () => {
     expectMarkup('1024', '.number')
   })
 
+  it('renders pi', () => {
+    expectMarkup(Unicode.pi, '.number')
+  })
+
   it('renders binary operator expressions', () => {
     expectMarkup('1 + 2', '.binaryOp')
     expectMarkup('2 - 3', '.binaryOp', `2 ${Unicode.minus} 3`)

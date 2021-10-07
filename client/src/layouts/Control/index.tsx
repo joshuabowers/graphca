@@ -38,8 +38,8 @@ export const Control = (props: ControlProps) => {
       />
       <Key 
         default={{type: 'default', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
-        shift={{type: 'shift', display: ''}}
-        alpha={{type: 'alpha', display: ''}}
+        shift={{type: 'shift', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
+        alpha={{type: 'alpha', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
       />
     </KeyGroup>
   )

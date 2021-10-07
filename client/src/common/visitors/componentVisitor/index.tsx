@@ -18,6 +18,7 @@ const functional = (node: Node, metaClass: string) => (
 export const componentVisitor: Visitor<JSX.Element> = {
   NUMBER: (node) => <span className={styles.number}>{node.value}</span>,
   VARIABLE: (node) => <span className={styles.variable}>{node.name}</span>,
+  PI: (node) => <span className={styles.number}>{Unicode.pi}</span>,
   PLUS: (node) => binaryOp(node, '+'),
   MINUS: (node) => binaryOp(node, Unicode.minus),
   MULTIPLY: (node) => binaryOp(node, Unicode.multiplication),

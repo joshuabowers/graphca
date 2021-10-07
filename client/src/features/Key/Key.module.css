@@ -27,10 +27,6 @@
   box-shadow: inset 0 0 0.25em var(--color);
 }
 
-.normal.activated, .normal:active {
-  --color: lawngreen;
-}
-
 .primary {
   padding: 0;
   margin: 0;
@@ -65,4 +61,8 @@
 
 .alpha:hover {
   --color: hsl(90, 75%, 75%);
+}
+
+.normal.activated, .normal:active {
+  --color: lawngreen;
 }

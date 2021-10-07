@@ -1,6 +1,7 @@
 import { evaluateVisitor } from "./evaluateVisitor";
 import { parser } from "../parser";
 import { Node } from 'pegase'
+import { Unicode } from "../MathSymbols";
 
 const apply = (input: string) => parser.value(input, {visit: evaluateVisitor})
 const num = (val: string) => ({'$label': 'NUMBER', 'value': val})
@@ -31,6 +32,10 @@ describe('evaluateVisitor', () => {
   })
 
   describe('without variables', () => {
+    it('approximates pi', () => {
+      expectNumber(Unicode.pi, Math.PI)
+    })
+
     it('evaluates binary expressions', () => {
       expectNumber('1 + 2', 3)
       expectNumber('1 - 2', -1)

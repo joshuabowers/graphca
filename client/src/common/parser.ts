@@ -1,4 +1,5 @@
 import peg, { $node } from 'pegase';
+import { Unicode } from './MathSymbols';
 
 const operators = new Map([
   ['+', 'PLUS'],
@@ -24,7 +25,7 @@ const lNode = (term: any, expressionPrime: any): any => {
       {a: term, b: expressionPrime.a}
     ), expressionPrime.b
   )
-} 
+}
 
 export const parser = peg`
 expression: arithmetic
@@ -59,6 +60,7 @@ grouping:
 
 factor:
 | <value>number => 'NUMBER'
+| pi => 'PI'
 | <name>variable => 'VARIABLE'
 
 keywords: callable ![a-zA-Z]
@@ -67,4 +69,5 @@ callable: ${functional}
 
 $number @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
 $variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
+$pi @raw: ${RegExp(Unicode.pi, 'u')}
 `

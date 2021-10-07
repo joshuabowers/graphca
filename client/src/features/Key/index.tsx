@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAppDispatch, AppDispatch } from '../../app/hooks';
+import { useAppDispatch, AppDispatch, useAppSelector } from '../../app/hooks';
 import { keyPress } from '../Terminal/Terminal.slice';
 import { Mode, ModeProps, ModeType } from '../Mode';
 import styles from './Key.module.css';
@@ -16,7 +16,10 @@ export const createKeyPress = (value: string) =>
 
 export const Key = (props: KeyProps) => {
   const dispatch = useAppDispatch();
-  const keyMode: ModeType = props.modeOverride ?? 'default' //useAppSelector(state => state.keyMode);
+  const keyMode: ModeType = 
+    useAppSelector(state => state.keypad.currentMode) 
+    ?? props.modeOverride 
+    ?? 'default'
   const currentMode = props[keyMode];
   const appliedStyles = [styles.normal, styles[keyMode]];
   const [activated, setActivate] = useState(false)
@@ -41,7 +44,7 @@ export const Key = (props: KeyProps) => {
       onClick={handler}
       className={appliedStyles.join(' ')}>
       <div className={styles.primary}>
-        <Mode type='default' {...props.default} />
+        <Mode {...(currentMode ?? props.default)} />
       </div>
     </button>
   )

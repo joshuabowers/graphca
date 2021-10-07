@@ -40,6 +40,7 @@ export const evaluateVisitor: Visitor<Node> = {
     return node;
   },
   VARIABLE: (node) => node,
+  PI: (node) => numberNode(() => Math.PI),
   PLUS: (node) => binaryEval(node, (a,b) => a + b),
   MINUS: (node) => binaryEval(node, (a,b) => a - b),
   MULTIPLY: (node) => binaryEval(node, (a,b) => a * b),
