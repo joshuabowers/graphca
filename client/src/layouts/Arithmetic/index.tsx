@@ -12,22 +12,22 @@ export const Arithmetic = (props: ArithmeticProps) => (
     <Key 
       default={{type: 'default', display: Unicode.division, displayHint: 'icon', activate: createKeyPress('/')}}
       shift={{type: 'shift', display: functional.invert, displayHint: 'functional', activate: createKeyPress('^-1')}}
-      alpha={{type: 'alpha', display: 'M', activate: createKeyPress('M')}}
+      alpha={{type: 'alpha', display: 'S', activate: createKeyPress('S')}}
     />
     <Key 
       default={{type: 'default', display: Unicode.multiplication, displayHint: 'icon', activate: createKeyPress('*')}}
       shift={{type: 'shift', display: 'EE', activate: createKeyPress('E')}}
-      alpha={{type: 'alpha', display: 'R'}}
+      alpha={{type: 'alpha', display: 'W', activate: createKeyPress('W')}}
     />
     <Key 
       default={{type: 'default', display: Unicode.minus, displayHint: 'icon', activate: createKeyPress('-')}}
       shift={{type: 'shift', display: ''}}
-      alpha={{type: 'alpha', display: 'W'}}
+      alpha={{type: 'alpha', display: ''}}
     />
     <Key 
       default={{type: 'default', display: '+', displayHint: 'icon', activate: createKeyPress('+')}}
       shift={{type: 'shift', display: ''}}
-      alpha={{type: 'alpha', display: '#'}}
+      alpha={{type: 'alpha', display: '#', activate: createKeyPress('#')}}
     />
   </KeyGroup>
 );

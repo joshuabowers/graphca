@@ -9,19 +9,21 @@ export interface NumericProps {
 
 // Tuple structure: ['default', 'shift', 'alpha']
 const numberKeys = [
-  ['7', '', ''],
-  ['8', '', ''],
-  ['9', '', ''],
-  ['4', '', ''],
-  ['5', '', ''],
-  ['6', '', ''],
-  ['1', '', ''],
-  ['2', '', ''],
-  ['3', '', ''],
+  ['7', '', 'P'],
+  ['8', '', 'Q'],
+  ['9', '', 'R'],
+  ['4', '', 'T'],
+  ['5', '', 'U'],
+  ['6', '', 'V'],
+  ['1', '', 'X'],
+  ['2', '', 'Y'],
+  ['3', '', 'Z'],
   ['0', '', Unicode.space],
   ['.', Unicode.i, ':'],
   [Unicode.plusMinus, `|${Unicode.x}|`, '']
 ]
+
+const unicodeToASCII = new Map([[Unicode.space as string, ' ']])
 
 export const Numeric = (props: NumericProps) => {
   return (
@@ -32,7 +34,7 @@ export const Numeric = (props: NumericProps) => {
             key={info[0]}
             default={{type: 'default', display: info[0], activate: createKeyPress(info[0])}}
             shift={{type: 'shift', display: info[1]}}
-            alpha={{type: 'alpha', display: info[2]}}
+            alpha={{type: 'alpha', display: info[2], activate: createKeyPress(unicodeToASCII.get(info[2]) ?? info[2])}}
           />  
         ))
       }

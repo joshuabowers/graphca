@@ -16,8 +16,9 @@ export const Control = (props: ControlProps) => {
   return (
     <KeyGroup layout='vertical'>
       <Key 
-        default={{type: 'default', display: Unicode.delete, displayHint: 'icon', activate: (dispatch) => dispatch(deleteLast())}}
+        default={{type: 'default', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
         shift={{type: 'shift', display: 'Ins'}}
+        alpha={{type: 'alpha', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
       />
       <ToggleKey 
         default={{
