@@ -18,7 +18,7 @@ const numberKeys = [
   ['1', '', 'X'],
   ['2', '', 'Y'],
   ['3', '', 'Z'],
-  ['0', '', Unicode.space],
+  ['0', Unicode.infinity, Unicode.space],
   ['.', Unicode.i, ':'],
   [Unicode.plusMinus, `|${Unicode.x}|`, '']
 ]
@@ -33,7 +33,7 @@ export const Numeric = (props: NumericProps) => {
           <Key 
             key={info[0]}
             default={{type: 'default', display: info[0], activate: createKeyPress(info[0])}}
-            shift={{type: 'shift', display: info[1]}}
+            shift={{type: 'shift', display: info[1], activate: info[1] ? createKeyPress(info[1]) : undefined}}
             alpha={{type: 'alpha', display: info[2], activate: createKeyPress(unicodeToASCII.get(info[2]) ?? info[2])}}
           />  
         ))

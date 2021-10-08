@@ -61,6 +61,7 @@ grouping:
 factor:
 | <value>number => 'NUMBER'
 | pi => 'PI'
+| infinity => 'INFINITY'
 | <name>variable => 'VARIABLE'
 
 keywords: callable ![a-zA-Z]
@@ -70,4 +71,5 @@ callable: ${functional}
 $number @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
 $variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
 $pi @raw: ${RegExp(Unicode.pi, 'u')}
+$infinity @raw: ${RegExp(Unicode.infinity, 'u')}
 `

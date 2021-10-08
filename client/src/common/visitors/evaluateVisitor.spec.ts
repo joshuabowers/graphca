@@ -36,11 +36,19 @@ describe('evaluateVisitor', () => {
       expectNumber(Unicode.pi, Math.PI)
     })
 
+    it('contemplates infinity', () => {
+      expectNumber(Unicode.infinity, Number.POSITIVE_INFINITY)
+    })
+
     it('evaluates binary expressions', () => {
       expectNumber('1 + 2', 3)
       expectNumber('1 - 2', -1)
       expectNumber('2 * 3', 6)
       expectNumber('6 / 2', 3)
+    })
+
+    it('computes negative infinity', () => {
+      expectNumber('(-5) / 0', Number.NEGATIVE_INFINITY)
     })
 
     it('evaluates arithmetic with operator precedence', () => {

@@ -15,10 +15,16 @@ const functional = (node: Node, metaClass: string) => (
   </span>
 )
 
+const specialNumbers = new Map([
+  [Number.POSITIVE_INFINITY.toString(), Unicode.infinity],
+  [Number.NEGATIVE_INFINITY.toString(), `-${Unicode.infinity}`]
+])
+
 export const componentVisitor: Visitor<JSX.Element> = {
-  NUMBER: (node) => <span className={styles.number}>{node.value}</span>,
+  NUMBER: (node) => <span className={styles.number}>{specialNumbers.get(node.value) ?? node.value}</span>,
   VARIABLE: (node) => <span className={styles.variable}>{node.name}</span>,
   PI: (node) => <span className={styles.number}>{Unicode.pi}</span>,
+  INFINITY: (node) => <span className={styles.number}>{Unicode.infinity}</span>,
   PLUS: (node) => binaryOp(node, '+'),
   MINUS: (node) => binaryOp(node, Unicode.minus),
   MULTIPLY: (node) => binaryOp(node, Unicode.multiplication),

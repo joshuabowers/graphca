@@ -20,7 +20,8 @@ export enum Unicode {
   pi = "\u{1D70B}",
   t = "\ud835\udc61",
   theta = "\ud835\udf03",
-  n = "\ud835\udc5b"
+  n = "\ud835\udc5b",
+  infinity = "\u{221E}"
 }
 
 export const functional = {

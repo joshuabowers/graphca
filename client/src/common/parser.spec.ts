@@ -34,6 +34,11 @@ describe('parser', () => {
     expect(parser.value(input)).toMatchObject({'$label': 'PI'})
   })
 
+  it('matches infinity', () => {
+    const input = Unicode.infinity
+    expect(parser.value(input)).toMatchObject({'$label': 'INFINITY'})
+  })
+
   it('matches variables', () => {
     const variables = ['x', 'zed', 'y10']
     variables.forEach(v => {
