@@ -83,6 +83,12 @@ describe('evaluateVisitor', () => {
       expectNumber('tan(0)', 0)
     })
 
+    it('evaluates arcus functions', () => {
+      expectNumber('acos(0)', Math.PI / 2)
+      expectNumber('asin(0)', 0)
+      expectNumber('atan(0)', 0)
+    })
+
     // TODO: revisit this once E is implemented
     // TODO: Implement configuration precision?
     it('evaluates logarithmic functions', () => {

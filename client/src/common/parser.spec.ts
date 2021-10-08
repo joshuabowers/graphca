@@ -134,6 +134,21 @@ describe('parser', () => {
     })
   })
 
+  it('matches arcus functions', () => {
+    expect(parser.value('acos(x)')).toMatchObject({
+      '$label': 'ACOS',
+      'expression': variable('x')
+    })
+    expect(parser.value('asin(x)')).toMatchObject({
+      '$label': 'ASIN',
+      'expression': variable('x')
+    })
+    expect(parser.value('atan(x)')).toMatchObject({
+      '$label': 'ATAN',
+      'expression': variable('x')
+    })
+  })
+
   it('matches negations', () => {
     expect(parser.value('-1')).toMatchObject({
       '$label': 'NEGATE',

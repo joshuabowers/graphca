@@ -56,6 +56,12 @@ describe('componentVisitor', () => {
     expectMarkup('tan(x)', '.functional.trigonometric')
   })
 
+  it('renders arcus functions', () => {
+    expectMarkup('acos(x)', '.functional.arcus')
+    expectMarkup('asin(x)', '.functional.arcus')
+    expectMarkup('atan(x)', '.functional.arcus')
+  })
+
   it('renders logarithmic functions', () => {
     expectMarkup('lg(x)', '.functional.logarithmic')
     expectMarkup('ln(x)', '.functional.logarithmic')

@@ -8,7 +8,11 @@ const operators = new Map([
   ['/', 'DIVIDE']
 ])
 
-const functions = ['sin', 'cos', 'tan', 'lg', 'ln', 'log']
+const functions = [
+  'sin', 'cos', 'tan', 
+  'asin', 'acos', 'atan', 
+  'lg', 'ln', 'log'
+]
 const callableNodes = new Map(
   functions.map(f => [f, f.toLocaleUpperCase()])
 )
