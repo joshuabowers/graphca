@@ -66,4 +66,14 @@ describe(Complex, () => {
       expect(r).toEqual(new Complex(0.5609756097560976, 0.04878048780487805))
     })
   })
+
+  describe(Complex.prototype.raise, () => {
+
+  })
+
+  describe(Complex.prototype.negate, () => {
+    it('calculates (-1) * (a + bi)', () => {
+      expect(new Complex(2, 3).negate()).toEqual(new Complex(-2, -3))
+    })
+  })
 })

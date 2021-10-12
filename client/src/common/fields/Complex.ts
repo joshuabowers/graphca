@@ -1,10 +1,14 @@
+import { Field } from "./Field";
 import { Unicode } from "../MathSymbols";
 
-export class Complex {
+export class Complex extends Field<Complex> {
+  static NaN = new Complex(Number.NaN)
+
   a: number;
   b: number;
 
   constructor(a: number, b: number = 0) {
+    super()
     this.a = a;
     this.b = b;
   }
@@ -43,5 +47,53 @@ export class Complex {
       (this.a * that.a + that.b * this.b) / divisor, 
       (that.a * this.b - this.a * that.b) / divisor
     )
+  }
+
+  raise(that: Complex) {
+    return Complex.NaN
+  }
+
+  negate() {
+    return new Complex(-this.a, -this.b)
+  }
+
+  cos() {
+    return Complex.NaN
+  }
+
+  sin() {
+    return Complex.NaN
+  }
+
+  tan() {
+    return Complex.NaN
+  }
+
+  acos() {
+    return Complex.NaN
+  }
+
+  asin() {
+    return Complex.NaN
+  }
+
+  atan() {
+    return Complex.NaN
+  }
+
+  lg() {
+    return Complex.NaN
+  }
+
+  ln() {
+    return Complex.NaN
+  }
+
+  log() {
+    return Complex.NaN
+  }
+
+  factorial() {
+    return Complex.NaN
   }
 }
