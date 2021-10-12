@@ -1,6 +1,13 @@
 import { Field } from "./Field";
 import { Unicode } from "../MathSymbols";
 
+const nIfNot1 = (n: number, sign: boolean = false) => {
+  return ((n === 1 || n === -1)
+    ? (
+      (sign && n === -1) ? '-' : undefined
+    ): n)
+}
+
 export class Complex extends Field<Complex> {
   static NaN = new Complex(Number.NaN)
 
@@ -17,10 +24,10 @@ export class Complex extends Field<Complex> {
     const result: any[] = [];
     if(this.a != 0) result.push(this.a)
     if(result.length > 0){
-      if(this.b < 0 ) result.push(' - ', Math.abs(this.b), Unicode.i)
-      else if(this.b > 0) result.push(' + ', this.b, Unicode.i)
+      if(this.b < 0 ) result.push(' - ', nIfNot1(Math.abs(this.b)), Unicode.i)
+      else if(this.b > 0) result.push(' + ', nIfNot1(this.b), Unicode.i)
     } else {
-      if(this.b != 0) result.push(this.b, Unicode.i)
+      if(this.b != 0) result.push(nIfNot1(this.b, true), Unicode.i)
       else result.push(0)
     }
     return result.join('');

@@ -7,6 +7,14 @@ describe(Complex, () => {
       expect(new Complex(5, 0).toString()).toEqual('5')
     })
 
+    it('shows the singleton imaginary without multiplicative constant', () => {
+      expect(new Complex(0, 1).toString()).toEqual(Unicode.i)
+    })
+
+    it('shows the singleton imaginary in mixed without multiplicative', () => {
+      expect(new Complex(2, -1).toString()).toEqual(`2 - ${Unicode.i}`)
+    })
+
     it('shows on the imaginary part for pure imaginaries', () => {
       expect(new Complex(0, 5).toString()).toEqual(`5${Unicode.i}`)
     })

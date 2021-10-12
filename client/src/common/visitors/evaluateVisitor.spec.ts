@@ -2,16 +2,31 @@ import { evaluateVisitor } from "./evaluateVisitor";
 import { parser } from "../parser";
 import { Node } from 'pegase'
 import { Unicode } from "../MathSymbols";
+import { Complex } from "../fields/Complex";
+import { Field } from "../fields/Field";
 
 const apply = (input: string) => parser.value(input, {visit: evaluateVisitor})
 const num = (val: string) => ({'$label': 'NUMBER', 'value': val})
+const complex = (val: string) => ({'$label': 'COMPLEX', 'value': val})
 const variable = (name: string) => ({'$label': 'VARIABLE', 'name': name})
 
+const expectField = <T extends Field<T>>(input: string, label: string, value: T) => {
+  const output = apply(input)
+  expect(output.$label).toEqual(label)
+  expect(output.evaluated).toEqual(value)
+  expect(output.value).toEqual(value.toString())
+}
+
+// TODO: Rewrite for Real
 const expectNumber = (input: string, value: number) => {
   const output = apply(input)
   expect(output.$label).toEqual('NUMBER')
   expect(output.evaluated).toEqual(value)
   expect(output.value).toEqual(value.toString())
+}
+
+const expectComplex = (input: string, value: Complex) => {
+  expectField(input, 'COMPLEX', value)
 }
 
 describe('evaluateVisitor', () => {
@@ -32,6 +47,14 @@ describe('evaluateVisitor', () => {
   })
 
   describe('without variables', () => {
+    it('approximates e', () => {
+      expectNumber(Unicode.e, Math.E)
+    })
+
+    it('represents i as a complex', () => {
+      expectComplex(Unicode.i, new Complex(0, 1))
+    })
+
     it('approximates pi', () => {
       expectNumber(Unicode.pi, Math.PI)
     })

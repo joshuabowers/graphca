@@ -29,6 +29,16 @@ describe('parser', () => {
     expect(parser.value(input)).toMatchObject(num(input))
   })
 
+  it('matches i', () => {
+    const input = Unicode.i
+    expect(parser.value(input)).toMatchObject({'$label': 'I'})
+  })
+
+  it('matches e', () => {
+    const input = Unicode.e
+    expect(parser.value(input)).toMatchObject({'$label': 'E'})
+  })
+
   it('matches pi', () => {
     const input = Unicode.pi
     expect(parser.value(input)).toMatchObject({'$label': 'PI'})

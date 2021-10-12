@@ -4,6 +4,7 @@ import { shallow, mount, render } from 'enzyme';
 import { MathSymbols, Unicode } from '../../MathSymbols';
 import { parser } from '../../parser';
 import { componentVisitor } from '.';
+import { Complex } from '../../fields/Complex';
 
 const apply = (input: string) => parser.value(input, {visit: componentVisitor})
 const expectMarkup = (input: string, className: string, expected?: string) => {
@@ -13,8 +14,29 @@ const expectMarkup = (input: string, className: string, expected?: string) => {
 }
 
 describe('componentVisitor', () => {
+  describe('complex numbers', () => {
+    it('renders the singleton imaginary', () => {
+      expectMarkup(Unicode.i, '.complex')
+    })
+
+    // TODO: need to integrate Fields into evaluateVisitor...
+    it.todo('renders multiplicative imagineries')
+
+    // it('renders multiplicative imaginaries', () => {
+    //   expectMarkup(`3 * ${Unicode.i}`, '.complex', new Complex(0, 3).toString())
+    // })
+  })
+
   it('renders numbers', () => {
     expectMarkup('1024', '.number')
+  })
+
+  it('renders e', () => {
+    expectMarkup(Unicode.e, '.number')
+  })
+
+  it('renders i', () => {
+    expectMarkup(Unicode.i, '.complex')
   })
 
   it('renders pi', () => {

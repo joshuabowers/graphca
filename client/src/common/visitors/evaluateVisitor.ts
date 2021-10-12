@@ -1,12 +1,19 @@
 import { Visitor, Node, $visit, $node, $fail } from 'pegase';
+import { Complex } from '../fields/Complex';
 
 type EvaluateFunction = (a: number, b: number) => number
 type EvaluateNumber = (n: number) => number
 type CalculateFunction = () => number
+type CalculateComplex = () => Complex
 
 const numberNode = (evaluate: CalculateFunction) => {
   const evaluated = evaluate(), value = evaluated.toString();
   return $node('NUMBER', {value, evaluated})
+}
+
+const complexNode = (evaluate:  CalculateComplex) => {
+  const evaluated = evaluate(), value = evaluated.toString();
+  return $node('COMPLEX', {value, evaluated})
 }
 
 const binaryEval = (node: Node, evaluate: EvaluateFunction): Node => {
@@ -40,6 +47,8 @@ export const evaluateVisitor: Visitor<Node> = {
     return node;
   },
   VARIABLE: (node) => node,
+  I: (node) => complexNode(() => new Complex(0, 1)),
+  E: (node) => numberNode(() => Math.E),
   PI: (node) => numberNode(() => Math.PI),
   INFINITY: (node) => numberNode(() => Number.POSITIVE_INFINITY),
   PLUS: (node) => binaryEval(node, (a,b) => a + b),

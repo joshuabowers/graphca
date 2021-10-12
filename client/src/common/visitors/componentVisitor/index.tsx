@@ -23,6 +23,9 @@ const specialNumbers = new Map([
 export const componentVisitor: Visitor<JSX.Element> = {
   NUMBER: (node) => <span className={styles.number}>{specialNumbers.get(node.value) ?? node.value}</span>,
   VARIABLE: (node) => <span className={styles.variable}>{node.name}</span>,
+  E: (node) => <span className={styles.number}>{Unicode.e}</span>,
+  I: (node) => <span className={styles.complex}>{Unicode.i}</span>,
+  COMPLEX: (node) => <span className={styles.complex}>{node.value}</span>,
   PI: (node) => <span className={styles.number}>{Unicode.pi}</span>,
   INFINITY: (node) => <span className={styles.number}>{Unicode.infinity}</span>,
   PLUS: (node) => binaryOp(node, '+'),
