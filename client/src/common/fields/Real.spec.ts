@@ -142,6 +142,12 @@ describe(Real, () => {
     })
   })
 
+  describe(Real.prototype.abs, () => {
+    it('provides the positive magnitude of the real', () => {
+      expect(new Real(-10).abs()).toEqual(new Real(10))
+    })
+  })
+
   describe('As a field', () => {
     it('still works', () => {
       const f: Field<any> = new Real(2), s: Field<any> = new Real(3);

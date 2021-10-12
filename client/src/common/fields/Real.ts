@@ -84,4 +84,8 @@ export class Real extends Field<Real> {
     else if(this.value === 0){ return new Real(1) }
     return this.multiply(new Real(this.value - 1).factorial())
   }
+
+  abs() {
+    return new Real(Math.abs(this.value))
+  }
 }

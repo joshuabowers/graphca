@@ -76,4 +76,34 @@ describe(Complex, () => {
       expect(new Complex(2, 3).negate()).toEqual(new Complex(-2, -3))
     })
   })
+
+  describe(Complex.prototype.lg, () => {
+    it('calculates the principle value of the complex logarithm divided by ln(2)', () => {
+      const r = new Complex(0, -3).lg()
+      expect(r.a).toBeCloseTo(Math.log(3) / Math.log(2), 5)
+      expect(r.b).toBeCloseTo((Math.PI / -2) / Math.log(2), 5)
+    })
+  })
+
+  describe(Complex.prototype.ln, () => {
+    it('calculates the principle value of the complex', () => {
+      const r = new Complex(0, -3).ln()
+      expect(r.a).toBeCloseTo(Math.log(3), 5)
+      expect(r.b).toBeCloseTo(Math.PI / -2, 5)
+    })
+  })
+
+  describe(Complex.prototype.log, () => {
+    it('calculates the principle value of the complex logarithm divided by ln(10)', () => {
+      const r = new Complex(0, -3).log()
+      expect(r.a).toBeCloseTo(Math.log(3) / Math.log(10), 5)
+      expect(r.b).toBeCloseTo((Math.PI / -2) / Math.log(10), 5)
+    })
+  })
+
+  describe(Complex.prototype.abs, () => {
+    it('calculates the magnitude of the real and imaginary part', () => {
+      expect(new Complex(2, 3).abs().a).toBeCloseTo(Math.sqrt(13), 5)
+    })
+  })
 })

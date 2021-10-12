@@ -16,4 +16,5 @@ export abstract class Field<T extends Field<T>> {
   abstract ln(): T
   abstract log(): T
   abstract factorial(): T
+  abstract abs(): T
 }

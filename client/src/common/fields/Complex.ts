@@ -82,18 +82,30 @@ export class Complex extends Field<Complex> {
   }
 
   lg() {
-    return Complex.NaN
+    return this.ln().divide(new Complex(Math.log(2)))
   }
 
+  /**
+   * Represents a non-periodic evaluation of the complex logarithm.
+   * Specifically does not glue all branches together.
+   * @returns The principle value of the logarithm, defined within (-pi, pi]
+   */
   ln() {
-    return Complex.NaN
+    return new Complex(
+      Math.log(this.abs().a),
+      Math.atan2(this.b, this.a)
+    )
   }
 
   log() {
-    return Complex.NaN
+    return this.ln().divide(new Complex(Math.log(10)))
   }
 
   factorial() {
     return Complex.NaN
+  }
+
+  abs() {
+    return new Complex(Math.hypot(this.a, this.b))
   }
 }
