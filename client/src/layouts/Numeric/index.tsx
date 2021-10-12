@@ -15,11 +15,11 @@ const numberKeys = [
   ['4', '', 'T'],
   ['5', '', 'U'],
   ['6', '', 'V'],
-  ['1', '', 'X'],
-  ['2', '', 'Y'],
-  ['3', '', 'Z'],
+  ['1', Unicode.i, 'X'],
+  ['2', Unicode.e, 'Y'],
+  ['3', Unicode.pi, 'Z'],
   ['0', Unicode.infinity, Unicode.space],
-  ['.', Unicode.i, ':'],
+  ['.', '', ':'],
   [Unicode.plusMinus, `|${Unicode.x}|`, '']
 ]
 

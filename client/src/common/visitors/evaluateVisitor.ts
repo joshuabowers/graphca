@@ -54,8 +54,8 @@ export const evaluateVisitor: Visitor<Node> = {
   ACOS: (node) => applyFunction(node, n => Math.acos(n)),
   ASIN: (node) => applyFunction(node, n => Math.asin(n)),
   ATAN: (node) => applyFunction(node, n => Math.atan(n)),
-  LG: (node) => applyFunction(node, n => Math.log2(n)),
+  LB: (node) => applyFunction(node, n => Math.log2(n)),
   LN: (node) => applyFunction(node, n => Math.log(n)),
-  LOG: (node) => applyFunction(node, n => Math.log10(n)),
+  LG: (node) => applyFunction(node, n => Math.log10(n)),
   FACTORIAL: (node) => applyFunction(node, n => factorial(n))
 }

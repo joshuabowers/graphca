@@ -92,8 +92,8 @@ describe('evaluateVisitor', () => {
     // TODO: revisit this once E is implemented
     // TODO: Implement configuration precision?
     it('evaluates logarithmic functions', () => {
-      expectNumber('log(1000)', 3)
-      expectNumber('lg(1024)', 10)
+      expectNumber('lg(1000)', 3)
+      expectNumber('lb(1024)', 10)
       expectNumber('ln(10)', 2.302585092994046)
     })
 

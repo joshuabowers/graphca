@@ -11,7 +11,7 @@ const operators = new Map([
 const functions = [
   'sin', 'cos', 'tan', 
   'asin', 'acos', 'atan', 
-  'lg', 'ln', 'log'
+  'lb', 'ln', 'lg'
 ]
 const callableNodes = new Map(
   functions.map(f => [f, f.toLocaleUpperCase()])

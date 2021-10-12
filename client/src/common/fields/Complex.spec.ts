@@ -77,9 +77,9 @@ describe(Complex, () => {
     })
   })
 
-  describe(Complex.prototype.lg, () => {
+  describe(Complex.prototype.lb, () => {
     it('calculates the principle value of the complex logarithm divided by ln(2)', () => {
-      const r = new Complex(0, -3).lg()
+      const r = new Complex(0, -3).lb()
       expect(r.a).toBeCloseTo(Math.log(3) / Math.log(2), 5)
       expect(r.b).toBeCloseTo((Math.PI / -2) / Math.log(2), 5)
     })
@@ -93,9 +93,9 @@ describe(Complex, () => {
     })
   })
 
-  describe(Complex.prototype.log, () => {
+  describe(Complex.prototype.lg, () => {
     it('calculates the principle value of the complex logarithm divided by ln(10)', () => {
-      const r = new Complex(0, -3).log()
+      const r = new Complex(0, -3).lg()
       expect(r.a).toBeCloseTo(Math.log(3) / Math.log(10), 5)
       expect(r.b).toBeCloseTo((Math.PI / -2) / Math.log(10), 5)
     })

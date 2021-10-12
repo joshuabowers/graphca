@@ -81,7 +81,7 @@ export class Complex extends Field<Complex> {
     return Complex.NaN
   }
 
-  lg() {
+  lb() {
     return this.ln().divide(new Complex(Math.log(2)))
   }
 
@@ -97,7 +97,7 @@ export class Complex extends Field<Complex> {
     )
   }
 
-  log() {
+  lg() {
     return this.ln().divide(new Complex(Math.log(10)))
   }
 

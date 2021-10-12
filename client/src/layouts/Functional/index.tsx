@@ -11,7 +11,7 @@ export const Functional = (args: FunctionalProps) => (
   <KeyGroup layout='rectangular' columns={5} fullWidth>
     <Key
       default={{type:'default', display:functional.variables, activate: createKeyPress('x')}}
-      shift={{type:'shift', display:Unicode.pi, activate: createKeyPress(Unicode.pi)}}
+      shift={{type:'shift', display:''}}
       alpha={{type:'alpha', display:'A', activate: createKeyPress('A')}}
     />
     <Key
@@ -60,18 +60,18 @@ export const Functional = (args: FunctionalProps) => (
       alpha={{type:'alpha', display:'J', activate: createKeyPress('J')}}
     />
     <Key
-      default={{type:'default', display:'lg', activate: createKeyPress('lg(')}}
-      shift={{type:'shift', display:functional.base2, displayHint:'functional'}}
+      default={{type:'default', display:'lb', activate: createKeyPress('lb(')}}
+      shift={{type:'shift', display:''}}
       alpha={{type:'alpha', display:'K', activate: createKeyPress('K')}}
     />
     <Key
       default={{type:'default', display:'ln', activate: createKeyPress('ln(')}}
-      shift={{type:'shift', display:functional.eX, displayHint:'functional'}}
+      shift={{type:'shift', display:''}}
       alpha={{type:'alpha', display:'L', activate: createKeyPress('L')}}
     />
     <Key
-      default={{type:'default', display:'log', activate: createKeyPress('log(')}}
-      shift={{type:'shift', display:functional.base10, displayHint:'functional'}}
+      default={{type:'default', display:'lg', activate: createKeyPress('lg(')}}
+      shift={{type:'shift', display:''}}
       alpha={{type:'alpha', display:'M', activate: createKeyPress('M')}}
     />
     <Key

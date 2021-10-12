@@ -41,8 +41,8 @@ export const componentVisitor: Visitor<JSX.Element> = {
   ASIN: (node) => functional(node, 'arcus'),
   ACOS: (node) => functional(node, 'arcus'),
   ATAN: (node) => functional(node, 'arcus'),
-  LG: (node) => functional(node, 'logarithmic'),
+  LB: (node) => functional(node, 'logarithmic'),
   LN: (node) => functional(node, 'logarithmic'),
-  LOG: (node) => functional(node, 'logarithmic'),
+  LG: (node) => functional(node, 'logarithmic'),
   FACTORIAL: (node) => <span className={styles.factorial}>{$visit(node.expression)}!</span>
 }

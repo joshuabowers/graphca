@@ -63,14 +63,14 @@ describe('componentVisitor', () => {
   })
 
   it('renders logarithmic functions', () => {
-    expectMarkup('lg(x)', '.functional.logarithmic')
+    expectMarkup('lb(x)', '.functional.logarithmic')
     expectMarkup('ln(x)', '.functional.logarithmic')
-    expectMarkup('log(x)', '.functional.logarithmic')
+    expectMarkup('lg(x)', '.functional.logarithmic')
   })
 
   it('renders nested functions', () => {
-    expectMarkup('cos(log(x))', '.functional.trigonometric')
-    expectMarkup('log(cos(x))', '.functional.logarithmic')
+    expectMarkup('cos(lg(x))', '.functional.trigonometric')
+    expectMarkup('lg(cos(x))', '.functional.logarithmic')
   })
 
   it('renders factorials', () => {

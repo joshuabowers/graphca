@@ -67,7 +67,7 @@ export class Real extends Field<Real> {
     return new Real(Math.atan(this.value))
   }
 
-  lg() {
+  lb() {
     return new Real(Math.log2(this.value))
   }
 
@@ -75,7 +75,7 @@ export class Real extends Field<Real> {
     return new Real(Math.log(this.value))
   }
 
-  log() {
+  lg() {
     return new Real(Math.log10(this.value))
   }
 

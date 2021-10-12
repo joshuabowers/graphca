@@ -109,9 +109,9 @@ describe(Real, () => {
     })
   })
 
-  describe(Real.prototype.lg, () => {
+  describe(Real.prototype.lb, () => {
     it('calculates the base-2 logarithm of the real', () => {
-      expect(new Real(1024).lg()).toEqual(new Real(10))
+      expect(new Real(1024).lb()).toEqual(new Real(10))
     })
   })
 
@@ -122,9 +122,9 @@ describe(Real, () => {
     })
   })
 
-  describe(Real.prototype.log, () => {
+  describe(Real.prototype.lg, () => {
     it('calculates the base-10 logarithm of the real', () => {
-      expect(new Real(1000).log()).toEqual(new Real(3))      
+      expect(new Real(1000).lg()).toEqual(new Real(3))      
     })
   })
 
