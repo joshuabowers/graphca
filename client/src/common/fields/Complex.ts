@@ -1,4 +1,4 @@
-import { Unicode } from "./MathSymbols";
+import { Unicode } from "../MathSymbols";
 
 export class Complex {
   a: number;

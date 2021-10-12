@@ -1,5 +1,5 @@
 import { Complex } from './Complex'
-import { Unicode } from './MathSymbols'
+import { Unicode } from '../MathSymbols'
 
 describe(Complex, () => {
   describe(Complex.prototype.toString, () => {
