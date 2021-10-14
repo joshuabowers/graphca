@@ -55,6 +55,18 @@ export class Real extends Field<Real> {
     return new Real(Math.tan(this.value))
   }
 
+  cosh() {
+    return new Real(Math.cosh(this.value))
+  }
+
+  sinh() {
+    return new Real(Math.sinh(this.value))
+  }
+
+  tanh() {
+    return new Real(Math.tanh(this.value))
+  }
+
   acos() {
     return new Real(Math.acos(this.value))
   }
@@ -65,6 +77,18 @@ export class Real extends Field<Real> {
 
   atan() {
     return new Real(Math.atan(this.value))
+  }
+
+  acosh() {
+    return new Real(Math.acosh(this.value))
+  }
+
+  asinh() {
+    return new Real(Math.asinh(this.value))
+  }
+
+  atanh() {
+    return new Real(Math.atanh(this.value))
   }
 
   lb() {

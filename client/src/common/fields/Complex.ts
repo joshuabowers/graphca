@@ -22,12 +22,12 @@ export class Complex extends Field<Complex> {
 
   toString() {
     const result: any[] = [];
-    if(this.a != 0) result.push(this.a)
+    if(this.a !== 0) result.push(this.a)
     if(result.length > 0){
       if(this.b < 0 ) result.push(' - ', nIfNot1(Math.abs(this.b)), Unicode.i)
       else if(this.b > 0) result.push(' + ', nIfNot1(this.b), Unicode.i)
     } else {
-      if(this.b != 0) result.push(nIfNot1(this.b, true), Unicode.i)
+      if(this.b !== 0) result.push(nIfNot1(this.b, true), Unicode.i)
       else result.push(0)
     }
     return result.join('');
@@ -76,6 +76,18 @@ export class Complex extends Field<Complex> {
     return Complex.NaN
   }
 
+  cosh() {
+    return Complex.NaN
+  }
+
+  sinh() {
+    return Complex.NaN
+  }
+
+  tanh() {
+    return Complex.NaN
+  }
+
   acos() {
     return Complex.NaN
   }
@@ -85,6 +97,18 @@ export class Complex extends Field<Complex> {
   }
 
   atan() {
+    return Complex.NaN
+  }
+
+  acosh() {
+    return Complex.NaN
+  }
+
+  asinh() {
+    return Complex.NaN
+  }
+
+  atanh() {
     return Complex.NaN
   }
 

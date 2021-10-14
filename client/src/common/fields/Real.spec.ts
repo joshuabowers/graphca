@@ -90,6 +90,24 @@ describe(Real, () => {
     })
   })
 
+  describe(Real.prototype.cosh, () => {
+    it('calculates the hyperbolic cos on the real', () => {
+      expect(Real.Zero.cosh().value).toBeCloseTo(1, 5)
+    })
+  })
+
+  describe(Real.prototype.sinh, () => {
+    it('calculates the hyperbolic sin on the real', () => {
+      expect(Real.Zero.sinh().value).toBeCloseTo(0, 5)
+    })
+  })
+
+  describe(Real.prototype.tanh, () => {
+    it('calculates the hyperbolic tan on the real', () => {
+      expect(Real.Zero.tanh().value).toBeCloseTo(0, 5)
+    })
+  })
+
   describe(Real.prototype.acos, () => {
     it('calculates the arcus cos of the real', () => {
       expect(new Real(-1).acos().value).toBeCloseTo(Real.PI.value, 5)
@@ -106,6 +124,24 @@ describe(Real, () => {
     it('calculates the arcus tan of the real', () => {
       const quarterPi = Real.PI.divide(new Real(4))
       expect(new Real(1).atan().value).toBeCloseTo(quarterPi.value, 5)
+    })
+  })
+
+  describe(Real.prototype.acosh, () => {
+    it('calculates the area hyperbolic cos on the real', () => {
+      expect(new Real(1).acosh().value).toBeCloseTo(0, 5)
+    })
+  })
+
+  describe(Real.prototype.asinh, () => {
+    it('calculates the area hyperbolic sin on the real', () => {
+      expect(new Real(0).asinh().value).toBeCloseTo(0, 5)
+    })
+  })
+
+  describe(Real.prototype.atanh, () => {
+    it('calculates the area hyperbolic tan on the real', () => {
+      expect(new Real(0).atanh().value).toBeCloseTo(0, 5)
     })
   })
 

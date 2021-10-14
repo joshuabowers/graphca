@@ -9,9 +9,15 @@ export abstract class Field<T extends Field<T>> {
   abstract cos(): T
   abstract sin(): T
   abstract tan(): T
+  abstract cosh(): T
+  abstract sinh(): T
+  abstract tanh(): T
   abstract acos(): T
   abstract asin(): T
   abstract atan(): T
+  abstract acosh(): T
+  abstract asinh(): T
+  abstract atanh(): T
   abstract lb(): T
   abstract ln(): T
   abstract lg(): T

@@ -76,13 +76,61 @@ describe(Complex, () => {
   })
 
   describe(Complex.prototype.raise, () => {
-
+    it.todo('calculates the value of raising one complex to another')
   })
 
   describe(Complex.prototype.negate, () => {
     it('calculates (-1) * (a + bi)', () => {
       expect(new Complex(2, 3).negate()).toEqual(new Complex(-2, -3))
     })
+  })
+
+  describe(Complex.prototype.cos, () => {
+    it.todo('calculates the complex trigonometric cos')
+  })
+
+  describe(Complex.prototype.sin, () => {
+    it.todo('calculates the complex trigonometric sin')
+  })
+
+  describe(Complex.prototype.tan, () => {
+    it.todo('calculates the complex trigonometric tan')
+  })
+
+  describe(Complex.prototype.cosh, () => {
+    it.todo('calculates the complex hyperbolic cos')
+  })
+
+  describe(Complex.prototype.sinh, () => {
+    it.todo('calculates the complex hyperbolic sin')
+  })
+
+  describe(Complex.prototype.tanh, () => {
+    it.todo('calculates the complex hyperbolic tan')
+  })
+
+  describe(Complex.prototype.acos, () => {
+    it.todo('calculates the complex arcus cos')
+  })
+
+  describe(Complex.prototype.asin, () => {
+    it.todo('calculates the complex arcus sin')
+  })
+
+  describe(Complex.prototype.atan, () => {
+    it.todo('calculates the complex arcus tan')
+  })
+
+  describe(Complex.prototype.acosh, () => {
+    it.todo('calculates the complex area hyperbolic cos')
+  })
+
+  describe(Complex.prototype.asinh, () => {
+    it.todo('calculates the complex area hyperbolic sin')
+  })
+
+  describe(Complex.prototype.atanh, () => {
+    it.todo('calculates the complex area hyperbolic tan')
   })
 
   describe(Complex.prototype.lb, () => {
