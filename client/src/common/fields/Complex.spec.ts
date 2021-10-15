@@ -140,15 +140,31 @@ describe(Complex, () => {
   })
 
   describe(Complex.prototype.cosh, () => {
-    it.todo('calculates the complex hyperbolic cos')
+    it('calculates the complex hyperbolic cos', () => {
+      const z = new Complex(2, 3)
+      const r = z.cosh()
+      expect(r.a).toBeCloseTo(Math.cosh(2) * Math.cos(3), 5)
+      expect(r.b).toBeCloseTo(Math.sinh(2) * Math.sin(3), 5)
+    })
   })
 
   describe(Complex.prototype.sinh, () => {
-    it.todo('calculates the complex hyperbolic sin')
+    it('calculates the complex hyperbolic sin', () => {
+      const z = new Complex(2, 3)
+      const r = z.sinh()
+      expect(r.a).toBeCloseTo(Math.sinh(2) * Math.cos(3), 5)
+      expect(r.b).toBeCloseTo(Math.cosh(2) * Math.sin(3), 5)
+    })
   })
 
   describe(Complex.prototype.tanh, () => {
-    it.todo('calculates the complex hyperbolic tan')
+    it('calculates the complex hyperbolic tan', () => {
+      const z = new Complex(2, 3)
+      const r = z.tanh()
+      const d = Math.cosh(4) + Math.cos(6)
+      expect(r.a).toBeCloseTo(Math.sinh(4) / d, 5)
+      expect(r.b).toBeCloseTo(Math.sin(6) / d, 5)
+    })
   })
 
   describe(Complex.prototype.acos, () => {

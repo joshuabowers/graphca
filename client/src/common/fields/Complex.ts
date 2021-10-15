@@ -108,15 +108,25 @@ export class Complex extends Field<Complex> {
   }
 
   cosh() {
-    return Complex.NaN
+    return new Complex(
+      Math.cosh(this.a) * Math.cos(this.b),
+      Math.sinh(this.a) * Math.sin(this.b)
+    )
   }
 
   sinh() {
-    return Complex.NaN
+    return new Complex(
+      Math.sinh(this.a) * Math.cos(this.b),
+      Math.cosh(this.a) * Math.sin(this.b)
+    )
   }
 
   tanh() {
-    return Complex.NaN
+    const divisor = Math.cosh(2 * this.a) + Math.cos(2 * this.b)
+    return new Complex(
+      Math.sinh(2 * this.a) / divisor,
+      Math.sin(2 * this.b) / divisor
+    )
   }
 
   acos() {
