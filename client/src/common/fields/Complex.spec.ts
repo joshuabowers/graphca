@@ -167,28 +167,63 @@ describe(Complex, () => {
     })
   })
 
+  // NOTE: for the complex arcus functions, the implementations are done
+  // in terms of mathematical functions on the complex number as a
+  // discrete entity, not as mathematical operations on the components
+  // of that complex number. So, the expected values represent calculated
+  // values found elsewhere for comparison.
   describe(Complex.prototype.acos, () => {
-    it.todo('calculates the complex arcus cos')
+    it('calculates the complex arcus cos', () => {
+      const z = new Complex(2, 3)
+      const r = z.acos()
+      expect(r.a).toBeCloseTo(1.000144, 6)
+      expect(r.b).toBeCloseTo(-1.983387, 6)
+    })
   })
 
   describe(Complex.prototype.asin, () => {
-    it.todo('calculates the complex arcus sin')
+    it('calculates the complex arcus sin', () => {
+      const z = new Complex(2, 3)
+      const r = z.asin()
+      expect(r.a).toBeCloseTo(0.570653, 6)
+      expect(r.b).toBeCloseTo(1.983387, 6)
+    })
   })
 
   describe(Complex.prototype.atan, () => {
-    it.todo('calculates the complex arcus tan')
+    it('calculates the complex arcus tan', () => {
+      const z = new Complex(2, 3)
+      const r = z.atan()
+      expect(r.a).toBeCloseTo(1.409921, 6)
+      expect(r.b).toBeCloseTo(0.229073, 6)
+    })
   })
 
   describe(Complex.prototype.acosh, () => {
-    it.todo('calculates the complex area hyperbolic cos')
+    it('calculates the complex area hyperbolic cos', () => {
+      const z = new Complex(2, 3)
+      const r = z.acosh()
+      expect(r.a).toBeCloseTo(1.983387, 6)
+      expect(r.b).toBeCloseTo(1.000144, 6)
+    })
   })
 
   describe(Complex.prototype.asinh, () => {
-    it.todo('calculates the complex area hyperbolic sin')
+    it('calculates the complex area hyperbolic sin', () => {
+      const z = new Complex(2, 3)
+      const r = z.asinh()
+      expect(r.a).toBeCloseTo(1.968638, 6)
+      expect(r.b).toBeCloseTo(0.964659, 6)
+    })
   })
 
   describe(Complex.prototype.atanh, () => {
-    it.todo('calculates the complex area hyperbolic tan')
+    it('calculates the complex area hyperbolic tan', () => {
+      const z = new Complex(2, 3)
+      const r = z.atanh()
+      expect(r.a).toBeCloseTo(0.146947, 6)
+      expect(r.b).toBeCloseTo(1.338973, 6)
+    })
   })
 
   describe(Complex.prototype.lb, () => {
@@ -213,6 +248,10 @@ describe(Complex, () => {
       expect(r.a).toBeCloseTo(Math.log(3) / Math.log(10), 5)
       expect(r.b).toBeCloseTo((Math.PI / -2) / Math.log(10), 5)
     })
+  })
+
+  describe(Complex.prototype.factorial, () => {
+    it.todo('calculates the complex factorial in terms of the gamma function')
   })
 
   describe(Complex.prototype.abs, () => {

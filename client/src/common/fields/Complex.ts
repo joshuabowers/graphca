@@ -10,6 +10,8 @@ const nIfNot1 = (n: number, sign: boolean = false) => {
 
 export class Complex extends Field<Complex> {
   static NaN = new Complex(Number.NaN)
+  static i = new Complex(0, 1)
+  static One = new Complex(1, 0)
 
   a: number;
   b: number;
@@ -130,27 +132,44 @@ export class Complex extends Field<Complex> {
   }
 
   acos() {
-    return Complex.NaN
+    return new Complex(Math.PI / 2).subtract(this.asin())
   }
 
   asin() {
-    return Complex.NaN
+    const iz = Complex.i.multiply(this)
+    const diffSquares = new Complex(1).subtract(this.raise(new Complex(2)))
+    const sqrt = diffSquares.raise(new Complex(0.5, 0))
+    return Complex.i.multiply(sqrt.subtract(iz).ln())
   }
 
   atan() {
-    return Complex.NaN
+    const ni2 = new Complex(0, -0.5)
+    const inz = Complex.i.subtract(this)
+    const ipz = Complex.i.add(this)
+    const ratio = inz.divide(ipz)
+    return ni2.multiply(ratio.ln())
   }
 
   acosh() {
-    return Complex.NaN
+    return this.add(
+      this.add(Complex.One).raise(new Complex(0.5)).multiply(
+        this.subtract(Complex.One).raise(new Complex(0.5))
+      )
+    ).ln()
   }
 
   asinh() {
-    return Complex.NaN
+    const z2p1 = this.raise(new Complex(2)).add(Complex.One)
+    const sqrt = z2p1.raise(new Complex(0.5))
+    const zps = this.add(sqrt)
+    return zps.ln()
   }
 
   atanh() {
-    return Complex.NaN
+    const h = new Complex(0.5)
+    const n = Complex.One.add(this)
+    const d = Complex.One.subtract(this)
+    return h.multiply(n.divide(d).ln())
   }
 
   lb() {
