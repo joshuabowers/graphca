@@ -76,7 +76,36 @@ describe(Complex, () => {
   })
 
   describe(Complex.prototype.raise, () => {
-    it.todo('calculates the value of raising one complex to another')
+    it('calculates the value of raising one complex to another', () => {
+      const z = new Complex(0, 1), w = new Complex(0, 1)
+      const r = z.raise(w)
+      expect(r.a).toBeCloseTo(0.2079, 4)
+      expect(r.b).toBeCloseTo(0, 0)
+    })
+
+    it('calculates the value of raising a real to a complex number', () => {
+      const z = new Complex(-2, 0), w = new Complex(3, 4)
+      const r = z.raise(w)
+      const m = (-2)**3*Math.exp(-4*Math.PI)
+      expect(r.a).toBeCloseTo(m * Math.cos(4 * Math.log(2)), 5)
+      expect(r.b).toBeCloseTo(m * Math.sin(4 * Math.log(2)), 5)
+    })
+
+    it('calculates the value of raising a complex number to a real', () => {
+      const z = new Complex(2, 3), w = new Complex(2, 0)
+      const r = z.raise(w)
+      const m = z.modulus() ** 2, arg = z.argument()
+      expect(r.a).toBeCloseTo(m * Math.cos(2 * arg), 5)
+      expect(r.b).toBeCloseTo(m * Math.sin(2 * arg), 5)
+    })
+
+    it('calculates the complex square root', () => {
+      const z = new Complex(2, 3), w = new Complex(0.5, 0)
+      const r = z.raise(w)
+      const m = z.modulus() ** 0.5, arg = z.argument()
+      expect(r.a).toBeCloseTo(m * Math.cos(0.5 * arg), 5)
+      expect(r.b).toBeCloseTo(m * Math.sin(0.5 * arg), 5)
+    })
   })
 
   describe(Complex.prototype.negate, () => {
@@ -86,15 +115,28 @@ describe(Complex, () => {
   })
 
   describe(Complex.prototype.cos, () => {
-    it.todo('calculates the complex trigonometric cos')
+    it('calculates the complex trigonometric cos', () => {
+      const r = new Complex(2, 3).cos()
+      expect(r.a).toBeCloseTo(Math.cos(2) * Math.cosh(3), 5)
+      expect(r.b).toBeCloseTo(-Math.sin(2) * Math.sinh(3), 5)
+    })
   })
 
   describe(Complex.prototype.sin, () => {
-    it.todo('calculates the complex trigonometric sin')
+    it('calculates the complex trigonometric sin', () => {
+      const r = new Complex(2, 3).sin()
+      expect(r.a).toBeCloseTo(Math.sin(2) * Math.cosh(3), 5)
+      expect(r.b).toBeCloseTo(Math.cos(2) * Math.sinh(3), 5)
+    })
   })
 
   describe(Complex.prototype.tan, () => {
-    it.todo('calculates the complex trigonometric tan')
+    it('calculates the complex trigonometric tan', () => {
+      const r = new Complex(2, 3).tan()
+      const d = Math.cos(4) + Math.cosh(6)
+      expect(r.a).toBeCloseTo(Math.sin(4) / d, 5)
+      expect(r.b).toBeCloseTo(Math.sinh(6) / d, 5)
+    })
   })
 
   describe(Complex.prototype.cosh, () => {

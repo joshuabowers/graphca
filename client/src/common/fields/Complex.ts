@@ -20,6 +20,14 @@ export class Complex extends Field<Complex> {
     this.b = b;
   }
 
+  modulus() {
+    return Math.hypot(this.a, this.b)
+  }
+
+  argument() {
+    return Math.atan2(this.b, this.a)
+  }
+
   toString() {
     const result: any[] = [];
     if(this.a !== 0) result.push(this.a)
@@ -56,8 +64,21 @@ export class Complex extends Field<Complex> {
     )
   }
 
+  /**
+   * Raises the current complex, this, to the power that, such that
+   * this ^ that === e ^ (that * z.log())
+   * @param that The power to raise the complex number to
+   * @returns the principle value of the complex exponentiation, with
+   * the b-value constrained.
+   */
   raise(that: Complex) {
-    return Complex.NaN
+    const p = this.modulus(), arg = this.argument()
+    const dlnp = that.b * Math.log(p), carg = that.a * arg
+    const multiplicand = (p ** that.a) * Math.exp(-that.b * arg)
+    return new Complex(
+      multiplicand * Math.cos(dlnp + carg),
+      multiplicand * Math.sin(dlnp + carg)
+    )
   }
 
   negate() {
@@ -65,15 +86,25 @@ export class Complex extends Field<Complex> {
   }
 
   cos() {
-    return Complex.NaN
+    return new Complex(
+      Math.cos(this.a) * Math.cosh(this.b),
+      -Math.sin(this.a) * Math.sinh(this.b)
+    )
   }
 
   sin() {
-    return Complex.NaN
+    return new Complex(
+      Math.sin(this.a) * Math.cosh(this.b),
+      Math.cos(this.a) * Math.sinh(this.b)
+    )
   }
 
   tan() {
-    return Complex.NaN
+    const divisor = Math.cos(2 * this.a) + Math.cosh(2 * this.b)
+    return new Complex(
+      Math.sin(2 * this.a) / divisor,
+      Math.sinh(2 * this.b) / divisor
+    )
   }
 
   cosh() {
@@ -113,7 +144,7 @@ export class Complex extends Field<Complex> {
   }
 
   lb() {
-    return this.ln().divide(new Complex(Math.log(2)))
+    return this.ln().divide(new Complex(Math.LN2))
   }
 
   /**
@@ -123,13 +154,13 @@ export class Complex extends Field<Complex> {
    */
   ln() {
     return new Complex(
-      Math.log(this.abs().a),
-      Math.atan2(this.b, this.a)
+      Math.log(this.modulus()),
+      this.argument()
     )
   }
 
   lg() {
-    return this.ln().divide(new Complex(Math.log(10)))
+    return this.ln().divide(new Complex(Math.LN10))
   }
 
   factorial() {
@@ -137,6 +168,6 @@ export class Complex extends Field<Complex> {
   }
 
   abs() {
-    return new Complex(Math.hypot(this.a, this.b))
+    return new Complex(this.modulus())
   }
 }
