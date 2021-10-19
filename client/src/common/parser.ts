@@ -63,8 +63,8 @@ grouping:
 | factor
 
 factor:
+| <value>(number?) i => 'I'
 | <value>number => 'NUMBER'
-| i => 'I'
 | e => 'E'
 | pi => 'PI'
 | infinity => 'INFINITY'

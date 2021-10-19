@@ -34,6 +34,14 @@ describe('parser', () => {
     expect(parser.value(input)).toMatchObject({'$label': 'I'})
   })
 
+  it('matches multiples of i', () => {
+    const input = `2.5${Unicode.i}`
+    expect(parser.value(input)).toMatchObject({
+      '$label': 'I',
+      'value': '2.5'
+    })
+  })
+
   it('matches e', () => {
     const input = Unicode.e
     expect(parser.value(input)).toMatchObject({'$label': 'E'})
