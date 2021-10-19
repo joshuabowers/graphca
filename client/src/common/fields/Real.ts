@@ -112,4 +112,12 @@ export class Real extends Field<Real> {
   abs() {
     return new Real(Math.abs(this.value))
   }
+
+  cast(value: number) {
+    return new Real(value)
+  }
+
+  lt(that: Real) {
+    return this.value < that.value
+  }
 }

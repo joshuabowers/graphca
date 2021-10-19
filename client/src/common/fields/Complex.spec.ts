@@ -259,4 +259,41 @@ describe(Complex, () => {
       expect(new Complex(2, 3).abs().a).toBeCloseTo(Math.sqrt(13), 5)
     })
   })
+
+  describe(Complex.prototype.cast, () => {
+    it('converts a Number into a Complex', () => {
+      const n = 5.5
+      const r = Complex.i.cast(n)
+      expect(r.a).toEqual(n)
+      expect(r.b).toEqual(0)
+    })
+  })
+
+  describe(Complex.prototype.lt, () => {
+    it('is true if this is less than that', () => {
+      const a = new Complex(2), b = new Complex(3)
+      expect(a.lt(b)).toBe(true)
+    })
+
+    it('is false if this is greater than that', () => {
+      const a = new Complex(3), b = new Complex(2)
+      expect(a.lt(b)).toBe(false)
+    })
+  })
+
+  describe(Complex.prototype.gamma, () => {
+    it('calculates the gamma function for complex numbers', () => {
+      const z = new Complex(2, 3)
+      const r = z.gamma()
+      expect(r.a).toBeCloseTo(-0.08239527, 8)
+      expect(r.b).toBeCloseTo(0.09177429, 8)
+    })
+
+    it('handles negative imaginary numbers', () => {
+      const z = new Complex(1, -1)
+      const r = z.gamma()
+      expect(r.a).toBeCloseTo(0.498, 3)
+      expect(r.b).toBeCloseTo(0.155, 3)
+    })
+  })
 })

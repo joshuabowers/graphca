@@ -199,4 +199,18 @@ export class Complex extends Field<Complex> {
   abs() {
     return new Complex(this.modulus())
   }
+
+  cast(value: number) {
+    return new Complex(value, 0)
+  }
+
+  /**
+   * Note, this only compares the real part of the complex number.
+   * This might need to change to consider the value of abs().
+   * @param that a Complex to compare against
+   * @returns true if this is less than than
+   */
+  lt(that: Complex) {
+    return this.a < that.a
+  }
 }

@@ -184,6 +184,43 @@ describe(Real, () => {
     })
   })
 
+  describe(Real.prototype.cast, () => {
+    it('converts a Number into a Real', () => {
+      const n = 5.5, r = Real.Zero;
+      expect(r.cast(5.5).value).toEqual(n)
+    })
+  })
+
+  describe(Real.prototype.lt, () => {
+    it('is true if this is less than that', () => {
+      const a = new Real(2), b = new Real(3)
+      expect(a.lt(b)).toBe(true)
+    })
+
+    it('is false if this is greater than that', () => {
+      const a = new Real(3), b = new Real(2)
+      expect(a.lt(b)).toBe(false)
+    })
+  })
+
+  describe(Real.prototype.gamma, () => {
+    it('calculates (n-1)! for positive integers', () => {
+      expect(new Real(5).gamma().value).toBeCloseTo(24, 8)
+    })
+
+    it.todo('is undefined for non-positive integers', () => {
+      expect(new Real(-5).gamma().value).toBeUndefined()
+    })
+
+    it('calculates the gamma function for real values', () => {
+      expect(new Real(5.5).gamma().value).toBeCloseTo(52.34277778, 8)
+    })
+
+    it('calculates values lower than 0.5 via reflection', () => {
+      expect(new Real(0.25).gamma().value).toBeCloseTo(3.62560991, 8)
+    })
+  })
+
   describe('As a field', () => {
     it('still works', () => {
       const f: Field<any> = new Real(2), s: Field<any> = new Real(3);
