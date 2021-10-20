@@ -108,6 +108,18 @@ describe('evaluateVisitor', () => {
       expectReal('atan(0)', new Real(0))
     })
 
+    it('evaluates hyperbolic functions', () => {
+      expectReal('cosh(0)', new Real(1))
+      expectReal('sinh(0)', new Real(0))
+      expectReal('tanh(0)', new Real(0))
+    })
+
+    it('evaluates area hyperbolic functions', () => {
+      expectReal('acosh(0)', Real.NaN)
+      expectReal('asinh(0)', new Real(0))
+      expectReal('atanh(0)', new Real(0))
+    })
+
     // TODO: revisit this once E is implemented
     // TODO: Implement configuration precision?
     it('evaluates logarithmic functions', () => {

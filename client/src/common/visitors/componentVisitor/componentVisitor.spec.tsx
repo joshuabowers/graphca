@@ -81,6 +81,18 @@ describe('componentVisitor', () => {
     expectMarkup('atan(x)', '.functional.arcus')
   })
 
+  it('renders hyperbolic functions', () => {
+    expectMarkup('cosh(x)', '.functional.hyperbolic')
+    expectMarkup('sinh(x)', '.functional.hyperbolic')
+    expectMarkup('tanh(x)', '.functional.hyperbolic')
+  })
+
+  it('renders area hyperbolic functions', () => {
+    expectMarkup('acosh(x)', '.functional.arHyperbolic')
+    expectMarkup('asinh(x)', '.functional.arHyperbolic')
+    expectMarkup('atanh(x)', '.functional.arHyperbolic')
+  })
+
   it('renders logarithmic functions', () => {
     expectMarkup('lb(x)', '.functional.logarithmic')
     expectMarkup('ln(x)', '.functional.logarithmic')

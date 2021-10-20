@@ -167,6 +167,36 @@ describe('parser', () => {
     })
   })
 
+  it('matches hyperbolic functions', () => {
+    expect(parser.value('cosh(x)')).toMatchObject({
+      '$label': 'COSH',
+      'expression': variable('x')
+    })
+    expect(parser.value('sinh(x)')).toMatchObject({
+      '$label': 'SINH',
+      'expression': variable('x')
+    })
+    expect(parser.value('tanh(x)')).toMatchObject({
+      '$label': 'TANH',
+      'expression': variable('x')
+    })
+  })
+
+  it('matches area hyperbolic functions', () => {
+    expect(parser.value('acosh(x)')).toMatchObject({
+      '$label': 'ACOSH',
+      'expression': variable('x')
+    })
+    expect(parser.value('asinh(x)')).toMatchObject({
+      '$label': 'ASINH',
+      'expression': variable('x')
+    })
+    expect(parser.value('atanh(x)')).toMatchObject({
+      '$label': 'ATANH',
+      'expression': variable('x')
+    })
+  })
+
   it('matches negations', () => {
     expect(parser.value('-1')).toMatchObject({
       '$label': 'NEGATE',

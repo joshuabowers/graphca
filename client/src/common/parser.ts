@@ -9,8 +9,10 @@ const operators = new Map([
 ])
 
 const functions = [
-  'sin', 'cos', 'tan', 
+  'asinh', 'acosh', 'atanh',
   'asin', 'acos', 'atan', 
+  'sinh', 'cosh', 'tanh',
+  'sin', 'cos', 'tan', 
   'lb', 'ln', 'lg',
   Unicode.gamma
 ]
