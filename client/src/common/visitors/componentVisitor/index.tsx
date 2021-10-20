@@ -59,5 +59,6 @@ export const componentVisitor: Visitor<JSX.Element> = {
   LN: (node) => functional(node, 'logarithmic'),
   LG: (node) => functional(node, 'logarithmic'),
   GAMMA: (node) => functional(node, 'gamma'),
+  ABS: (node) => functional(node, 'absolute'),
   FACTORIAL: (node) => <span className={styles.factorial}>{$visit(node.expression)}!</span>
 }

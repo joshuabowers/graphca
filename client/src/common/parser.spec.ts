@@ -236,4 +236,11 @@ describe('parser', () => {
       'expression': variable('n')
     })
   })
+
+  it('matches absolute values', () => {
+    expect(parser.value('abs(x)')).toMatchObject({
+      '$label': 'ABS',
+      'expression': variable('x')
+    })
+  })
 })

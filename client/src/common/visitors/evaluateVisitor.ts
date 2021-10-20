@@ -67,5 +67,6 @@ export const evaluateVisitor: Visitor<Node> = {
   LN: (node) => visitUnary(node, (expression) => expression.ln()),
   LG: (node) => visitUnary(node, (expression) => expression.lg()),
   GAMMA: (node) => visitUnary(node, (expression) => expression.gamma()),
+  ABS: (node) => visitUnary(node, (expression) => expression.abs()),
   FACTORIAL: (node) => visitUnary(node, (expression) => expression.factorial()),
 }

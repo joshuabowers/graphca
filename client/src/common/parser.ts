@@ -14,7 +14,7 @@ const functions = [
   'sinh', 'cosh', 'tanh',
   'sin', 'cos', 'tan', 
   'lb', 'ln', 'lg',
-  Unicode.gamma
+  Unicode.gamma, 'abs'
 ]
 const renameFunctions: Map<string, string> = new Map([
   [Unicode.gamma, 'GAMMA']

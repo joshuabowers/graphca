@@ -108,6 +108,10 @@ describe('componentVisitor', () => {
     expectMarkup(`${Unicode.gamma}(x)`, '.functional.gamma')
   })
 
+  it('renders absolute values', () => {
+    expectMarkup('abs(x)', '.functional.absolute')
+  })
+
   it('renders factorials', () => {
     expectMarkup('x!', '.factorial')
   })

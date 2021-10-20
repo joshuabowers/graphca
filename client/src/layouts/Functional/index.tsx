@@ -40,7 +40,7 @@ export const Functional = (args: FunctionalProps) => (
       trig={{type:'trig', display:'asinh', displayHint:'verbose', activate: createKeyPress('asinh(')}}
     />
     <Key
-      default={{type:'default', display:''}}
+      default={{type:'default', display:'abs', activate: createKeyPress('abs(')}}
       shift={{type:'shift', display:''}}
       alpha={{type:'alpha', display:'F', activate: createKeyPress('F')}}
       trig={{type:'trig', display:''}}

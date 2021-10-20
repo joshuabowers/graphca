@@ -151,6 +151,19 @@ describe('evaluateVisitor', () => {
     it('computes the gamma function for complexes', () => {
       expectComplex(`${Unicode.gamma}(1 - ${Unicode.i})`, new Complex(0.49801566811835646, 0.15494982830181053))
     })
+
+    it('computes the absolute value for reals', () => {
+      expectReal('abs(5)', new Real(5))
+      expectReal('abs(-5)', new Real(5))
+    })
+
+    it('computes the absolute value of infinity', () => {
+      expectReal(`abs(-${Unicode.infinity})`, Real.Infinity)
+    })
+
+    it('computes the absolute value of complexes', () => {
+      expectComplex(`abs(2 + 3${Unicode.i})`, new Complex(3.6055512754639896))
+    })
   })
 
   describe('with variables but without context', () => {
