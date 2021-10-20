@@ -127,6 +127,18 @@ describe('evaluateVisitor', () => {
     it('casts reals to complexes for mixed binary ops', () => {
       expectComplex(`2 + 3${Unicode.i}`, new Complex(2, 3))
     })
+
+    it('computes the gamma function for integers', () => {
+      expectReal(`${Unicode.gamma}(5)`, new Real(24.000000000000014))
+    })
+
+    it('computes the gamma function for reals', () => {
+      expectReal(`${Unicode.gamma}(5.5)`, new Real(52.34277778455362))
+    })
+
+    it('computes the gamma function for complexes', () => {
+      expectComplex(`${Unicode.gamma}(1 - ${Unicode.i})`, new Complex(0.49801566811835646, 0.15494982830181053))
+    })
   })
 
   describe('with variables but without context', () => {

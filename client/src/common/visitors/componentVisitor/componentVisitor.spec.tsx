@@ -92,6 +92,10 @@ describe('componentVisitor', () => {
     expectMarkup('lg(cos(x))', '.functional.logarithmic')
   })
 
+  it('renders gamma', () => {
+    expectMarkup(`${Unicode.gamma}(x)`, '.functional.gamma')
+  })
+
   it('renders factorials', () => {
     expectMarkup('x!', '.factorial')
   })

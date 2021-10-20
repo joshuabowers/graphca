@@ -3,6 +3,10 @@ import React from 'react'
 import styles from './componentVisitor.module.css'
 import { Unicode, MathSymbols } from '../../MathSymbols'
 
+const renameFunctions: Map<string, string> = new Map([
+  ['GAMMA', Unicode.gamma]
+])
+
 const binaryOp = (node: Node, op: MathSymbols) => (
   <span className={styles.binaryOp}>
     {$visit(node.a)} {op} {$visit(node.b)}
@@ -11,7 +15,7 @@ const binaryOp = (node: Node, op: MathSymbols) => (
 
 const functional = (node: Node, metaClass: string) => (
   <span className={[styles.functional, styles[metaClass]].join(' ')}>
-    {node.$label.toLocaleLowerCase()}({$visit(node.expression)})
+    {renameFunctions.get(node.$label) ?? node.$label.toLocaleLowerCase()}({$visit(node.expression)})
   </span>
 )
 
@@ -48,5 +52,6 @@ export const componentVisitor: Visitor<JSX.Element> = {
   LB: (node) => functional(node, 'logarithmic'),
   LN: (node) => functional(node, 'logarithmic'),
   LG: (node) => functional(node, 'logarithmic'),
+  GAMMA: (node) => functional(node, 'gamma'),
   FACTORIAL: (node) => <span className={styles.factorial}>{$visit(node.expression)}!</span>
 }

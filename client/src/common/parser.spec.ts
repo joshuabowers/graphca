@@ -182,6 +182,13 @@ describe('parser', () => {
     })
   })
 
+  it('matches gamma', () => {
+    expect(parser.value(`${Unicode.gamma}(x)`)).toMatchObject({
+      '$label': 'GAMMA',
+      'expression': variable('x')
+    })
+  })
+
   it('matches exponents', () => {
     expect(parser.value('(-x)^2')).toMatchObject({
       '$label': 'EXPONENT',

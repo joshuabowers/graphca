@@ -11,10 +11,14 @@ const operators = new Map([
 const functions = [
   'sin', 'cos', 'tan', 
   'asin', 'acos', 'atan', 
-  'lb', 'ln', 'lg'
+  'lb', 'ln', 'lg',
+  Unicode.gamma
 ]
+const renameFunctions: Map<string, string> = new Map([
+  [Unicode.gamma, 'GAMMA']
+])
 const callableNodes = new Map(
-  functions.map(f => [f, f.toLocaleUpperCase()])
+  functions.map(f => [f, renameFunctions.get(f) ?? f.toLocaleUpperCase()])
 )
 
 const functional = peg(functions.map(s => `"${s}"`).join(" | "))

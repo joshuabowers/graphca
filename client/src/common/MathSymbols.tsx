@@ -17,6 +17,7 @@ export enum Unicode {
   x = "\ud835\udc99",
   y = "\ud835\udc9a",
   alpha = "\u{03B1}",
+  gamma = "\u{1D6AA}",
   pi = "\u{1D70B}",
   t = "\ud835\udc61",
   theta = "\ud835\udf03",

@@ -30,7 +30,7 @@ export const Functional = (args: FunctionalProps) => (
       alpha={{type:'alpha', display:'D', activate: createKeyPress('D')}}
     />
     <Key
-      default={{type:'default', display:',', activate: createKeyPress(',')}}
+      default={{type:'default', display:Unicode.gamma, activate: createKeyPress(`${Unicode.gamma}(`)}}
       shift={{type:'shift', display:']'}}
       alpha={{type:'alpha', display:'E', activate: createKeyPress('E')}}
     />
