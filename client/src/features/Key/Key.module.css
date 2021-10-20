@@ -63,6 +63,15 @@
   --color: hsl(90, 75%, 75%);
 }
 
+.trig {
+  --background-color: darkgray;
+  --color: hsl(293, 75%, 50%);
+}
+
+.trig:hover {
+  --color: hsl(293, 75%, 75%);
+}
+
 .normal.activated, .normal:active {
   --color: lawngreen;
 }

@@ -3,7 +3,7 @@ import { KeyGroup } from '../../features/KeyGroup';
 import { Key } from '../../features/Key';
 import { ToggleKey } from '../../features/ToggleKey';
 import { Unicode } from '../../common/MathSymbols';
-import { calculate, deleteLast } from '../../features/Terminal/Terminal.slice';
+import { calculate } from '../../features/Terminal/Terminal.slice';
 import { changeMode } from '../Keypad/Keypad.slice';
 import { useAppSelector } from '../../app/hooks';
 
@@ -16,9 +16,7 @@ export const Control = (props: ControlProps) => {
   return (
     <KeyGroup layout='vertical'>
       <Key 
-        default={{type: 'default', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
-        shift={{type: 'shift', display: 'Ins'}}
-        alpha={{type: 'alpha', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
+        default={{type: 'default', display: ''}}
       />
       <ToggleKey 
         default={{
@@ -41,6 +39,7 @@ export const Control = (props: ControlProps) => {
         default={{type: 'default', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
         shift={{type: 'shift', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
         alpha={{type: 'alpha', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
+        trig={{type: 'trig', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
       />
     </KeyGroup>
   )

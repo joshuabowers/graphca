@@ -8,7 +8,8 @@ export interface KeyProps {
   default: ModeProps,
   alpha?: ModeProps,
   shift?: ModeProps,
-  modeOverride?: 'shift' | 'alpha'
+  trig?: ModeProps,
+  modeOverride?: 'shift' | 'alpha' | 'trig'
 }
 
 export const createKeyPress = (value: string) =>

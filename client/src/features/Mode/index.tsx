@@ -3,11 +3,11 @@ import { AppDispatch } from '../../app/hooks';
 import { MathSymbols } from '../../common/MathSymbols';
 import styles from './Mode.module.css';
 
-export type ModeType = 'default' | 'alpha' | 'shift';
+export type ModeType = 'default' | 'alpha' | 'shift' | 'trig';
 
 export interface ModeProps {
   type?: ModeType,
-  displayHint?: 'icon' | 'unicode' | 'functional'
+  displayHint?: 'icon' | 'unicode' | 'functional' | 'verbose'
   display: MathSymbols,
   activate?: (dispatch: AppDispatch) => void
 }

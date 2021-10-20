@@ -1,6 +1,7 @@
 import React from 'react';
 
 export enum Unicode {
+  angle = "\u{2221}",
   derivative = "\u2202",
   delete = "\u232b",
   integral = "\u222b",
