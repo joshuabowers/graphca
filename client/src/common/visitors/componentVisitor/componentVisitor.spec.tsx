@@ -19,12 +19,9 @@ describe('componentVisitor', () => {
       expectMarkup(Unicode.i, '.complex')
     })
 
-    // TODO: need to integrate Fields into evaluateVisitor...
-    it.todo('renders multiplicative imagineries')
-
-    // it('renders multiplicative imaginaries', () => {
-    //   expectMarkup(`3 * ${Unicode.i}`, '.complex', new Complex(0, 3).toString())
-    // })
+    it('renders multiplicative imaginaries', () => {
+      expectMarkup(`3${Unicode.i}`, '.complex', new Complex(0, 3).toString())
+    })
   })
 
   it('renders numbers', () => {

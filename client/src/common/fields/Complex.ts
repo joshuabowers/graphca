@@ -16,10 +16,10 @@ export class Complex extends Field<Complex> {
   a: number;
   b: number;
 
-  constructor(a: number, b: number = 0) {
+  constructor(a: number | string, b: number | string = 0) {
     super()
-    this.a = a;
-    this.b = b;
+    this.a = Number(a);
+    this.b = Number(b);
   }
 
   modulus() {

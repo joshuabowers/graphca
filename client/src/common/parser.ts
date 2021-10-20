@@ -63,7 +63,7 @@ grouping:
 | factor
 
 factor:
-| <value>(number?) i => 'I'
+| <value>(number?) i @node('I', ${({value}) => ({value: value || 1})})
 | <value>number => 'NUMBER'
 | e => 'E'
 | pi => 'PI'

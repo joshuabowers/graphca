@@ -208,9 +208,10 @@ describe(Real, () => {
       expect(new Real(5).gamma().value).toBeCloseTo(24, 8)
     })
 
-    it.todo('is undefined for non-positive integers', () => {
-      expect(new Real(-5).gamma().value).toBeUndefined()
-    })
+    it.todo('is undefined for non-positive integers')
+    // , () => {
+    //   expect(new Real(-5).gamma().value).toBeUndefined()
+    // }
 
     it('calculates the gamma function for real values', () => {
       expect(new Real(5.5).gamma().value).toBeCloseTo(52.34277778, 8)

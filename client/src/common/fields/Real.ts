@@ -10,9 +10,9 @@ export class Real extends Field<Real> {
 
   value: number;
 
-  constructor(value: number){
+  constructor(value: number | string){
     super()
-    this.value = value
+    this.value = Number(value)
   }
 
   toString() {

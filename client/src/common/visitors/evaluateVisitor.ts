@@ -1,70 +1,64 @@
-import { Visitor, Node, $visit, $node, $fail } from 'pegase';
+import { Visitor, Node, $visit, $node } from 'pegase';
+import { Field } from '../fields/Field';
 import { Complex } from '../fields/Complex';
+import { Real } from '../fields/Real';
 
-type EvaluateFunction = (a: number, b: number) => number
-type EvaluateNumber = (n: number) => number
-type CalculateFunction = () => number
-type CalculateComplex = () => Complex
-
-const numberNode = (evaluate: CalculateFunction) => {
-  const evaluated = evaluate(), value = evaluated.toString();
-  return $node('NUMBER', {value, evaluated})
+const createFieldNode = (label: string, value: Field<any>) => {
+  return $node(label, {value})
 }
 
-const complexNode = (evaluate:  CalculateComplex) => {
-  const evaluated = evaluate(), value = evaluated.toString();
-  return $node('COMPLEX', {value, evaluated})
-}
+type EvaluateBinary = (a: Field<any>, b: Field<any>) => Field<any>
 
-const binaryEval = (node: Node, evaluate: EvaluateFunction): Node => {
-  const a = $visit(node.a), b = $visit(node.b);
-  if( a.$label !== 'NUMBER' || b.$label !== 'NUMBER' ){
+const visitBinary = (node: Node, evaluate: EvaluateBinary): Node => {
+  let a = $visit(node.a), b = $visit(node.b)
+  if( a.value === undefined || b.value === undefined ){
+    // Either a or b does not immediately evaluate to a Field subclass
     return $node(node.$label, {a, b})
-  } else {
-    return numberNode(() => evaluate(a.evaluated, b.evaluated))
+  } 
+  if( a.$label !== b.$label ){
+    // lift real to complex
+    if( a.$label === 'REAL' ){
+      a = createFieldNode('COMPLEX', new Complex(a.value.value, 0))
+    } else {
+      b = createFieldNode('COMPLEX', new Complex(b.value.value, 0))
+    }
   }
+  return createFieldNode(a.$label, evaluate(a.value, b.value))
 }
 
-const applyFunction = (node: Node, evaluate: EvaluateNumber): Node => {
-  const expression = $visit(node.expression)
-  if( expression.$label !== 'NUMBER' ){
+type EvaluateUnary = (expression: Field<any>) => Field<any>
+
+const visitUnary = (node: Node, evaluate: EvaluateUnary): Node => {
+  let expression = $visit(node.expression)
+  if( expression.value === undefined ){
     return $node(node.$label, {expression})
-  } else {
-    return numberNode(() => evaluate(expression.evaluated))
   }
+  return createFieldNode(expression.$label, evaluate(expression.value))
 }
 
-const factorial = (n: number): number => {
-  if( n < 0 ){ 
-    $fail('factorials undefined for negative numbers')
-    return 0;
-  }
-  return n === 0 ? 1 : n * factorial(n-1);
-}
 export const evaluateVisitor: Visitor<Node> = {
-  NUMBER: (node) => {
-    node.evaluated = Number(node.value)
-    return node;
-  },
+  NUMBER: (node) => createFieldNode('REAL', new Real(node.value)),
+  I: (node) => createFieldNode('COMPLEX', new Complex(0, node.value)),
+  E: (node) => createFieldNode('REAL', Real.E),
+  PI: (node) => createFieldNode('REAL', Real.PI),
+  INFINITY: (node) => createFieldNode('REAL', Real.Infinity),
   VARIABLE: (node) => node,
-  I: (node) => complexNode(() => new Complex(0, 1)),
-  E: (node) => numberNode(() => Math.E),
-  PI: (node) => numberNode(() => Math.PI),
-  INFINITY: (node) => numberNode(() => Number.POSITIVE_INFINITY),
-  PLUS: (node) => binaryEval(node, (a,b) => a + b),
-  MINUS: (node) => binaryEval(node, (a,b) => a - b),
-  MULTIPLY: (node) => binaryEval(node, (a,b) => a * b),
-  DIVIDE: (node) => binaryEval(node, (a,b) => a / b),
-  EXPONENT: (node) => binaryEval(node, (a,b) => a ** b),
-  NEGATE: (node) => applyFunction(node, n => -n),
-  COS: (node) => applyFunction(node, n => Math.cos(n)),
-  SIN: (node) => applyFunction(node, n => Math.sin(n)),
-  TAN: (node) => applyFunction(node, n => Math.tan(n)),
-  ACOS: (node) => applyFunction(node, n => Math.acos(n)),
-  ASIN: (node) => applyFunction(node, n => Math.asin(n)),
-  ATAN: (node) => applyFunction(node, n => Math.atan(n)),
-  LB: (node) => applyFunction(node, n => Math.log2(n)),
-  LN: (node) => applyFunction(node, n => Math.log(n)),
-  LG: (node) => applyFunction(node, n => Math.log10(n)),
-  FACTORIAL: (node) => applyFunction(node, n => factorial(n))
+
+  PLUS: (node) => visitBinary(node, (a, b) => a.add(b)),
+  MINUS: (node) => visitBinary(node, (a, b) => a.subtract(b)),
+  MULTIPLY: (node) => visitBinary(node, (a, b) => a.multiply(b)),
+  DIVIDE: (node) => visitBinary(node, (a, b) => a.divide(b)),
+  EXPONENT: (node) => visitBinary(node, (a, b) => a.raise(b)),
+
+  NEGATE: (node) => visitUnary(node, (expression) => expression.negate()),
+  COS: (node) => visitUnary(node, (expression) => expression.cos()),
+  SIN: (node) => visitUnary(node, (expression) => expression.sin()),
+  TAN: (node) => visitUnary(node, (expression) => expression.tan()),
+  ACOS: (node) => visitUnary(node, (expression) => expression.acos()),
+  ASIN: (node) => visitUnary(node, (expression) => expression.asin()),
+  ATAN: (node) => visitUnary(node, (expression) => expression.atan()),
+  LB: (node) => visitUnary(node, (expression) => expression.lb()),
+  LN: (node) => visitUnary(node, (expression) => expression.ln()),
+  LG: (node) => visitUnary(node, (expression) => expression.lg()),
+  FACTORIAL: (node) => visitUnary(node, (expression) => expression.factorial()),
 }
