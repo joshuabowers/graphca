@@ -11,18 +11,27 @@ const real = (val: string) => ({'$label': 'REAL', 'value': new Real(val)})
 const complex = (val: string) => ({'$label': 'COMPLEX', 'value': val})
 const variable = (name: string) => ({'$label': 'VARIABLE', 'name': name})
 
-const expectField = <T extends Field<T>>(input: string, label: string, value: T) => {
+type Transform<T extends Field<T>> = (value: T) => number
+
+const expectField = <T extends Field<T>>(input: string, label: string, expected: T, precision: number, ...transforms: Transform<T>[]) => {
   const output = apply(input)
   expect(output.$label).toEqual(label)
-  expect(output.value).toEqual(value)
+  transforms.forEach(transform => {
+    const e = transform(expected), a = transform(output.value)
+    if(Number.isNaN(e)) {
+      expect(a).toEqual(e)
+    } else {
+      expect(a).toBeCloseTo(e, precision)
+    }
+  })
 }
 
-const expectReal = (input: string, value: Real) => {
-  expectField(input, 'REAL', value)
+const expectReal = (input: string, value: Real, precision: number = 17) => {
+  expectField(input, 'REAL', value, precision, real => real.value)
 }
 
-const expectComplex = (input: string, value: Complex) => {
-  expectField(input, 'COMPLEX', value)
+const expectComplex = (input: string, value: Complex, precision: number = 17) => {
+  expectField(input, 'COMPLEX', value, precision, complex => complex.a, complex => complex.b)
 }
 
 describe('evaluateVisitor', () => {
@@ -89,6 +98,12 @@ describe('evaluateVisitor', () => {
       expectReal('2 ^ 2 ^ 3', new Real(256))
     })
 
+    it('converts a negative real to a complex when it is raised', () => {
+      expectComplex('(-1)^2', new Complex(1), 10)
+      expectComplex('(-1)^0.5', new Complex(0, 1), 10)
+      expectComplex('(-25)^0.5', new Complex(0, 5), 10)
+    })
+
     it('evaluates negations', () => {
       expectReal('-10', new Real(-10))
       expectReal('-(2 * 3)', new Real(-6))
@@ -141,7 +156,7 @@ describe('evaluateVisitor', () => {
     })
 
     it('computes the gamma function for integers', () => {
-      expectReal(`${Unicode.gamma}(5)`, new Real(24.000000000000014))
+      expectReal(`${Unicode.gamma}(5)`, new Real(24), 10)
     })
 
     it('computes the gamma function for reals', () => {

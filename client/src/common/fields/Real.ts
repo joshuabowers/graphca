@@ -120,4 +120,8 @@ export class Real extends Field<Real> {
   lt(that: Real) {
     return this.value < that.value
   }
+
+  isNegative() {
+    return this.value < 0
+  }
 }

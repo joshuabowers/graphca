@@ -43,6 +43,7 @@ export abstract class Field<T extends Field<T>> {
   abstract cast(value: number): T
 
   abstract lt(that: T): boolean
+  abstract isNegative(): boolean
   // abstract isGammaUndefined(): boolean
 
   /**

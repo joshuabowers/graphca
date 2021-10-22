@@ -213,4 +213,8 @@ export class Complex extends Field<Complex> {
   lt(that: Complex) {
     return this.a < that.a
   }
+
+  isNegative() {
+    return this.a < 0
+  }
 }

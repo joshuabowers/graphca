@@ -15,6 +15,11 @@ const visitBinary = (node: Node, evaluate: EvaluateBinary): Node => {
     // Either a or b does not immediately evaluate to a Field subclass
     return $node(node.$label, {a, b})
   } 
+  if( node.$label === 'EXPONENT' ){
+    if( a.$label === 'REAL' && a.value.isNegative() ){
+      a = createFieldNode('COMPLEX', new Complex(a.value.value, 0))
+    }
+  }
   if( a.$label !== b.$label ){
     // lift real to complex
     if( a.$label === 'REAL' ){

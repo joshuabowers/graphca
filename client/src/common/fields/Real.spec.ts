@@ -1,4 +1,5 @@
 import { Unicode } from "../MathSymbols";
+import { Complex } from "./Complex";
 import { Field } from "./Field";
 import { Real } from "./Real";
 
@@ -200,6 +201,19 @@ describe(Real, () => {
     it('is false if this is greater than that', () => {
       const a = new Real(3), b = new Real(2)
       expect(a.lt(b)).toBe(false)
+    })
+  })
+
+  describe(Real.prototype.isNegative, () => {
+    it('is true if this is less than zero', () => {
+      const a = new Real(-5)
+      expect(a.isNegative()).toBe(true)
+    })
+
+    it('is false if this is greater than or equal to zero', () => {
+      const a = new Real(5)
+      expect(a.isNegative()).toBe(false)
+      expect(Real.Zero.isNegative()).toBe(false)
     })
   })
 

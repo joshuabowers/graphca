@@ -281,6 +281,18 @@ describe(Complex, () => {
     })
   })
 
+  describe(Complex.prototype.isNegative, () => {
+    it('is true if the real part is less than zero', () => {
+      const a = new Complex(-5)
+      expect(a.isNegative()).toBe(true)
+    })
+
+    it('is false if the real part is greater than or equal to zero', () => {
+      const a = new Complex(5)
+      expect(a.isNegative()).toBe(false)
+    })
+  })
+
   describe(Complex.prototype.gamma, () => {
     it('calculates the gamma function for complex numbers', () => {
       const z = new Complex(2, 3)
