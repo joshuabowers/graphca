@@ -86,10 +86,86 @@ export class Decimal extends Field<Decimal> {
     return new Decimal(this.significand * BigInt(-1), this.isFinite)    
   }
 
+  cos() {
+    return Decimal.Infinity
+  }
+
+  sin() {
+    return Decimal.Infinity
+  }
+
+  tan() {
+    return Decimal.Infinity
+  }
+
+  cosh() {
+    return Decimal.Infinity
+  }
+
+  sinh() {
+    return Decimal.Infinity
+  }
+
+  tanh() {
+    return Decimal.Infinity
+  }
+
+  acos() {
+    return Decimal.Infinity
+  }
+
+  asin() {
+    return Decimal.Infinity
+  }
+
+  atan() {
+    return Decimal.Infinity
+  }
+
+  acosh() {
+    return Decimal.Infinity
+  }
+
+  asinh() {
+    return Decimal.Infinity
+  }
+
+  atanh() {
+    return Decimal.Infinity
+  }
+
+  lb() {
+    return Decimal.Infinity
+  }
+
+  ln() {
+    return Decimal.Infinity
+  }
+
+  lg() {
+    return Decimal.Infinity
+  }
+
+  factorial() {
+    return Decimal.Infinity
+  }
+
   abs() {
     return new Decimal(
       this.sign < 0 ? this.significand * BigInt(-1) : this.significand,
       this.isFinite
     )
+  }
+
+  cast(value: number) {
+    return Decimal.Infinity
+  }
+
+  lt(that: Decimal) {
+    return false
+  }
+
+  isNegative(){
+    return false
   }
 }
