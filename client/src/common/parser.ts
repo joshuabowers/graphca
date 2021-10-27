@@ -37,7 +37,13 @@ const lNode = (term: any, expressionPrime: any): any => {
   )
 }
 
-export const parser = peg`
+export const parser = peg<any, Map<string, any>>`
+start: statement | expression
+
+statement: assignment
+
+assignment: <>variable '<-' <>expression => 'ASSIGN'
+
 expression: arithmetic
 
 arithmetic: <a>product <b>arithmeticPrime ${({a,b}) => lNode(a,b)}

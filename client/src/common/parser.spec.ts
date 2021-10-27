@@ -243,4 +243,16 @@ describe('parser', () => {
       'expression': variable('x')
     })
   })
+
+  it('matches assignment statements', () => {
+    expect(parser.value('x <- 5 + 2')).toMatchObject({
+      '$label': 'ASSIGN',
+      'variable': 'x',
+      'expression': {
+        '$label': 'PLUS',
+        'a': num('5'),
+        'b': num('2')
+      }
+    })
+  })
 })
