@@ -29,11 +29,7 @@ export class Scope {
   }
 
   has(identifier: Identifier, before = Date.now()) {
-    const id = toSymbol(identifier)
-    const heap = this.variables.get(id)
-    if(!heap){ return false }
-    const clone = filter(heap, before)
-    return clone.peek() !== undefined
+    return this.get(identifier, before) !== undefined
   }
 
   get(identifier: Identifier, before = Date.now()) {
