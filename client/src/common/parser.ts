@@ -1,4 +1,5 @@
-import peg, { $node } from 'pegase';
+import peg, { $node, Node } from 'pegase';
+import { Scope } from './Scope';
 import { Unicode } from './MathSymbols';
 
 const operators = new Map([
@@ -27,9 +28,9 @@ const functional = peg(functions.map(s => `"${s}"`).join(" | "))
 
 // For future reference, used for constructing a left-associative
 // tree structure from a expression list built right recursively.
-const lNode = (term: any, expressionPrime: any): any => {
+const leftAssociate = (term: any, expressionPrime: any): any => {
   if(!expressionPrime){ return term; }
-  return lNode( 
+  return leftAssociate( 
     $node(
       operators.get(expressionPrime.op) ?? 'ERROR',
       {a: term, b: expressionPrime.a}
@@ -37,7 +38,7 @@ const lNode = (term: any, expressionPrime: any): any => {
   )
 }
 
-export const parser = peg<any, Map<string, any>>`
+export const parser = peg<Node, Scope>`
 start: statement | expression
 
 statement: assignment
@@ -46,13 +47,13 @@ assignment: <>variable '<-' <>expression => 'ASSIGN'
 
 expression: arithmetic
 
-arithmetic: <a>product <b>arithmeticPrime ${({a,b}) => lNode(a,b)}
+arithmetic: <a>product <b>arithmeticPrime ${({a,b}) => leftAssociate(a,b)}
 
 arithmeticPrime:
 | <op>("+" | "-") <a>product <b>arithmeticPrime ${(args) => args}
 | ''
 
-product: <a>exponent <b>productPrime ${({a,b}) => lNode(a,b)}
+product: <a>exponent <b>productPrime ${({a,b}) => leftAssociate(a,b)}
 
 productPrime:
 | <op>("*" | "/") <a>exponent <b>productPrime ${(args) => args}

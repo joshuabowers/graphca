@@ -5,8 +5,9 @@ import { Unicode } from "../MathSymbols";
 import { Field } from "../fields/Field";
 import { Complex } from "../fields/Complex";
 import { Real } from "../fields/Real";
+import { Scope } from "../Scope";
 
-const apply = (input: string) => parser.value(input, {visit: evaluateVisitor})
+const apply = (input: string, context?: Scope) => parser.value(input, {visit: evaluateVisitor, context})
 const real = (val: string) => ({'$label': 'REAL', 'value': new Real(val)})
 const complex = (val: string) => ({'$label': 'COMPLEX', 'value': val})
 const variable = (name: string) => ({'$label': 'VARIABLE', 'name': name})
@@ -194,6 +195,70 @@ describe('evaluateVisitor', () => {
         a: real('2'),
         b: variable('x')
       })
+    })
+  })
+
+  describe('with context', () => {
+    it('assigns variables in the context object', () => {
+      const s = new Scope()
+      const output = apply('x <- 5', s)
+      expect(s.has('x'))
+      expect(s.get('x')).toMatchObject(real('5'))
+      expect(output).toMatchObject(real('5'))
+    })
+
+    it('evaluates the value of an expression before assigning', () => {
+      const s = new Scope()
+      const output = apply('x <- 2^3', s)
+      expect(s.get('x')).toMatchObject(real('8'))
+      expect(output).toMatchObject(real('8'))
+    })
+
+    it('returns the value of a variable as the value of the assignment', () => {
+      const s = new Scope()
+      const output = apply('x <- 5', s)
+      expect(s.get('x')).toMatchObject(output)
+      expect(output).not.toBeUndefined()
+    })
+
+    it('assigns expressions with valueless variables to variables', () => {
+      const s = new Scope()
+      apply('y <- x + 5', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('y')).toMatchObject({
+        $label: 'PLUS',
+        'a': variable('x'),
+        'b': real('5')
+      })
+    })
+
+    it('evaluates variables when assigning to variables', () => {
+      const s = new Scope()
+      apply('x <- 2^10', s)
+      apply('y <- x * 4', s)
+      expect(s.get('x')).toMatchObject(real('1024'))
+      expect(s.get('y')).toMatchObject(real('4096'))
+    })
+
+    it('returns the value of a variable when referenced', () => {
+      const s = new Scope()
+      apply('x <- 10', s)
+      const output = apply('x + 1', s)
+      expect(output).toMatchObject(real('11'))
+    })
+
+    it('evaluates a variable in the current context when referenced', () => {
+      const s = new Scope()
+      apply('y <- x * 5', s)
+      apply('x <- 10', s)
+      expect(s.get('x')).toMatchObject(real('10'))
+      expect(s.get('y')).toMatchObject({
+        $label: 'MULTIPLY',
+        'a': variable('x'),
+        'b': real('5')
+      })
+      const output = apply('y', s)
+      expect(output).toMatchObject(real('50'))
     })
   })
 })

@@ -1,4 +1,5 @@
-import { Visitor, Node, $visit, $node } from 'pegase';
+import { Visitor, Node, $visit, $node, $context } from 'pegase';
+import { Scope } from '../Scope';
 import { Field } from '../fields/Field';
 import { Complex } from '../fields/Complex';
 import { Real } from '../fields/Real';
@@ -41,13 +42,31 @@ const visitUnary = (node: Node, evaluate: EvaluateUnary): Node => {
   return createFieldNode(expression.$label, evaluate(expression.value))
 }
 
+const visitVariable = (node: Node): Node => {
+  const scope = $context() as Scope
+  const variable = scope?.get(node.name)
+  const evaluated = variable && $visit(variable)
+  return evaluated ?? node
+}
+
+const visitAssign = (node: Node): Node => {
+  const scope = $context() as Scope
+  const evaluated = $visit(node.expression)
+  scope.set(node.variable, evaluated)
+  return evaluated
+}
+
 export const evaluateVisitor: Visitor<Node> = {
   NUMBER: (node) => createFieldNode('REAL', new Real(node.value)),
   I: (node) => createFieldNode('COMPLEX', new Complex(0, node.value)),
   E: (node) => createFieldNode('REAL', Real.E),
   PI: (node) => createFieldNode('REAL', Real.PI),
   INFINITY: (node) => createFieldNode('REAL', Real.Infinity),
-  VARIABLE: (node) => node,
+  REAL: (node) => node,
+  COMPLEX: (node) => node,
+
+  VARIABLE: (node) => visitVariable(node),
+  ASSIGN: (node) => visitAssign(node),
 
   PLUS: (node) => visitBinary(node, (a, b) => a.add(b)),
   MINUS: (node) => visitBinary(node, (a, b) => a.subtract(b)),
