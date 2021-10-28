@@ -10,6 +10,7 @@
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "eslint-config-react-app": "^6.0.0",
+    "heap-js": "^2.1.6",
     "node-gyp": "^8.2.0",
     "pegase": "^0.3.17",
     "re-reselect": "^4.0.0",
