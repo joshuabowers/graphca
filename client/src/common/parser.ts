@@ -60,7 +60,7 @@ productPrime:
 | ''
 
 exponent:
-| <a>negation '^' ^ <b>expression => 'EXPONENT'
+| <a>negation '^' ^ <b>exponent => 'EXPONENT'
 | <expression>negation '!' => 'FACTORIAL'
 | negation
 

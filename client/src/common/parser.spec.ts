@@ -230,6 +230,18 @@ describe('parser', () => {
     })
   })
 
+  it('has the proper associativity for exponents', () => {
+    expect(parser.value('x^2+5')).toMatchObject({
+      $label: 'PLUS',
+      'a': {
+        $label: 'EXPONENT',
+        'a': variable('x'),
+        'b': num('2')
+      },
+      'b': num('5')
+    })
+  })
+
   it('matches factorials', () => {
     expect(parser.value('n!')).toMatchObject({
       '$label': 'FACTORIAL',
