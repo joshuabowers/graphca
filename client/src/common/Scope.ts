@@ -17,7 +17,8 @@ function eventComparator(a: Event, b: Event): number {
 
 function filter(heap: Heap<Event>, before: number): Heap<Event> {
   const clone = heap.clone()
-  while(clone.size() > 0 && clone.peek().when > before){ clone.pop() }
+  let next: Event | undefined = undefined
+  while(clone.size() > 0 && (next = clone.peek()) && next.when > before){ clone.pop() }
   return clone
 }
 

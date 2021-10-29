@@ -1,8 +1,9 @@
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import { parser } from '../../common/parser';
 import { componentVisitor } from '../../common/visitors/componentVisitor';
 import { evaluateVisitor } from '../../common/visitors/evaluateVisitor';
+import { Scope } from '../../common/Scope';
 import styles from './Terminal.module.css';
 import { RootState } from '../../app/store';
 import { createArraySelector } from 'reselect-map';
@@ -13,13 +14,16 @@ export interface TerminalProps {
 
 }
 
-const parse = (entry: TerminalEntryState) => {
+const parse = (entry: TerminalEntryState, scope: Scope) => {
   console.log('parsing expression: ', entry.content)
   try {
     const parsing = parser.value(
       entry.content,
-      {visit: [evaluateVisitor, componentVisitor]}
-    ) as JSX.Element  
+      {
+        visit: [evaluateVisitor, componentVisitor],
+        context: scope
+      }
+    ) as unknown as JSX.Element  
     return <div className={styles.result}>{'=>'} {parsing}</div>
   } catch(err: any) {
     return <div className={styles.error}>{err.message}</div>
@@ -32,12 +36,21 @@ const getCurrentLine = createSelector(
   terminal => terminal.currentLine.join('')
 )
 const getHistory = createSelector(getTerminal, (terminal) => terminal.history)
-const getParsings = createArraySelector<RootState, TerminalEntryState, JSX.Element>(
-  (state: RootState) => state.terminal.history,
-  (entry: TerminalEntryState) => parse(entry)
-) as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>
+// const getParsings = createArraySelector<RootState, TerminalEntryState, JSX.Element>(
+//   (state: RootState) => state.terminal.history,
+//   (entry: TerminalEntryState) => parse(entry)
+// ) as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>
 
 export const Terminal = (props: TerminalProps) => {
+  const [scope, setScope] = useState(new Scope())
+  const getParsings = useMemo(
+    () => createArraySelector<RootState, TerminalEntryState, JSX.Element>(
+      (state: RootState) => state.terminal.history,
+      (entry: TerminalEntryState) => parse(entry, scope)
+    ) as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>,
+    [scope]
+  )
+
   const currentRef = useRef<HTMLLIElement>(null)
   const history = useAppSelector(getHistory);
   const currentLine = useAppSelector(getCurrentLine);
