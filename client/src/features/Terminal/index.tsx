@@ -36,10 +36,6 @@ const getCurrentLine = createSelector(
   terminal => terminal.currentLine.join('')
 )
 const getHistory = createSelector(getTerminal, (terminal) => terminal.history)
-// const getParsings = createArraySelector<RootState, TerminalEntryState, JSX.Element>(
-//   (state: RootState) => state.terminal.history,
-//   (entry: TerminalEntryState) => parse(entry)
-// ) as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>
 
 export const Terminal = (props: TerminalProps) => {
   const [scope, setScope] = useState(new Scope())
