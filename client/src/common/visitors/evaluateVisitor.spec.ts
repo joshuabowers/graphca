@@ -196,6 +196,10 @@ describe('evaluateVisitor', () => {
         b: variable('x')
       })
     })
+
+    it('throws an error if no scope given on assignment', () => {
+      expect(() => apply('x <- 5')).toThrow()
+    })
   })
 
   describe('with context', () => {
@@ -247,6 +251,13 @@ describe('evaluateVisitor', () => {
       expect(output).toMatchObject(real('11'))
     })
 
+    it('returns an unevaluated variable if assigned to itself', () => {
+      const s = new Scope()
+      expect(() => apply('x <- x', s)).not.toThrow()
+      const output = apply('x(1)', s)
+      expect(output).toMatchObject(real('1'))
+    })
+
     it('evaluates a variable in the current context when referenced', () => {
       const s = new Scope()
       apply('y <- x * 5', s)
@@ -259,6 +270,131 @@ describe('evaluateVisitor', () => {
       })
       const output = apply('y', s)
       expect(output).toMatchObject(real('50'))
+    })
+
+    it('stops evaluation if function undefined', () => {
+      const s = new Scope()
+      const output = apply('x(2^3)', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(output).toMatchObject({
+        $label: 'INVOKE',
+        'variable': 'x',
+        'argumentList': [{$label: 'EXPONENT', 'a': {'value': '2'}, 'b': {'value': '3'}}]
+      })
+    })
+
+    it('temporarily sets context when invoking a variable', () => {
+      const s = new Scope()
+      apply('y <- x * 5', s)
+      const output = apply('y(10)', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('y')).toMatchObject({
+        $label: 'MULTIPLY',
+        'a': variable('x'),
+        'b': real('5')
+      })
+      expect(output).toMatchObject(real('50'))
+    })
+
+    it('partially sets context if not enough arguments are supplied', () => {
+      const s = new Scope()
+      apply('f <- x * y', s)
+      const output = apply('f(10)', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('y')).toBeUndefined()
+      expect(s.get('f')).toMatchObject({
+        $label: 'MULTIPLY',
+        'a': variable('x'),
+        'b': variable('y')
+      })
+      expect(output).toMatchObject({
+        $label: 'MULTIPLY',
+        'a': real('10'),
+        'b': variable('y')
+      })
+    })
+
+    it('handles multiple arguments correctly', () => {
+      const s = new Scope()
+      apply('f <- x * y', s)
+      const output = apply('f(10, 5)', s)
+      expect(output).toMatchObject(real('50'))
+    })
+
+    it('ignores an excess of arguments', () => {
+      const s = new Scope()
+      apply('f <- x * y', s)
+      const output = apply('f(10, 5, 2)', s)
+      expect(output).toMatchObject(real('50'))
+    })
+
+    it('evaluates the arguments before evaluating the variable', () => {
+      const s = new Scope()
+      apply('f <- x * y', s)
+      const output = apply('f(2^3, 2^4)', s)
+      expect(output).toMatchObject(real('128'))
+    })
+
+    it('handles variables passed as argument', () => {
+      const s = new Scope()
+      apply('f <- lb(x)', s)
+      apply('y <- 2 ^ 10', s)
+      const output = apply('f(y)', s)
+      expect(output).toMatchObject(real('10'))
+    })
+
+    it('handles undefined variables as argument', () => {
+      const s = new Scope()
+      apply('f <- x + x', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('f')).toMatchObject({
+        $label: 'PLUS',
+        'a': variable('x'),
+        'b': variable('x')
+      })
+      const output = apply('f(x)', s)
+      expect(output).toMatchObject({
+        $label: 'PLUS',
+        'a': variable('x'),
+        'b': variable('x')
+      })
+    })
+
+    it('replaces variables with functional composition', () => {
+      const s = new Scope()
+      apply('f <- x * 5', s)
+      expect(s.get('f')).toMatchObject({
+        $label: 'MULTIPLY',
+        'a': variable('x'),
+        'b': real('5')
+      })
+
+      apply('g <- f(y)', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('y')).toBeUndefined()
+      expect(s.get('g')).toMatchObject({
+        $label: 'MULTIPLY',
+        'a': variable('y'),
+        'b': real('5')
+      })
+    })
+
+    it('handles functional composition', () => {
+      const s = new Scope()
+      apply('f <- 2 * x', s)
+      apply('g <- f(x) * 3', s)
+      apply('h <- g(x)', s)
+      expect(s.get('h')).toMatchObject({
+        $label: 'MULTIPLY',
+        'a': {
+          $label: 'MULTIPLY',
+          'a': real('2'),
+          'b': variable('x')
+        },
+        'b': real('3')
+      })
+      const output = apply('h(g(5))', s)
+      expect(output).toMatchObject(real('180'))
     })
   })
 })

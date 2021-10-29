@@ -14,7 +14,7 @@ describe('parser', () => {
   it('matches numbers', () => {
     const inputs = '1 10 0 0.25 10.25 1.23E4 1.23E-4'.split(' ');
     inputs.forEach(input => {
-      expect(parser.parse(input).log()).toEqual('')
+      expect(parser.parse(input).logger.toString()).toEqual('')
       expect(parser.value(input)).toMatchObject(num(input))
     })
   })
@@ -253,6 +253,14 @@ describe('parser', () => {
         'a': num('5'),
         'b': num('2')
       }
+    })
+  })
+
+  it('matches variable invocations', () => {
+    expect(parser.value('x(1, 2)')).toMatchObject({
+      '$label': 'INVOKE',
+      'variable': 'x',
+      'argumentList': [num('1'), num('2')]
     })
   })
 })

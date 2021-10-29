@@ -1,8 +1,9 @@
-import { Visitor, Node, $visit, $node, $context } from 'pegase';
+import { Visitor, Node, $visit, $node, $context, applyVisitor, $options } from 'pegase';
 import { Scope } from '../Scope';
 import { Field } from '../fields/Field';
 import { Complex } from '../fields/Complex';
 import { Real } from '../fields/Real';
+import { parameterVisitor } from './parameterVisitor';
 
 const createFieldNode = (label: string, value: Field<any>) => {
   return $node(label, {value})
@@ -44,16 +45,46 @@ const visitUnary = (node: Node, evaluate: EvaluateUnary): Node => {
 
 const visitVariable = (node: Node): Node => {
   const scope = $context() as Scope
-  const variable = scope?.get(node.name)
-  const evaluated = variable && $visit(variable)
+  const value = scope?.get(node.name)
+  if(value && value.$label === 'VARIABLE' && value.name === node.name){
+    return node
+  }
+  const evaluated = value && $visit(value)
   return evaluated ?? node
 }
 
 const visitAssign = (node: Node): Node => {
   const scope = $context() as Scope
+  if(!scope){ throw new Error('No scope provided for assignment context'); }
   const evaluated = $visit(node.expression)
   scope.set(node.variable, evaluated)
   return evaluated
+}
+
+const visitInvoke = (node: Node): Node => {
+  const scope = $context() as Scope
+  const setParameters = new Array<string>()
+  if(!scope){ throw new Error('No scope provided for invocation context'); }
+  const functionBody = scope?.get(node.variable)
+  if(!functionBody){ return node }
+  try {
+    const parameters = applyVisitor(functionBody, parameterVisitor, $options())
+    if(parameters){
+      parameters.forEach( (parameter, index) => {
+        const argument = node.argumentList[index] ?
+          $visit(node.argumentList[index]) : undefined
+        if(argument){
+          scope.set(parameter, argument)
+          setParameters.push(parameter)
+        }
+      })
+    }
+    return $visit(functionBody)
+  } finally {
+    setParameters.forEach( parameter => {
+      scope.removeLast(parameter)
+    })
+  }
 }
 
 export const evaluateVisitor: Visitor<Node> = {
@@ -67,6 +98,7 @@ export const evaluateVisitor: Visitor<Node> = {
 
   VARIABLE: (node) => visitVariable(node),
   ASSIGN: (node) => visitAssign(node),
+  INVOKE: (node) => visitInvoke(node),
 
   PLUS: (node) => visitBinary(node, (a, b) => a.add(b)),
   MINUS: (node) => visitBinary(node, (a, b) => a.subtract(b)),

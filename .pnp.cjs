@@ -12794,7 +12794,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jest-enzyme", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:7.1.2"],
             ["lint-staged", "npm:11.1.2"],
             ["node-gyp", "npm:8.2.0"],
-            ["pegase", "npm:0.3.17"],
+            ["pegase", "npm:0.5.5"],
             ["pnp-webpack-plugin", "npm:1.7.0"],
             ["prettier", "npm:2.3.2"],
             ["re-reselect", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:4.0.0"],
@@ -22945,10 +22945,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["pegase", [
-        ["npm:0.3.17", {
-          "packageLocation": "./.yarn/cache/pegase-npm-0.3.17-d00a4adfc0-ec19b5e32c.zip/node_modules/pegase/",
+        ["npm:0.5.5", {
+          "packageLocation": "./.yarn/cache/pegase-npm-0.5.5-8edc224203-b915dad598.zip/node_modules/pegase/",
           "packageDependencies": [
-            ["pegase", "npm:0.3.17"]
+            ["pegase", "npm:0.5.5"]
           ],
           "linkType": "HARD",
         }]

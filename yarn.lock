@@ -7011,7 +7011,7 @@ __metadata:
     jest-enzyme: ^7.1.2
     lint-staged: ^11.1.2
     node-gyp: ^8.2.0
-    pegase: ^0.3.17
+    pegase: ^0.5.5
     pnp-webpack-plugin: ^1.7.0
     prettier: ^2.3.2
     re-reselect: ^4.0.0
@@ -15658,10 +15658,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pegase@npm:^0.3.17":
-  version: 0.3.17
-  resolution: "pegase@npm:0.3.17"
-  checksum: ec19b5e32c97c72a125af2bc79ac5f971a42ea0ef752c052927463e745d42400b59d2a87c2827b20dcc333fecaa1e584271b5caa3f237866caf0ffffd0707c17
+"pegase@npm:^0.5.5":
+  version: 0.5.5
+  resolution: "pegase@npm:0.5.5"
+  checksum: b915dad598bd9e900a7553651e7cedacd08d76c63f2ce2d08c79d30bf034a977f6286779a085f9ff23549dbf84d492ffc11ae0dcd27767adef2b11588d4b7629
   languageName: node
   linkType: hard
 
