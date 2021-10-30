@@ -65,6 +65,10 @@ describe('evaluateVisitor', () => {
       expectReal(Unicode.pi, Real.PI)
     })
 
+    it('has a value for epsilon', () => {
+      expectReal(Unicode.epsilon, Real.Epsilon)
+    })
+
     it('contemplates infinity', () => {
       expectReal(Unicode.infinity, Real.Infinity)
     })
@@ -278,7 +282,7 @@ describe('evaluateVisitor', () => {
       expect(s.get('x')).toBeUndefined()
       expect(output).toMatchObject({
         $label: 'INVOKE',
-        'variable': 'x',
+        'function': 'x',
         'argumentList': [{$label: 'EXPONENT', 'a': {'value': '2'}, 'b': {'value': '3'}}]
       })
     })

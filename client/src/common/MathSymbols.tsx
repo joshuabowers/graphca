@@ -22,6 +22,7 @@ export enum Unicode {
   pi = "\u{1D70B}",
   t = "\ud835\udc61",
   theta = "\ud835\udf03",
+  epsilon = "\u{025B}",
   n = "\ud835\udc5b",
   infinity = "\u{221E}"
 }

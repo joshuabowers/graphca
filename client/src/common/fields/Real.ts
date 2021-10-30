@@ -3,6 +3,7 @@ import { Field } from './Field'
 
 export class Real extends Field<Real> {
   static PI = new Real(Math.PI)
+  static Epsilon = new Real(Number.EPSILON)
   static Zero = new Real(0)
   static Infinity = new Real(Infinity)
   static E = new Real(Math.E)

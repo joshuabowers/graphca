@@ -43,7 +43,7 @@ start: statement | expression
 
 statement: assignment
 
-assignment: <>variable '<-' <>expression => 'ASSIGN'
+assignment: <identifier>$variable '<-' <>expression => 'ASSIGN'
 
 expression: arithmetic
 
@@ -72,28 +72,30 @@ grouping:
 | <f>callable '(' ^ <>expression ')' ${
   ({f, expression}) => $node(callableNodes.get(f) ?? 'ERROR', {expression})
 }
-| <>variable '(' ^ <...>argumentList ')' => 'INVOKE'
+| <function>$variable '(' ^ <...>argumentList ')' => 'INVOKE'
 | '(' ^ expression ')'
 | factor
 
 argumentList: expression % ','
 
 factor:
-| <value>(number?) i @node('I', ${({value}) => ({value: value || 1})})
-| <value>number => 'NUMBER'
-| e => 'E'
-| pi => 'PI'
-| infinity => 'INFINITY'
-| <name>variable => 'VARIABLE'
+| <value>($number?) $i @node('I', ${({value}) => ({value: value || 1})})
+| <value>$number => 'NUMBER'
+| $e => 'E'
+| $pi => 'PI'
+| $epsilon => 'EPSILON'
+| $infinity => 'INFINITY'
+| <name>$variable => 'VARIABLE'
 
 keywords: callable ![a-zA-Z]
 
 callable: ${functional}
 
-number @raw @token: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
-variable @raw @token: !(keywords) [a-zA-Z][a-zA-Z0-9]*
-i @raw @token: ${RegExp(Unicode.i, 'u')}
-e @raw @token: ${RegExp(Unicode.e, 'u')}
-pi @raw @token: ${RegExp(Unicode.pi, 'u')}
-infinity @raw @token: ${RegExp(Unicode.infinity, 'u')}
+$number @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
+$variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
+$i @raw: ${RegExp(Unicode.i, 'u')}
+$e @raw: ${RegExp(Unicode.e, 'u')}
+$pi @raw: ${RegExp(Unicode.pi, 'u')}
+$epsilon @raw: ${RegExp(Unicode.epsilon, 'u')}
+$infinity @raw: ${RegExp(Unicode.infinity, 'u')}
 `

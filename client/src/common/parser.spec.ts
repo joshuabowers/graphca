@@ -57,6 +57,11 @@ describe('parser', () => {
     expect(parser.value(input)).toMatchObject({'$label': 'INFINITY'})
   })
 
+  it('matches epsilon', () => {
+    const input = Unicode.epsilon
+    expect(parser.value(input)).toMatchObject({$label: 'EPSILON'})
+  })
+
   it('matches variables', () => {
     const variables = ['x', 'zed', 'y10']
     variables.forEach(v => {
@@ -259,7 +264,7 @@ describe('parser', () => {
   it('matches assignment statements', () => {
     expect(parser.value('x <- 5 + 2')).toMatchObject({
       '$label': 'ASSIGN',
-      'variable': 'x',
+      'identifier': 'x',
       'expression': {
         '$label': 'PLUS',
         'a': num('5'),
@@ -271,7 +276,7 @@ describe('parser', () => {
   it('matches variable invocations', () => {
     expect(parser.value('x(1, 2)')).toMatchObject({
       '$label': 'INVOKE',
-      'variable': 'x',
+      'function': 'x',
       'argumentList': [num('1'), num('2')]
     })
   })

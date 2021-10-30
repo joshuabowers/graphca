@@ -57,7 +57,7 @@ const visitAssign = (node: Node): Node => {
   const scope = $context() as Scope
   if(!scope){ throw new Error('No scope provided for assignment context'); }
   const evaluated = $visit(node.expression)
-  scope.set(node.variable, evaluated)
+  scope.set(node.identifier, evaluated)
   return evaluated
 }
 
@@ -65,7 +65,7 @@ const visitInvoke = (node: Node): Node => {
   const scope = $context() as Scope
   const setParameters = new Array<string>()
   if(!scope){ throw new Error('No scope provided for invocation context'); }
-  const functionBody = scope?.get(node.variable)
+  const functionBody = scope?.get(node.function)
   if(!functionBody){ return node }
   try {
     const parameters = applyVisitor(functionBody, parameterVisitor, $options())
@@ -92,6 +92,7 @@ export const evaluateVisitor: Visitor<Node> = {
   I: (node) => createFieldNode('COMPLEX', new Complex(0, node.value)),
   E: (node) => createFieldNode('REAL', Real.E),
   PI: (node) => createFieldNode('REAL', Real.PI),
+  EPSILON: (node) => createFieldNode('REAL', Real.Epsilon),
   INFINITY: (node) => createFieldNode('REAL', Real.Infinity),
   REAL: (node) => node,
   COMPLEX: (node) => node,
