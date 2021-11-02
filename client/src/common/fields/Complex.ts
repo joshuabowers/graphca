@@ -30,6 +30,10 @@ export class Complex extends Field<Complex> {
     return Math.atan2(this.b, this.a)
   }
 
+  get fieldName(): string {
+    return 'COMPLEX'
+  }
+
   toString() {
     const result: any[] = [];
     if(this.a !== 0) result.push(this.a)

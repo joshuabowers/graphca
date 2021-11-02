@@ -29,6 +29,14 @@ export class Scope {
     this.variables = new Map<symbol, Heap<Event>>()
   }
 
+  static from(variables: {[x: Identifier]: Node}) {
+    const scope = new Scope()
+    for(const identifier in variables){
+      scope.set(identifier, variables[identifier])
+    }
+    return scope
+  }
+
   has(identifier: Identifier, before = Date.now()) {
     return this.get(identifier, before) !== undefined
   }

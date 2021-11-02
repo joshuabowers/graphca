@@ -1,3 +1,5 @@
+import { Node } from 'pegase'
+
 const lanczos = {
   p: [
     676.5203681218851,
@@ -12,6 +14,7 @@ const lanczos = {
 }
 
 export abstract class Field<T extends Field<T>> {
+  abstract get fieldName(): string
   abstract toString(): string
   abstract add(that: T): T
   abstract subtract(that: T): T

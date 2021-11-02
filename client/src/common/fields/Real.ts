@@ -16,6 +16,10 @@ export class Real extends Field<Real> {
     this.value = Number(value)
   }
 
+  get fieldName(): string {
+    return 'REAL'
+  }
+
   toString() {
     return this.value === Infinity ? Unicode.infinity : this.value.toString()
   }
