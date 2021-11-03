@@ -12,6 +12,7 @@ export class Complex extends Field<Complex> {
   static NaN = new Complex(Number.NaN)
   static i = new Complex(0, 1)
   static One = new Complex(1, 0)
+  static Zero = new Complex(0, 0)
 
   a: number;
   b: number;

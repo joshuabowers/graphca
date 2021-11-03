@@ -2,7 +2,23 @@ import { $visit, Visitor, Node, $node } from 'pegase'
 import { Complex } from '../fields/Complex'
 import { Real } from '../fields/Real'
 
-export const createLimitVisitor = (asymptotes: {[x:string]: number | Real | Complex}): Visitor<Node> => {
+export type Asymptote = {[x: string]: number | Real | Complex}
+
+type BinaryOverride = (a: Node, b: Node) => Node | undefined
+
+const binaryOp = (node: Node, override?: BinaryOverride) => {
+  const a = $visit(node.a), b = $visit(node.b)
+  return override && override(a, b) || $node(node.$label, {a, b})
+}
+
+type UnaryOverride = (n: Node) => Node | undefined
+
+const unaryOp = (node: Node, override?: UnaryOverride) => {
+  const expression = $visit(node.expression)
+  return override && override(expression) || $node(node.$label, {expression})
+}
+
+export const createLimitVisitor = (asymptotes: Asymptote): Visitor<Node | undefined> => {
   return {
     REAL: (node) => node,
     COMPLEX: (node) => $node('REAL', {value: new Real(node.value.modulus())}),
@@ -13,14 +29,32 @@ export const createLimitVisitor = (asymptotes: {[x:string]: number | Real | Comp
       return $node(label, {value: next})  
     },
 
-    PLUS: (node) => {
-      const a = $visit(node.a), b = $visit(node.b)
-      return $node('PLUS', {a, b})
-    },
+    PLUS: binaryOp,
+    MINUS: binaryOp,
+    MULTIPLY: binaryOp,
+    DIVIDE: (node) => binaryOp(node, (a,b) => (
+      b.value instanceof Real && b.value.value === 0
+      || b.value instanceof Complex && b.value.modulus() === 0
+      ? $node('UNDEFINED', {}) : undefined
+    )),
+    EXPONENT: (node) => binaryOp(node, (a,b) => (
+      (a.value instanceof Real && a.value.value === 0)
+      && (b.value instanceof Real && b.value.value < 0 && (
+        b.value.value % 2 === 0
+        ? $node('INFINITY', {}) 
+        : $node('NEGATE', {expression: $node('INFINITY', {})})
+        )) 
+      || undefined
+    )),
 
-    MINUS: (node) => {
-      const a = $visit(node.a), b = $visit(node.b)
-      return $node('MINUS', {a, b})
-    }
+    NEGATE: unaryOp,
+
+    COS: unaryOp,
+    SIN: unaryOp,
+    TAN: unaryOp,
+
+    LB: unaryOp,
+    LN: unaryOp,
+    LG: unaryOp
   }
 }
