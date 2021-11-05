@@ -33,6 +33,8 @@ const binary = ($label: string, a: NodeLike, b: NodeLike) => ({
   $label, a, b
 })
 
+const unary = ($label: string, expression: NodeLike) => ({$label, expression})
+
 const real = (val: string) => ({'$label': 'REAL', 'value': new Real(val)})
 const variable = (name: string) => ({'$label': 'VARIABLE', name})
 
@@ -41,6 +43,13 @@ const subtract = (a: NodeLike, b: NodeLike) => binary('MINUS', a, b)
 const multiply = (a: NodeLike, b: NodeLike) => binary('MULTIPLY', a, b)
 const divide = (a: NodeLike, b: NodeLike) => binary('DIVIDE', a, b)
 const raise = (a: NodeLike, b: NodeLike) => binary('EXPONENT', a, b)
+
+const negate = (expression: NodeLike) => unary('NEGATE', expression)
+const ln = (expression: NodeLike) => unary('LN', expression)
+
+const cos = (expression: NodeLike) => unary('COS', expression)
+const sin = (expression: NodeLike) => unary('SIN', expression)
+const tan = (expression: NodeLike) => unary('TAN', expression)
 
 describe('differentiationVisitor', () => {
   describe('of constants', () => {
@@ -89,6 +98,122 @@ describe('differentiationVisitor', () => {
           multiply(real('1'), real('5'))
         ),
         raise(variable('x'), real('2'))
+      ))
+    })
+  })
+
+  describe('of powers and exponentials', () => {
+    it('returns the generalized power rule of the parts for powers', () => {
+      expectObject('x ^ 2', {}, multiply(
+        raise(variable('x'), real('2')),
+        add(
+          multiply(
+            real('1'),
+            divide(real('2'), variable('x'))
+          ),
+          multiply(
+            real('0'),
+            ln(variable('x'))
+          )
+        )
+      ))
+    })
+
+    it('returns the generalized power rule of the parts for exponentials', () => {
+      expectObject('2 ^ x', {}, multiply(
+        raise(real('2'), variable('x')),
+        add(
+          multiply(
+            real('0'),
+            divide(variable('x'), real('2'))
+          ),
+          multiply(
+            real('1'),
+            ln(real('2'))
+          )
+        )
+      ))
+    })
+  })
+
+  describe('of negations', () => {
+    it('returns the negation of derivative of the expression', () => {
+      expectObject('-x', {}, negate(real('1')))
+    })
+  })
+
+  describe('of cosines', () => {
+    it('returns the chain rule of the derivative of cosine of an expression', () => {
+      expectObject('cos(x)', {}, multiply(
+        negate(sin(variable('x'))),
+        real('1')
+      ))
+    })
+  })
+
+  describe('of sines', () => {
+    it('returns the chain rule of the derivative of sine of an expression', () => {
+      expectObject('sin(x)', {}, multiply(
+        cos(variable('x')),
+        real('1')
+      ))
+    })
+  })
+
+  describe('of tangents', () => {
+    it('returns the chain rule of the derivative of tangent of an expression', () => {
+      expectObject('tan(x)', {}, multiply(
+        add(
+          real('1'), 
+          raise(
+            tan(variable('x')), 
+            real('2')
+          )
+        ),
+        real('1')
+      ))
+    })
+  })
+
+  describe('of arccosines', () => {
+    it('returns the chain rule of the derivative of the arccos', () => {
+      expectObject('acos(x)', {}, negate(
+        divide(
+          real('1'),
+          raise(
+            subtract(
+              real('1'),
+              raise(variable('x'), real('2'))
+            ),
+            real('0.5')
+          )
+        )
+      ))
+    })
+  })
+
+  describe('of arcsines', () => {
+    it('returns the chain rule of the derivative of the arcsin', () => {
+      expectObject('asin(x)', {}, divide(
+        real('1'),
+        raise(
+          subtract(
+            real('1'), 
+            raise(variable('x'), real('2'))),
+          real('0.5')
+        )
+      ))
+    })
+  })
+
+  describe('of arctangents', () => {
+    it('returns the chain rule of the derivative of the arctan', () => {
+      expectObject('atan(x)', {}, divide(
+        real('1'),
+        add(
+          real('1'),
+          raise(variable('x'), real('2'))
+        )
       ))
     })
   })
