@@ -248,4 +248,46 @@ describe('differentiationVisitor', () => {
       ))
     })
   })
+
+  describe('of area hyperbolic cosines', () => {
+    it('returns the chain rule of the derivative of the acosh', () => {
+      expectObject('acosh(x)', {}, divide(
+        real('1'),
+        raise(
+          subtract(
+            raise(variable('x'), real('2')),
+            real('1')
+          ),
+          real('0.5')
+        )
+      ))
+    })
+  })
+
+  describe('of area hyperbolic sines', () => {
+    it('returns the chain rule of the derivative of the asinh', () => {
+      expectObject('asinh(x)', {}, divide(
+        real('1'),
+        raise(
+          add(
+            real('1'),
+            raise(variable('x'), real('2'))
+          ),
+          real('0.5')
+        )
+      ))
+    })
+  })
+
+  describe('of area hyperbolic tangents', () => {
+    it('returns the chain rule of the derivative of the atanh', () => {
+      expectObject('atanh(x)', {}, divide(
+        real('1'),
+        subtract(
+          real('1'),
+          raise(variable('x'), real('2'))
+        )
+      ))
+    })
+  })
 })

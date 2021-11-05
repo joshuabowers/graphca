@@ -181,5 +181,41 @@ export const differentiationVisitor: Visitor<Node> = {
       ),
       $visit(node.expression)
     )
+  },
+
+  ACOSH: (node) => {
+    return divide(
+      $visit(node.expression),
+      raise(
+        subtract(
+          raise(node.expression, real(2)),
+          real(1)
+        ),
+        real(0.5)
+      )
+    )
+  },
+
+  ASINH: (node) => {
+    return divide(
+      $visit(node.expression),
+      raise(
+        add(
+          real(1),
+          raise(node.expression, real(2))
+        ),
+        real(0.5)
+      )
+    )
+  },
+
+  ATANH: (node) => {
+    return divide(
+      $visit(node.expression),
+      subtract(
+        real(1),
+        raise(node.expression, real(2))
+      )
+    )
   }
 }
