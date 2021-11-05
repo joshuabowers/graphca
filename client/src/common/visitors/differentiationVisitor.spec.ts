@@ -29,27 +29,28 @@ const expectObject = (input: string, scopeEntries: ScopeEntry, expected: object)
 
 type NodeLike = Omit<Node, '$from' | '$to'>
 
-const binary = ($label: string, a: NodeLike, b: NodeLike) => ({
-  $label, a, b
-})
-
-const unary = ($label: string, expression: NodeLike) => ({$label, expression})
+const unary = ($label: string) => (expression: NodeLike) => ({$label, expression})
+const binary = ($label: string) => (a: NodeLike, b: NodeLike) => ({$label, a, b})
 
 const real = (val: string) => ({'$label': 'REAL', 'value': new Real(val)})
 const variable = (name: string) => ({'$label': 'VARIABLE', name})
 
-const add = (a: NodeLike, b: NodeLike) => binary('PLUS', a, b)
-const subtract = (a: NodeLike, b: NodeLike) => binary('MINUS', a, b)
-const multiply = (a: NodeLike, b: NodeLike) => binary('MULTIPLY', a, b)
-const divide = (a: NodeLike, b: NodeLike) => binary('DIVIDE', a, b)
-const raise = (a: NodeLike, b: NodeLike) => binary('EXPONENT', a, b)
+const add = binary('PLUS')
+const subtract = binary('MINUS')
+const multiply = binary('MULTIPLY')
+const divide = binary('DIVIDE')
+const raise = binary('EXPONENT')
 
-const negate = (expression: NodeLike) => unary('NEGATE', expression)
-const ln = (expression: NodeLike) => unary('LN', expression)
+const negate = unary('NEGATE')
+const ln = unary('LN')
 
-const cos = (expression: NodeLike) => unary('COS', expression)
-const sin = (expression: NodeLike) => unary('SIN', expression)
-const tan = (expression: NodeLike) => unary('TAN', expression)
+const cos = unary('COS')
+const sin = unary('SIN')
+const tan = unary('TAN')
+
+const cosh = unary('COSH')
+const sinh = unary('SINH')
+const tanh = unary('TANH')
 
 describe('differentiationVisitor', () => {
   describe('of constants', () => {
@@ -214,6 +215,36 @@ describe('differentiationVisitor', () => {
           real('1'),
           raise(variable('x'), real('2'))
         )
+      ))
+    })
+  })
+
+  describe('of hyperbolic cosines', () => {
+    it('returns the chain rule of the derivative of the cosh', () => {
+      expectObject('cosh(x)', {}, multiply(
+        sinh(variable('x')),
+        real('1')
+      ))
+    })
+  })
+
+  describe('of hyperbolic sines', () => {
+    it('returns the chain rule of the derivative of the sinh', () => {
+      expectObject('sinh(x)', {}, multiply(
+        cosh(variable('x')),
+        real('1')
+      ))
+    })
+  })
+
+  describe('of hyperbolic tangents', () => {
+    it('returns the chain rule of the derivative of the tanh', () => {
+      expectObject('tanh(x)', {}, multiply(
+        subtract(
+          real('1'),
+          raise(tanh(variable('x')), real('2'))
+        ),
+        real('1')
       ))
     })
   })

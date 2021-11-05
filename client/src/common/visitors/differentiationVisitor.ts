@@ -1,19 +1,28 @@
 import { Visitor, Node, $visit, $node } from 'pegase'
 import { Real } from '../fields/Real'
 
-const unary = (label: string, expression: Node) => $node(label, {expression})
+const unary = (label: string) => (expression: Node) => $node(label, {expression})
+const binary = (label: string) => (a: Node, b: Node) => $node(label, {a, b})
 
 const real = (value: number) => $node('REAL', {value: new Real(value)})
-const add = (a: Node, b: Node) => $node('PLUS', {a, b})
-const subtract = (a: Node, b: Node) => $node('MINUS', {a, b})
-const multiply = (a: Node, b: Node) => $node('MULTIPLY', {a, b})
-const divide = (a: Node, b: Node) => $node('DIVIDE', {a, b})
-const raise = (a: Node, b: Node) => $node('EXPONENT', {a, b})
-const negate = (expression: Node) => unary('NEGATE', expression)
-const cos = (expression: Node) => unary('COS', expression)
-const sin = (expression: Node) => unary('SIN', expression)
-const tan = (expression: Node) => unary('TAN', expression)
-const ln = (expression: Node) => unary('LN', expression)
+
+const add = binary('PLUS')
+const subtract = binary('MINUS')
+const multiply = binary('MULTIPLY')
+const divide = binary('DIVIDE')
+const raise = binary('EXPONENT')
+
+const negate = unary('NEGATE')
+
+const cos = unary('COS')
+const sin = unary('SIN')
+const tan = unary('TAN')
+
+const cosh = unary('COSH')
+const sinh = unary('SINH')
+const tanh = unary('TANH')
+
+const ln = unary('LN')
 
 export const differentiationVisitor: Visitor<Node> = {
   REAL: (node) => real(0),
@@ -30,10 +39,9 @@ export const differentiationVisitor: Visitor<Node> = {
    * @returns the product rule
    */
   MULTIPLY: (node) => {
-    const a = $visit(node.a), b = $visit(node.b)
     return add(
-      multiply(a, node.b),
-      multiply(node.a, b)
+      multiply($visit(node.a), node.b),
+      multiply(node.a, $visit(node.b))
     )
   },
 
@@ -45,11 +53,10 @@ export const differentiationVisitor: Visitor<Node> = {
    * @returns the quotient rule
    */
   DIVIDE: (node) => {
-    const a = $visit(node.a), b = $visit(node.b)
     return divide(
       subtract(
-        multiply(a, node.b),
-        multiply(b, node.a)
+        multiply($visit(node.a), node.b),
+        multiply($visit(node.b), node.a)
       ),
       raise(node.b, real(2))
     )
@@ -63,16 +70,15 @@ export const differentiationVisitor: Visitor<Node> = {
    * @returns the generalized power rule
    */
   EXPONENT: (node) => {
-    const a = $visit(node.a), b = $visit(node.b)
     return multiply(
       node,
       add(
         multiply(
-          a,
+          $visit(node.a),
           divide(node.b, node.a)
         ),
         multiply(
-          b,
+          $visit(node.b),
           ln(node.a)
         )
       )
@@ -89,23 +95,20 @@ export const differentiationVisitor: Visitor<Node> = {
   NEGATE: (node) => negate($visit(node.expression)),
 
   COS: (node) => {
-    const expression = $visit(node.expression)
     return multiply(
       negate(sin(node.expression)),
-      expression
+      $visit(node.expression)
     )
   },
 
   SIN: (node) => {
-    const expression = $visit(node.expression)
     return multiply(
       cos(node.expression),
-      expression
+      $visit(node.expression)
     )
   },
 
   TAN: (node) => {
-    const expression = $visit(node.expression)
     return multiply(
       add(
         real(1),
@@ -114,15 +117,14 @@ export const differentiationVisitor: Visitor<Node> = {
           real(2)
         )
       ),
-      expression
+      $visit(node.expression)
     )
   },
 
   ACOS: (node) => {
-    const expression = $visit(node.expression)
     return negate(
       divide(
-        expression,
+        $visit(node.expression),
         raise(
           subtract(
             real(1),
@@ -135,9 +137,8 @@ export const differentiationVisitor: Visitor<Node> = {
   },
 
   ASIN: (node) => {
-    const expression = $visit(node.expression)
     return divide(
-      expression,
+      $visit(node.expression),
       raise(
         subtract(
           real(1),
@@ -149,13 +150,36 @@ export const differentiationVisitor: Visitor<Node> = {
   },
 
   ATAN: (node) => {
-    const expression = $visit(node.expression)
     return divide(
-      expression,
+      $visit(node.expression),
       add(
         real(1),
         raise(node.expression, real(2))
       )
+    )
+  },
+
+  COSH: (node) => {
+    return multiply(
+      sinh(node.expression),
+      $visit(node.expression)
+    )
+  },
+
+  SINH: (node) => {
+    return multiply(
+      cosh(node.expression),
+      $visit(node.expression)
+    )
+  },
+
+  TANH: (node) => {
+    return multiply(
+      subtract(
+        real(1),
+        raise(tanh(node.expression), real(2))
+      ),
+      $visit(node.expression)
     )
   }
 }
