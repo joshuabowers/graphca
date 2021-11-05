@@ -24,6 +24,14 @@ const tanh = unary('TANH')
 
 const ln = unary('LN')
 
+const logarithm = (base: number) => (node: Node) => divide(
+  $visit(node.expression),
+  base === Math.E ? node.expression : multiply(
+    node.expression,
+    ln(real(base))
+  )
+)
+
 export const differentiationVisitor: Visitor<Node> = {
   REAL: (node) => real(0),
   VARIABLE: (node) => real(1),
@@ -217,5 +225,9 @@ export const differentiationVisitor: Visitor<Node> = {
         raise(node.expression, real(2))
       )
     )
-  }
+  },
+
+  LB: logarithm(2),
+  LN: logarithm(Math.E),
+  LG: logarithm(10)
 }

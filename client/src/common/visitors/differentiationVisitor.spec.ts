@@ -290,4 +290,37 @@ describe('differentiationVisitor', () => {
       ))
     })
   })
+
+  describe('of binary logarithms', () => {
+    it('returns the chain rule of the derivative of the lb', () => {
+      expectObject('lb(x)', {}, divide(
+        real('1'),
+        multiply(
+          variable('x'),
+          ln(real('2'))
+        )
+      ))
+    })
+  })
+
+  describe('of natural logarithms', () => {
+    it('returns the chain rule of the derivative of the ln', () => {
+      expectObject('ln(x)', {}, divide(
+        real('1'),
+        variable('x')
+      ))
+    })
+  })
+
+  describe('of common logarithms', () => {
+    it('returns the chain rule of the derivative of the lg', () => {
+      expectObject('lg(x)', {}, divide(
+        real('1'),
+        multiply(
+          variable('x'),
+          ln(real('10'))
+        )
+      ))
+    })
+  })
 })
