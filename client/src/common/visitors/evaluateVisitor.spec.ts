@@ -282,7 +282,7 @@ describe('evaluateVisitor', () => {
       expect(s.get('x')).toBeUndefined()
       expect(output).toMatchObject({
         $label: 'INVOKE',
-        'function': 'x',
+        'identifier': 'x',
         'argumentList': [{$label: 'EXPONENT', 'a': {'value': '2'}, 'b': {'value': '3'}}]
       })
     })

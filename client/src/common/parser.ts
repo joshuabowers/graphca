@@ -72,7 +72,7 @@ grouping:
 | <f>callable '(' ^ <>expression ')' ${
   ({f, expression}) => $node(callableNodes.get(f) ?? 'ERROR', {expression})
 }
-| <function>$variable '(' ^ <...>argumentList ')' => 'INVOKE'
+| <identifier>$variable '(' ^ <...>argumentList ')' => 'INVOKE'
 | '(' ^ expression ')'
 | factor
 

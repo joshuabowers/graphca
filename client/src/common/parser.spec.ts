@@ -1,9 +1,27 @@
 import { Unicode } from "./MathSymbols";
 import { parser } from "./parser";
+import { 
+  NodeLike,
+  num, real, variable,
+  add, subtract, multiply, divide, raise, negate,
+  cos, sin, tan,
+  acos, asin, atan,
+  cosh, sinh, tanh,
+  acosh, asinh, atanh,
+  lg,
+  gamma, factorial, abs,
+  assign, invoke
+} from './visitors/helpers/NodeLike'
+
+const expectObject = (input: string, expected: NodeLike) => {
+  let output = undefined
+  expect(() => {output = parser.value(input)}).not.toThrow()
+  expect(output).not.toBeUndefined()
+  expect(output).toMatchObject(expected)
+}
 
 // Helper functions for generating tree nodes to check.
-const num = (val: string) => ({'$label': 'NUMBER', 'value': val})
-const variable = (name: string) => ({'$label': 'VARIABLE', 'name': name})
+// const num = (val: string) => ({'$label': 'NUMBER', 'value': val})
 
 describe('parser', () => {
   it('can parse a new expression after a failure', () => {
@@ -73,211 +91,115 @@ describe('parser', () => {
   })
 
   it('matches basic arithmetic', () => {
-    expect(parser.value('x + 1')).toMatchObject({
-      '$label': 'PLUS', 
-      'a': variable('x'), 
-      'b': num('1')
-    })
-    expect(parser.value('1 + x * 2')).toMatchObject({
-      '$label': 'PLUS',
-      'a': num('1'),
-      'b': {
-        '$label': 'MULTIPLY',
-        'a': variable('x'),
-        'b': num('2')
-      }
-    })
+    expectObject('x + 1', add(variable('x'), num(1)))
+    expectObject('1 + x * 2', add(
+      num(1), multiply(variable('x'), num(2))
+    ))
   })
 
   it('associates the minus operator to the left', () => {
-    expect(parser.value('7 - 2 - 4')).toMatchObject({
-      '$label': 'MINUS',
-      'a': {
-        '$label': 'MINUS',
-        'a': num('7'),
-        'b': num('2')
-      },
-      'b': num('4')
-    })
+    expectObject('7 - 2 - 4', subtract(
+      subtract(num(7), num(2)),
+      num(4)
+    ))
   })
 
   it('handles operator precedence and associativity', () => {
-    expect(parser.value('1 + 2 * 3 - 4 / n')).toMatchObject({
-      '$label': 'MINUS',
-      'a': {
-        '$label': 'PLUS',
-        'a': num('1'),
-        'b': {
-          '$label': 'MULTIPLY',
-          'a': num('2'),
-          'b': num('3')
-        }
-      },
-      'b': {
-        '$label': 'DIVIDE',
-        'a': num('4'),
-        'b': variable('n')
-      }
-    })
+    expectObject('1 + 2 * 3 - 4 / n', subtract(
+      add(
+        num(1),
+        multiply(num(2), num(3))
+      ),
+      divide(num(4), variable('n'))
+    ))
   })
 
   it('matches a function call', () => {
-    expect(parser.value('cos(x)')).toMatchObject({
-      '$label': 'COS',
-      'expression': variable('x')
-    })
+    expectObject('cos(x)', cos(variable('x')))
   })
 
   it('matches functional expressions', () => {
-    expect(parser.value('cos(lg(1024*x))')).toMatchObject({
-      '$label': 'COS',
-      'expression': {
-        '$label': 'LG',
-        'expression': {
-          '$label': 'MULTIPLY',
-          'a': num('1024'),
-          'b': variable('x')
-        }
-      }
-    })
+    expectObject('cos(lg(1024*x))', cos(
+      lg(
+        multiply(num(1024), variable('x'))
+      )
+    ))
   })
 
   it('matches functional expressions in arithmetic', () => {
-    expect(parser.value('1 + 2 * cos(x)')).toMatchObject({
-      '$label': 'PLUS',
-      'a': num('1'),
-      'b': {
-        '$label': 'MULTIPLY',
-        'a': num('2'),
-        'b': {
-          '$label': 'COS',
-          'expression': variable('x')
-        }
-      }
-    })
+    expectObject('1 + 2 * cos(x)', add(
+      num(1),
+      multiply(
+        num(2), cos(variable('x'))
+      )
+    ))
+  })
+
+  it('matches trigonometric functions', () => {
+    expectObject('cos(x)', cos(variable('x')))
+    expectObject('sin(x)', sin(variable('x')))
+    expectObject('tan(x)', tan(variable('x')))
   })
 
   it('matches arcus functions', () => {
-    expect(parser.value('acos(x)')).toMatchObject({
-      '$label': 'ACOS',
-      'expression': variable('x')
-    })
-    expect(parser.value('asin(x)')).toMatchObject({
-      '$label': 'ASIN',
-      'expression': variable('x')
-    })
-    expect(parser.value('atan(x)')).toMatchObject({
-      '$label': 'ATAN',
-      'expression': variable('x')
-    })
+    expectObject('acos(x)', acos(variable('x')))
+    expectObject('asin(x)', asin(variable('x')))
+    expectObject('atan(x)', atan(variable('x')))
   })
 
   it('matches hyperbolic functions', () => {
-    expect(parser.value('cosh(x)')).toMatchObject({
-      '$label': 'COSH',
-      'expression': variable('x')
-    })
-    expect(parser.value('sinh(x)')).toMatchObject({
-      '$label': 'SINH',
-      'expression': variable('x')
-    })
-    expect(parser.value('tanh(x)')).toMatchObject({
-      '$label': 'TANH',
-      'expression': variable('x')
-    })
+    expectObject('cosh(x)', cosh(variable('x')))
+    expectObject('sinh(x)', sinh(variable('x')))
+    expectObject('tanh(x)', tanh(variable('x')))
   })
 
   it('matches area hyperbolic functions', () => {
-    expect(parser.value('acosh(x)')).toMatchObject({
-      '$label': 'ACOSH',
-      'expression': variable('x')
-    })
-    expect(parser.value('asinh(x)')).toMatchObject({
-      '$label': 'ASINH',
-      'expression': variable('x')
-    })
-    expect(parser.value('atanh(x)')).toMatchObject({
-      '$label': 'ATANH',
-      'expression': variable('x')
-    })
+    expectObject('acosh(x)', acosh(variable('x')))
+    expectObject('asinh(x)', asinh(variable('x')))
+    expectObject('atanh(x)', atanh(variable('x')))
   })
 
   it('matches negations', () => {
-    expect(parser.value('-1')).toMatchObject({
-      '$label': 'NEGATE',
-      'expression': num('1')
-    })
-    expect(parser.value('-(x - 1)')).toMatchObject({
-      '$label': 'NEGATE',
-      'expression': {
-        '$label': 'MINUS',
-        'a': variable('x'),
-        'b': num('1')
-      }
-    })
+    expectObject('-1', negate(num(1)))
+    expectObject('-(x - 1)', negate(
+      subtract(variable('x'), num(1))
+    ))
   })
 
   it('matches gamma', () => {
-    expect(parser.value(`${Unicode.gamma}(x)`)).toMatchObject({
-      '$label': 'GAMMA',
-      'expression': variable('x')
-    })
+    expectObject(`${Unicode.gamma}(x)`, gamma(variable('x')))
   })
 
   it('matches exponents', () => {
-    expect(parser.value('(-x)^2')).toMatchObject({
-      '$label': 'EXPONENT',
-      'a': {
-        '$label': 'NEGATE',
-        'expression': variable('x')
-      },
-      'b': num('2')
-    })
+    expectObject('(-x)^2', raise(
+      negate(variable('x')), num(2)
+    ))
   })
 
   it('has the proper associativity for exponents', () => {
-    expect(parser.value('x^2+5')).toMatchObject({
-      $label: 'PLUS',
-      'a': {
-        $label: 'EXPONENT',
-        'a': variable('x'),
-        'b': num('2')
-      },
-      'b': num('5')
-    })
+    expectObject('x^2+5', add(
+      raise(variable('x'), num(2)),
+      num(5)
+    ))
   })
 
   it('matches factorials', () => {
-    expect(parser.value('n!')).toMatchObject({
-      '$label': 'FACTORIAL',
-      'expression': variable('n')
-    })
+    expectObject('n!', factorial(variable('n')))
   })
 
   it('matches absolute values', () => {
-    expect(parser.value('abs(x)')).toMatchObject({
-      '$label': 'ABS',
-      'expression': variable('x')
-    })
+    expectObject('abs(x)', abs(variable('x')))
   })
 
   it('matches assignment statements', () => {
-    expect(parser.value('x <- 5 + 2')).toMatchObject({
-      '$label': 'ASSIGN',
-      'identifier': 'x',
-      'expression': {
-        '$label': 'PLUS',
-        'a': num('5'),
-        'b': num('2')
-      }
-    })
+    expectObject('x <- 5 + 2', assign(
+      'x', add(num(5), num(2))
+    ))
   })
 
   it('matches variable invocations', () => {
-    expect(parser.value('x(1, 2)')).toMatchObject({
-      '$label': 'INVOKE',
-      'function': 'x',
-      'argumentList': [num('1'), num('2')]
-    })
+    expectObject('x(1, 2)', invoke(
+      'x', [num(1), num(2)]
+    ))
   })
 })

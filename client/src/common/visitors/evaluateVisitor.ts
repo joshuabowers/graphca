@@ -65,7 +65,7 @@ const visitInvoke = (node: Node): Node => {
   const scope = $context() as Scope
   const setParameters = new Array<string>()
   if(!scope){ throw new Error('No scope provided for invocation context'); }
-  const functionBody = scope?.get(node.function)
+  const functionBody = scope?.get(node.identifier)
   if(!functionBody){ return node }
   try {
     const parameters = applyVisitor(functionBody, parameterVisitor, $options())
