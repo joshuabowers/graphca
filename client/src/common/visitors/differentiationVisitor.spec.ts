@@ -2,9 +2,14 @@ import { differentiationVisitor } from "./differentiationVisitor";
 import { evaluateVisitor } from "./evaluateVisitor";
 import { parser } from "../parser";
 import { Scope } from "../Scope";
-import { Node, Location } from 'pegase'
-import { Real } from '../fields/Real'
+import { Node } from 'pegase'
 import { Unicode } from "../MathSymbols";
+import { 
+  real, variable,
+  add, subtract, multiply, divide, raise,
+  negate, ln,
+  cos, sin, tan, cosh, sinh, tanh
+} from './helpers/NodeLike'
 
 const apply = (input: string, scope: Scope) => parser.value(
   input, {visit: [evaluateVisitor, differentiationVisitor], context: scope}
@@ -26,31 +31,6 @@ const expectObject = (input: string, scopeEntries: ScopeEntry, expected: object)
   expect(output).not.toBeUndefined()
   expect(output).toMatchObject(expected)
 }
-
-type NodeLike = Omit<Node, '$from' | '$to'>
-
-const unary = ($label: string) => (expression: NodeLike) => ({$label, expression})
-const binary = ($label: string) => (a: NodeLike, b: NodeLike) => ({$label, a, b})
-
-const real = (val: string) => ({'$label': 'REAL', 'value': new Real(val)})
-const variable = (name: string) => ({'$label': 'VARIABLE', name})
-
-const add = binary('PLUS')
-const subtract = binary('MINUS')
-const multiply = binary('MULTIPLY')
-const divide = binary('DIVIDE')
-const raise = binary('EXPONENT')
-
-const negate = unary('NEGATE')
-const ln = unary('LN')
-
-const cos = unary('COS')
-const sin = unary('SIN')
-const tan = unary('TAN')
-
-const cosh = unary('COSH')
-const sinh = unary('SINH')
-const tanh = unary('TANH')
 
 describe('differentiationVisitor', () => {
   describe('of constants', () => {

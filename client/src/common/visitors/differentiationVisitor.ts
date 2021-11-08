@@ -1,28 +1,10 @@
-import { Visitor, Node, $visit, $node } from 'pegase'
-import { Real } from '../fields/Real'
-
-const unary = (label: string) => (expression: Node) => $node(label, {expression})
-const binary = (label: string) => (a: Node, b: Node) => $node(label, {a, b})
-
-const real = (value: number) => $node('REAL', {value: new Real(value)})
-
-const add = binary('PLUS')
-const subtract = binary('MINUS')
-const multiply = binary('MULTIPLY')
-const divide = binary('DIVIDE')
-const raise = binary('EXPONENT')
-
-const negate = unary('NEGATE')
-
-const cos = unary('COS')
-const sin = unary('SIN')
-const tan = unary('TAN')
-
-const cosh = unary('COSH')
-const sinh = unary('SINH')
-const tanh = unary('TANH')
-
-const ln = unary('LN')
+import { Visitor, Node, $visit } from 'pegase'
+import { 
+  real,
+  add, subtract, multiply, divide, raise,
+  cos, sin, tan, cosh, sinh, tanh,
+  negate, ln
+} from './helpers/Node'
 
 const logarithm = (base: number) => (node: Node) => divide(
   $visit(node.expression),
