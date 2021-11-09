@@ -5,8 +5,11 @@ import { Unicode } from './MathSymbols';
 const operators = new Map([
   ['+', 'ADD'],
   ['-', 'SUBTRACT'],
+  [Unicode.minus, 'SUBTRACT'],
   ['*', 'MULTIPLY'],
-  ['/', 'DIVIDE']
+  [Unicode.multiplication, 'MULTIPLY'],
+  ['/', 'DIVIDE'],
+  [Unicode.division, 'DIVIDE']
 ])
 
 const functions = [
@@ -50,13 +53,13 @@ expression: arithmetic
 arithmetic: <a>product <b>arithmeticPrime ${({a,b}) => leftAssociate(a,b)}
 
 arithmeticPrime:
-| <op>("+" | "-") <a>product <b>arithmeticPrime ${(args) => args}
+| <op>("+" | "-" | $subtract) <a>product <b>arithmeticPrime ${(args) => args}
 | ''
 
 product: <a>exponent <b>productPrime ${({a,b}) => leftAssociate(a,b)}
 
 productPrime:
-| <op>("*" | "/") <a>exponent <b>productPrime ${(args) => args}
+| <op>("*" | $multiply | "/" | $divide) <a>exponent <b>productPrime ${(args) => args}
 | ''
 
 exponent:
@@ -98,4 +101,7 @@ $e @raw: ${RegExp(Unicode.e, 'u')}
 $pi @raw: ${RegExp(Unicode.pi, 'u')}
 $epsilon @raw: ${RegExp(Unicode.epsilon, 'u')}
 $infinity @raw: ${RegExp(Unicode.infinity, 'u')}
+$subtract @raw: ${RegExp(Unicode.minus, 'u')}
+$multiply @raw: ${RegExp(Unicode.multiplication, 'u')}
+$divide @raw: ${RegExp(Unicode.division, 'u')}
 `

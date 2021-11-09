@@ -1,5 +1,3 @@
-import { Node } from 'pegase'
-
 const lanczos = {
   p: [
     676.5203681218851,

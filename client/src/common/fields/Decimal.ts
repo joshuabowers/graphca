@@ -42,6 +42,10 @@ export class Decimal extends Field<Decimal> {
     this.sign = this.significand < 0 ? -1 : 1
   }
 
+  get fieldName(): string {
+    return 'DECIMAL'
+  }
+
   toString() {
     const zeroPoint = Decimal.exponent()
     const whole = this.significand / zeroPoint

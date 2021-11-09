@@ -114,6 +114,19 @@ describe('parser', () => {
     ))
   })
 
+  it('accepts alternate symbols for arithmetic operators', () => {
+    expectObject(
+      `1 ${Unicode.minus} 2 ${Unicode.multiplication} 3 ${Unicode.division} 4`,
+      subtract(
+        num(1),
+        divide(
+          multiply(num(2), num(3)),
+          num(4)
+        )
+      )
+    )
+  })
+
   it('matches a function call', () => {
     expectObject('cos(x)', cos(variable('x')))
   })
