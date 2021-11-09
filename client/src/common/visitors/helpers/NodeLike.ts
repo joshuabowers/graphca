@@ -1,4 +1,4 @@
-import { $node, Node } from 'pegase'
+import { Node } from 'pegase'
 import { Real } from '../../fields/Real'
 
 export type NodeLike = Omit<Node, '$from' | '$to'>
