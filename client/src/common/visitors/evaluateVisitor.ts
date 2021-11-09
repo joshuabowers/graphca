@@ -101,8 +101,8 @@ export const evaluateVisitor: Visitor<Node> = {
   ASSIGN: (node) => visitAssign(node),
   INVOKE: (node) => visitInvoke(node),
 
-  PLUS: (node) => visitBinary(node, (a, b) => a.add(b)),
-  MINUS: (node) => visitBinary(node, (a, b) => a.subtract(b)),
+  ADD: (node) => visitBinary(node, (a, b) => a.add(b)),
+  SUBTRACT: (node) => visitBinary(node, (a, b) => a.subtract(b)),
   MULTIPLY: (node) => visitBinary(node, (a, b) => a.multiply(b)),
   DIVIDE: (node) => visitBinary(node, (a, b) => a.divide(b)),
   EXPONENT: (node) => visitBinary(node, (a, b) => a.raise(b)),

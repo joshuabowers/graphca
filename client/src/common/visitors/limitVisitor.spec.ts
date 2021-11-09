@@ -50,13 +50,13 @@ describe('limitVisitor', () => {
 
   describe('of additions', () => {
     it('is the sum of the limits of the parts', () => {
-      expectObject('x + 5', {'x': 7}, {$label: 'PLUS', 'a': real('7'), 'b': real('5')})
+      expectObject('x + 5', {'x': 7}, {$label: 'ADD', 'a': real('7'), 'b': real('5')})
     })
   })
 
   describe('of subtractions', () => {
     it('is the difference of the limits of the parts', () => {
-      expectObject('x - 5', {'x': 7}, {$label: 'MINUS', 'a': real('7'), 'b': real('5')})
+      expectObject('x - 5', {'x': 7}, {$label: 'SUBTRACT', 'a': real('7'), 'b': real('5')})
     })
   })
 

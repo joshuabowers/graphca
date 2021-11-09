@@ -6,8 +6,8 @@ export const binary = (label: string) => (a: Node, b: Node) => $node(label, {a, 
 
 export const real = (value: number) => $node('REAL', {value: new Real(value)})
 
-export const add = binary('PLUS')
-export const subtract = binary('MINUS')
+export const add = binary('ADD')
+export const subtract = binary('SUBTRACT')
 export const multiply = binary('MULTIPLY')
 export const divide = binary('DIVIDE')
 export const raise = binary('EXPONENT')

@@ -34,8 +34,8 @@ export const componentVisitor: Visitor<JSX.Element> = {
   COMPLEX: (node) => <span className={styles.complex}>{node.value.toString()}</span>,
   PI: (node) => <span className={styles.number}>{Unicode.pi}</span>,
   INFINITY: (node) => <span className={styles.number}>{Unicode.infinity}</span>,
-  PLUS: (node) => binaryOp(node, '+'),
-  MINUS: (node) => binaryOp(node, Unicode.minus),
+  ADD: (node) => binaryOp(node, '+'),
+  SUBTRACT: (node) => binaryOp(node, Unicode.minus),
   MULTIPLY: (node) => binaryOp(node, Unicode.multiplication),
   DIVIDE: (node) => binaryOp(node, Unicode.division),
   EXPONENT: (node) => (

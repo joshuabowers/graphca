@@ -3,8 +3,8 @@ import { Scope } from './Scope';
 import { Unicode } from './MathSymbols';
 
 const operators = new Map([
-  ['+', 'PLUS'],
-  ['-', 'MINUS'],
+  ['+', 'ADD'],
+  ['-', 'SUBTRACT'],
   ['*', 'MULTIPLY'],
   ['/', 'DIVIDE']
 ])

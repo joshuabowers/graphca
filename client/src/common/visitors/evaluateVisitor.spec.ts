@@ -6,11 +6,14 @@ import { Field } from "../fields/Field";
 import { Complex } from "../fields/Complex";
 import { Real } from "../fields/Real";
 import { Scope } from "../Scope";
+import { 
+  NodeLike,
+  num, real, variable,
+  add,  multiply, raise, invoke
+} from './helpers/NodeLike'
 
 const apply = (input: string, context?: Scope) => parser.value(input, {visit: evaluateVisitor, context})
-const real = (val: string) => ({'$label': 'REAL', 'value': new Real(val)})
 const complex = (val: string) => ({'$label': 'COMPLEX', 'value': val})
-const variable = (name: string) => ({'$label': 'VARIABLE', 'name': name})
 
 type Transform<T extends Field<T>> = (value: T) => number
 
@@ -33,6 +36,13 @@ const expectReal = (input: string, value: Real, precision: number = 17) => {
 
 const expectComplex = (input: string, value: Complex, precision: number = 17) => {
   expectField(input, 'COMPLEX', value, precision, complex => complex.a, complex => complex.b)
+}
+
+const expectObject = (input: string, expected: NodeLike) => {
+  let output = undefined
+  expect(() => {output = apply(input)}).not.toThrow()
+  expect(output).not.toBeUndefined()
+  expect(output).toMatchObject(expected)
 }
 
 describe('evaluateVisitor', () => {
@@ -188,17 +198,11 @@ describe('evaluateVisitor', () => {
 
   describe('with variables but without context', () => {
     it('returns the same node structure', () => {
-      const output = apply('1 + x')
-      expect(output.$label).toEqual('PLUS')
+      expectObject('1 + x', add(real(1), variable('x')))
     })
 
     it('evaluates numeric sub-expressions', () => {
-      const output = apply('(10 / 5) * x')
-      expect(output).toMatchObject({
-        '$label': 'MULTIPLY',
-        a: real('2'),
-        b: variable('x')
-      })
+      expectObject('(10 / 5) * x', multiply(real('2'), variable('x')))
     })
 
     it('throws an error if no scope given on assignment', () => {
@@ -233,11 +237,9 @@ describe('evaluateVisitor', () => {
       const s = new Scope()
       apply('y <- x + 5', s)
       expect(s.get('x')).toBeUndefined()
-      expect(s.get('y')).toMatchObject({
-        $label: 'PLUS',
-        'a': variable('x'),
-        'b': real('5')
-      })
+      expect(s.get('y')).toMatchObject(add(
+        variable('x'), real(5)
+      ))
     })
 
     it('evaluates variables when assigning to variables', () => {
@@ -267,11 +269,7 @@ describe('evaluateVisitor', () => {
       apply('y <- x * 5', s)
       apply('x <- 10', s)
       expect(s.get('x')).toMatchObject(real('10'))
-      expect(s.get('y')).toMatchObject({
-        $label: 'MULTIPLY',
-        'a': variable('x'),
-        'b': real('5')
-      })
+      expect(s.get('y')).toMatchObject(multiply(variable('x'), real(5)))
       const output = apply('y', s)
       expect(output).toMatchObject(real('50'))
     })
@@ -280,11 +278,9 @@ describe('evaluateVisitor', () => {
       const s = new Scope()
       const output = apply('x(2^3)', s)
       expect(s.get('x')).toBeUndefined()
-      expect(output).toMatchObject({
-        $label: 'INVOKE',
-        'identifier': 'x',
-        'argumentList': [{$label: 'EXPONENT', 'a': {'value': '2'}, 'b': {'value': '3'}}]
-      })
+      expect(output).toMatchObject(
+        invoke('x', [raise(num(2), num(3))])
+      )
     })
 
     it('temporarily sets context when invoking a variable', () => {
@@ -292,11 +288,9 @@ describe('evaluateVisitor', () => {
       apply('y <- x * 5', s)
       const output = apply('y(10)', s)
       expect(s.get('x')).toBeUndefined()
-      expect(s.get('y')).toMatchObject({
-        $label: 'MULTIPLY',
-        'a': variable('x'),
-        'b': real('5')
-      })
+      expect(s.get('y')).toMatchObject(
+        multiply(variable('x'), real(5))
+      )
       expect(output).toMatchObject(real('50'))
     })
 
@@ -306,16 +300,12 @@ describe('evaluateVisitor', () => {
       const output = apply('f(10)', s)
       expect(s.get('x')).toBeUndefined()
       expect(s.get('y')).toBeUndefined()
-      expect(s.get('f')).toMatchObject({
-        $label: 'MULTIPLY',
-        'a': variable('x'),
-        'b': variable('y')
-      })
-      expect(output).toMatchObject({
-        $label: 'MULTIPLY',
-        'a': real('10'),
-        'b': variable('y')
-      })
+      expect(s.get('f')).toMatchObject(
+        multiply(variable('x'), variable('y'))
+      )
+      expect(output).toMatchObject(
+        multiply(real(10), variable('y'))
+      )
     })
 
     it('handles multiple arguments correctly', () => {
@@ -351,36 +341,28 @@ describe('evaluateVisitor', () => {
       const s = new Scope()
       apply('f <- x + x', s)
       expect(s.get('x')).toBeUndefined()
-      expect(s.get('f')).toMatchObject({
-        $label: 'PLUS',
-        'a': variable('x'),
-        'b': variable('x')
-      })
+      expect(s.get('f')).toMatchObject(
+        add(variable('x'), variable('x'))
+      )
       const output = apply('f(x)', s)
-      expect(output).toMatchObject({
-        $label: 'PLUS',
-        'a': variable('x'),
-        'b': variable('x')
-      })
+      expect(output).toMatchObject(
+        add(variable('x'), variable('x'))
+      )
     })
 
     it('replaces variables with functional composition', () => {
       const s = new Scope()
       apply('f <- x * 5', s)
-      expect(s.get('f')).toMatchObject({
-        $label: 'MULTIPLY',
-        'a': variable('x'),
-        'b': real('5')
-      })
+      expect(s.get('f')).toMatchObject(
+        multiply(variable('x'), real(5))
+      )
 
       apply('g <- f(y)', s)
       expect(s.get('x')).toBeUndefined()
       expect(s.get('y')).toBeUndefined()
-      expect(s.get('g')).toMatchObject({
-        $label: 'MULTIPLY',
-        'a': variable('y'),
-        'b': real('5')
-      })
+      expect(s.get('g')).toMatchObject(
+        multiply(variable('y'), real(5))
+      )
     })
 
     it('handles functional composition', () => {
@@ -388,15 +370,12 @@ describe('evaluateVisitor', () => {
       apply('f <- 2 * x', s)
       apply('g <- f(x) * 3', s)
       apply('h <- g(x)', s)
-      expect(s.get('h')).toMatchObject({
-        $label: 'MULTIPLY',
-        'a': {
-          $label: 'MULTIPLY',
-          'a': real('2'),
-          'b': variable('x')
-        },
-        'b': real('3')
-      })
+      expect(s.get('h')).toMatchObject(
+        multiply(
+          multiply(real(2), variable('x')),
+          real(3)
+        )
+      )
       const output = apply('h(g(5))', s)
       expect(output).toMatchObject(real('180'))
     })

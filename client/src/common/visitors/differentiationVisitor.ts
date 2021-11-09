@@ -18,8 +18,8 @@ export const differentiationVisitor: Visitor<Node> = {
   REAL: (node) => real(0),
   VARIABLE: (node) => real(1),
 
-  PLUS: (node) => add($visit(node.a), $visit(node.b)),
-  MINUS: (node) => subtract($visit(node.a), $visit(node.b)),
+  ADD: (node) => add($visit(node.a), $visit(node.b)),
+  SUBTRACT: (node) => subtract($visit(node.a), $visit(node.b)),
 
   /**
    * Applies the product rule to the node:

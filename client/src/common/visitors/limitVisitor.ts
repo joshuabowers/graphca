@@ -29,8 +29,8 @@ export const createLimitVisitor = (asymptotes: Asymptote): Visitor<Node | undefi
       return $node(label, {value: next})  
     },
 
-    PLUS: binaryOp,
-    MINUS: binaryOp,
+    ADD: binaryOp,
+    SUBTRACT: binaryOp,
     MULTIPLY: binaryOp,
     DIVIDE: (node) => binaryOp(node, (a,b) => (
       b.value instanceof Real && b.value.value === 0
