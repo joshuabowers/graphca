@@ -129,4 +129,8 @@ export class Real extends Field<Real> {
   isNegative() {
     return this.value < 0
   }
+
+  isInteger() {
+    return Number.isInteger(this.value)
+  }
 }

@@ -45,6 +45,8 @@ export abstract class Field<T extends Field<T>> {
 
   abstract lt(that: T): boolean
   abstract isNegative(): boolean
+  abstract isInteger(): boolean
+  isHalfInteger(): boolean { return false } // TODO: abstract
   // abstract isGammaUndefined(): boolean
 
   /**
@@ -84,6 +86,17 @@ export abstract class Field<T extends Field<T>> {
   }
 
   digamma(): T {
+    if(this.isNegative()){
+      // reflection
+    } else if(this.isInteger()){
+      // integer implementation
+    } else if(this.isHalfInteger()){
+      // half integer implementation
+    } else if(this.lt(this.cast(10))){
+      // recurrence up toward 10
+    } else {
+      // values greater than 10
+    }
     return this.cast(0)
   }
 }

@@ -172,4 +172,8 @@ export class Decimal extends Field<Decimal> {
   isNegative(){
     return false
   }
+
+  isInteger(){
+    return false
+  }
 }

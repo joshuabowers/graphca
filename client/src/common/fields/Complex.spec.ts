@@ -293,6 +293,23 @@ describe(Complex, () => {
     })
   })
 
+  describe(Complex.prototype.isInteger, () => {
+    it('is true if the real part is integer and the imaginary is zero', () => {
+      const a = new Complex(5)
+      expect(a.isInteger()).toBe(true)
+    })
+
+    it('is false if the imaginary part is nonzero', () => {
+      const a = new Complex(5, 1)
+      expect(a.isInteger()).toBe(false)
+    })
+
+    it('is false if the real part is non-integer', () => {
+      const a = new Complex(5.5)
+      expect(a.isInteger()).toBe(false)
+    })
+  })
+
   describe(Complex.prototype.gamma, () => {
     it('calculates the gamma function for complex numbers', () => {
       const z = new Complex(2, 3)

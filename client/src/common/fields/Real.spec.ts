@@ -217,6 +217,18 @@ describe(Real, () => {
     })
   })
 
+  describe(Real.prototype.isInteger, () => {
+    it('is true if this is an integer', () => {
+      const a = new Real(5)
+      expect(a.isInteger()).toBe(true)
+    })
+
+    it('is false if this is real', () => {
+      const a = new Real(5.5)
+      expect(a.isInteger()).toBe(false)
+    })
+  })
+
   describe(Real.prototype.gamma, () => {
     it('calculates (n-1)! for positive integers', () => {
       expect(new Real(5).gamma().value).toBeCloseTo(24, 8)
@@ -234,6 +246,10 @@ describe(Real, () => {
     it('calculates values lower than 0.5 via reflection', () => {
       expect(new Real(0.25).gamma().value).toBeCloseTo(3.62560991, 8)
     })
+  })
+
+  describe(Real.prototype.digamma, () => {
+
   })
 
   describe('As a field', () => {

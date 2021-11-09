@@ -222,4 +222,8 @@ export class Complex extends Field<Complex> {
   isNegative() {
     return this.a < 0
   }
+
+  isInteger() {
+    return this.b === 0 && Number.isInteger(this.a)
+  }
 }
