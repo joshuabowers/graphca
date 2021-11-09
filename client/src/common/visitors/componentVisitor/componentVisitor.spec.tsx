@@ -6,7 +6,7 @@ import { parser } from '../../parser';
 import { componentVisitor } from '.';
 import { Complex } from '../../fields/Complex';
 
-const apply = (input: string) => parser.value(input, {visit: componentVisitor})
+const apply = (input: string): JSX.Element => parser.value(input, {visit: componentVisitor}) as unknown as JSX.Element
 const expectMarkup = (input: string, className: string, expected?: string) => {
   const output = apply(input);
   expect(shallow(output).is(className)).toBe(true);
@@ -106,6 +106,10 @@ describe('componentVisitor', () => {
 
   it('renders gamma', () => {
     expectMarkup(`${Unicode.gamma}(x)`, '.functional.gamma')
+  })
+
+  it('renders digamma', () => {
+    expectMarkup(`${Unicode.digamma}(x)`, '.functional.digamma')
   })
 
   it('renders absolute values', () => {

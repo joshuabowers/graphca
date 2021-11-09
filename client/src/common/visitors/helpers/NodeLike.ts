@@ -39,6 +39,7 @@ export const asinh = unary('ASINH')
 export const atanh = unary('ATANH')
 
 export const gamma = unary('GAMMA')
+export const digamma = unary('DIGAMMA')
 export const factorial = unary('FACTORIAL')
 export const abs = unary('ABS')
 

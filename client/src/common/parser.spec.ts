@@ -9,7 +9,7 @@ import {
   cosh, sinh, tanh,
   acosh, asinh, atanh,
   lg,
-  gamma, factorial, abs,
+  gamma, digamma, factorial, abs,
   assign, invoke
 } from './visitors/helpers/NodeLike'
 
@@ -181,6 +181,10 @@ describe('parser', () => {
 
   it('matches gamma', () => {
     expectObject(`${Unicode.gamma}(x)`, gamma(variable('x')))
+  })
+
+  it('matches digamma', () => {
+    expectObject(`${Unicode.digamma}(x)`, digamma(variable('x')))
   })
 
   it('matches exponents', () => {

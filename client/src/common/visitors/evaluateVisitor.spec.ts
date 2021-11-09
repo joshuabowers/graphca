@@ -9,7 +9,7 @@ import { Scope } from "../Scope";
 import { 
   NodeLike,
   num, real, variable,
-  add,  multiply, raise, invoke
+  add,  multiply, raise, invoke, digamma
 } from './helpers/NodeLike'
 
 const apply = (input: string, context?: Scope) => parser.value(input, {visit: evaluateVisitor, context})
@@ -182,6 +182,9 @@ describe('evaluateVisitor', () => {
       expectComplex(`${Unicode.gamma}(1 - ${Unicode.i})`, new Complex(0.49801566811835646, 0.15494982830181053))
     })
 
+    it.todo('computes the digamma function for reals')
+    it.todo('computes the digamma function for complexes')
+
     it('computes the absolute value for reals', () => {
       expectReal('abs(5)', new Real(5))
       expectReal('abs(-5)', new Real(5))
@@ -207,6 +210,10 @@ describe('evaluateVisitor', () => {
 
     it('throws an error if no scope given on assignment', () => {
       expect(() => apply('x <- 5')).toThrow()
+    })
+
+    it('evaluates expressions of functions', () => {
+      expectObject(`${Unicode.digamma}(x)`, digamma(variable('x')))
     })
   })
 

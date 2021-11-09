@@ -82,4 +82,8 @@ export abstract class Field<T extends Field<T>> {
       )
     }
   }
+
+  digamma(): T {
+    return this.cast(0)
+  }
 }

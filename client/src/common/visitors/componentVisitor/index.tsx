@@ -4,16 +4,17 @@ import styles from './componentVisitor.module.css'
 import { Unicode, MathSymbols } from '../../MathSymbols'
 
 const renameFunctions: Map<string, string> = new Map([
-  ['GAMMA', Unicode.gamma]
+  ['GAMMA', Unicode.gamma],
+  ['DIGAMMA', Unicode.digamma]
 ])
 
-const binaryOp = (node: Node, op: MathSymbols) => (
+const binary = (op: MathSymbols) => (node: Node) => (
   <span className={styles.binaryOp}>
     {$visit(node.a)} {op} {$visit(node.b)}
   </span>
 )
 
-const functional = (node: Node, metaClass: string) => (
+const functional = (metaClass: string) => (node: Node) => (
   <span className={[styles.functional, styles[metaClass]].join(' ')}>
     {renameFunctions.get(node.$label) ?? node.$label.toLocaleLowerCase()}({$visit(node.expression)})
   </span>
@@ -34,32 +35,33 @@ export const componentVisitor: Visitor<JSX.Element> = {
   COMPLEX: (node) => <span className={styles.complex}>{node.value.toString()}</span>,
   PI: (node) => <span className={styles.number}>{Unicode.pi}</span>,
   INFINITY: (node) => <span className={styles.number}>{Unicode.infinity}</span>,
-  ADD: (node) => binaryOp(node, '+'),
-  SUBTRACT: (node) => binaryOp(node, Unicode.minus),
-  MULTIPLY: (node) => binaryOp(node, Unicode.multiplication),
-  DIVIDE: (node) => binaryOp(node, Unicode.division),
+  ADD: binary('+'),
+  SUBTRACT: binary(Unicode.minus),
+  MULTIPLY: binary(Unicode.multiplication),
+  DIVIDE: binary(Unicode.division),
   EXPONENT: (node) => (
     <span className={styles.exponent}>
       {$visit(node.a)}^{$visit(node.b)}
     </span>
   ),
   NEGATE: (node) => <span className={styles.negation}>{Unicode.minus}{$visit(node.expression)}</span>,
-  SIN: (node) => functional(node, 'trigonometric'),
-  COS: (node) => functional(node, 'trigonometric'),
-  TAN: (node) => functional(node, 'trigonometric'),
-  ASIN: (node) => functional(node, 'arcus'),
-  ACOS: (node) => functional(node, 'arcus'),
-  ATAN: (node) => functional(node, 'arcus'),
-  SINH: (node) => functional(node, 'hyperbolic'),
-  COSH: (node) => functional(node, 'hyperbolic'),
-  TANH: (node) => functional(node, 'hyperbolic'),
-  ASINH: (node) => functional(node, 'arHyperbolic'),
-  ACOSH: (node) => functional(node, 'arHyperbolic'),
-  ATANH: (node) => functional(node, 'arHyperbolic'),
-  LB: (node) => functional(node, 'logarithmic'),
-  LN: (node) => functional(node, 'logarithmic'),
-  LG: (node) => functional(node, 'logarithmic'),
-  GAMMA: (node) => functional(node, 'gamma'),
-  ABS: (node) => functional(node, 'absolute'),
+  SIN: functional('trigonometric'),
+  COS: functional('trigonometric'),
+  TAN: functional('trigonometric'),
+  ASIN: functional('arcus'),
+  ACOS: functional('arcus'),
+  ATAN: functional('arcus'),
+  SINH: functional('hyperbolic'),
+  COSH: functional('hyperbolic'),
+  TANH: functional('hyperbolic'),
+  ASINH: functional('arHyperbolic'),
+  ACOSH: functional('arHyperbolic'),
+  ATANH: functional('arHyperbolic'),
+  LB: functional('logarithmic'),
+  LN: functional('logarithmic'),
+  LG: functional('logarithmic'),
+  GAMMA: functional('gamma'),
+  DIGAMMA: functional('digamma'),
+  ABS: functional('absolute'),
   FACTORIAL: (node) => <span className={styles.factorial}>{$visit(node.expression)}!</span>
 }

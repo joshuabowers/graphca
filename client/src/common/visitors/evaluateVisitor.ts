@@ -4,6 +4,7 @@ import { Field } from '../fields/Field';
 import { Complex } from '../fields/Complex';
 import { Real } from '../fields/Real';
 import { parameterVisitor } from './parameterVisitor';
+import { complex } from './helpers/Node';
 
 const createFieldNode = (label: string, value: Field<any>) => {
   return $node(label, {value})
@@ -11,7 +12,7 @@ const createFieldNode = (label: string, value: Field<any>) => {
 
 type EvaluateBinary = (a: Field<any>, b: Field<any>) => Field<any>
 
-const visitBinary = (node: Node, evaluate: EvaluateBinary): Node => {
+const visitBinary = (evaluate: EvaluateBinary) => (node: Node): Node => {
   let a = $visit(node.a), b = $visit(node.b)
   if( a.value === undefined || b.value === undefined ){
     // Either a or b does not immediately evaluate to a Field subclass
@@ -19,15 +20,15 @@ const visitBinary = (node: Node, evaluate: EvaluateBinary): Node => {
   } 
   if( node.$label === 'EXPONENT' ){
     if( a.$label === 'REAL' && a.value.isNegative() ){
-      a = createFieldNode('COMPLEX', new Complex(a.value.value, 0))
+      a = complex(a.value.value)
     }
   }
   if( a.$label !== b.$label ){
     // lift real to complex
     if( a.$label === 'REAL' ){
-      a = createFieldNode('COMPLEX', new Complex(a.value.value, 0))
+      a = complex(a.value.value)
     } else {
-      b = createFieldNode('COMPLEX', new Complex(b.value.value, 0))
+      b = complex(b.value.value)
     }
   }
   return createFieldNode(a.$label, evaluate(a.value, b.value))
@@ -35,12 +36,12 @@ const visitBinary = (node: Node, evaluate: EvaluateBinary): Node => {
 
 type EvaluateUnary = (expression: Field<any>) => Field<any>
 
-const visitUnary = (node: Node, evaluate: EvaluateUnary): Node => {
+const visitUnary = (evaluate: EvaluateUnary) => (node: Node): Node => {
   let expression = $visit(node.expression)
   if( expression.value === undefined ){
     return $node(node.$label, {expression})
   }
-  return createFieldNode(expression.$label, evaluate(expression.value))
+  return createFieldNode(expression.$label, evaluate(expression.value))  
 }
 
 const visitVariable = (node: Node): Node => {
@@ -101,29 +102,30 @@ export const evaluateVisitor: Visitor<Node> = {
   ASSIGN: (node) => visitAssign(node),
   INVOKE: (node) => visitInvoke(node),
 
-  ADD: (node) => visitBinary(node, (a, b) => a.add(b)),
-  SUBTRACT: (node) => visitBinary(node, (a, b) => a.subtract(b)),
-  MULTIPLY: (node) => visitBinary(node, (a, b) => a.multiply(b)),
-  DIVIDE: (node) => visitBinary(node, (a, b) => a.divide(b)),
-  EXPONENT: (node) => visitBinary(node, (a, b) => a.raise(b)),
+  ADD: visitBinary((a, b) => a.add(b)),
+  SUBTRACT: visitBinary((a, b) => a.subtract(b)),
+  MULTIPLY: visitBinary((a, b) => a.multiply(b)),
+  DIVIDE: visitBinary((a, b) => a.divide(b)),
+  EXPONENT: visitBinary((a, b) => a.raise(b)),
 
-  NEGATE: (node) => visitUnary(node, (expression) => expression.negate()),
-  COS: (node) => visitUnary(node, (expression) => expression.cos()),
-  SIN: (node) => visitUnary(node, (expression) => expression.sin()),
-  TAN: (node) => visitUnary(node, (expression) => expression.tan()),
-  ACOS: (node) => visitUnary(node, (expression) => expression.acos()),
-  ASIN: (node) => visitUnary(node, (expression) => expression.asin()),
-  ATAN: (node) => visitUnary(node, (expression) => expression.atan()),
-  COSH: (node) => visitUnary(node, (expression) => expression.cosh()),
-  SINH: (node) => visitUnary(node, (expression) => expression.sinh()),
-  TANH: (node) => visitUnary(node, (expression) => expression.tanh()),
-  ACOSH: (node) => visitUnary(node, (expression) => expression.acosh()),
-  ASINH: (node) => visitUnary(node, (expression) => expression.asinh()),
-  ATANH: (node) => visitUnary(node, (expression) => expression.atanh()),
-  LB: (node) => visitUnary(node, (expression) => expression.lb()),
-  LN: (node) => visitUnary(node, (expression) => expression.ln()),
-  LG: (node) => visitUnary(node, (expression) => expression.lg()),
-  GAMMA: (node) => visitUnary(node, (expression) => expression.gamma()),
-  ABS: (node) => visitUnary(node, (expression) => expression.abs()),
-  FACTORIAL: (node) => visitUnary(node, (expression) => expression.factorial()),
+  NEGATE: visitUnary((expression) => expression.negate()),
+  COS: visitUnary((expression) => expression.cos()),
+  SIN: visitUnary((expression) => expression.sin()),
+  TAN: visitUnary((expression) => expression.tan()),
+  ACOS: visitUnary((expression) => expression.acos()),
+  ASIN: visitUnary((expression) => expression.asin()),
+  ATAN: visitUnary((expression) => expression.atan()),
+  COSH: visitUnary((expression) => expression.cosh()),
+  SINH: visitUnary((expression) => expression.sinh()),
+  TANH: visitUnary((expression) => expression.tanh()),
+  ACOSH: visitUnary((expression) => expression.acosh()),
+  ASINH: visitUnary((expression) => expression.asinh()),
+  ATANH: visitUnary((expression) => expression.atanh()),
+  LB: visitUnary((expression) => expression.lb()),
+  LN: visitUnary((expression) => expression.ln()),
+  LG: visitUnary((expression) => expression.lg()),
+  GAMMA: visitUnary((expression) => expression.gamma()),
+  DIGAMMA: visitUnary((expression) => expression.digamma()),
+  ABS: visitUnary((expression) => expression.abs()),
+  FACTORIAL: visitUnary((expression) => expression.factorial()),
 }
