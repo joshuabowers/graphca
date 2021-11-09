@@ -46,7 +46,7 @@ export abstract class Field<T extends Field<T>> {
   abstract lt(that: T): boolean
   abstract isNegative(): boolean
   abstract isInteger(): boolean
-  isHalfInteger(): boolean { return false } // TODO: abstract
+  abstract isHalfInteger(): boolean
   // abstract isGammaUndefined(): boolean
 
   /**

@@ -176,4 +176,8 @@ export class Decimal extends Field<Decimal> {
   isInteger(){
     return false
   }
+
+  isHalfInteger(){
+    return false
+  }
 }

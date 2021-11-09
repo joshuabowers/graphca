@@ -133,4 +133,8 @@ export class Real extends Field<Real> {
   isInteger() {
     return Number.isInteger(this.value)
   }
+
+  isHalfInteger() {
+    return (Math.abs(this.value) % 1) === 0.5
+  }
 }

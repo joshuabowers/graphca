@@ -310,6 +310,28 @@ describe(Complex, () => {
     })
   })
 
+  describe(Complex.prototype.isHalfInteger, () => {
+    it('is true if the real part is half integer and the imaginary is zero', () => {
+      const a = new Complex(5.5)
+      expect(a.isHalfInteger()).toBe(true)
+    })
+
+    it('is true if the complex represents a negative half integer', () => {
+      const a = new Complex(-5.5)
+      expect(a.isHalfInteger()).toBe(true)
+    })
+
+    it('is false if the imaginary is nonzero', () => {
+      const a = new Complex(5.5, 1)
+      expect(a.isHalfInteger()).toBe(false)
+    })
+
+    it('is false if the real part is not half-integer', () => {
+      const a = new Complex(5.25, 1)
+      expect(a.isHalfInteger()).toBe(false)
+    })
+  })
+
   describe(Complex.prototype.gamma, () => {
     it('calculates the gamma function for complex numbers', () => {
       const z = new Complex(2, 3)

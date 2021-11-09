@@ -226,4 +226,8 @@ export class Complex extends Field<Complex> {
   isInteger() {
     return this.b === 0 && Number.isInteger(this.a)
   }
+
+  isHalfInteger() {
+    return this.b === 0 && (Math.abs(this.a) % 1) === 0.5
+  }
 }

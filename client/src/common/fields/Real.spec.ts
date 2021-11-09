@@ -229,6 +229,28 @@ describe(Real, () => {
     })
   })
 
+  describe(Real.prototype.isHalfInteger, () => {
+    it('is true if this is half way between two integers', () => {
+      const a = new Real(5.5)
+      expect(a.isHalfInteger()).toBe(true)
+    })
+
+    it('is true for negative half integers', () => {
+      const a = new Real(-5.5)
+      expect(a.isHalfInteger()).toBe(true)
+    })
+
+    it('is false if this is integer', () => {
+      const a = new Real(5)
+      expect(a.isHalfInteger()).toBe(false)
+    })
+
+    it('is false for non-half reals', () => {
+      const a = new Real(5.25)
+      expect(a.isHalfInteger()).toBe(false)
+    })
+  })
+
   describe(Real.prototype.gamma, () => {
     it('calculates (n-1)! for positive integers', () => {
       expect(new Real(5).gamma().value).toBeCloseTo(24, 8)
