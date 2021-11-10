@@ -215,6 +215,17 @@ describe('evaluateVisitor', () => {
     it('evaluates expressions of functions', () => {
       expectObject(`${Unicode.digamma}(x)`, digamma(variable('x')))
     })
+
+    it('computes derivatives', () => {
+      expectObject(`${Unicode.derivative}(x)`, real(1))
+    })
+
+    it('computes nested derivatives', () => {
+      expectObject(
+        `${Unicode.derivative}(${Unicode.derivative}(x + 2))`,
+        real(0)
+      )
+    })
   })
 
   describe('with context', () => {

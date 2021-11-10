@@ -16,7 +16,7 @@ export const Functional = (args: FunctionalProps) => (
       trig={{type:'trig', display:''}}
     />
     <Key
-      default={{type:'default', display:functional.partialDerivative}}
+      default={{type:'default', display:Unicode.derivative, activate: createKeyPress(`${Unicode.derivative}(`)}}
       shift={{type:'shift', display:Unicode.integral}}
       alpha={{type:'alpha', display:'B', activate: createKeyPress('B')}}
       trig={{type:'trig', display:'sin', activate: createKeyPress('sin(')}}

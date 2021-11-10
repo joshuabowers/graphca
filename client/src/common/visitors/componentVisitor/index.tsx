@@ -8,11 +8,24 @@ const renameFunctions: Map<string, string> = new Map([
   ['DIGAMMA', Unicode.digamma]
 ])
 
-const binary = (op: MathSymbols) => (node: Node) => (
-  <span className={styles.binaryOp}>
-    {$visit(node.a)} {op} {$visit(node.b)}
-  </span>
+const needsParenthesis = new Set([
+  'ADD', 'SUBTRACT', 'MULTIPLY', 'DIVIDE', 'RAISE'
+])
+
+const parenthesize = (label: string, value: JSX.Element) => (
+  needsParenthesis.has(label) 
+    ? <span className={styles.parenthesis}>({value})</span> 
+    : value
 )
+
+const binary = (op: MathSymbols) => (node: Node) => {
+  const a = $visit(node.a), b = $visit(node.b)
+  return (
+    <span className={styles.binaryOp}>
+      {parenthesize(node.a.$label, a)} {op} {parenthesize(node.b.$label, b)}
+    </span>
+  )
+}
 
 const functional = (metaClass: string) => (node: Node) => (
   <span className={[styles.functional, styles[metaClass]].join(' ')}>
@@ -23,7 +36,8 @@ const functional = (metaClass: string) => (node: Node) => (
 const specialNumbers = new Map([
   [Number.POSITIVE_INFINITY.toString(), Unicode.infinity],
   [Number.NEGATIVE_INFINITY.toString(), `-${Unicode.infinity}`],
-  [Math.PI.toString(), Unicode.pi]
+  [Math.PI.toString(), Unicode.pi],
+  [Math.E.toString(), Unicode.e]
 ])
 
 export const componentVisitor: Visitor<JSX.Element> = {

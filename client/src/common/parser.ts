@@ -76,6 +76,7 @@ grouping:
 | <f>callable '(' ^ <>expression ')' ${
   ({f, expression}) => $node(callableNodes.get(f) ?? 'ERROR', {expression})
 }
+| $differentiate '(' <>expression ')' => 'DIFFERENTIATE'
 | <identifier>$variable '(' ^ <...>argumentList ')' => 'INVOKE'
 | '(' ^ expression ')'
 | factor
@@ -105,4 +106,5 @@ $infinity @raw: ${RegExp(Unicode.infinity, 'u')}
 $subtract @raw: ${RegExp(Unicode.minus, 'u')}
 $multiply @raw: ${RegExp(Unicode.multiplication, 'u')}
 $divide @raw: ${RegExp(Unicode.division, 'u')}
+$differentiate @raw: ${RegExp(Unicode.derivative, 'u')}
 `

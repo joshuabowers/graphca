@@ -1,4 +1,4 @@
-import { Visitor, Node, $visit } from 'pegase'
+import { Visitor, Node, $visit, $context } from 'pegase'
 import { 
   real,
   add, subtract, multiply, divide, raise,
@@ -6,6 +6,7 @@ import {
   negate, ln,
   factorial, gamma, digamma
 } from './helpers/Node'
+import { Scope } from '../Scope'
 
 const logarithm = (base: number) => (node: Node) => divide(
   $visit(node.expression),
@@ -15,9 +16,21 @@ const logarithm = (base: number) => (node: Node) => divide(
   )
 )
 
+const constant = (node: Node) => real(0)
+
 export const differentiationVisitor: Visitor<Node> = {
-  REAL: (node) => real(0),
-  VARIABLE: (node) => real(1),
+  REAL: constant,
+  NUMBER: constant,
+  E: constant,
+  PI: constant,
+
+  VARIABLE: (node) => {
+    const scope = $context() as Scope
+    const body = scope?.get(node.name)
+    return body
+      ? $visit(body)
+      : real(1)
+  },
 
   ADD: (node) => add($visit(node.a), $visit(node.b)),
   SUBTRACT: (node) => subtract($visit(node.a), $visit(node.b)),
@@ -241,5 +254,7 @@ export const differentiationVisitor: Visitor<Node> = {
       multiply(node.expression, $visit(node.expression)),
       node
     )
-  }
+  },
+
+  DIFFERENTIATE: (node) => $visit($visit(node.expression))
 }

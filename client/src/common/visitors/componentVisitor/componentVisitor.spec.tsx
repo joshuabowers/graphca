@@ -52,7 +52,7 @@ describe('componentVisitor', () => {
     expectMarkup(
       '1 + 2 - 3 * 4 / 5', 
       '.binaryOp', 
-      `1 + 2 ${Unicode.minus} 3 ${Unicode.multiplication} 4 ${Unicode.division} 5`
+      `(1 + 2) ${Unicode.minus} ((3 ${Unicode.multiplication} 4) ${Unicode.division} 5)`
     )
   })
 

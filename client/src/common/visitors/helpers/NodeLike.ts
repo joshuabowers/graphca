@@ -45,3 +45,5 @@ export const abs = unary('ABS')
 
 export const assign = (identifier: string, expression: NodeLike): NodeLike => ({$label: 'ASSIGN', identifier, expression})
 export const invoke = (identifier: string, argumentList: NodeLike[]): NodeLike => ({$label: 'INVOKE', identifier, argumentList})
+
+export const differentiate = unary('DIFFERENTIATE')

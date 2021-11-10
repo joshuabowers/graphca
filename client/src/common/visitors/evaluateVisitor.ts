@@ -5,6 +5,7 @@ import { Complex } from '../fields/Complex';
 import { Real } from '../fields/Real';
 import { parameterVisitor } from './parameterVisitor';
 import { complex } from './helpers/Node';
+import { differentiationVisitor } from './differentiationVisitor';
 
 const createFieldNode = (label: string, value: Field<any>) => {
   return $node(label, {value})
@@ -88,6 +89,10 @@ const visitInvoke = (node: Node): Node => {
   }
 }
 
+const visitDifferentiate = (node: Node): Node => {
+  return $visit(applyVisitor(node.expression, differentiationVisitor, $options()))
+}
+
 export const evaluateVisitor: Visitor<Node> = {
   NUMBER: (node) => createFieldNode('REAL', new Real(node.value)),
   I: (node) => createFieldNode('COMPLEX', new Complex(0, node.value)),
@@ -128,4 +133,6 @@ export const evaluateVisitor: Visitor<Node> = {
   DIGAMMA: visitUnary((expression) => expression.digamma()),
   ABS: visitUnary((expression) => expression.abs()),
   FACTORIAL: visitUnary((expression) => expression.factorial()),
+
+  DIFFERENTIATE: visitDifferentiate
 }

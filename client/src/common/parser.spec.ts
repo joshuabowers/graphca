@@ -2,7 +2,7 @@ import { Unicode } from "./MathSymbols";
 import { parser } from "./parser";
 import { 
   NodeLike,
-  num, real, variable,
+  num, variable,
   add, subtract, multiply, divide, raise, negate,
   cos, sin, tan,
   acos, asin, atan,
@@ -10,7 +10,7 @@ import {
   acosh, asinh, atanh,
   lg,
   gamma, digamma, factorial, abs,
-  assign, invoke
+  assign, invoke, differentiate
 } from './visitors/helpers/NodeLike'
 
 const expectObject = (input: string, expected: NodeLike) => {
@@ -218,5 +218,22 @@ describe('parser', () => {
     expectObject('x(1, 2)', invoke(
       'x', [num(1), num(2)]
     ))
+  })
+
+  it('matches derivatives', () => {
+    expectObject(`${Unicode.derivative}(x^2)`, differentiate(
+      raise(variable('x'), num(2))
+    ))
+  })
+
+  it('matches nested derivatives', () => {
+    expectObject(
+      `${Unicode.derivative}(${Unicode.derivative}(2 * x))`,
+      differentiate(
+        differentiate(
+          multiply(num(2), variable('x'))
+        )
+      )
+    )
   })
 })

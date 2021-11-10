@@ -30,3 +30,5 @@ export const factorial = unary('FACTORIAL')
 export const gamma = unary('GAMMA')
 export const digamma = unary('DIGAMMA')
 export const abs = unary('ABS')
+
+export const differentiate = unary('DIFFERENTIATE')
