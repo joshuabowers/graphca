@@ -271,7 +271,21 @@ describe(Real, () => {
   })
 
   describe(Real.prototype.digamma, () => {
+    it('uses a reflection formula for inputs less than 0', () => {
+      expect(new Real(-5.5).digamma().value).toBeCloseTo(1.79291133039993294, 2)
+    })
 
+    it('users a recurrence formula to find values smaller than large', () => {
+      expect(new Real(1.75).digamma().value).toBeCloseTo(0.24747245354686, 2)
+    })
+
+    it('for large values, uses an approximation on Bernoulli numbers', () => {
+      expect(new Real(100).digamma().value).toBeCloseTo(4.600161852738087, 2)
+    })
+
+    it('approximates Euler-Mascheroni at 1', () => {
+      expect(new Real(1).digamma().value).toBeCloseTo(Real.Euler.negate().value, 2)
+    })
   })
 
   describe('As a field', () => {

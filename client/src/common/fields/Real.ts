@@ -7,6 +7,7 @@ export class Real extends Field<Real> {
   static Zero = new Real(0)
   static Infinity = new Real(Infinity)
   static E = new Real(Math.E)
+  static Euler = new Real(0.57721566490153286060)
   static NaN = new Real(NaN)
 
   value: number;
