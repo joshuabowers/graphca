@@ -25,3 +25,8 @@ export const sinh = unary('SINH')
 export const tanh = unary('TANH')
 
 export const ln = unary('LN')
+
+export const factorial = unary('FACTORIAL')
+export const gamma = unary('GAMMA')
+export const digamma = unary('DIGAMMA')
+export const abs = unary('ABS')

@@ -3,7 +3,8 @@ import {
   real,
   add, subtract, multiply, divide, raise,
   cos, sin, tan, cosh, sinh, tanh,
-  negate, ln
+  negate, ln,
+  factorial, gamma, digamma
 } from './helpers/Node'
 
 const logarithm = (base: number) => (node: Node) => divide(
@@ -211,5 +212,34 @@ export const differentiationVisitor: Visitor<Node> = {
 
   LB: logarithm(2),
   LN: logarithm(Math.E),
-  LG: logarithm(10)
+  LG: logarithm(10),
+
+  FACTORIAL: (node) => {
+    return multiply(
+      multiply(
+        factorial(node.expression),
+        digamma(
+          add(node.expression, real(1))
+        )
+      ),
+      $visit(node.expression)
+    )
+  },
+
+  GAMMA: (node) => {
+    return multiply(
+      multiply(
+        gamma(node.expression),
+        digamma(node.expression)
+      ),
+      $visit(node.expression)
+    )
+  },
+
+  ABS: (node) => {
+    return divide(
+      multiply(node.expression, $visit(node.expression)),
+      node
+    )
+  }
 }

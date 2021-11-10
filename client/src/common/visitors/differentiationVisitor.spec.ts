@@ -8,7 +8,7 @@ import {
   real, variable,
   add, subtract, multiply, divide, raise,
   negate, ln,
-  cos, sin, tan, cosh, sinh, tanh
+  cos, sin, tan, cosh, sinh, tanh, gamma, digamma, abs, factorial
 } from './helpers/NodeLike'
 
 const apply = (input: string, scope: Scope) => parser.value(
@@ -300,6 +300,33 @@ describe('differentiationVisitor', () => {
           variable('x'),
           ln(real('10'))
         )
+      ))
+    })
+  })
+
+  describe('of factorials', () => {
+    it('returns the chain rule of the derivative of the factorial', () => {
+      expectObject('x!', {}, multiply(
+        multiply(factorial(variable('x')), digamma(add(variable('x'), real(1)))),
+        real(1)
+      ))
+    })
+  })
+
+  describe('of gamma', () => {
+    it('returns the chain rule of the derivative of gamma', () => {
+      expectObject(`${Unicode.gamma}(x)`, {}, multiply(
+        multiply(gamma(variable('x')), digamma(variable('x'))),
+        real(1)
+      ))
+    })
+  })
+
+  describe('of absolute values', () => {
+    it('returns the chain rule of the derivative of the absolute', () => {
+      expectObject('abs(x)', {}, divide(
+        multiply(variable('x'), real(1)),
+        abs(variable('x'))
       ))
     })
   })
