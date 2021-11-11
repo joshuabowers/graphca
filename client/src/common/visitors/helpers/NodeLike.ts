@@ -1,4 +1,5 @@
 import { Node } from 'pegase'
+import { Complex } from '../../fields/Complex'
 import { Real } from '../../fields/Real'
 
 export type NodeLike = Omit<Node, '$from' | '$to'>
@@ -10,6 +11,7 @@ export const constant = ($label: string, transform: Transform) => (value: number
 
 export const num = constant('NUMBER', (v) => v.toString())
 export const real = constant('REAL', (v) => new Real(v))
+export const complex = (a: number | string, b?: number | string): NodeLike => ({$label: 'COMPLEX', value: new Complex(a, b)})
 export const variable = (name: string): NodeLike => ({'$label': 'VARIABLE', name})
 
 export const add = binary('ADD')

@@ -5,8 +5,8 @@ import { Real } from '../../fields/Real'
 export const unary = (label: string) => (expression: Node) => $node(label, {expression})
 export const binary = (label: string) => (a: Node, b: Node) => $node(label, {a, b})
 
-export const real = (value: number) => $node('REAL', {value: new Real(value)})
-export const complex = (a: number, b: number = 0) => $node('COMPLEX', {value: new Complex(a, b)})
+export const real = (value: number | string) => $node('REAL', {value: new Real(value)})
+export const complex = (a: number | string, b: number | string = 0) => $node('COMPLEX', {value: new Complex(a, b)})
 
 export const add = binary('ADD')
 export const subtract = binary('SUBTRACT')

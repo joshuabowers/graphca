@@ -20,9 +20,6 @@ const expectObject = (input: string, expected: NodeLike) => {
   expect(output).toMatchObject(expected)
 }
 
-// Helper functions for generating tree nodes to check.
-// const num = (val: string) => ({'$label': 'NUMBER', 'value': val})
-
 describe('parser', () => {
   it('can parse a new expression after a failure', () => {
     expect(() => parser.value('2 @ 3')).toThrow()
