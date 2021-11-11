@@ -62,7 +62,9 @@ export abstract class Field<T extends Field<T>> {
   // statics don't exist. 
   abstract cast(value: number): T
 
+  abstract equals(that: T): boolean
   abstract lt(that: T): boolean
+
   abstract isNegative(): boolean
   abstract isInteger(): boolean
   abstract isHalfInteger(): boolean

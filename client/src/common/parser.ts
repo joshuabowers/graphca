@@ -64,12 +64,12 @@ productPrime:
 | ''
 
 exponent:
-| <a>negation '^' ^ <b>exponent => 'EXPONENT'
+| <a>negation '^' ^ <b>exponent => 'RAISE'
 | <expression>negation '!' => 'FACTORIAL'
 | negation
 
 negation:
-| '-' ^ <expression>grouping => 'NEGATE'
+| ('-' | $subtract) ^ <expression>grouping => 'NEGATE'
 | grouping
 
 grouping:

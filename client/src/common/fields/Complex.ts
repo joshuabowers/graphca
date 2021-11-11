@@ -209,6 +209,10 @@ export class Complex extends Field<Complex> {
     return new Complex(value, 0)
   }
 
+  equals(that: Complex) {
+    return this.a === that.a && this.b === that.b
+  }
+
   /**
    * Note, this only compares the real part of the complex number.
    * This might need to change to consider the value of abs().

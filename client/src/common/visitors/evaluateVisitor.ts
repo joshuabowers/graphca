@@ -19,7 +19,7 @@ const visitBinary = (evaluate: EvaluateBinary) => (node: Node): Node => {
     // Either a or b does not immediately evaluate to a Field subclass
     return $node(node.$label, {a, b})
   } 
-  if( node.$label === 'EXPONENT' ){
+  if( node.$label === 'RAISE' ){
     if( a.$label === 'REAL' && a.value.isNegative() ){
       a = complex(a.value.value)
     }
@@ -90,7 +90,8 @@ const visitInvoke = (node: Node): Node => {
 }
 
 const visitDifferentiate = (node: Node): Node => {
-  return $visit(applyVisitor(node.expression, differentiationVisitor, $options()))
+  const derivative = applyVisitor(node.expression, differentiationVisitor, $options())
+  return $visit(derivative)
 }
 
 export const evaluateVisitor: Visitor<Node> = {
@@ -111,7 +112,7 @@ export const evaluateVisitor: Visitor<Node> = {
   SUBTRACT: visitBinary((a, b) => a.subtract(b)),
   MULTIPLY: visitBinary((a, b) => a.multiply(b)),
   DIVIDE: visitBinary((a, b) => a.divide(b)),
-  EXPONENT: visitBinary((a, b) => a.raise(b)),
+  RAISE: visitBinary((a, b) => a.raise(b)),
 
   NEGATE: visitUnary((expression) => expression.negate()),
   COS: visitUnary((expression) => expression.cos()),

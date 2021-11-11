@@ -16,7 +16,7 @@ export const add = binary('ADD')
 export const subtract = binary('SUBTRACT')
 export const multiply = binary('MULTIPLY')
 export const divide = binary('DIVIDE')
-export const raise = binary('EXPONENT')
+export const raise = binary('RAISE')
 
 export const negate = unary('NEGATE')
 export const ln = unary('LN')

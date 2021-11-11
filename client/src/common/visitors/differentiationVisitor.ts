@@ -73,7 +73,7 @@ export const differentiationVisitor: Visitor<Node> = {
    * @param node an exponent node to differentiate
    * @returns the generalized power rule
    */
-  EXPONENT: (node) => {
+  RAISE: (node) => {
     return multiply(
       node,
       add(

@@ -53,7 +53,7 @@ export const componentVisitor: Visitor<JSX.Element> = {
   SUBTRACT: binary(Unicode.minus),
   MULTIPLY: binary(Unicode.multiplication),
   DIVIDE: binary(Unicode.division),
-  EXPONENT: (node) => (
+  RAISE: (node) => (
     <span className={styles.exponent}>
       {$visit(node.a)}^{$visit(node.b)}
     </span>

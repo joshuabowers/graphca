@@ -165,6 +165,10 @@ export class Decimal extends Field<Decimal> {
     return Decimal.Infinity
   }
 
+  equals(that: Decimal) {
+    return false
+  }
+
   lt(that: Decimal) {
     return false
   }

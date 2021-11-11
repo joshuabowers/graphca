@@ -3,6 +3,7 @@ import { useAppSelector } from '../../app/hooks';
 import { parser } from '../../common/parser';
 import { componentVisitor } from '../../common/visitors/componentVisitor';
 import { evaluateVisitor } from '../../common/visitors/evaluateVisitor';
+import { simplifyVisitor } from '../../common/visitors/simplifyVisitor';
 import { Scope } from '../../common/Scope';
 import styles from './Terminal.module.css';
 import { RootState } from '../../app/store';
@@ -20,7 +21,7 @@ const parse = (entry: TerminalEntryState, scope: Scope) => {
     const parsing = parser.value(
       entry.content,
       {
-        visit: [evaluateVisitor, componentVisitor],
+        visit: [evaluateVisitor, simplifyVisitor, componentVisitor],
         context: scope
       }
     ) as unknown as JSX.Element  

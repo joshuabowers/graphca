@@ -123,6 +123,10 @@ export class Real extends Field<Real> {
     return new Real(value)
   }
 
+  equals(that: Real) {
+    return this.value === that.value
+  }
+
   lt(that: Real) {
     return this.value < that.value
   }

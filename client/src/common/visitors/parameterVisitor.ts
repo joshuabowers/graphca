@@ -11,7 +11,7 @@ export const parameterVisitor: Visitor<string[]> = {
   'SUBTRACT': node => visitChildren(node.a, node.b),
   'MULTIPLY': node => visitChildren(node.a, node.b),
   'DIVIDE': node => visitChildren(node.a, node.b),
-  'EXPONENT': node => visitChildren(node.a, node.b),
+  'RAISE': node => visitChildren(node.a, node.b),
 
   $default: node => node.expression ? visitChildren(node.expression) : []
 }

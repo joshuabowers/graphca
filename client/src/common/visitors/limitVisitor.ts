@@ -37,7 +37,7 @@ export const createLimitVisitor = (asymptotes: Asymptote): Visitor<Node | undefi
       || b.value instanceof Complex && b.value.modulus() === 0
       ? $node('UNDEFINED', {}) : undefined
     )),
-    EXPONENT: (node) => binaryOp(node, (a,b) => (
+    RAISE: (node) => binaryOp(node, (a,b) => (
       (a.value instanceof Real && a.value.value === 0)
       && (b.value instanceof Real && b.value.value < 0 && (
         b.value.value % 2 === 0

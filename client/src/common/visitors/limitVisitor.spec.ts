@@ -78,8 +78,8 @@ describe('limitVisitor', () => {
 
   describe('of exponentials', () => {
     it('is the power of the limit for a real power', () => {
-      expectObject('x ^ 5', {'x': 2}, {$label: 'EXPONENT', 'a': real('2'), 'b': real('5')})
-      expectObject('x ^ (1 / 4)', {'x': 2}, {$label: 'EXPONENT', 'a': real('2'), 'b': real('0.25')})
+      expectObject('x ^ 5', {'x': 2}, {$label: 'RAISE', 'a': real('2'), 'b': real('5')})
+      expectObject('x ^ (1 / 4)', {'x': 2}, {$label: 'RAISE', 'a': real('2'), 'b': real('0.25')})
     })
 
     it('is infinity if the power is negative and even', () => {

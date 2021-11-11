@@ -269,6 +269,18 @@ describe(Complex, () => {
     })
   })
 
+  describe(Complex.prototype.equals, () => {
+    it('is true if this equals that', () => {
+      const a = new Complex(2, 1), b = new Complex(2, 1)
+      expect(a.equals(b)).toBe(true)
+    })
+
+    it('is false if this does not equal that', () => {
+      const a = new Complex(2, 1), b = new Complex(1, 2)
+      expect(a.equals(b)).toBe(false)
+    })
+  })
+
   describe(Complex.prototype.lt, () => {
     it('is true if this is less than that', () => {
       const a = new Complex(2), b = new Complex(3)

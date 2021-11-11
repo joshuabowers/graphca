@@ -192,6 +192,18 @@ describe(Real, () => {
     })
   })
 
+  describe(Real.prototype.equals, () => {
+    it('is true if this value equals that value', () => {
+      const a = new Real(2), b = new Real(2)
+      expect(a.equals(b)).toBe(true)
+    })
+
+    it('is false if this does not equal that', () => {
+      const a = new Real(2), b = new Real(3)
+      expect(a.equals(b)).toBe(false)
+    })
+  })
+
   describe(Real.prototype.lt, () => {
     it('is true if this is less than that', () => {
       const a = new Real(2), b = new Real(3)
