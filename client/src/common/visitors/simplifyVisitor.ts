@@ -18,6 +18,24 @@ const equals = (a: Real | Complex, b: Real | Complex): boolean => {
   return c.equals(d)
 }
 
+const stripLocations = (node: Node): Omit<Node, '$from' | '$to'> => {
+  const {$from, $to, ...fields} = node
+  return fields
+}
+
+const equivalent = (a: Node, b: Node): boolean => {
+  const sa = stripLocations(a), sb = stripLocations(b)  
+  for(const p in sa) {
+    if(typeof sa[p] === 'string' && sa[p] !== sb[p]){ return false }
+    else if(
+      sa[p].value && typeof sa[p].value.equals === 'function' 
+      && !(sa[p].value.equals(sb[p].value))
+    ){ return false }
+    else if(sa[p].$label && !equivalent(sa[p], sb[p])){ return false }
+  }
+  return true
+}
+
 const identity = (node: Node): Node => node
 
 const logarithm = (base: number) => {
@@ -42,6 +60,37 @@ export const simplifyVisitor: Visitor<Node> = {
     const zero = new Real(0)
     if( a.value && equals(zero, a.value) ){ return b }
     else if( b.value && equals(zero, b.value) ){ return a }
+    else if( equivalent(a, b) ){ return multiply(real(2), a) }
+    else if( a.$label === 'MULTIPLY' && b.$label !== 'MULTIPLY' ) {
+      if( a.b.$label === 'REAL' && equivalent( a.a, b ) ){ 
+        return multiply(real(a.b.value.value + 1), b) 
+      }
+      else if( a.a.$label === 'REAL' && equivalent( a.b, b ) ){ 
+        return multiply(real(a.a.value.value + 1), b) 
+      }
+    }
+    else if( a.$label !== 'MULTIPLY' && b.$label === 'MULTIPLY' ) {
+      if( b.b.$label === 'REAL' && equivalent( a, b.a ) ){ 
+        return multiply(real(b.b.value.value + 1), a) 
+      }
+      else if( b.a.$label === 'REAL' && equivalent( a, b.b ) ){ 
+        return multiply(real(b.a.value.value + 1), a)
+      }
+    }
+    else if( a.$label === 'MULTIPLY' && b.$label === 'MULTIPLY' ) {
+      if( a.a.$label === 'REAL' && b.a.$label === 'REAL' && equivalent(a.b, b.b) ){ 
+        return multiply(real(a.a.value.value + b.a.value.value), a.b) 
+      }
+      else if( a.b.$label === 'REAL' && b.a.$label === 'REAL' && equivalent(a.a, b.b) ){ 
+        return multiply(real(a.b.value.value + b.a.value.value), a.a) 
+      }
+      else if( a.a.$label === 'REAL' && b.b.$label === 'REAL' && equivalent(a.b, b.a) ){ 
+        return multiply(real(a.a.value.value + b.b.value.value), a.b) 
+      }
+      else if( a.b.$label === 'REAL' && b.b.$label === 'REAL' && equivalent(a.a, b.a) ){ 
+        return multiply(real(a.b.value.value + b.b.value.value), a.a) 
+      }
+    }
     return add(a, b)
   },
 

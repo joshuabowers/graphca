@@ -90,8 +90,7 @@ const visitInvoke = (node: Node): Node => {
 }
 
 const visitDifferentiate = (node: Node): Node => {
-  const derivative = applyVisitor(node.expression, differentiationVisitor, $options())
-  return $visit(derivative)
+  return $visit(applyVisitor(node.expression, differentiationVisitor, $options()))
 }
 
 export const evaluateVisitor: Visitor<Node> = {

@@ -34,6 +34,34 @@ describe('simplifyVisitor', () => {
     it('handles mixed operations', () => {
       expectObject('(0 * (x / 2)) + 5', real(5))
     })
+
+    it('collects like terms', () => {
+      expectObject('x + x', multiply(real(2), variable('x')))
+    })
+
+    it('collects like terms when the first is a multiplication', () => {
+      expectObject('2 * x + x', multiply(real(3), variable('x')))
+    })
+
+    it('collects like terms with then second is a multiplication', () => {
+      expectObject('x + 2 * x', multiply(real(3), variable('x')))
+    })
+
+    it('collects like terms when both are multiplications', () => {
+      expectObject('2 * x + 3 * x', multiply(real(5), variable('x')))
+    })
+
+    it('collects like terms as multiplications', () => {
+      expectObject('x + x + x', multiply(
+        real(3), variable('x')
+      ))
+    })
+
+    it('collects like sub-expressions', () => {
+      expectObject('x^2 + x^2', multiply(
+        real(2), raise(variable('x'), real(2))
+      ))
+    })
   })
 
   describe('of subtractions', () => {
