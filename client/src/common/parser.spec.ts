@@ -233,4 +233,12 @@ describe('parser', () => {
       )
     )
   })
+
+  it('matches assignment of derivatives', () => {
+    expectObject(
+      `y <- ${Unicode.derivative}(x)`, assign(
+        'y', differentiate(variable('x'))
+      )
+    )
+  })
 })
