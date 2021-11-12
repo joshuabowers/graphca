@@ -216,6 +216,18 @@ describe('identityParser', () => {
     it('reduces nested ones', () => {
       expectObject('x ^ y ^ 1', raise(variable('x'), variable('y')))
     })
+
+    it('simplifies a binary power of a binary logarithm', () => {
+      expectObject('2 ^ lb(x)', variable('x'))
+    })
+
+    it('simplifies a natural power of a natural logarithm', () => {
+      expectObject(`${Unicode.e} ^ ln(x)`, variable('x'))
+    })
+
+    it('simplifies a common power of a common logarithm', () => {
+      expectObject('10 ^ lg(x)', variable('x'))
+    })
   })
 
   describe('of logarithms', () => {

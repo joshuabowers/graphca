@@ -16,6 +16,25 @@ const operators = new Map([
   [Unicode.division, 'DIVIDE']
 ])
 
+const functions = [
+  'asinh', 'acosh', 'atanh',
+  'asin', 'acos', 'atan', 
+  'sinh', 'cosh', 'tanh',
+  'sin', 'cos', 'tan', 
+  'lb', 'ln', 'lg',
+  Unicode.gamma, Unicode.digamma, 'abs'
+]
+const renameFunctions: Map<string, string> = new Map([
+  [Unicode.gamma, 'GAMMA'],
+  [Unicode.digamma, 'DIGAMMA']
+])
+const callableNodes = new Map(
+  functions.map(f => [f, renameFunctions.get(f) ?? f.toLocaleUpperCase()])
+)
+
+const functional = peg(functions.map(s => `"${s}"`).join(" | "))
+
+
 const leftAssociate = (term: any, expressionPrime: any): any => {
   if(!expressionPrime){ return term; }
   return leftAssociate( 
@@ -70,6 +89,9 @@ exponential:
 | grouping '^' '0' ${() => real(1)}
 | <a>grouping '^' '1' ${({a}) => a}
 | <a>("0" | "1") '^' exponential ${({a}) => real(a)}
+| '2' '^' 'lb' '(' <b>exponential ')' ${({b}) => b}
+| $e '^' 'ln' '(' <b>exponential ')' ${({b}) => b}
+| '10' '^' 'lg' '(' <b>exponential ')' ${({b}) => b}
 | <a>grouping '^' <b>exponential ${
   ({a, b}) => b.value && b.value.value ? (
     b.value.value === 0 && real(1)
@@ -81,16 +103,18 @@ exponential:
 
 grouping:
 | logarithm
+| <f>callable '(' ^ <>expression ')' ${
+  ({f, expression}) => $node(callableNodes.get(f) ?? 'ERROR', {expression})
+}
 | '(' ^ expression ')'
 | literal
 
 logarithm:
-| 'lb' '(' '2' '^' <>expression ')' ${({expression}) => expression}
-| 'ln' '(' $e '^' <>expression ')' ${({expression}) => expression}
-| 'lg' '(' '10' '^' <>expression ')' ${({expression}) => expression}
-| <a>("lb" | "ln" | "lg") '(' ^ <>expression ')' ${
-  ({a, expression}) => $node(a.toLocaleUpperCase(), {expression})
-}
+| 'lb' '(' '2' '^' ^ <>expression ')' ${({expression}) => expression}
+| 'ln' '(' $e '^' ^ <>expression ')' ${({expression}) => expression}
+| 'lg' '(' '10' '^' ^ <>expression ')' ${({expression}) => expression}
+
+callable: ${functional}
 
 literal:
 | <a>$real '+' <b>$real? $i ${({a, b}) => complex(a, b ?? 1)}
