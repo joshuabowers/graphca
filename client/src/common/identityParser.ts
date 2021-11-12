@@ -1,8 +1,9 @@
 import { $node, peg } from 'pegase'
 import { Unicode } from './MathSymbols'
+import { Real } from './fields/Real'
 
 import { 
-  real, complex, negate
+  real, complex, negate, raise, lb, ln, lg
 } from './visitors/helpers/Node'
 
 const operators = new Map([
@@ -26,26 +27,84 @@ const leftAssociate = (term: any, expressionPrime: any): any => {
 }
 
 export const identityParser = peg`
+expression: addition
+
 addition:
-| <a>literal ('+' | '-' | $subtract) '0' ${({a}) => a}
-| '0' '+' <a>literal <b>additionPrime ${({a, b}) => leftAssociate(a, b)}
-| '0' ('-' | $subtract) <a>literal <b>additionPrime ${({a, b}) => leftAssociate(negate(a), b)}
-| <a>literal <b>additionPrime ${({a, b}) => leftAssociate(a, b)}
+| <a>multiplication ('+' | '-' | $subtract) '0' ${({a}) => a}
+| '0' '+' <a>multiplication <b>additionPrime ${({a, b}) => leftAssociate(a, b)}
+| '0' ('-' | $subtract) <a>multiplication <b>additionPrime ${({a, b}) => leftAssociate(negate(a), b)}
+| <a>multiplication <b>additionPrime ${({a, b}) => leftAssociate(a, b)}
 
 additionPrime:
 | ('+' | '-' | $subtract) '0' <b>additionPrime ${({b}) => b}
-| <op>("+" | "-" | $subtract) <a>literal <b>additionPrime ${(args) => args}
+| <op>("+" | "-" | $subtract) <a>multiplication <b>additionPrime ${(args) => args}
 | ε
+
+multiplication:
+| exponential ('*' | $multiply) '0' ${() => real(0)}
+| <a>exponential ('*' | $multiply) '1' ${({a}) => a}
+| '0' ('*' | $multiply) exponential multiplicationPrime ${() => real(0)}
+| '1' ('*' | $multiply) <a>exponential <b>multiplicationPrime ${({a, b}) => leftAssociate(a, b)}
+| exponential ('/' | $divide) '0' ${() => real(Infinity)}
+| '0' ('/' | $divide) exponential multiplicationPrime ${() => real(0)}
+| <a>exponential ('/' | $divide) '1' ${({a}) => a}
+| <a>exponential <b>multiplicationPrime ${
+  ({a, b}) => b === 'ZERO' 
+    ? real(0) 
+    : b === 'INFINITY' 
+      ? real(Infinity) 
+      : leftAssociate(a, b)
+}
+
+multiplicationPrime:
+| ('*' | $multiply) '0' multiplicationPrime ${() => 'ZERO'}
+| ('*' | $multiply) '1' <b>multiplicationPrime ${({b}) => b}
+| ('/' | $divide) '0' multiplicationPrime ${() => 'INFINITY'}
+| ('/' | $divide) '1' <b>multiplicationPrime ${({b}) => b}
+| <op>("*" | "/" | $multiply | $divide) <a>exponential <b>multiplicationPrime ${
+  (args) => typeof args.b === 'string' ? args.b : args
+}
+| ε
+
+exponential:
+| grouping '^' '0' ${() => real(1)}
+| <a>grouping '^' '1' ${({a}) => a}
+| <a>("0" | "1") '^' exponential ${({a}) => real(a)}
+| <a>grouping '^' <b>exponential ${
+  ({a, b}) => b.value && b.value.value ? (
+    b.value.value === 0 && real(1)
+    || b.value.value === 1 && a
+    || raise(a, b)
+  ) : raise(a, b)
+}
+| grouping
+
+grouping:
+| logarithm
+| '(' ^ expression ')'
+| literal
+
+logarithm:
+| 'lb' '(' '2' '^' <>expression ')' ${({expression}) => expression}
+| 'ln' '(' $e '^' <>expression ')' ${({expression}) => expression}
+| 'lg' '(' '10' '^' <>expression ')' ${({expression}) => expression}
+| <a>("lb" | "ln" | "lg") '(' ^ <>expression ')' ${
+  ({a, expression}) => $node(a.toLocaleUpperCase(), {expression})
+}
 
 literal:
 | <a>$real '+' <b>$real? $i ${({a, b}) => complex(a, b ?? 1)}
 | <b>$real? $i ${({b}) => complex(0, b ?? 1)}
 | <value>$real ${({value}) => real(value)}
+| $e ${() => real(Math.E)}
 | <name>$variable => 'VARIABLE'
 
 $real @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
 $variable @raw: [a-zA-Z][a-zA-Z0-9]*
 $i @raw: ${RegExp(Unicode.i, 'u')}
+$e @raw: ${RegExp(Unicode.e, 'u')}
 
 $subtract @raw: ${RegExp(Unicode.minus, 'u')}
+$multiply @raw: ${RegExp(Unicode.multiplication, 'u')}
+$divide @raw: ${RegExp(Unicode.division, 'u')}
 `

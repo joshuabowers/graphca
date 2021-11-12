@@ -21,6 +21,7 @@ export const divide = binary('DIVIDE')
 export const raise = binary('RAISE')
 
 export const negate = unary('NEGATE')
+export const lb = unary('LB')
 export const ln = unary('LN')
 export const lg = unary('LG')
 

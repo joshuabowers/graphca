@@ -24,7 +24,9 @@ export const cosh = unary('COSH')
 export const sinh = unary('SINH')
 export const tanh = unary('TANH')
 
+export const lb = unary('LB')
 export const ln = unary('LN')
+export const lg = unary('LG')
 
 export const factorial = unary('FACTORIAL')
 export const gamma = unary('GAMMA')
