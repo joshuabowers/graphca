@@ -1,9 +1,9 @@
-import { $node, peg } from 'pegase'
+import { $children, $node, peg } from 'pegase'
 import { Unicode } from './MathSymbols'
 import { Real } from './fields/Real'
 
 import { 
-  real, complex, negate, raise, lb, ln, lg
+  real, complex, negate, raise, lb, ln, lg, multiply
 } from './visitors/helpers/Node'
 
 const operators = new Map([
@@ -52,6 +52,7 @@ addition:
 | <a>multiplication ('+' | '-' | $subtract) '0' ${({a}) => a}
 | '0' '+' <a>multiplication <b>additionPrime ${({a, b}) => leftAssociate(a, b)}
 | '0' ('-' | $subtract) <a>multiplication <b>additionPrime ${({a, b}) => leftAssociate(negate(a), b)}
+| <a>multiplication '+' >a< ${(args) => { console.log(args); return multiply(real(2), args)}}
 | <a>multiplication <b>additionPrime ${({a, b}) => leftAssociate(a, b)}
 
 additionPrime:
@@ -89,9 +90,9 @@ exponential:
 | grouping '^' '0' ${() => real(1)}
 | <a>grouping '^' '1' ${({a}) => a}
 | <a>("0" | "1") '^' exponential ${({a}) => real(a)}
-| '2' '^' 'lb' '(' <b>exponential ')' ${({b}) => b}
-| $e '^' 'ln' '(' <b>exponential ')' ${({b}) => b}
-| '10' '^' 'lg' '(' <b>exponential ')' ${({b}) => b}
+| '2' '^' 'lb' '(' ^ <b>exponential ')' ${({b}) => b}
+| $e '^' 'ln' '(' ^ <b>exponential ')' ${({b}) => b}
+| '10' '^' 'lg' '(' ^ <b>exponential ')' ${({b}) => b}
 | <a>grouping '^' <b>exponential ${
   ({a, b}) => b.value && b.value.value ? (
     b.value.value === 0 && real(1)
@@ -114,6 +115,8 @@ logarithm:
 | 'ln' '(' $e '^' ^ <>expression ')' ${({expression}) => expression}
 | 'lg' '(' '10' '^' ^ <>expression ')' ${({expression}) => expression}
 
+keywords: callable ![a-zA-Z]
+
 callable: ${functional}
 
 literal:
@@ -124,7 +127,7 @@ literal:
 | <name>$variable => 'VARIABLE'
 
 $real @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
-$variable @raw: [a-zA-Z][a-zA-Z0-9]*
+$variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
 $i @raw: ${RegExp(Unicode.i, 'u')}
 $e @raw: ${RegExp(Unicode.e, 'u')}
 
