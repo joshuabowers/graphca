@@ -69,7 +69,7 @@ exponent:
 | negation
 
 negation:
-| ('-' | $subtract) ^ <expression>grouping => 'NEGATE'
+| ('-' | $subtract) ^ <expression>negation => 'NEGATE'
 | grouping
 
 grouping:

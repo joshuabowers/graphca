@@ -158,6 +158,11 @@ describe('simplifyVisitor', () => {
     it('combines equivalent based powers together', () => {
       expectObject('x^2 * x^3', raise(variable('x'), real(5)))
     })
+
+    it('multiplies constant coefficients of nested multiplications', () => {
+      expectObject('3 * (2 * x)', multiply(real(6), variable('x')))
+      expectObject('(2 * x) * 3', multiply(real(6), variable('x')))
+    })
   })
 
   describe('of divisions', () => {
@@ -213,6 +218,26 @@ describe('simplifyVisitor', () => {
       expectObject('(x * y) / (x * z)', divide(variable('y'), variable('z')))
       expectObject('(x * y) / (z * x)', divide(variable('y'), variable('z')))
     })
+
+    it('cancels a power multiplicand in the numerator if a similar base denominator', () => {
+      expectObject('(y * x^2) / x', multiply(variable('y'), variable('x')))
+      expectObject('(x^2 * y) / x', multiply(variable('x'), variable('y')))
+    })
+
+    it('cancels a power multiplicand in the denominator if a similar base numerator', () => {
+      expectObject('x / (y * x^2)', divide(real(1), multiply(variable('y'), variable('x'))))
+      expectObject('x / (x^2 * y)', divide(real(1), multiply(variable('x'), variable('y'))))
+    })
+
+    it('cancels a multiplicand in the numerator if a similar power denominator', () => {
+      expectObject('(y * x) / x^2', divide(variable('y'), variable('x')))
+      expectObject('(x * y) / x^2', divide(variable('y'), variable('x')))
+    })
+
+    it('cancels a multiplicand in the denominator if a similar power numerator', () => {
+      expectObject('x^2 / (x * y)', divide(variable('x'), variable('y')))
+      expectObject('x^2 / (y * x)', divide(variable('x'), variable('y')))
+    })
   })
 
   describe('of exponentiations', () => {
@@ -267,12 +292,15 @@ describe('simplifyVisitor', () => {
     })
   })
 
+  describe('of negations', () => {
+    it('returns the nested expression of a negation of a negation', () => {
+      expectObject('--x', variable('x'))
+    })
+  })
+
   describe('of derivatives', () => {
     it('returns the simplified form of the derivative', () => {
-      expectObject(`${Unicode.derivative}(x^2)`, multiply(
-        raise(variable('x'), real(2)),
-        divide(real(2), variable('x'))
-      ))
+      expectObject(`${Unicode.derivative}(x^2)`, multiply(real(2), variable('x')))
     })
   })
 

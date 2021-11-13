@@ -174,6 +174,7 @@ describe('parser', () => {
     expectObject('-(x - 1)', negate(
       subtract(variable('x'), num(1))
     ))
+    expectObject('--x', negate(negate(variable('x'))))
   })
 
   it('matches gamma', () => {
