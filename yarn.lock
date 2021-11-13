@@ -7022,6 +7022,7 @@ __metadata:
     redux-logger: ^3.0.6
     reselect: ^4.0.0
     reselect-map: ^1.0.6
+    ts-pattern: ^3.3.3
     typescript: ^4.1.2
     web-vitals: ^1.0.1
     webpack-hot-middleware: ^2.25.0
@@ -20156,6 +20157,13 @@ resolve@^2.0.0-next.3:
   version: 2.0.12
   resolution: "ts-essentials@npm:2.0.12"
   checksum: e46916ef44b4417f0c726faac333c8d2f363a47a5c1994eb9d42045a85d247284a3220cb7f71fb30a9bd2eef43ed7eb3bc1f76f4fedf946200a98cfde7eb3a3f
+  languageName: node
+  linkType: hard
+
+"ts-pattern@npm:^3.3.3":
+  version: 3.3.3
+  resolution: "ts-pattern@npm:3.3.3"
+  checksum: 64c8535fbfc4f56bb9f00c4c4fa5a47471cc4e27c618cb25bc94df3e6f7fdaebff43be0071e117aa1d12ed0fa58ee960895b3311976c64b978559aac228ef0eb
   languageName: node
   linkType: hard
 

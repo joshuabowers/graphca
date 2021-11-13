@@ -12805,6 +12805,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["redux-logger", "npm:3.0.6"],
             ["reselect", "npm:4.0.0"],
             ["reselect-map", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:1.0.6"],
+            ["ts-pattern", "npm:3.3.3"],
             ["typescript", "patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=32657b"],
             ["web-vitals", "npm:1.1.2"],
             ["webpack-hot-middleware", "npm:2.25.0"]
@@ -28284,6 +28285,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ts-essentials-npm-2.0.12-2c553d7b88-e46916ef44.zip/node_modules/ts-essentials/",
           "packageDependencies": [
             ["ts-essentials", "npm:2.0.12"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["ts-pattern", [
+        ["npm:3.3.3", {
+          "packageLocation": "./.yarn/cache/ts-pattern-npm-3.3.3-18e3ac33df-64c8535fbf.zip/node_modules/ts-pattern/",
+          "packageDependencies": [
+            ["ts-pattern", "npm:3.3.3"]
           ],
           "linkType": "HARD",
         }]

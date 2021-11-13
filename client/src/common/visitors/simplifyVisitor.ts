@@ -1,8 +1,9 @@
-import { Visitor, Node, $visit, $node } from 'pegase'
+import { Visitor, Node, Location, $visit, $node } from 'pegase'
 import { Complex } from '../fields/Complex'
 import { Field } from '../fields/Field'
 import { Real } from '../fields/Real'
 import { add, subtract, multiply, divide, raise, negate, real } from './helpers/Node'
+import { match, not, __ } from 'ts-pattern'
 
 const isComplex = (value: Real | Complex): value is Complex => {
   return value instanceof Complex
@@ -36,17 +37,27 @@ const equivalent = (a: Node, b: Node): boolean => {
   return true
 }
 
+type Binary = 'ADD' | 'SUBTRACT' | 'MULTIPLY' | 'DIVIDE' | 'RAISE'
+type Unary = 'LB' | 'LN' | 'LG'
+
+type AST = 
+  | { $label: Binary, a: AST, b: AST, $from: Location, $to: Location }
+  | { $label: Unary, expression: AST, $from: Location, $to: Location }
+  | { $label: 'REAL', value: Real, $from: Location, $to: Location }
+  | { $label: 'COMPLEX', value: Complex, $from: Location, $to: Location }
+  | { $label: 'VARIABLE', name: string, $from: Location, $to: Location }
+
 const identity = (node: Node): Node => node
 
 const logarithm = (base: number) => {
-  const b = new Real(base)
   return (node: Node): Node => {
     const expression = $visit(node.expression)
-    if( expression.$label === 'RAISE' ){
-      const a = expression.a
-      if( a.value && equals(a.value, b) ){ return expression.b }
-    }
-    return $node(node.$label, {expression})
+    return match<AST, Node>(expression)
+      .with(
+        {$label: 'RAISE', a: {value: {value: base}}}, 
+        (expression) => expression.b
+      )
+      .otherwise((expression) => $node(node.$label, {expression}))
   }
 }
 
@@ -57,81 +68,91 @@ export const simplifyVisitor: Visitor<Node> = {
 
   ADD: (node) => {
     const a = $visit(node.a), b = $visit(node.b)
-    const zero = new Real(0)
-    if( a.value && equals(zero, a.value) ){ return b }
-    else if( b.value && equals(zero, b.value) ){ return a }
-    else if( equivalent(a, b) ){ return multiply(real(2), a) }
-    else if( a.$label === 'MULTIPLY' && b.$label !== 'MULTIPLY' ) {
-      if( a.b.$label === 'REAL' && equivalent( a.a, b ) ){ 
-        return multiply(real(a.b.value.value + 1), b) 
-      }
-      else if( a.a.$label === 'REAL' && equivalent( a.b, b ) ){ 
-        return multiply(real(a.a.value.value + 1), b) 
-      }
-    }
-    else if( a.$label !== 'MULTIPLY' && b.$label === 'MULTIPLY' ) {
-      if( b.b.$label === 'REAL' && equivalent( a, b.a ) ){ 
-        return multiply(real(b.b.value.value + 1), a) 
-      }
-      else if( b.a.$label === 'REAL' && equivalent( a, b.b ) ){ 
-        return multiply(real(b.a.value.value + 1), a)
-      }
-    }
-    else if( a.$label === 'MULTIPLY' && b.$label === 'MULTIPLY' ) {
-      if( a.a.$label === 'REAL' && b.a.$label === 'REAL' && equivalent(a.b, b.b) ){ 
-        return multiply(real(a.a.value.value + b.a.value.value), a.b) 
-      }
-      else if( a.b.$label === 'REAL' && b.a.$label === 'REAL' && equivalent(a.a, b.b) ){ 
-        return multiply(real(a.b.value.value + b.a.value.value), a.a) 
-      }
-      else if( a.a.$label === 'REAL' && b.b.$label === 'REAL' && equivalent(a.b, b.a) ){ 
-        return multiply(real(a.a.value.value + b.b.value.value), a.b) 
-      }
-      else if( a.b.$label === 'REAL' && b.b.$label === 'REAL' && equivalent(a.a, b.a) ){ 
-        return multiply(real(a.b.value.value + b.b.value.value), a.a) 
-      }
-    }
-    return add(a, b)
+    return match<[AST, AST], Node>([a, b])
+      .with([{value: {value: 0}}, __], ([, b]) => b)
+      .with([__, {value: {value: 0}}], ([a, ]) => a)
+      .when(([a, b]) => equivalent(a, b), ([a, ]) => multiply(real(2), a))
+      .with(
+        [{$label: 'MULTIPLY', a: {$label: 'REAL'}}, {$label: not('MULTIPLY')}],
+        ([a, b]) => equivalent(a.b, b),
+        ([a, b]) => multiply(real(a.a.value.value + 1), b)
+      )
+      .with(
+        [{$label: 'MULTIPLY', b: {$label: 'REAL'}}, {$label: not('MULTIPLY')}],
+        ([a, b]) => equivalent(a.a, b),
+        ([a, b]) => multiply(real(a.b.value.value + 1), b)        
+      )
+      .with(
+        [{$label: not('MULTIPLY')}, {$label: 'MULTIPLY', a: {$label: 'REAL'}}],
+        ([a, b]) => equivalent(a, b.b),
+        ([a, b]) => multiply(real(b.a.value.value + 1), a)
+      )
+      .with(
+        [{$label: not('MULTIPLY')}, {$label: 'MULTIPLY', b: {$label: 'REAL'}}],
+        ([a, b]) => equivalent(a, b.a),
+        ([a, b]) => multiply(real(b.b.value.value + 1), a)
+      )
+      .with(
+        [{$label: 'MULTIPLY', a: {$label: 'REAL'}}, {$label: 'MULTIPLY', a: {$label: 'REAL'}}],
+        ([a, b]) => equivalent(a.b, b.b),
+        ([a, b]) => multiply(real(a.a.value.value + b.a.value.value), a.b)
+      )
+      .with(
+        [{$label: 'MULTIPLY', a: {$label: 'REAL'}}, {$label: 'MULTIPLY', b: {$label: 'REAL'}}],
+        ([a, b]) => equivalent(a.b, b.a),
+        ([a, b]) => multiply(real(a.a.value.value + b.b.value.value), a.b)
+      )
+      .with(
+        [{$label: 'MULTIPLY', b: {$label: 'REAL'}}, {$label: 'MULTIPLY', a: {$label: 'REAL'}}],
+        ([a, b]) => equivalent(a.a, b.b),
+        ([a, b]) => multiply(real(a.b.value.value + b.a.value.value), a.a)
+      )
+      .with(
+        [{$label: 'MULTIPLY', b: {$label: 'REAL'}}, {$label: 'MULTIPLY', b: {$label: 'REAL'}}],
+        ([a, b]) => equivalent(a.a, b.a),
+        ([a, b]) => multiply(real(a.b.value.value + b.b.value.value), a.a)
+      )
+      .otherwise(([a, b]) => add(a, b))
   },
 
   SUBTRACT: (node) => {
     const a = $visit(node.a), b = $visit(node.b)
-    const zero = new Real(0)
-    if( a.value && equals(zero, a.value) ){ return negate(b) }
-    else if( b.value && equals(zero, b.value) ){ return a }
-    return subtract(a, b)
+    return match<[AST, AST], Node>([a, b])
+      .with([{value: {value: 0}}, __], ([, b]) => negate(b))
+      .with([__, {value: {value: 0}}], ([a, ]) => a)
+      .otherwise(([a, b]) => subtract(a, b))
   },
 
   MULTIPLY: (node) => {
     const a = $visit(node.a), b = $visit(node.b)
-    const zero = new Real(0), one = new Real(1)
-    if( a.value && equals(zero, a.value) ){ return real(0) }
-    else if( b.value && equals(zero, b.value) ){ return real(0) }
-    else if( a.value && equals(one, a.value) ){ return b }
-    else if( b.value && equals(one, b.value) ){ return a }
-    return multiply(a, b)
+    return match<[AST, AST], Node>([a, b])
+      .with([{value: {value: 0}}, __], () => real(0))
+      .with([__, {value: {value: 0}}], () => real(0))
+      .with([{value: {value: 1}}, __], ([, b]) => b)
+      .with([__, {value: {value: 1}}], ([a, ]) => a)
+      .otherwise(([a, b]) => multiply(a, b))
   },
 
   DIVIDE: (node) => {
     const a = $visit(node.a), b = $visit(node.b)
-    const zero = new Real(0), one = new Real(1)
-    if( a.value && equals(zero, a.value) ){ return real(0) }
-    else if( b.value && equals(zero, b.value) ){ return real(Infinity) }
-    else if( b.value && equals(one, b.value) ){ return a }
-    return divide(a, b)
+    return match<[AST, AST], Node>([a, b])
+      .with([{value: {value: 0}}, __], () => real(0))
+      .with([__, {value: {value: 0}}], () => real(Infinity))
+      .with([__, {value: {value: 1}}], ([a, ]) => a)
+      .otherwise(([a, b]) => divide(a, b))
   },
 
   RAISE: (node) => {
     const a = $visit(node.a), b = $visit(node.b)
-    const zero = new Real(0), one = new Real(1)
-    if( a.value && equals(zero, a.value) ){ return real(0) }
-    else if( b.value && equals(zero, b.value) ){ return real(1) }
-    else if( a.value && equals(one, a.value) ){ return a }
-    else if( b.value && equals(one, b.value) ){ return a }
-    else if( b.$label === 'LB' && a.value && equals(new Real(2), a.value) ){ return b.expression }
-    else if( b.$label === 'LN' && a.value && equals(new Real(Math.E), a.value) ){ return b.expression }
-    else if( b.$label === 'LG' && a.value && equals(new Real(10), a.value) ){ return b.expression }
-    return raise(a, b)
+    return match<[AST, AST], Node>([a, b])
+      .with([{value: {value: 0}}, __], () => real(0))
+      .with([__, {value: {value: 0}}], () => real(1))
+      .with([{value: {value: 1}}, __], ([a,]) => a)
+      .with([__, {value: {value: 1}}], ([a,]) => a)
+      .with([{value: {value: 2}}, {$label: 'LB'}], ([, b]) => b.expression)
+      .with([{value: {value: Math.E}}, {$label: 'LN'}], ([, b]) => b.expression)
+      .with([{value: {value: 10}}, {$label: 'LG'}], ([, b]) => b.expression)
+      .otherwise(([a, b]) => raise(a, b))
   },
 
   LB: logarithm(2),
