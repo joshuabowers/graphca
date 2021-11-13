@@ -53,11 +53,7 @@ export const componentVisitor: Visitor<JSX.Element> = {
   SUBTRACT: binary(Unicode.minus),
   MULTIPLY: binary(Unicode.multiplication),
   DIVIDE: binary(Unicode.division),
-  RAISE: (node) => (
-    <span className={styles.exponent}>
-      {$visit(node.a)}^{$visit(node.b)}
-    </span>
-  ),
+  RAISE: binary('^'),
   NEGATE: (node) => <span className={styles.negation}>{Unicode.minus}{$visit(node.expression)}</span>,
   SIN: functional('trigonometric'),
   COS: functional('trigonometric'),

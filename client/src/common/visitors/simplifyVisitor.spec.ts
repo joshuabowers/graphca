@@ -5,7 +5,7 @@ import { simplifyVisitor } from './simplifyVisitor'
 import { 
   NodeLike,
   variable, real, negate,
-  multiply, divide, raise
+  add, multiply, divide, raise, cos
 } from './helpers/NodeLike'
 import { Unicode } from '../MathSymbols'
 
@@ -62,6 +62,19 @@ describe('simplifyVisitor', () => {
         real(2), raise(variable('x'), real(2))
       ))
     })
+
+    it('correctly handles the sum of two like multiples', () => {
+      expectObject('(x + x) + (x + x)', multiply(
+        real(4), variable('x')
+      ))
+    })
+
+    it('does no simplification if there are no like terms', () => {
+      expectObject('2 * x + 3 * y', add(
+        multiply(real(2), variable('x')),
+        multiply(real(3), variable('y'))
+      ))
+    })
   })
 
   describe('of subtractions', () => {
@@ -75,6 +88,11 @@ describe('simplifyVisitor', () => {
 
     it('chains nested subtractions', () => {
       expectObject('0 - x - 0', negate(variable('x')))
+    })
+
+    it('returns zero if a quantity is subtracted from itself', () => {
+      expectObject('x - x', real(0))
+      expectObject('cos(x) - cos(x)', real(0))
     })
   })
 
@@ -111,6 +129,21 @@ describe('simplifyVisitor', () => {
 
     it('returns infinity if the denominator is zero', () => {
       expectObject('x / 0', real(Infinity))
+    })
+
+    it('returns one if the numerator and the denominator are the same', () => {
+      expectObject('x / x', real(1))
+    })
+
+    it('simplifies powers divided by their base', () => {
+      expectObject('x^3 / x', raise(variable('x'), real(2)))
+    })
+
+    it('simplifies dividing a base by a power of the same base', () => {
+      expectObject('x / x^3', divide(
+        real(1),
+        raise(variable('x'), real(2))
+      ))
     })
   })
 
@@ -167,7 +200,7 @@ describe('simplifyVisitor', () => {
 
   describe('by default', () => {
     it('passes through the input node', () => {
-      expectObject('x', variable('x'))
+      expectObject('cos(x)', cos(variable('x')))
     })
   })
 })

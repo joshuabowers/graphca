@@ -66,7 +66,7 @@ describe('componentVisitor', () => {
   })
 
   it('renders exponents', () => {
-    expectMarkup('x^2', '.exponent')
+    expectMarkup('x ^ 2', '.binaryOp')
   })
 
   it('renders trigonometric functions', () => {

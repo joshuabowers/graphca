@@ -71,7 +71,6 @@ export const simplifyVisitor: Visitor<Node> = {
     return match<[AST, AST], Node>([a, b])
       .with([{value: {value: 0}}, __], ([, b]) => b)
       .with([__, {value: {value: 0}}], ([a, ]) => a)
-      .when(([a, b]) => equivalent(a, b), ([a, ]) => multiply(real(2), a))
       .with(
         [{$label: 'MULTIPLY', a: {$label: 'REAL'}}, {$label: not('MULTIPLY')}],
         ([a, b]) => equivalent(a.b, b),
@@ -112,6 +111,7 @@ export const simplifyVisitor: Visitor<Node> = {
         ([a, b]) => equivalent(a.a, b.a),
         ([a, b]) => multiply(real(a.b.value.value + b.b.value.value), a.a)
       )
+      .when(([a, b]) => equivalent(a, b), ([a, ]) => multiply(real(2), a))
       .otherwise(([a, b]) => add(a, b))
   },
 
@@ -120,6 +120,12 @@ export const simplifyVisitor: Visitor<Node> = {
     return match<[AST, AST], Node>([a, b])
       .with([{value: {value: 0}}, __], ([, b]) => negate(b))
       .with([__, {value: {value: 0}}], ([a, ]) => a)
+      // The following case can happen due to, e.g. $visit(DIVIDE)
+      .with( 
+        [{$label: 'REAL'}, {$label: 'REAL'}], 
+        ([a,b]) => real(a.value.value - b.value.value)
+      )
+      .when(([a, b]) => equivalent(a, b), () => real(0))
       .otherwise(([a, b]) => subtract(a, b))
   },
 
@@ -139,6 +145,17 @@ export const simplifyVisitor: Visitor<Node> = {
       .with([{value: {value: 0}}, __], () => real(0))
       .with([__, {value: {value: 0}}], () => real(Infinity))
       .with([__, {value: {value: 1}}], ([a, ]) => a)
+      .when(([a, b]) => equivalent(a, b), () => real(1))
+      .with(
+        [{$label: 'RAISE'}, {$label: not('RAISE')}],
+        ([a, b]) => equivalent(a.a, b),
+        ([a, ]) => $visit(raise(a.a, subtract(a.b, real(1)))) as Node
+      )
+      .with(
+        [{$label: not('RAISE')}, {$label: 'RAISE'}],
+        ([a, b]) => equivalent(a, b.a),
+        ([, b]) => $visit(divide(real(1), raise(b.a, subtract(b.b, real(1)))))
+      )
       .otherwise(([a, b]) => divide(a, b))
   },
 
