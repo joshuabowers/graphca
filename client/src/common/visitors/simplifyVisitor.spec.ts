@@ -116,6 +116,48 @@ describe('simplifyVisitor', () => {
     it('handles mixed operations', () => {
       expectObject('0 * (x / 2)', real(0))
     })
+
+    it('reorders constants to the left-hand position', () => {
+      expectObject('x * 2', multiply(real(2), variable('x')))
+      expectObject('2 * x', multiply(real(2), variable('x')))
+    })
+
+    it('multiplies a value by the numerator of a division from the left', () => {
+      expectObject('x * (y / z)', divide(
+        multiply(variable('x'), variable('y')),
+        variable('z')
+      ))
+    })
+
+    it('multiplies a value by the numerator of a division from the right', () => {
+      expectObject('(y / z) * x', divide(
+        multiply(variable('y'), variable('x')),
+        variable('z')
+      ))
+    })
+
+    it('multiplies two fractions together into a single division', () => {
+      expectObject('(x / y) * (z / w)', divide(
+        multiply(variable('x'), variable('z')),
+        multiply(variable('y'), variable('w'))
+      ))
+    })
+
+    it('combines like terms as a power', () => {
+      expectObject('x * x', raise(variable('x'), real(2)))
+    })
+
+    it('combines adds to the power when multiplying by the base from the left', () => {
+      expectObject('x * x^2', raise(variable('x'), real(3)))
+    })
+
+    it('combines adds to the power when multiplying by the base from the right', () => {
+      expectObject('x^2 * x', raise(variable('x'), real(3)))
+    })
+
+    it('combines equivalent based powers together', () => {
+      expectObject('x^2 * x^3', raise(variable('x'), real(5)))
+    })
   })
 
   describe('of divisions', () => {
@@ -145,6 +187,32 @@ describe('simplifyVisitor', () => {
         raise(variable('x'), real(2))
       ))
     })
+
+    it('simplifies powers divided by similar powers', () => {
+      expectObject('x^5 / x^3', raise(variable('x'), real(2)))
+      expectObject('x^3 / x^2', variable('x'))
+      expectObject('x^3 / x^5', divide(
+        real(1),
+        raise(variable('x'), real(2))
+      ))
+    })
+
+    it('cancels a multiplicand in the numerator if a similar denominator', () => {
+      expectObject('(x * y) / y', variable('x'))
+      expectObject('(x * y) / x', variable('y'))
+    })
+
+    it('cancels a multiplicand in the denominator if a similar numerator', () => {
+      expectObject('y / (x * y)', divide(real(1), variable('x')))
+      expectObject('x / (x * y)', divide(real(1), variable('y')))
+    })
+
+    it('cancels like terms in a division of multiplications', () => {
+      expectObject('(x * y) / (y * z)', divide(variable('x'), variable('z')))
+      expectObject('(x * y) / (z * y)', divide(variable('x'), variable('z')))
+      expectObject('(x * y) / (x * z)', divide(variable('y'), variable('z')))
+      expectObject('(x * y) / (z * x)', divide(variable('y'), variable('z')))
+    })
   })
 
   describe('of exponentiations', () => {
@@ -166,6 +234,16 @@ describe('simplifyVisitor', () => {
 
     it('returns one if both the base and power are zero', () => {
       expectObject('0 ^ 0', real(1))
+    })
+
+    it('returns a reciprocal for negative exponents', () => {
+      expectObject('x ^ -5', divide(real(1), raise(variable('x'), real(5))))
+    })
+
+    it('returns a reciprocal for negative unaries', () => {
+      expectObject('x ^ -cos(x)', divide(
+        real(1), raise(variable('x'), cos(variable('x')))
+      ))
     })
 
     it('returns the argument of a binary logarithm power of 2', () => {

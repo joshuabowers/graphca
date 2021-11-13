@@ -1,4 +1,4 @@
-import { Visitor, Node, Location, $visit, $node } from 'pegase'
+import { Visitor, Node, $visit, $node } from 'pegase'
 import { Complex } from '../fields/Complex'
 import { Field } from '../fields/Field'
 import { Real } from '../fields/Real'
@@ -38,15 +38,16 @@ const equivalent = (a: Node, b: Node): boolean => {
 }
 
 type Binary = 'ADD' | 'SUBTRACT' | 'MULTIPLY' | 'DIVIDE' | 'RAISE'
-type Unary = 'LB' | 'LN' | 'LG'
+type Unary = 'LB' | 'LN' | 'LG' | 'NEGATE'
 
-type AST = 
-  | { $label: Binary, a: AST, b: AST, $from: Location, $to: Location }
-  | { $label: Unary, expression: AST, $from: Location, $to: Location }
-  | { $label: 'REAL', value: Real, $from: Location, $to: Location }
-  | { $label: 'COMPLEX', value: Complex, $from: Location, $to: Location }
-  | { $label: 'VARIABLE', name: string, $from: Location, $to: Location }
-
+type AST = (
+  | { $label: Binary, a: AST, b: AST }
+  | { $label: Unary, expression: AST }
+  | { $label: 'REAL', value: Real }
+  | { $label: 'COMPLEX', value: Complex }
+  | { $label: 'VARIABLE', name: string }
+) & Pick<Node, '$from' | '$to'>
+  
 const identity = (node: Node): Node => node
 
 const logarithm = (base: number) => {
@@ -71,6 +72,11 @@ export const simplifyVisitor: Visitor<Node> = {
     return match<[AST, AST], Node>([a, b])
       .with([{value: {value: 0}}, __], ([, b]) => b)
       .with([__, {value: {value: 0}}], ([a, ]) => a)
+      // Can occur in, e.g., $visit(MULTIPLY)
+      .with(
+        [{$label: 'REAL'}, {$label: 'REAL'}], 
+        ([a, b]) => real(a.value.value + b.value.value)
+      )
       .with(
         [{$label: 'MULTIPLY', a: {$label: 'REAL'}}, {$label: not('MULTIPLY')}],
         ([a, b]) => equivalent(a.b, b),
@@ -136,6 +142,29 @@ export const simplifyVisitor: Visitor<Node> = {
       .with([__, {value: {value: 0}}], () => real(0))
       .with([{value: {value: 1}}, __], ([, b]) => b)
       .with([__, {value: {value: 1}}], ([a, ]) => a)
+      .with(
+        [{$label: 'DIVIDE'}, {$label: 'DIVIDE'}],
+        ([a, b]) => $visit(divide(multiply(a.a, b.a), multiply(a.b, b.b)))
+      )
+      .with([__, {$label: 'DIVIDE'}], ([a, b]) => divide(multiply(a, b.a), b.b))
+      .with([{$label: 'DIVIDE'}, __], ([a, b]) => divide(multiply(a.a, b), a.b))
+      .with([__, {$label: 'REAL'}], ([a, b]) => multiply(b, a))
+      .with(
+        [{$label: not('RAISE')}, {$label: 'RAISE'}],
+        ([a, b]) => equivalent(a, b.a),
+        ([, b]) => $visit(raise(b.a, add(b.b, real(1))))
+      )
+      .with(
+        [{$label: 'RAISE'}, {$label: not('RAISE')}],
+        ([a, b]) => equivalent(a.a, b),
+        ([a, ]) => $visit(raise(a.a, add(a.b, real(1))))
+      )
+      .with(
+        [{$label: 'RAISE'}, {$label: 'RAISE'}],
+        ([a, b]) => equivalent(a.a, b.a),
+        ([a, b]) => $visit(raise(a.a, add(a.b, b.b)))
+      )
+      .when(([a, b]) => equivalent(a, b), ([a, ]) => raise(a, real(2)))
       .otherwise(([a, b]) => multiply(a, b))
   },
 
@@ -156,6 +185,51 @@ export const simplifyVisitor: Visitor<Node> = {
         ([a, b]) => equivalent(a, b.a),
         ([, b]) => $visit(divide(real(1), raise(b.a, subtract(b.b, real(1)))))
       )
+      .with(
+        [{$label: 'RAISE'}, {$label: 'RAISE'}],
+        ([a, b]) => equivalent(a.a, b.a),
+        ([a, b]) => $visit(raise(a.a, subtract(a.b, b.b)))
+      )
+      .with( // (x * y) / x => y
+        [{$label: 'MULTIPLY'}, {$label: not('MULTIPLY')}],
+        ([a, b]) => equivalent(a.a, b),
+        ([a, ]) => a.b
+      )
+      .with( // (x * y) / y => x
+        [{$label: 'MULTIPLY'}, {$label: not('MULTIPLY')}],
+        ([a, b]) => equivalent(a.b, b),
+        ([a, ]) => a.a
+      )
+      .with( // x / (x * y) => 1 / y
+        [{$label: not('MULTIPLY')}, {$label: 'MULTIPLY'}],
+        ([a, b]) => equivalent(a, b.a),
+        ([, b]) => divide(real(1), b.b)
+      )
+      .with( // y / (x * y) => 1 / x
+        [{$label: not('MULTIPLY')}, {$label: 'MULTIPLY'}],
+        ([a, b]) => equivalent(a, b.b),
+        ([, b]) => divide(real(1), b.a)
+      )
+      .with( // (x * y) / (x * z) => y / z
+        [{$label: 'MULTIPLY'}, {$label: 'MULTIPLY'}],
+        ([a, b]) => equivalent(a.a, b.a),
+        ([a, b]) => $visit(divide(a.b, b.b))
+      )
+      .with( // (x * y) / (z * x) => y / z
+        [{$label: 'MULTIPLY'}, {$label: 'MULTIPLY'}],
+        ([a, b]) => equivalent(a.a, b.b),
+        ([a, b]) => $visit(divide(a.b, b.a))
+      )
+      .with( // (x * y) / (y * z) => x / z
+        [{$label: 'MULTIPLY'}, {$label: 'MULTIPLY'}],
+        ([a, b]) => equivalent(a.b, b.a),
+        ([a, b]) => $visit(divide(a.a, b.b))
+      )
+      .with( // (x * y) / (z * y) => x / z
+        [{$label: 'MULTIPLY'}, {$label: 'MULTIPLY'}],
+        ([a, b]) => equivalent(a.b, b.b),
+        ([a, b]) => $visit(divide(a.a, b.a))
+      )
       .otherwise(([a, b]) => divide(a, b))
   },
 
@@ -166,6 +240,12 @@ export const simplifyVisitor: Visitor<Node> = {
       .with([__, {value: {value: 0}}], () => real(1))
       .with([{value: {value: 1}}, __], ([a,]) => a)
       .with([__, {value: {value: 1}}], ([a,]) => a)
+      .with([__, {$label: 'NEGATE'}], ([a, b]) => divide(real(1), raise(a, b.expression)))
+      .with(
+        [__, {$label: 'REAL'}],
+        ([, b]) => b.value.value < 0,
+        ([a, b]) => divide(real(1), raise(a, real(-b.value.value)))
+      )
       .with([{value: {value: 2}}, {$label: 'LB'}], ([, b]) => b.expression)
       .with([{value: {value: Math.E}}, {$label: 'LN'}], ([, b]) => b.expression)
       .with([{value: {value: 10}}, {$label: 'LG'}], ([, b]) => b.expression)
