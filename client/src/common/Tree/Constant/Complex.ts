@@ -1,8 +1,8 @@
 import { Unicode } from '../../MathSymbols'
-import { Field, Node } from './Field'
+import { Field, Node, Kind } from './Field'
 
 export class Complex extends Field {
-  readonly $type = 'Complex'
+  readonly $kind = Kind.Complex
   readonly a: number
   readonly b: number
 

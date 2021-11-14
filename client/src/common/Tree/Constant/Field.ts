@@ -1,5 +1,6 @@
-import { Expression, Node } from '../Expression'
+import { Expression, Node, Kind } from '../Expression'
 export type { Expression, Node }
+export { Kind }
 
 export abstract class Field extends Expression {
 

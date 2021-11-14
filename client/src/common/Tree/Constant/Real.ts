@@ -1,7 +1,7 @@
-import { Field, Node } from './Field'
+import { Field, Node, Kind } from './Field'
 
 export class Real extends Field {
-  readonly $type = 'Real'
+  readonly $kind = Kind.Real
   readonly value: number
 
   constructor(value: number){

@@ -1,10 +1,10 @@
 import { Unicode } from '../../MathSymbols'
-import { Binary, binary } from './Binary'
+import { Binary, binary, Kind } from './Binary'
 
 const operators = [Unicode.multiplication, '*']
 
 export class Multiplication extends Binary {
-  readonly $type = 'Multiplication'
+  readonly $kind = Kind.Multiplication
 
   static get operators(): string[] {
     return operators

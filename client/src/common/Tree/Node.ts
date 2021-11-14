@@ -1,5 +1,8 @@
+import { Kind } from "./Kind";
+export { Kind }
+
 export interface Node {
-  readonly $type: string
+  readonly $kind: Kind
   toString(): string
   equals(that: Node): boolean
 }

@@ -1,12 +1,13 @@
-import { Node } from './Node'
+import { Node, Kind } from './Node'
 export type { Node }
+export { Kind }
 
 export abstract class Expression implements Node {
-  abstract readonly $type: string
+  abstract readonly $kind: Kind
 
   abstract toString(): string
 
   equals(that: Node): boolean {
-    return this.$type === that.$type
+    return this.$kind === that.$kind
   }
 }

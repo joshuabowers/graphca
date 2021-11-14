@@ -1,10 +1,10 @@
 import { Unicode } from '../../MathSymbols'
-import { Binary, binary } from './Binary'
+import { Binary, binary, Kind } from './Binary'
 
 const operators = [Unicode.minus, '-']
 
 export class Subtraction extends Binary {
-  readonly $type = 'Subtraction'
+  readonly $kind = Kind.Subtraction
 
   static get operators(): string[] {
     return operators

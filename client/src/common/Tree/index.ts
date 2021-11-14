@@ -5,6 +5,7 @@ import {
 import { Complex, Real } from './Constant'
 
 export type { Node } from './Node'
+export { Kind } from './Kind'
 export type { Expression } from './Expression'
 export {
   Binary, Addition, Subtraction, Multiplication, Division, Exponential,

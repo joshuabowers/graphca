@@ -2,7 +2,7 @@ import {
   real, complex,
   add, subtract, multiply, divide, raise,
   operators, additive, multiplicative, 
-  Tree, Node, Real, Addition, Multiplication
+  Tree, Node, Real, Addition, Multiplication, Kind
 } from './Tree'
 import { peg } from 'pegase'
 import { match, instanceOf } from 'ts-pattern'
@@ -38,18 +38,19 @@ const c = multiply(a, add(a, b))
 const d = operators.get('+')?.(a, b)
 
 const foo = match<Tree, Node>(c)
-  .with({$type: 'Real'}, (v) => v as Real)
-  .with({$type: 'Addition'}, (v) => v as Addition)
-  .with({$type: 'Multiplication', a: {$type: 'Addition'}}, (v) => v as Multiplication)
+  .with({$kind: Kind.Real}, (v) => v as Real)
+  .with({$kind: Kind.Addition}, (v) => v as Addition)
+  .with({$kind: Kind.Multiplication, a: {$kind: Kind.Addition}}, (v) => v as Multiplication)
 
 const bar = match<[Tree, Tree], Node>([b, c])
-  .with([{$type: 'Real'}, {$type: 'Real'}], ([a, b]) => add(a, b))
-  .with([{$type: 'Addition'}, {$type: 'Multiplication'}], ([a, b]) => multiply(a, b))
+  .with([{$kind: Kind.Real}, {$kind: Kind.Real}], ([a, b]) => add(a, b))
+  .with([{$kind: Kind.Addition}, {$kind: Kind.Multiplication}], ([a, b]) => multiply(a, b))
+  .with([instanceOf(Addition), instanceOf(Multiplication)], ([a, b]) => multiply(a, b))
 
 const baz = match<Tree, Node>(c)
   .with(instanceOf(Real), (v) => v)
   .with(instanceOf(Addition), (v) => v)
-  .with({$type: 'Multiplication', a: instanceOf(Multiplication), b: instanceOf(Real)},
+  .with({$kind: Kind.Multiplication, a: instanceOf(Multiplication), b: instanceOf(Real)},
     (v) => v.a
   )
 

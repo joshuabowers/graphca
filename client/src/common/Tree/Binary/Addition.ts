@@ -1,9 +1,9 @@
-import { Binary, binary } from './Binary'
+import { Binary, binary, Kind } from './Binary'
 
 const operators = ['+']
 
 export class Addition extends Binary {
-  readonly $type = 'Addition'
+  readonly $kind = Kind.Addition
 
   static get operators(): string[] {
     return operators

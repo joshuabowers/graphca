@@ -1,9 +1,9 @@
-import { Binary, Expression, binary } from './Binary'
+import { Binary, binary, Kind } from './Binary'
 
 const operators = ['^']
 
 export class Exponential extends Binary {
-  readonly $type = 'Exponential'
+  readonly $kind = Kind.Exponential
 
   static get operators(): string[] {
     return operators

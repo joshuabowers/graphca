@@ -1,10 +1,10 @@
 import { Unicode } from '../../MathSymbols'
-import { Binary, Expression, binary } from './Binary'
+import { Binary, binary, Kind } from './Binary'
 
 const operators = [Unicode.division, '/']
 
 export class Division extends Binary {
-  readonly $type = 'Division'
+  readonly $kind = Kind.Division
 
   static get operators(): string[] {
     return operators
