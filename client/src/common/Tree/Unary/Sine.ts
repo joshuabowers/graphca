@@ -1,4 +1,4 @@
-import { Unary, unary, Kind, Visitor  } from "./Unary";
+import { Unary, unary, Kind, Visitor } from "./Unary";
 
 export class Sine extends Unary {
   static readonly function: string = 'sin'
@@ -11,5 +11,7 @@ export class Sine extends Unary {
 
   get function(): string { return Sine.function }
 }
+
+// export const Sine = classize(Kind.Sine, 'sin', () => (visitor) => visitor.visitSine)
 
 export const sin = unary(Sine)

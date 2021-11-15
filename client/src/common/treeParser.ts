@@ -3,7 +3,7 @@ import {
   real, complex, variable,
   add, subtract, multiply, divide, raise, negate,
   operators, additive, multiplicative, functions,
-  Tree, Node, Real, Addition, Multiplication, Kind, Exponentiation, Subtraction
+  Tree, Node, Real, Addition, Multiplication, Kind, Exponentiation, Subtraction, Sine
 } from './Tree'
 import { peg, $fail } from 'pegase'
 import { match, instanceOf } from 'ts-pattern'
@@ -115,6 +115,7 @@ const foo = match<Tree, Node>(c)
   .with({$kind: Kind.Real}, (v) => v as Real)
   .with({$kind: Kind.Addition}, (v) => v as Addition)
   .with({$kind: Kind.Multiplication, a: {$kind: Kind.Addition}}, (v) => v as Multiplication)
+  .with({$kind: Kind.Sine}, (v) => v as Sine)
 
 const bar = match<[Tree, Tree], Node>([b, c])
   .with([{$kind: Kind.Real}, {$kind: Kind.Real}], ([a, b]) => add(a, b))
@@ -127,6 +128,7 @@ const baz = match<Tree, Node>(c)
   .with({$kind: Kind.Multiplication, a: instanceOf(Multiplication), b: instanceOf(Real)},
     (v) => v.a
   )
+  .with(instanceOf(Sine), (v) => v)
 
 const qux = match<{v: Tree}, Node>({v: c})
   .with({v: instanceOf(Real)}, ({v}) => v)

@@ -29,3 +29,20 @@ export function unary<T extends Unary>(type: (new(expression: Expression) => T))
     return new type(expression)
   }
 }
+
+// While a neat instance of meta-programming, this unfortunately does not
+// play too well with ts-pattern. Notably, matches on $kind are not as
+// definitive as they could otherwise be.
+export function classize(kind: Kind, functionName: string, accept: <T, V>() => (visitor: Visitor<V>) => (node: T) => V) {
+  return class Subclass extends Unary {
+    static function: string = functionName
+
+    readonly $kind = kind
+
+    accept<Value>(visitor: Visitor<Value>): Value {
+      return accept<Subclass, Value>()(visitor)(this)
+    }
+
+    get function(): string { return Subclass.function }
+  }
+}
