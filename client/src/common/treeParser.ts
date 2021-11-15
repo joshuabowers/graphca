@@ -12,23 +12,16 @@ const additiveParser = peg([...additive.keys()].map(capture).join('|'))
 const multiplicativeParser = peg([...multiplicative.keys()].map(capture).join('|'))
 
 export const treeParser = peg<Tree>`
-addition:
-| <a>multiplication <b>additionPrime
+addition: leftAssociative(multiplication, ${additiveParser})
 
-additionPrime:
-| <op>additiveOperator <a>multiplication <b>additionPrime
-| ε
+multiplication: leftAssociative(exponentiation, ${multiplicativeParser})
 
-additiveOperator: ${additiveParser}
-
-multiplication:
-| <a>exponentiation <b>multiplicationPrime
-
-multiplicationPrime:
-| <op>multiplicativeOperator <a>exponentiation <b>multiplicationPrime
-| ε
-
-multiplicativeOperator: ${multiplicativeParser}
+leftAssociative(itemType, operators): (
+  head: <a>itemType <b>tail
+  tail:
+  | <op>operators <a>itemType <b>tail
+  | ε
+)
 `
 
 const a = real(5)

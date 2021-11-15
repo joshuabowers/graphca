@@ -1,5 +1,5 @@
-import { Node, Kind } from './Node'
-export type { Node }
+import { Node, Kind, Visitor } from './Node'
+export type { Node, Visitor }
 export { Kind }
 
 export abstract class Expression implements Node {
@@ -10,4 +10,6 @@ export abstract class Expression implements Node {
   equals(that: Node): boolean {
     return this.$kind === that.$kind
   }
+
+  abstract accept<Value>(visitor: Visitor<Value>): Value
 }

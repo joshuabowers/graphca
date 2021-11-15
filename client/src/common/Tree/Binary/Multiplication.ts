@@ -1,5 +1,5 @@
 import { Unicode } from '../../MathSymbols'
-import { Binary, binary, Kind } from './Binary'
+import { Binary, binary, Kind, Visitor } from './Binary'
 
 const operators = [Unicode.multiplication, '*']
 
@@ -12,6 +12,10 @@ export class Multiplication extends Binary {
   
   get operators(): string[] {
     return operators
+  }
+
+  accept<Value>(visitor: Visitor<Value>): Value {
+    return visitor.visitMultiplication(this)
   }
 }
 

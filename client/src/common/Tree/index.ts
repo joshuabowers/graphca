@@ -1,16 +1,24 @@
 import { 
-  Addition, Subtraction, Multiplication, Division, Exponential, 
+  Addition, Subtraction, Multiplication, Division, Exponentiation,
   add, subtract, multiply, divide, raise 
 } from './Binary'
+import { 
+  Negation
+} from './Unary'
 import { Complex, Real } from './Constant'
 
 export type { Node } from './Node'
 export { Kind } from './Kind'
 export type { Expression } from './Expression'
 export {
-  Binary, Addition, Subtraction, Multiplication, Division, Exponential,
+  Binary, Addition, Subtraction, Multiplication, Division, Exponentiation,
   binary, add, subtract, multiply, divide, raise
 } from './Binary'
+export {
+  Unary, Negation, BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
+  unary, negate, lb, ln, lg
+} from './Unary'
+export type { Logarithm } from './Unary'
 export {
   Field, Complex, Real,
   field, complex, real
@@ -21,9 +29,10 @@ export type Tree =
 | Subtraction
 | Multiplication
 | Division
-| Exponential
+| Exponentiation
 | Complex
 | Real
+| Negation
 
 type Additive = typeof add | typeof subtract
 type Multiplicative = typeof multiply | typeof divide

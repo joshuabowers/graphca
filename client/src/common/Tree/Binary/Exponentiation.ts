@@ -1,10 +1,9 @@
-import { Unicode } from '../../MathSymbols'
 import { Binary, binary, Kind, Visitor } from './Binary'
 
-const operators = [Unicode.division, '/']
+const operators = ['^']
 
-export class Division extends Binary {
-  readonly $kind = Kind.Division
+export class Exponentiation extends Binary {
+  readonly $kind = Kind.Exponentiation
 
   static get operators(): string[] {
     return operators
@@ -15,8 +14,8 @@ export class Division extends Binary {
   }
 
   accept<Value>(visitor: Visitor<Value>): Value {
-    return visitor.visitDivision(this)
+    return visitor.visitExponentiation(this)
   }
 }
 
-export const divide = binary(Division)
+export const raise = binary(Exponentiation)

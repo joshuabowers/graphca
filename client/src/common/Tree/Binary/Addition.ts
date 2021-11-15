@@ -1,4 +1,4 @@
-import { Binary, binary, Kind } from './Binary'
+import { Binary, binary, Kind, Visitor } from './Binary'
 
 const operators = ['+']
 
@@ -11,6 +11,10 @@ export class Addition extends Binary {
 
   get operators(): string[] {
     return operators
+  }
+
+  accept<Value>(visitor: Visitor<Value>): Value {
+    return visitor.visitAddition(this)
   }
 }
 

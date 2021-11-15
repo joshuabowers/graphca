@@ -5,5 +5,9 @@ export enum Kind {
   Subtraction,
   Multiplication,
   Division,
-  Exponential
+  Exponentiation,
+  Negation,
+  BinaryLogarithm,
+  NaturalLogarithm,
+  CommonLogarithm
 }

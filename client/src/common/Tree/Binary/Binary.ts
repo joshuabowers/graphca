@@ -1,5 +1,5 @@
-import { Expression, Node, Kind } from '../Expression'
-export type { Expression, Node }
+import { Expression, Node, Kind, Visitor } from '../Expression'
+export type { Expression, Node, Visitor }
 export { Kind }
 
 export abstract class Binary extends Expression {

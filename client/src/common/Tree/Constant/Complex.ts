@@ -1,5 +1,5 @@
 import { Unicode } from '../../MathSymbols'
-import { Field, Node, Kind } from './Field'
+import { Field, Node, Kind, Visitor } from './Field'
 
 export class Complex extends Field {
   readonly $kind = Kind.Complex
@@ -22,8 +22,12 @@ export class Complex extends Field {
       && this.a === asComplex.a
       && this.b === asComplex.b
   }
+
+  accept<Value>(visitor: Visitor<Value>): Value {
+    return visitor.visitComplex(this)
+  }
 }
 
-export function complex(a: number, b: number) {
+export function complex(a: number, b: number = 0) {
   return new Complex(a, b)
 }
