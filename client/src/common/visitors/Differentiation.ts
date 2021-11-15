@@ -2,9 +2,11 @@ import {
   Visitor,
   Addition, Subtraction, Multiplication, Division, Exponentiation,
   Negation, BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
-  Real, Complex, Tree, Logarithm, 
-  add, subtract, multiply, divide, raise, real, complex,
-  negate, lb, ln, lg
+  Cosine, Sine, Tangent,
+  Real, Complex, Variable, Tree, Logarithm, 
+  add, subtract, multiply, divide, raise, real, complex, variable,
+  negate, lb, ln, lg,
+  cos, sin, tan
 } from './Visitor'
 
 export class Differentiation extends Visitor<Tree> {
@@ -14,6 +16,10 @@ export class Differentiation extends Visitor<Tree> {
 
   visitComplex(_: Complex): Tree {
     return complex(0)
+  }
+
+  visitVariable(node: Variable): Tree {
+    return real(1)
   }
 
   visitAddition(node: Addition): Tree {
@@ -71,6 +77,33 @@ export class Differentiation extends Visitor<Tree> {
 
   visitCommonLogarithm(node: CommonLogarithm): Tree {
     return this.logarithm(10, node)
+  }
+
+  visitCosine(node: Cosine): Tree {
+    return multiply(
+      negate(sin(node.expression)),
+      node.expression.accept(this)
+    )
+  }
+
+  visitSine(node: Sine): Tree {
+    return multiply(
+      cos(node.expression),
+      node.expression.accept(this)
+    )
+  }
+
+  visitTangent(node: Tangent): Tree {
+    return multiply(
+      add(
+        real(1),
+        raise(
+          tan(node.expression),
+          real(2)
+        )
+      ),
+      node.expression.accept(this)
+    )
   }
 
   private logarithm(base: number, node: Logarithm): Tree {

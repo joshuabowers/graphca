@@ -2,7 +2,9 @@ import { Unicode } from './MathSymbols';
 import {
   Tree,
   add, subtract, multiply, divide, negate, raise,
-  real, complex
+  real, complex, variable,
+  lb, ln, lg,
+  cos, sin, tan
 } from './Tree'
 import { treeParser } from "./treeParser";
 
@@ -19,8 +21,38 @@ describe('treeParser', () => {
       expectObject('1.2345', real(1.2345))
     })
 
+    it(`matches ${Unicode.e}`, () => {
+      expectObject(Unicode.e, real(Math.E))
+    })
+
+    it(`matches ${Unicode.pi}`, () => {
+      expectObject(Unicode.pi, real(Math.PI))
+    })
+
+    it(`matches ${Unicode.infinity}`, () => {
+      expectObject(Unicode.infinity, real(Infinity))
+    })
+
     it('matches complex numbers', () => {
       expectObject(`1.23 + 4.56${Unicode.i}`, complex(1.23, 4.56))
+    })
+
+    it(`matches ${Unicode.e}${Unicode.i}`, () => {
+      expectObject(`${Unicode.e}${Unicode.i}`, complex(0, Math.E))
+    })
+
+    it(`matches ${Unicode.pi}${Unicode.i}`, () => {
+      expectObject(`${Unicode.pi}${Unicode.i}`, complex(0, Math.PI))
+    })
+  })
+
+  describe('of variables', () => {
+    it('matches identifiers', () => {
+      expectObject('x', variable('x'))
+    })
+
+    it('does not match reserved words', () => {
+      expect(() => treeParser.value('cos')).toThrow()
     })
   })
 
@@ -117,6 +149,80 @@ describe('treeParser', () => {
 
     it('matches an alternative symbol for division', () => {
       expectObject(`1 ${Unicode.division} 2`, divide(real(1), real(2)))
+    })
+  })
+
+  describe('of exponentiations', () => {
+    it('matches a simple binary', () => {
+      expectObject('1 ^ 2', raise(real(1), real(2)))
+    })
+
+    it('matches nested exponentiations right recursively', () => {
+      expectObject('1 ^ 2 ^ 3', raise(
+        real(1),
+        raise(real(2), real(3))
+      ))
+    })
+  })
+
+  describe('of grouping parentheses', () => {
+    it('matches the inner expression', () => {
+      expectObject('(1 + 2)', add(real(1), real(2)))
+    })
+
+    it('influences associativity', () => {
+      expectObject('1 + (2 + 3)', add(
+        real(1),
+        add(real(2), real(3))
+      ))
+    })
+  })
+
+  describe('of negations', () => {
+    it('matches a basic negation', () => {
+      expectObject('-1', negate(real(1)))
+    })
+
+    it('matches nested negations', () => {
+      expectObject('--1', negate(negate(real(1))))
+    })
+
+    it('matches an alternative symbol for negations', () => {
+      expectObject(`${Unicode.minus}1`, negate(real(1)))
+    })
+  })
+
+  describe('of logarithms', () => {
+    it('matches the binary logarithm', () => {
+      expectObject('lb(x)', lb(variable('x')))
+    })
+
+    it('matches the natural logarithm', () => {
+      expectObject('ln(x)', ln(variable('x')))
+    })
+
+    it('matches the common logarithm', () => {
+      expectObject('lg(x)', lg(variable('x')))
+    })
+  })
+
+  describe('of trigonometric functions', () => {
+    it('matches cosines', () => {
+      expectObject('cos(x)', cos(variable('x')))
+    })
+
+    it('matches sines', () => {
+      expectObject('sin(x)', sin(variable('x')))
+    })
+
+    it('matches tangents', () => {
+      expectObject('tan(x)', tan(variable('x')))
+    })
+  })
+
+  describe('of functions', () => {
+    it('matches nested composition', () => {
+      expectObject('cos(ln(tan(x)))', cos(ln(tan(variable('x')))))
     })
   })
 })

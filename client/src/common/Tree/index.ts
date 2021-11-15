@@ -1,11 +1,16 @@
 import { 
   Addition, Subtraction, Multiplication, Division, Exponentiation,
-  add, subtract, multiply, divide, raise 
+  add, subtract, multiply, divide, raise
 } from './Binary'
 import { 
-  Negation
+  Unary,
+  Negation, Cosine, Sine, Tangent,
+  BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
+  lb, ln, lg,
+  cos, sin, tan
 } from './Unary'
 import { Complex, Real } from './Constant'
+import { Variable } from './Variable'
 
 export type { Node } from './Node'
 export { Kind } from './Kind'
@@ -16,27 +21,43 @@ export {
 } from './Binary'
 export {
   Unary, Negation, BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
-  unary, negate, lb, ln, lg
+  Cosine, Sine, Tangent,
+  unary, negate, lb, ln, lg,
+  cos, sin, tan
 } from './Unary'
 export type { Logarithm } from './Unary'
 export {
   Field, Complex, Real,
   field, complex, real
 } from './Constant'
+export { 
+  Variable, variable
+} from './Variable'
 
 export type Tree =
+| Real
+| Complex
+| Variable
 | Addition
 | Subtraction
 | Multiplication
 | Division
 | Exponentiation
-| Complex
-| Real
 | Negation
+| BinaryLogarithm
+| NaturalLogarithm
+| CommonLogarithm
+| Cosine
+| Sine
+| Tangent
 
 type Additive = typeof add | typeof subtract
 type Multiplicative = typeof multiply | typeof divide
 type Operator = Additive | Multiplicative
+
+type Logarithmic = typeof lb | typeof ln | typeof lg
+type Trigonometric = typeof cos | typeof sin | typeof tan
+type Functions = Logarithmic | Trigonometric
 
 export const additive = new Map<string, Additive>()
 Addition.operators.map((op) => additive.set(op, add))
@@ -53,3 +74,12 @@ for(const [op, func] of additive){
 for(const [op, func] of multiplicative){
   operators.set(op, func)
 }
+
+export const functions = new Map<string, Functions>([
+  [BinaryLogarithm.function, lb],
+  [NaturalLogarithm.function, ln],
+  [CommonLogarithm.function, lg],
+  [Cosine.function, cos],
+  [Sine.function, sin],
+  [Tangent.function, tan]
+])

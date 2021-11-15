@@ -1,16 +1,19 @@
 import { Unicode } from './MathSymbols'
 import {
-  real, complex,
-  add, subtract, multiply, divide, raise,
-  operators, additive, multiplicative, 
-  Tree, Node, Real, Addition, Multiplication, Kind
+  real, complex, variable,
+  add, subtract, multiply, divide, raise, negate,
+  operators, additive, multiplicative, functions,
+  Tree, Node, Real, Addition, Multiplication, Kind, Exponentiation, Subtraction
 } from './Tree'
 import { peg, $fail } from 'pegase'
 import { match, instanceOf } from 'ts-pattern'
 
 const capture = (s: string) => `"${s}"`
-const additiveParser = peg([...additive.keys()].map(capture).join('|'))
-const multiplicativeParser = peg([...multiplicative.keys()].map(capture).join('|'))
+const additiveOperators = peg([...additive.keys()].map(capture).join('|'))
+const multiplicativeOperators = peg([...multiplicative.keys()].map(capture).join('|'))
+const exponentiationOperator = peg(Exponentiation.operators.map(capture).join('|'))
+const subtractionOperators = peg(Subtraction.operators.map(capture).join('|'))
+const functional = peg([...functions.keys()].map(capture).join('|'))
 
 type Tail = {
   op: string,
@@ -22,7 +25,7 @@ const leftAssociate = (node: Tree, tail: Tail | undefined): Tree | undefined => 
   if(!tail){ return node; }
   const operator = operators.get(tail.op)
   if(!operator){ 
-    $fail( `Unknown operator ${tail.op} in expression` )
+    $fail( `Unknown operator '${tail.op}' in expression` )
     return undefined
   }
   return leftAssociate(
@@ -31,10 +34,21 @@ const leftAssociate = (node: Tree, tail: Tail | undefined): Tree | undefined => 
   )
 }
 
-export const treeParser = peg<Tree>`
-addition: leftAssociative(multiplication, ${additiveParser})
+const builtInFunction = (name: string, expression: Tree): Tree | undefined => {
+  const f = functions.get(name)
+  if(!f){ 
+    $fail(`could not locate built-in function '${name}'`)
+    return undefined
+  }
+  return f(expression)
+}
 
-multiplication: leftAssociative(exponentiation, ${multiplicativeParser})
+export const treeParser = peg<Tree>`
+expression: addition
+
+addition: leftAssociative(multiplication, ${additiveOperators})
+
+multiplication: leftAssociative(exponentiation, ${multiplicativeOperators})
 
 leftAssociative(itemType, operators): (
   head: <a>itemType <b>tail ${({a, b}) => leftAssociate(a, b)}
@@ -44,21 +58,51 @@ leftAssociative(itemType, operators): (
 )
 
 exponentiation:
+| <a>group ${exponentiationOperator} <b>exponentiation ${({a, b}) => raise(a, b)}
 | group
 
 group:
-| literal
+| ${subtractionOperators} <>group ${({group}) => negate(group)}
+| functional
+| '(' expression ')'
+| primitive
 
-literal:
-| <a>$real '+' <b>$real? $i ${({a, b}) => complex(a, b ?? 1)}
-| <b>$real? $i ${({b}) => complex(0, b ?? 1)}
+functional:
+| <name>builtInFunction '(' ^ <>expression ')' ${
+  ({name, expression}) => builtInFunction(name, expression)
+}
+
+builtInFunction: ${functional}
+
+primitive:
+| variable
+| constant
+
+constant:
+| complex
+| real
+
+variable:
+| <name>$variable ${({name}) => variable(name)}
+
+complex:
+| <a>real '+' <b>real? $i ${({a, b}) => complex(a.value, b.value ?? 1)}
+| <b>real? $i ${({b}) => complex(0, b.value ?? 1)}
+
+real:
 | <value>$real ${({value}) => real(value)}
 | $e ${() => real(Math.E)}
+| $pi ${() => real(Math.PI)}
+| $infinity ${() => real(Infinity)}
+
+keywords: builtInFunction
 
 $real @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
 $variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
 $i @raw: ${RegExp(Unicode.i, 'u')}
 $e @raw: ${RegExp(Unicode.e, 'u')}
+$pi @raw: ${RegExp(Unicode.pi, 'u')}
+$infinity @raw: ${RegExp(Unicode.infinity, 'u')}
 `
 
 const a = real(5)
