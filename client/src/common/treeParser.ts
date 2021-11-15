@@ -1,15 +1,35 @@
+import { Unicode } from './MathSymbols'
 import {
   real, complex,
   add, subtract, multiply, divide, raise,
   operators, additive, multiplicative, 
   Tree, Node, Real, Addition, Multiplication, Kind
 } from './Tree'
-import { peg } from 'pegase'
+import { peg, $fail } from 'pegase'
 import { match, instanceOf } from 'ts-pattern'
 
 const capture = (s: string) => `"${s}"`
 const additiveParser = peg([...additive.keys()].map(capture).join('|'))
 const multiplicativeParser = peg([...multiplicative.keys()].map(capture).join('|'))
+
+type Tail = {
+  op: string,
+  a: Tree,
+  b?: Tail
+}
+
+const leftAssociate = (node: Tree, tail: Tail | undefined): Tree | undefined => {
+  if(!tail){ return node; }
+  const operator = operators.get(tail.op)
+  if(!operator){ 
+    $fail( `Unknown operator ${tail.op} in expression` )
+    return undefined
+  }
+  return leftAssociate(
+    operator(node, tail.a),
+    tail.b
+  )
+}
 
 export const treeParser = peg<Tree>`
 addition: leftAssociative(multiplication, ${additiveParser})
@@ -17,11 +37,28 @@ addition: leftAssociative(multiplication, ${additiveParser})
 multiplication: leftAssociative(exponentiation, ${multiplicativeParser})
 
 leftAssociative(itemType, operators): (
-  head: <a>itemType <b>tail
+  head: <a>itemType <b>tail ${({a, b}) => leftAssociate(a, b)}
   tail:
-  | <op>operators <a>itemType <b>tail
+  | <op>operators <a>itemType <b>tail ${(tail) => tail}
   | ε
 )
+
+exponentiation:
+| group
+
+group:
+| literal
+
+literal:
+| <a>$real '+' <b>$real? $i ${({a, b}) => complex(a, b ?? 1)}
+| <b>$real? $i ${({b}) => complex(0, b ?? 1)}
+| <value>$real ${({value}) => real(value)}
+| $e ${() => real(Math.E)}
+
+$real @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
+$variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
+$i @raw: ${RegExp(Unicode.i, 'u')}
+$e @raw: ${RegExp(Unicode.e, 'u')}
 `
 
 const a = real(5)

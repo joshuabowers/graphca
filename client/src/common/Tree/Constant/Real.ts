@@ -4,9 +4,9 @@ export class Real extends Field {
   readonly $kind = Kind.Real
   readonly value: number
 
-  constructor(value: number){
+  constructor(value: number | string){
     super()
-    this.value = value
+    this.value = Number(value)
   }
 
   toString(): string {
@@ -22,6 +22,6 @@ export class Real extends Field {
   }
 }
 
-export function real(value: number) {
+export function real(value: number | string) {
   return new Real(value)
 }

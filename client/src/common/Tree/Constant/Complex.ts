@@ -6,10 +6,10 @@ export class Complex extends Field {
   readonly a: number
   readonly b: number
 
-  constructor(a: number, b: number) {
+  constructor(a: number | string, b: number | string) {
     super()
-    this.a = a
-    this.b = b
+    this.a = Number(a)
+    this.b = Number(b)
   }
 
   toString(): string {
@@ -28,6 +28,6 @@ export class Complex extends Field {
   }
 }
 
-export function complex(a: number, b: number = 0) {
+export function complex(a: number | string, b: number | string = 0) {
   return new Complex(a, b)
 }
