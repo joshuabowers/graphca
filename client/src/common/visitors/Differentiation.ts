@@ -24,7 +24,7 @@ import {
 import { Tree } from "../Tree"
 
 
-export class Differentiation extends Visitor<Tree> {
+export class Differentiation implements Visitor<Tree> {
   visitReal(_: Real): Tree {
     return real(0)
   }
@@ -35,6 +35,14 @@ export class Differentiation extends Visitor<Tree> {
 
   visitVariable(node: Variable): Tree {
     return real(1)
+  }
+
+  visitAssignment(node: Assignment): Tree {
+    return real(0)
+  }
+
+  visitInvocation(node: Invocation): Tree {
+    return real(0)
   }
 
   visitAddition(node: Addition): Tree {
@@ -82,6 +90,10 @@ export class Differentiation extends Visitor<Tree> {
     return negate(node.expression.accept(this))
   }
 
+  visitAbsoluteValue(node: AbsoluteValue): Tree {
+    return real(0)
+  }
+
   visitBinaryLogarithm(node: BinaryLogarithm): Tree {
     return this.logarithm(2, node)
   }
@@ -119,6 +131,58 @@ export class Differentiation extends Visitor<Tree> {
       ),
       node.expression.accept(this)
     )
+  }
+
+  visitArcusCosine(node: ArcusCosine): Tree {
+    return real(0)
+  }
+
+  visitArcusSine(node: ArcusSine): Tree {
+    return real(0)
+  }
+
+  visitArcusTangent(node: ArcusTangent): Tree {
+    return real(0)
+  }
+
+  visitHyperbolicCosine(node: HyperbolicCosine): Tree {
+    return real(0)
+  }
+
+  visitHyperbolicSine(node: HyperbolicSine): Tree {
+    return real(0)
+  }
+
+  visitHyperbolicTangent(node: HyperbolicTangent): Tree {
+    return real(0)
+  }
+
+  visitAreaHyperbolicCosine(node: AreaHyperbolicCosine): Tree {
+    return real(0)
+  }
+
+  visitAreaHyperbolicSine(node: AreaHyperbolicSine): Tree {
+    return real(0)
+  }
+
+  visitAreaHyperbolicTangent(node: AreaHyperbolicTangent): Tree {
+    return real(0)
+  }
+
+  visitFactorial(node: Factorial): Tree {
+    return real(0)
+  }
+
+  visitGamma(node: Gamma): Tree {
+    return real(0)
+  }
+
+  visitPolygamma(node: Polygamma): Tree {
+    return real(0)
+  }
+
+  visitDerivative(node: Derivative): Tree {
+    return real(0)
   }
 
   private logarithm(base: number, node: Logarithm): Tree {
