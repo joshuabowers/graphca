@@ -1,12 +1,12 @@
 import { Unicode } from './MathSymbols'
 import {
   real, complex, variable,
-  add, subtract, multiply, divide, raise, negate,
+  raise, negate, factorial,
   operators, additive, multiplicative, functions,
-  Tree, Node, Real, Addition, Multiplication, Kind, Exponentiation, Subtraction, Sine
+  Addition, Exponentiation, Subtraction, Factorial
 } from './Tree'
+import { Tree } from "./Tree"
 import { peg, $fail } from 'pegase'
-import { match, instanceOf } from 'ts-pattern'
 
 const capture = (s: string) => `"${s}"`
 const additiveOperators = peg([...additive.keys()].map(capture).join('|'))
@@ -60,6 +60,7 @@ leftAssociative(itemType, operators): (
 
 exponentiation:
 | <a>group ${exponentiationOperator} <b>exponentiation ${({a, b}) => raise(a, b)}
+| <expression>group ${Factorial.function} ${({expression}) => factorial(expression)}
 | group
 
 group:
@@ -110,33 +111,3 @@ $e @raw: ${RegExp(Unicode.e, 'u')}
 $pi @raw: ${RegExp(Unicode.pi, 'u')}
 $infinity @raw: ${RegExp(Unicode.infinity, 'u')}
 `
-
-const a = real(5)
-const b = real(7)
-const c = multiply(a, add(a, b))
-
-const d = operators.get('+')?.(a, b)
-
-const foo = match<Tree, Node>(c)
-  .with({$kind: Kind.Real}, (v) => v as Real)
-  .with({$kind: Kind.Addition}, (v) => v as Addition)
-  .with({$kind: Kind.Multiplication, a: {$kind: Kind.Addition}}, (v) => v as Multiplication)
-  .with({$kind: Kind.Sine}, (v) => v as Sine)
-
-const bar = match<[Tree, Tree], Node>([b, c])
-  .with([{$kind: Kind.Real}, {$kind: Kind.Real}], ([a, b]) => add(a, b))
-  .with([{$kind: Kind.Addition}, {$kind: Kind.Multiplication}], ([a, b]) => multiply(a, b))
-  .with([instanceOf(Addition), instanceOf(Multiplication)], ([a, b]) => multiply(a, b))
-
-const baz = match<Tree, Node>(c)
-  .with(instanceOf(Real), (v) => v)
-  .with(instanceOf(Addition), (v) => v)
-  .with({$kind: Kind.Multiplication, a: instanceOf(Multiplication), b: instanceOf(Real)},
-    (v) => v.a
-  )
-  .with(instanceOf(Sine), (v) => v)
-
-const qux = match<{v: Tree}, Node>({v: c})
-  .with({v: instanceOf(Real)}, ({v}) => v)
-  .with({v: instanceOf(Addition)}, ({v}) => v)
-  .when(({v}) => v instanceof Multiplication && v.a instanceof Addition, ({v}) => v)

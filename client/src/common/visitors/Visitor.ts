@@ -1,21 +1,42 @@
 import {
   Addition, Subtraction, Multiplication, Division, Exponentiation,
-  Negation, BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
+  Negation, AbsoluteValue,
+  BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
   Cosine, Sine, Tangent,
-  Real, Complex, Variable, Tree, Logarithm,
+  ArcusCosine, ArcusSine, ArcusTangent,
+  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  Factorial, Gamma, Polygamma,
+  Real, Complex, Variable, Logarithm, Kind,
   add, subtract, multiply, divide, raise, real, complex, variable,
-  negate, lb, ln, lg,
-  cos, sin, tan
+  negate, abs,
+  lb, ln, lg,
+  cos, sin, tan,
+  acos, asin, atan,
+  cosh, sinh, tanh,
+  acosh, asinh, atanh,
+  factorial, gamma, polygamma
 } from '../Tree'
+import { Tree } from "../Tree"
 
 export {
   Addition, Subtraction, Multiplication, Division, Exponentiation,
-  Negation, BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
+  Negation, AbsoluteValue,
+  BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
   Cosine, Sine, Tangent,
-  Real, Complex, Variable,
+  ArcusCosine, ArcusSine, ArcusTangent,
+  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  Factorial, Gamma, Polygamma,
+  Real, Complex, Variable, Kind,
   add, subtract, multiply, divide, raise, real, complex, variable,
-  negate, lb, ln, lg,
-  cos, sin, tan
+  negate, abs,
+  lb, ln, lg,
+  cos, sin, tan,
+  acos, asin, atan,
+  cosh, sinh, tanh,
+  acosh, asinh, atanh,
+  factorial, gamma, polygamma
 }
 export type { Tree, Logarithm }
 
@@ -32,6 +53,7 @@ export abstract class Visitor<Value> {
   abstract visitExponentiation(node: Exponentiation): Value
 
   abstract visitNegation(node: Negation): Value
+  abstract visitAbsoluteValue(node: AbsoluteValue): Value
 
   abstract visitBinaryLogarithm(node: BinaryLogarithm): Value
   abstract visitNaturalLogarithm(node: NaturalLogarithm): Value
@@ -40,6 +62,22 @@ export abstract class Visitor<Value> {
   abstract visitCosine(node: Cosine): Value
   abstract visitSine(node: Sine): Value
   abstract visitTangent(node: Tangent): Value
+
+  abstract visitArcusCosine(node: ArcusCosine): Value
+  abstract visitArcusSine(node: ArcusSine): Value
+  abstract visitArcusTangent(node: ArcusTangent): Value
+
+  abstract visitHyperbolicCosine(node: HyperbolicCosine): Value
+  abstract visitHyperbolicSine(node: HyperbolicSine): Value
+  abstract visitHyperbolicTangent(node: HyperbolicTangent): Value
+
+  abstract visitAreaHyperbolicCosine(node: AreaHyperbolicCosine): Value
+  abstract visitAreaHyperbolicSine(node: AreaHyperbolicSine): Value
+  abstract visitAreaHyperbolicTangent(node: AreaHyperbolicTangent): Value
+
+  abstract visitFactorial(node: Factorial): Value
+  abstract visitGamma(node: Gamma): Value
+  abstract visitPolygamma(node: Polygamma): Value
 
   visit(node: Tree): Value {
     return node.accept(this)

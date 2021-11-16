@@ -1,10 +1,15 @@
 import { Unicode } from './MathSymbols';
 import {
   Tree,
-  add, subtract, multiply, divide, negate, raise,
+  add, subtract, multiply, divide, raise,
   real, complex, variable,
+  negate, abs,
   lb, ln, lg,
-  cos, sin, tan
+  cos, sin, tan,
+  acos, asin, atan,
+  cosh, sinh, tanh,
+  acosh, asinh, atanh,
+  factorial, gamma, polygamma
 } from './Tree'
 import { treeParser } from "./treeParser";
 
@@ -208,6 +213,12 @@ describe('treeParser', () => {
     })
   })
 
+  describe('of absolute values', () => {
+    it('matches a basic absolute', () => {
+      expectObject('abs(-x)', abs(negate(variable('x'))))
+    })
+  })
+
   describe('of logarithms', () => {
     it('matches the binary logarithm', () => {
       expectObject('lb(x)', lb(variable('x')))
@@ -233,6 +244,62 @@ describe('treeParser', () => {
 
     it('matches tangents', () => {
       expectObject('tan(x)', tan(variable('x')))
+    })
+  })
+
+  describe('of arcus functions', () => {
+    it('matches arcus cosines', () => {
+      expectObject('acos(x)', acos(variable('x')))
+    })
+
+    it('matches arcus sines', () => {
+      expectObject('asin(x)', asin(variable('x')))
+    })
+
+    it('matches arcus tangents', () => {
+      expectObject('atan(x)', atan(variable('x')))
+    })
+  })
+
+  describe('of hyperbolic functions', () => {
+    it('matches hyperbolic cosines', () => {
+      expectObject('cosh(x)', cosh(variable('x')))
+    })
+
+    it('matches hyperbolic sines', () => {
+      expectObject('sinh(x)', sinh(variable('x')))
+    })
+
+    it('matches hyperbolic tangents', () => {
+      expectObject('tanh(x)', tanh(variable('x')))
+    })
+  })
+
+  describe('of area hyperbolic functions', () => {
+    it('matches area hyperbolic cosines', () => {
+      expectObject('acosh(x)', acosh(variable('x')))
+    })
+
+    it('matches area hyperbolic sines', () => {
+      expectObject('asinh(x)', asinh(variable('x')))
+    })
+
+    it('matches area hyperbolic tangents', () => {
+      expectObject('atanh(x)', atanh(variable('x')))
+    })
+  })
+
+  describe('of factorial-likes', () => {
+    it('matches factorial functions', () => {
+      expectObject('x!', factorial(variable('x')))
+    })
+
+    it('matches gamma', () => {
+      expectObject(`${Unicode.gamma}(x)`, gamma(variable('x')))
+    })
+
+    it('matches polygamma', () => {
+      expectObject(`${Unicode.digamma}(x)`, polygamma(variable('x')))
     })
   })
 
