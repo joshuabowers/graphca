@@ -2,8 +2,10 @@ import { Unicode } from './MathSymbols'
 import {
   real, complex, variable,
   raise, negate, factorial,
+  differentiate, assign, invoke,
   operators, additive, multiplicative, functions,
-  Addition, Exponentiation, Subtraction, Factorial
+  Addition, Exponentiation, Subtraction, Factorial,
+  Assignment
 } from './Tree'
 import { Tree } from "./Tree"
 import { peg, $fail, $children } from 'pegase'
@@ -16,6 +18,7 @@ const additionOperators = peg(Addition.operators.map(capture).join('|'))
 const subtractionOperators = peg(Subtraction.operators.map(capture).join('|'))
 const functional = peg([...functions.keys()].map(capture).join('|'))
 const factorialOPerator = peg(capture(Factorial.function))
+const assignmentOperators = peg(Assignment.operators.map(capture).join('|'))
 
 type Tail = {
   op: string,
@@ -36,6 +39,16 @@ const leftAssociate = (node: Tree, tail: Tail | undefined): Tree | undefined => 
   )
 }
 
+type InvokeList = {
+  a: Tree[],
+  b?: InvokeList
+}
+
+const createInvoke = (node: Tree, tail: InvokeList | undefined): Tree | undefined => {
+  if(!tail){ return node }
+  return createInvoke(invoke(node, ...tail.a), tail.b)
+}
+
 const builtInFunction = (name: string, expression: Tree): Tree | undefined => {
   const f = functions.get(name)
   if(!f){ 
@@ -46,7 +59,11 @@ const builtInFunction = (name: string, expression: Tree): Tree | undefined => {
 }
 
 export const treeParser = peg<Tree>`
-expression: addition
+expression: assignment
+
+assignment:
+| <a>variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b)}
+| addition
 
 addition: leftAssociative(multiplication, ${additiveOperators})
 
@@ -60,17 +77,26 @@ leftAssociative(itemType, operators): (
 )
 
 exponentiation:
-| <a>group ${exponentiationOperator} <b>exponentiation ${({a, b}) => raise(a, b)}
+| <a>invocation ${exponentiationOperator} <b>exponentiation ${({a, b}) => raise(a, b)}
 | factorial
-| group
+| invocation
 
-factorial: <a>group <...b>(${factorialOPerator}+) ${
+factorial: <a>invocation <...b>(${factorialOPerator}+) ${
   ({a, b}) => b.reduce((e: any) => factorial(e), a)
 }
+
+invocation: (
+  head: <a>group <b>tail ${({a, b}) => createInvoke(a, b)}
+  tail:
+  | '(' <...a>parameters ')' <b>tail ${(tail) => tail}
+  | ε
+  parameters: expression % ','
+)
 
 group:
 | negationOperator !complex <>group ${({group}) => negate(group)}
 | functional
+| derivative
 | '(' expression ')'
 | primitive
 
@@ -82,6 +108,11 @@ functional:
 }
 
 builtInFunction: ${functional}
+
+derivative:
+| ${Unicode.derivative} '(' <>expression ')' ${
+  ({expression}) => differentiate(expression)
+}
 
 primitive:
 | variable

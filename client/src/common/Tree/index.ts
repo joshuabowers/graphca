@@ -23,8 +23,10 @@ export type { Node } from './Node'
 export { Kind } from './Kind'
 export type { Expression } from './Expression'
 export {
-  Binary, Addition, Subtraction, Multiplication, Division, Exponentiation,
-  binary, add, subtract, multiply, divide, raise
+  Binary, 
+  Addition, Subtraction, Multiplication, Division, Exponentiation, Assignment,
+  binary, 
+  add, subtract, multiply, divide, raise, assign
 } from './Binary'
 export {
   Unary, 
@@ -52,6 +54,8 @@ export {
 export { 
   Variable, variable
 } from './Variable'
+export { Derivative, differentiate } from './Derivative'
+export { Invocation, invoke } from './Invocation'
 export type { Tree } from './Tree'
 
 type Additive = typeof add | typeof subtract

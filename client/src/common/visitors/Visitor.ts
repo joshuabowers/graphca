@@ -7,8 +7,11 @@ import {
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   Factorial, Gamma, Polygamma,
-  Real, Complex, Variable, Logarithm, Kind,
-  add, subtract, multiply, divide, raise, real, complex, variable,
+  Real, Complex, Variable, Assignment, Invocation,
+  Derivative,
+  Logarithm, Kind,
+  add, subtract, multiply, divide, raise, 
+  real, complex, variable, assign, invoke, differentiate,
   negate, abs,
   lb, ln, lg,
   cos, sin, tan,
@@ -28,8 +31,10 @@ export {
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   Factorial, Gamma, Polygamma,
-  Real, Complex, Variable, Kind,
-  add, subtract, multiply, divide, raise, real, complex, variable,
+  Real, Complex, Variable, Assignment, Invocation, Kind,
+  Derivative,
+  add, subtract, multiply, divide, raise, 
+  real, complex, variable, assign, invoke, differentiate,
   negate, abs,
   lb, ln, lg,
   cos, sin, tan,
@@ -45,6 +50,8 @@ export abstract class Visitor<Value> {
   abstract visitComplex(node: Complex): Value
 
   abstract visitVariable(node: Variable): Value
+  abstract visitAssignment(node: Assignment): Value
+  abstract visitInvocation(node: Invocation): Value
 
   abstract visitAddition(node: Addition): Value
   abstract visitSubtraction(node: Subtraction): Value
@@ -78,6 +85,8 @@ export abstract class Visitor<Value> {
   abstract visitFactorial(node: Factorial): Value
   abstract visitGamma(node: Gamma): Value
   abstract visitPolygamma(node: Polygamma): Value
+
+  abstract visitDerivative(node: Derivative): Value
 
   visit(node: Tree): Value {
     return node.accept(this)

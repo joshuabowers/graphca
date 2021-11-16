@@ -3,6 +3,8 @@ export enum Kind {
   Complex,
 
   Variable,
+  Assignment,
+  Invocation,
 
   Addition,
   Subtraction,
@@ -37,6 +39,6 @@ export enum Kind {
   Polygamma,
   Factorial,
 
-  Differentiation,
-  Integration
+  Derivative,
+  Integral
 }

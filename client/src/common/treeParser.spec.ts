@@ -1,15 +1,16 @@
 import { Unicode } from './MathSymbols';
 import {
   Tree,
-  add, subtract, multiply, divide, raise,
-  real, complex, variable,
+  add, subtract, multiply, divide, raise, 
+  real, complex, variable, assign, invoke,
   negate, abs,
   lb, ln, lg,
   cos, sin, tan,
   acos, asin, atan,
   cosh, sinh, tanh,
   acosh, asinh, atanh,
-  factorial, gamma, polygamma
+  factorial, gamma, polygamma,
+  differentiate
 } from './Tree'
 import { treeParser } from "./treeParser";
 
@@ -310,6 +311,78 @@ describe('treeParser', () => {
   describe('of functions', () => {
     it('matches nested composition', () => {
       expectObject('cos(ln(tan(x)))', cos(ln(tan(variable('x')))))
+    })
+  })
+
+  describe('of derivatives', () => {
+    it('matches a basic derivative', () => {
+      expectObject(`${Unicode.derivative}(x)`, differentiate(variable('x')))
+    })
+
+    it('matches nested derivatives', () => {
+      expectObject(
+        `${Unicode.derivative}(${Unicode.derivative}(x))`,
+        differentiate(differentiate(variable('x')))
+      )
+    })
+  })
+
+  describe('of assignments', () => {
+    it('matches a basic assignment', () => {
+      expectObject('x <- 2', assign(variable('x'), real(2)))
+    })
+
+    it('matches the assignment of a variable expression', () => {
+      expectObject('y <- 2 * x^2', assign(
+        variable('y'),
+        multiply(real(2), raise(variable('x'), real(2)))
+      ))
+    })
+
+    it('matches assignments right-associatively', () => {
+      expectObject('z <- y <- x', assign(
+        variable('z'),
+        assign(variable('y'), variable('x'))
+      ))
+    })
+  })
+
+  describe('of invocations', () => {
+    it('matches a basic invocation', () => {
+      expectObject('x(2)', invoke(variable('x'), real(2)))
+    })
+
+    it('allows multiple arguments to be passed', () => {
+      expectObject('x(2, y, 4)', invoke(
+        variable('x'), real(2), variable('y'), real(4)
+      ))
+    })
+
+    it('can invoke a parenthetical', () => {
+      expectObject('(x^2 + x)(5)', invoke(
+        add(raise(variable('x'), real(2)), variable('x')),
+        real(5)
+      ))
+    })
+
+    it('can invoke a derivative', () => {
+      expectObject(`${Unicode.derivative}(x^2)(5)`, invoke(
+        differentiate(raise(variable('x'), real(2))),
+        real(5)
+      ))
+    })
+
+    it('can recursively invoke', () => {
+      expectObject('(x + y + z)(1)(2)(3)', invoke(
+        invoke(
+          invoke(
+            add(add(variable('x'), variable('y')), variable('z')),
+            real(1)
+          ),
+          real(2)
+        ),
+        real(3)
+      ))
     })
   })
 })
