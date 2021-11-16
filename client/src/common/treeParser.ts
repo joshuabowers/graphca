@@ -6,7 +6,7 @@ import {
   Addition, Exponentiation, Subtraction, Factorial
 } from './Tree'
 import { Tree } from "./Tree"
-import { peg, $fail } from 'pegase'
+import { peg, $fail, $children } from 'pegase'
 
 const capture = (s: string) => `"${s}"`
 const additiveOperators = peg([...additive.keys()].map(capture).join('|'))
@@ -15,6 +15,7 @@ const exponentiationOperator = peg(Exponentiation.operators.map(capture).join('|
 const additionOperators = peg(Addition.operators.map(capture).join('|'))
 const subtractionOperators = peg(Subtraction.operators.map(capture).join('|'))
 const functional = peg([...functions.keys()].map(capture).join('|'))
+const factorialOPerator = peg(capture(Factorial.function))
 
 type Tail = {
   op: string,
@@ -60,8 +61,12 @@ leftAssociative(itemType, operators): (
 
 exponentiation:
 | <a>group ${exponentiationOperator} <b>exponentiation ${({a, b}) => raise(a, b)}
-| <expression>group ${Factorial.function} ${({expression}) => factorial(expression)}
+| factorial
 | group
+
+factorial: <a>group <...b>(${factorialOPerator}+) ${
+  ({a, b}) => b.reduce((e: any) => factorial(e), a)
+}
 
 group:
 | negationOperator !complex <>group ${({group}) => negate(group)}

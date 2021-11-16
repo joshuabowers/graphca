@@ -294,6 +294,10 @@ describe('treeParser', () => {
       expectObject('x!', factorial(variable('x')))
     })
 
+    it('matches nested factorials', () => {
+      expectObject('x!!', factorial(factorial(variable('x'))))
+    })
+
     it('matches gamma', () => {
       expectObject(`${Unicode.gamma}(x)`, gamma(variable('x')))
     })
