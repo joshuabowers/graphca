@@ -37,6 +37,18 @@ describe('treeParser', () => {
       expectObject(`1.23 + 4.56${Unicode.i}`, complex(1.23, 4.56))
     })
 
+    it('matches complex numbers with negative imaginary', () => {
+      expectObject(`1.23 - 4.56${Unicode.i}`, complex(1.23, -4.56))
+    })
+
+    it('matches complex numbers with negative real', () => {
+      expectObject(`-1.23 + 4.56${Unicode.i}`, complex(-1.23, 4.56))
+    })
+
+    it('matches negated imaginary numbers', () => {
+      expectObject(`-2${Unicode.i}`, complex(0, -2))
+    })
+
     it(`matches ${Unicode.e}${Unicode.i}`, () => {
       expectObject(`${Unicode.e}${Unicode.i}`, complex(0, Math.E))
     })
@@ -185,6 +197,10 @@ describe('treeParser', () => {
 
     it('matches nested negations', () => {
       expectObject('--1', negate(negate(real(1))))
+    })
+
+    it('matches negations of complex numbers', () => {
+      expectObject(`-(-1 - ${Unicode.i})`, negate(complex(-1, -1)))
     })
 
     it('matches an alternative symbol for negations', () => {

@@ -12,6 +12,7 @@ const capture = (s: string) => `"${s}"`
 const additiveOperators = peg([...additive.keys()].map(capture).join('|'))
 const multiplicativeOperators = peg([...multiplicative.keys()].map(capture).join('|'))
 const exponentiationOperator = peg(Exponentiation.operators.map(capture).join('|'))
+const additionOperators = peg(Addition.operators.map(capture).join('|'))
 const subtractionOperators = peg(Subtraction.operators.map(capture).join('|'))
 const functional = peg([...functions.keys()].map(capture).join('|'))
 
@@ -62,10 +63,12 @@ exponentiation:
 | group
 
 group:
-| ${subtractionOperators} <>group ${({group}) => negate(group)}
+| negationOperator !complex <>group ${({group}) => negate(group)}
 | functional
 | '(' expression ')'
 | primitive
+
+negationOperator: ${subtractionOperators}
 
 functional:
 | <name>builtInFunction '(' ^ <>expression ')' ${
@@ -86,8 +89,11 @@ variable:
 | <name>$variable ${({name}) => variable(name)}
 
 complex:
-| <a>real '+' <b>real? $i ${({a, b}) => complex(a.value, b.value ?? 1)}
-| <b>real? $i ${({b}) => complex(0, b.value ?? 1)}
+| <n>${subtractionOperators}? <a>real ${additionOperators} <b>real? $i ${({n, a, b}) => {
+  return complex((n ? -1 : 1) * a.value, b?.value ?? 1)
+}}
+| <n>${subtractionOperators}? <a>real ${subtractionOperators} <b>real? $i ${({n, a, b}) => complex((n ? -1 : 1) * a.value, -(b?.value ?? 1))}
+| <n>${subtractionOperators}? <b>real? $i ${({n, b}) => complex(0, (n ? -1 : 1) * (b?.value ?? 1))}
 
 real:
 | <value>$real ${({value}) => real(value)}
