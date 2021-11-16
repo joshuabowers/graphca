@@ -1,24 +1,3 @@
-import { 
-  Addition, Subtraction, Multiplication, Division, 
-  add, subtract, multiply, divide
-} from './Binary'
-import {
-  AbsoluteValue,
-  Cosine, Sine, Tangent,
-  ArcusCosine, ArcusSine, ArcusTangent,
-  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
-  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
-  BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
-  Gamma, Polygamma,
-  abs,
-  lb, ln, lg,
-  cos, sin, tan,
-  acos, asin, atan,
-  cosh, sinh, tanh,
-  acosh, asinh, atanh,
-  gamma, polygamma
-} from './Unary'
-
 export type { Node } from './Node'
 export { Kind } from './Kind'
 export type { Expression } from './Expression'
@@ -57,6 +36,27 @@ export {
 export { Derivative, differentiate } from './Derivative'
 export { Invocation, invoke } from './Invocation'
 export type { Tree } from './Tree'
+
+import { 
+  Addition, Subtraction, Multiplication, Division, 
+  add, subtract, multiply, divide
+} from './Binary'
+import {
+  AbsoluteValue,
+  Cosine, Sine, Tangent,
+  ArcusCosine, ArcusSine, ArcusTangent,
+  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
+  Gamma, Polygamma,
+  abs,
+  lb, ln, lg,
+  cos, sin, tan,
+  acos, asin, atan,
+  cosh, sinh, tanh,
+  acosh, asinh, atanh,
+  gamma, polygamma
+} from './Unary'
 
 type Additive = typeof add | typeof subtract
 type Multiplicative = typeof multiply | typeof divide

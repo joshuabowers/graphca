@@ -1,13 +1,28 @@
+import { Visitor } from './Visitor'
 import {
-  Visitor,
   Addition, Subtraction, Multiplication, Division, Exponentiation,
-  Negation, BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
+  Negation, AbsoluteValue,
+  BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
   Cosine, Sine, Tangent,
-  Real, Complex, Variable, Tree, Logarithm, 
-  add, subtract, multiply, divide, raise, real, complex, variable,
-  negate, lb, ln, lg,
-  cos, sin, tan
-} from './Visitor'
+  ArcusCosine, ArcusSine, ArcusTangent,
+  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  Factorial, Gamma, Polygamma,
+  Real, Complex, Variable, Assignment, Invocation,
+  Derivative,
+  Logarithm, Kind,
+  add, subtract, multiply, divide, raise, 
+  real, complex, variable, assign, invoke, differentiate,
+  negate, abs,
+  lb, ln, lg,
+  cos, sin, tan,
+  acos, asin, atan,
+  cosh, sinh, tanh,
+  acosh, asinh, atanh,
+  factorial, gamma, polygamma
+} from '../Tree'
+import { Tree } from "../Tree"
+
 
 export class Differentiation extends Visitor<Tree> {
   visitReal(_: Real): Tree {

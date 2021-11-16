@@ -8,7 +8,7 @@ import {
   Assignment
 } from './Tree'
 import { Tree } from "./Tree"
-import { peg, $fail, $children } from 'pegase'
+import { peg, $fail } from 'pegase'
 
 const capture = (s: string) => `"${s}"`
 const additiveOperators = peg([...additive.keys()].map(capture).join('|'))
