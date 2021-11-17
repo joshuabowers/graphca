@@ -1,7 +1,7 @@
 import { Kind } from "./Kind";
 export { Kind }
 import { Visitor } from "../visitors/Visitor";
-export { Visitor }
+export type { Visitor }
 
 export interface Node {
   readonly $kind: Kind

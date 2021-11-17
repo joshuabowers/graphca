@@ -66,6 +66,18 @@ export class Real extends Field<Real> {
     return new Real(Math.tan(this.value))
   }
 
+  sec() {
+    return new Real(1 / Math.cos(this.value))
+  }
+
+  csc() {
+    return new Real(1 / Math.sin(this.value))
+  }
+
+  cot() {
+    return new Real(1 / Math.tan(this.value))
+  }
+
   cosh() {
     return new Real(Math.cosh(this.value))
   }
@@ -76,6 +88,18 @@ export class Real extends Field<Real> {
 
   tanh() {
     return new Real(Math.tanh(this.value))
+  }
+
+  sech() {
+    return new Real(1 / Math.cosh(this.value))
+  }
+
+  csch() {
+    return new Real(1 / Math.sinh(this.value))
+  }
+
+  coth() {
+    return new Real(1 / Math.tanh(this.value))
   }
 
   acos() {
@@ -90,6 +114,18 @@ export class Real extends Field<Real> {
     return new Real(Math.atan(this.value))
   }
 
+  asec() {
+    return new Real(Math.acos(1 / this.value))
+  }
+
+  acsc() {
+    return new Real(Math.asin(1 / this.value))
+  }
+
+  acot() {
+    return new Real(Math.PI/2 - Math.atan(this.value))
+  }
+
   acosh() {
     return new Real(Math.acosh(this.value))
   }
@@ -100,6 +136,18 @@ export class Real extends Field<Real> {
 
   atanh() {
     return new Real(Math.atanh(this.value))
+  }
+
+  asech() {
+    return new Real(Math.acosh(1 / this.value))
+  }
+
+  acsch() {
+    return new Real(Math.asinh(1 / this.value))
+  }
+
+  acoth() {
+    return new Real(Math.atanh(1 / this.value))
   }
 
   lb() {

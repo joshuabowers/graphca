@@ -12,17 +12,21 @@ export {
   Negation, AbsoluteValue,
   BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
   Cosine, Sine, Tangent,
+  Secant, Cosecant, Cotangent,
   ArcusCosine, ArcusSine, ArcusTangent,
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Factorial, Gamma, Polygamma,
   unary, 
   negate, abs,
   lb, ln, lg,
-  cos, sin, tan,
-  acos, asin, atan,
-  cosh, sinh, tanh,
-  acosh, asinh, atanh,
+  cos, sin, tan, sec, csc, cot,
+  acos, asin, atan, asec, acsc, acot,
+  cosh, sinh, tanh, sech, csch, coth,
+  acosh, asinh, atanh, asech, acsch, acoth,
   factorial, gamma, polygamma
 } from './Unary'
 export type { Logarithm } from './Unary'
@@ -44,17 +48,21 @@ import {
 import {
   AbsoluteValue,
   Cosine, Sine, Tangent,
+  Secant, Cosecant, Cotangent,
   ArcusCosine, ArcusSine, ArcusTangent,
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
   Gamma, Polygamma,
   abs,
   lb, ln, lg,
-  cos, sin, tan,
-  acos, asin, atan,
-  cosh, sinh, tanh,
-  acosh, asinh, atanh,
+  cos, sin, tan, sec, csc, cot,
+  acos, asin, atan, asec, acsc, acot,
+  cosh, sinh, tanh, sech, csch, coth,
+  acosh, asinh, atanh, asech, acsch, acoth,
   gamma, polygamma
 } from './Unary'
 
@@ -63,10 +71,18 @@ type Multiplicative = typeof multiply | typeof divide
 type Operator = Additive | Multiplicative
 
 type Logarithmic = typeof lb | typeof ln | typeof lg
-type Trigonometric = typeof cos | typeof sin | typeof tan
-type Arcus = typeof acos | typeof asin | typeof atan
-type Hyperbolic = typeof cosh | typeof sinh | typeof tanh
-type AreaHyperbolic = typeof acosh | typeof asinh | typeof atanh
+type Trigonometric = 
+  | typeof cos | typeof sin | typeof tan
+  | typeof sec | typeof csc | typeof cot
+type Arcus = 
+  | typeof acos | typeof asin | typeof atan
+  | typeof asec | typeof acsc | typeof acot
+type Hyperbolic = 
+  | typeof cosh | typeof sinh | typeof tanh
+  | typeof sech | typeof csch | typeof coth
+type AreaHyperbolic = 
+  | typeof acosh | typeof asinh | typeof atanh
+  | typeof asech | typeof acsch | typeof acoth
 type FactorialLike = typeof gamma | typeof polygamma
 type Functions = 
 | Logarithmic 
@@ -100,15 +116,27 @@ export const functions = new Map<string, Functions>([
   [AreaHyperbolicCosine.function, acosh],
   [AreaHyperbolicSine.function, asinh],
   [AreaHyperbolicTangent.function, atanh],
+  [AreaHyperbolicSecant.function, asech],
+  [AreaHyperbolicCosecant.function, acsch],
+  [AreaHyperbolicCotangent.function, acoth],
   [ArcusCosine.function, acos],
   [ArcusSine.function, asin],
   [ArcusTangent.function, atan],
+  [ArcusSecant.function, asec],
+  [ArcusCosecant.function, acsc],
+  [ArcusCotangent.function, acot],
   [HyperbolicCosine.function, cosh],
   [HyperbolicSine.function, sinh],
   [HyperbolicTangent.function, tanh],
+  [HyperbolicSecant.function, sech],
+  [HyperbolicCosecant.function, csch],
+  [HyperbolicCotangent.function, coth],
   [Cosine.function, cos],
   [Sine.function, sin],
   [Tangent.function, tan],
+  [Secant.function, sec],
+  [Cosecant.function, csc],
+  [Cotangent.function, cot],
   [AbsoluteValue.function, abs],
   [Gamma.function, gamma],
   [Polygamma.function, polygamma]

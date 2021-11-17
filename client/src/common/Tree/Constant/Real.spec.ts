@@ -89,6 +89,24 @@ describe(Real, () => {
     })
   })
 
+  describe(Real.prototype.sec, () => {
+    it('calculates the trigonometric sec on the real', () => {
+      expect(Real.Zero.sec()).toEqual(new Real(1))
+    })
+  })
+
+  describe(Real.prototype.csc, () => {
+    it('calculates the trigonometric csc on the real', () => {
+      expect(Real.Zero.csc()).toEqual(Real.Infinity)
+    })
+  })
+
+  describe(Real.prototype.cot, () => {
+    it('calculates the trigonometric cot on the real', () => {
+      expect(Real.Zero.cot()).toEqual(Real.Infinity)
+    })
+  })
+
   describe(Real.prototype.cosh, () => {
     it('calculates the hyperbolic cos on the real', () => {
       expect(Real.Zero.cosh().value).toBeCloseTo(1, 5)
@@ -104,6 +122,24 @@ describe(Real, () => {
   describe(Real.prototype.tanh, () => {
     it('calculates the hyperbolic tan on the real', () => {
       expect(Real.Zero.tanh().value).toBeCloseTo(0, 5)
+    })
+  })
+
+  describe(Real.prototype.sech, () => {
+    it('calculates the hyperbolic sec on the real', () => {
+      expect(Real.Zero.sech()).toEqual(new Real(1))
+    })
+  })
+
+  describe(Real.prototype.csch, () => {
+    it('calculates the hyperbolic csc on the real', () => {
+      expect(new Real(1).csch().value).toBeCloseTo(0.850918, 6)
+    })
+  })
+
+  describe(Real.prototype.coth, () => {
+    it('calculates the hyperbolic cot on the real', () => {
+      expect(new Real(0.6).coth().value).toBeCloseTo(1.862025521387, 12)
     })
   })
 
@@ -126,6 +162,24 @@ describe(Real, () => {
     })
   })
 
+  describe(Real.prototype.asec, () => {
+    it('calculates the arcus sec on the real', () => {
+      expect(new Real(2).asec().value).toBeCloseTo(1.047197551197, 10)
+    })
+  })
+
+  describe(Real.prototype.acsc, () => {
+    it('calculates the arcus csc on the real', () => {
+      expect(new Real(2).acsc().value).toBeCloseTo(0.523598775598, 10)
+    })
+  })
+
+  describe(Real.prototype.acot, () => {
+    it('calculates the arcus cot on the real', () => {
+      expect(new Real(0.6).acot().value).toBeCloseTo(1.030376826524, 10)
+    })
+  })
+
   describe(Real.prototype.acosh, () => {
     it('calculates the area hyperbolic cos on the real', () => {
       expect(new Real(1).acosh().value).toBeCloseTo(0, 5)
@@ -141,6 +195,24 @@ describe(Real, () => {
   describe(Real.prototype.atanh, () => {
     it('calculates the area hyperbolic tan on the real', () => {
       expect(new Real(0).atanh().value).toBeCloseTo(0, 5)
+    })
+  })
+
+  describe(Real.prototype.asech, () => {
+    it('calculates the area hyperbolic sec on the real', () => {
+      expect(new Real(0.6).asech().value).toBeCloseTo(1.098612288668, 10)
+    })
+  })
+
+  describe(Real.prototype.acsch, () => {
+    it('calculates the area hyperbolic csc on the real', () => {
+      expect(new Real(0.6).acsch().value).toBeCloseTo(1.283795662743, 10)
+    })
+  })
+
+  describe(Real.prototype.acoth, () => {
+    it('calculates the area hyperbolic cot on the real', () => {
+      expect(new Real(2).acoth().value).toBeCloseTo(0.549306144334, 10)
     })
   })
 

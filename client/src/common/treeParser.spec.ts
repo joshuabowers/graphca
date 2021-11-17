@@ -5,10 +5,10 @@ import {
   real, complex, variable, assign, invoke,
   negate, abs,
   lb, ln, lg,
-  cos, sin, tan,
-  acos, asin, atan,
-  cosh, sinh, tanh,
-  acosh, asinh, atanh,
+  cos, sin, tan, sec, csc, cot,
+  acos, asin, atan, asec, acsc, acot,
+  cosh, sinh, tanh, sech, csch, coth,
+  acosh, asinh, atanh, asech, acsch, acoth,
   factorial, gamma, polygamma,
   differentiate
 } from './Tree'
@@ -246,6 +246,18 @@ describe('treeParser', () => {
     it('matches tangents', () => {
       expectObject('tan(x)', tan(variable('x')))
     })
+
+    it('matches secants', () => {
+      expectObject('sec(x)', sec(variable('x')))
+    })
+
+    it('matches cosecants', () => {
+      expectObject('csc(x)', csc(variable('x')))
+    })
+
+    it('matches cotangents', () => {
+      expectObject('cot(x)', cot(variable('x')))
+    })
   })
 
   describe('of arcus functions', () => {
@@ -259,6 +271,18 @@ describe('treeParser', () => {
 
     it('matches arcus tangents', () => {
       expectObject('atan(x)', atan(variable('x')))
+    })
+
+    it('matches arcus secants', () => {
+      expectObject('asec(x)', asec(variable('x')))
+    })
+
+    it('matches arcus cosecants', () => {
+      expectObject('acsc(x)', acsc(variable('x')))
+    })
+
+    it('matches arcus cotangents', () => {
+      expectObject('acot(x)', acot(variable('x')))
     })
   })
 
@@ -274,6 +298,18 @@ describe('treeParser', () => {
     it('matches hyperbolic tangents', () => {
       expectObject('tanh(x)', tanh(variable('x')))
     })
+
+    it('matches hyperbolic secants', () => {
+      expectObject('sech(x)', sech(variable('x')))
+    })
+
+    it('matches hyperbolic cosecants', () => {
+      expectObject('csch(x)', csch(variable('x')))
+    })
+
+    it('matches hyperbolic cotangents', () => {
+      expectObject('coth(x)', coth(variable('x')))
+    })
   })
 
   describe('of area hyperbolic functions', () => {
@@ -287,6 +323,18 @@ describe('treeParser', () => {
 
     it('matches area hyperbolic tangents', () => {
       expectObject('atanh(x)', atanh(variable('x')))
+    })
+
+    it('matches area hyperbolic secants', () => {
+      expectObject('asech(x)', asech(variable('x')))
+    })
+
+    it('matches area hyperbolic cosecants', () => {
+      expectObject('acsch(x)', acsch(variable('x')))
+    })
+
+    it('matches area hyperbolic cotangents', () => {
+      expectObject('acoth(x)', acoth(variable('x')))
     })
   })
 

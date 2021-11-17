@@ -139,6 +139,30 @@ describe(Complex, () => {
     })
   })
 
+  describe(Complex.prototype.sec, () => {
+    it('calculates the complex trigonometric sec', () => {
+      const r = new Complex(2, 3).sec()
+      expect(r.a).toBeCloseTo(-0.041675, 5)
+      expect(r.b).toBeCloseTo(0.0906111, 5)
+    })
+  })
+
+  describe(Complex.prototype.csc, () => {
+    it('calculates the complex trigonometric csc', () => {
+      const r = new Complex(2, 3).csc()
+      expect(r.a).toBeCloseTo(0.0904732, 5)
+      expect(r.b).toBeCloseTo(0.041201, 5)
+    })
+  })
+
+  describe(Complex.prototype.cot, () => {
+    it('calculates the complex trigonometric cot', () => {
+      const r = new Complex(2, 3).cot()
+      expect(r.a).toBeCloseTo(-0.0037397, 5)
+      expect(r.b).toBeCloseTo(-0.9967578, 5)
+    })
+  })
+
   describe(Complex.prototype.cosh, () => {
     it('calculates the complex hyperbolic cos', () => {
       const z = new Complex(2, 3)
@@ -164,6 +188,30 @@ describe(Complex, () => {
       const d = Math.cosh(4) + Math.cos(6)
       expect(r.a).toBeCloseTo(Math.sinh(4) / d, 5)
       expect(r.b).toBeCloseTo(Math.sin(6) / d, 5)
+    })
+  })
+
+  describe(Complex.prototype.sech, () => {
+    it('calculates the complex hyperbolic sec', () => {
+      const r = new Complex(2, 3).sech()
+      expect(r.a).toBeCloseTo(-0.263513, 5)
+      expect(r.b).toBeCloseTo(-0.0362116, 5)
+    })
+  })
+
+  describe(Complex.prototype.csch, () => {
+    it('calculates the complex hyperbolic csc', () => {
+      const r = new Complex(2, 3).csch()
+      expect(r.a).toBeCloseTo(-0.2725487, 5)
+      expect(r.b).toBeCloseTo(-0.0403006, 5)
+    })
+  })
+
+  describe(Complex.prototype.coth, () => {
+    it('calculates the complex hyperbolic cot', () => {
+      const r = new Complex(2, 3).coth()
+      expect(r.a).toBeCloseTo(1.0357466, 5)
+      expect(r.b).toBeCloseTo(0.0106048, 5)
     })
   })
 
@@ -199,6 +247,30 @@ describe(Complex, () => {
     })
   })
 
+  describe(Complex.prototype.asec, () => {
+    it('calculates the complex arcus sec', () => {
+      const r = new Complex(2, 3).asec()
+      expect(r.a).toBeCloseTo(1.4204107, 5)
+      expect(r.b).toBeCloseTo(0.2313346, 5)
+    })
+  })
+
+  describe(Complex.prototype.acsc, () => {
+    it('calculates the complex arcus csc', () => {
+      const r = new Complex(2, 3).acsc()
+      expect(r.a).toBeCloseTo(0.15038560, 5)
+      expect(r.b).toBeCloseTo(-0.23133469, 5)
+    })
+  })
+
+  describe(Complex.prototype.acot, () => {
+    it('calculates the complex arcus cot', () => {
+      const r = new Complex(2, 3).acot()
+      expect(r.a).toBeCloseTo(0.160875277, 5)
+      expect(r.b).toBeCloseTo(-0.229072682, 5)
+    })
+  })
+
   describe(Complex.prototype.acosh, () => {
     it('calculates the complex area hyperbolic cos', () => {
       const z = new Complex(2, 3)
@@ -223,6 +295,30 @@ describe(Complex, () => {
       const r = z.atanh()
       expect(r.a).toBeCloseTo(0.146947, 6)
       expect(r.b).toBeCloseTo(1.338973, 6)
+    })
+  })
+
+  describe(Complex.prototype.asech, () => {
+    it('calculates the complex area hyperbolic sec', () => {
+      const r = new Complex(2, 3).asech()
+      expect(r.a).toBeCloseTo(0.231334698, 5)
+      expect(r.b).toBeCloseTo(-1.420410722, 5)
+    })
+  })
+
+  describe(Complex.prototype.acsch, () => {
+    it('calculates the complex area hyperbolic csc', () => {
+      const r = new Complex(2, 3).acsch()
+      expect(r.a).toBeCloseTo(0.15735549, 5)
+      expect(r.b).toBeCloseTo(-0.22996290, 5)
+    })
+  })
+
+  describe(Complex.prototype.acoth, () => {
+    it('calculates the complex area hyperbolic cot', () => {
+      const r = new Complex(2, 3).acoth()
+      expect(r.a).toBeCloseTo(0.146946666, 5)
+      expect(r.b).toBeCloseTo(-0.231823804, 5)
     })
   })
 

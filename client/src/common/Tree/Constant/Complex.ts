@@ -122,6 +122,18 @@ export class Complex extends Field<Complex> {
     )
   }
 
+  sec() {
+    return new Complex(1, 0).divide(this.cos())
+  }
+
+  csc() {
+    return new Complex(1, 0).divide(this.sin())
+  }
+
+  cot() {
+    return new Complex(1, 0).divide(this.tan())
+  }
+
   cosh() {
     return new Complex(
       Math.cosh(this.a) * Math.cos(this.b),
@@ -144,6 +156,18 @@ export class Complex extends Field<Complex> {
     )
   }
 
+  sech() {
+    return this.cosh().reciprocal()
+  }
+
+  csch() {
+    return this.sinh().reciprocal()
+  }
+
+  coth() {
+    return this.tanh().reciprocal()
+  }
+
   acos() {
     return new Complex(Math.PI / 2, 0).subtract(this.asin())
   }
@@ -161,6 +185,18 @@ export class Complex extends Field<Complex> {
     const ipz = Complex.i.add(this)
     const ratio = inz.divide(ipz)
     return ni2.multiply(ratio.ln())
+  }
+
+  asec() {
+    return this.reciprocal().acos()
+  }
+
+  acsc() {
+    return this.reciprocal().asin()
+  }
+
+  acot() {
+    return new Complex(Math.PI/2, 0).subtract(this.atan())
   }
 
   acosh() {
@@ -183,6 +219,29 @@ export class Complex extends Field<Complex> {
     const n = Complex.One.add(this)
     const d = Complex.One.subtract(this)
     return h.multiply(n.divide(d).ln())
+  }
+
+  asech() {
+    const half = new Complex(0.5, 0)
+    const r = this.reciprocal()
+    const rp1 = r.add(Complex.One).raise(half)
+    const rm1 = r.subtract(Complex.One).raise(half)
+    return r.add(rp1.multiply(rm1)).ln()
+  }
+
+  acsch() {
+    const half = new Complex(0.5, 0)
+    const r = this.reciprocal()
+    const r2 = r.raise(new Complex(2, 0))
+    const r2p1 = r2.add(Complex.One).raise(half)
+    return r.add(r2p1).ln()
+  }
+
+  acoth() {
+    const half = new Complex(0.5, 0)
+    const n = this.add(Complex.One)
+    const d = this.subtract(Complex.One)
+    return half.multiply(n.divide(d).ln())
   }
 
   lb() {
@@ -237,6 +296,10 @@ export class Complex extends Field<Complex> {
 
   isHalfInteger() {
     return this.b === 0 && (Math.abs(this.a) % 1) === 0.5
+  }
+
+  reciprocal() {
+    return Complex.One.divide(this)
   }
 }
 

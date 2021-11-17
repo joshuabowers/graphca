@@ -4,10 +4,14 @@ import {
   Addition, Subtraction, Multiplication, Division, Exponentiation,
   Negation, AbsoluteValue,
   BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
-  Cosine, Sine, Tangent,
+  Cosine, Sine, Tangent, 
+  Secant, Cosecant, Cotangent,
   ArcusCosine, ArcusSine, ArcusTangent,
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Factorial, Gamma, Polygamma,
   Derivative
 } from '../Tree'
@@ -36,18 +40,30 @@ export interface Visitor<Value> {
   visitCosine(node: Cosine): Value
   visitSine(node: Sine): Value
   visitTangent(node: Tangent): Value
+  visitSecant(node: Secant): Value
+  visitCosecant(node: Cosecant): Value
+  visitCotangent(node: Cotangent): Value
 
   visitArcusCosine(node: ArcusCosine): Value
   visitArcusSine(node: ArcusSine): Value
   visitArcusTangent(node: ArcusTangent): Value
+  visitArcusSecant(node: ArcusSecant): Value
+  visitArcusCosecant(node: ArcusCosecant): Value
+  visitArcusCotangent(node: ArcusCotangent): Value
 
   visitHyperbolicCosine(node: HyperbolicCosine): Value
   visitHyperbolicSine(node: HyperbolicSine): Value
   visitHyperbolicTangent(node: HyperbolicTangent): Value
+  visitHyperbolicSecant(node: HyperbolicSecant): Value
+  visitHyperbolicCosecant(node: HyperbolicCosecant): Value
+  visitHyperbolicCotangent(node: HyperbolicCotangent): Value
 
   visitAreaHyperbolicCosine(node: AreaHyperbolicCosine): Value
   visitAreaHyperbolicSine(node: AreaHyperbolicSine): Value
   visitAreaHyperbolicTangent(node: AreaHyperbolicTangent): Value
+  visitAreaHyperbolicSecant(node: AreaHyperbolicSecant): Value
+  visitAreaHyperbolicCosecant(node: AreaHyperbolicCosecant): Value
+  visitAreaHyperbolicCotangent(node: AreaHyperbolicCotangent): Value
 
   visitFactorial(node: Factorial): Value
   visitGamma(node: Gamma): Value

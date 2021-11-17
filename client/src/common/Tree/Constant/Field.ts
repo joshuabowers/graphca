@@ -44,15 +44,27 @@ export abstract class Field<T extends Field<T>> extends Expression {
   abstract cos(): T
   abstract sin(): T
   abstract tan(): T
+  abstract sec(): T
+  abstract csc(): T
+  abstract cot(): T
   abstract cosh(): T
   abstract sinh(): T
   abstract tanh(): T
+  abstract sech(): T
+  abstract csch(): T
+  abstract coth(): T
   abstract acos(): T
   abstract asin(): T
   abstract atan(): T
+  abstract asec(): T
+  abstract acsc(): T
+  abstract acot(): T
   abstract acosh(): T
   abstract asinh(): T
   abstract atanh(): T
+  abstract asech(): T
+  abstract acsch(): T
+  abstract acoth(): T
   abstract lb(): T
   abstract ln(): T
   abstract lg(): T
