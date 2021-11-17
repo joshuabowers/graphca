@@ -18,7 +18,8 @@ import {
 
 export type Scope = Map<string, Expression>
 
-export const scope = (): Scope => new Map<string, Expression>()
+export const scope = (entries?: [[string, Expression]]): Scope => 
+  new Map<string, Expression>(entries)
 
 export interface Visitor<Value> {
   scope?: Scope
