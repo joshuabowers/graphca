@@ -1,12 +1,17 @@
 import { Visitor } from './Visitor'
 import {
+  Expression, Binary, Unary, Field,
   Addition, Subtraction, Multiplication, Division, Exponentiation,
   Negation, AbsoluteValue,
   BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
   Cosine, Sine, Tangent,
+  Secant, Cosecant, Cotangent,
   ArcusCosine, ArcusSine, ArcusTangent,
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Factorial, Gamma, Polygamma,
   Real, Complex, Variable, Assignment, Invocation,
   Derivative,
@@ -15,10 +20,10 @@ import {
   real, complex, variable, assign, invoke, differentiate,
   negate, abs,
   lb, ln, lg,
-  cos, sin, tan,
-  acos, asin, atan,
-  cosh, sinh, tanh,
-  acosh, asinh, atanh,
+  cos, sin, tan, sec, csc, cot,
+  acos, asin, atan, asec, acsc, acot,
+  cosh, sinh, tanh, sech, csch, coth,
+  acosh, asinh, atanh, asech, acsch, acoth,
   factorial, gamma, polygamma
 } from '../Tree'
 import { Tree } from "../Tree"
@@ -133,6 +138,18 @@ export class Differentiation implements Visitor<Tree> {
     )
   }
 
+  visitSecant(node: Secant): Tree {
+    return real(0)
+  }
+
+  visitCosecant(node: Cosecant): Tree {
+    return real(0)
+  }
+
+  visitCotangent(node: Cotangent): Tree {
+    return real(0)
+  }
+
   visitArcusCosine(node: ArcusCosine): Tree {
     return real(0)
   }
@@ -142,6 +159,18 @@ export class Differentiation implements Visitor<Tree> {
   }
 
   visitArcusTangent(node: ArcusTangent): Tree {
+    return real(0)
+  }
+
+  visitArcusSecant(node: ArcusSecant): Tree {
+    return real(0)
+  }
+
+  visitArcusCosecant(node: ArcusCosecant): Tree {
+    return real(0)
+  }
+
+  visitArcusCotangent(node: ArcusCotangent): Tree {
     return real(0)
   }
 
@@ -157,6 +186,18 @@ export class Differentiation implements Visitor<Tree> {
     return real(0)
   }
 
+  visitHyperbolicSecant(node: HyperbolicSecant): Tree {
+    return real(0)
+  }
+
+  visitHyperbolicCosecant(node: HyperbolicCosecant): Tree {
+    return real(0)
+  }
+
+  visitHyperbolicCotangent(node: HyperbolicCotangent): Tree {
+    return real(0)
+  }
+
   visitAreaHyperbolicCosine(node: AreaHyperbolicCosine): Tree {
     return real(0)
   }
@@ -166,6 +207,18 @@ export class Differentiation implements Visitor<Tree> {
   }
 
   visitAreaHyperbolicTangent(node: AreaHyperbolicTangent): Tree {
+    return real(0)
+  }
+
+  visitAreaHyperbolicSecant(node: AreaHyperbolicSecant): Tree {
+    return real(0)
+  }
+
+  visitAreaHyperbolicCosecant(node: AreaHyperbolicCosecant): Tree {
+    return real(0)
+  }
+
+  visitAreaHyperbolicCotangent(node: AreaHyperbolicCotangent): Tree {
     return real(0)
   }
 
