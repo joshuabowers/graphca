@@ -1,10 +1,23 @@
 import { Unicode } from '../MathSymbols';
 import { 
+  Expression,
   Tree, Real, Complex,
-  real, complex
+  real, complex, variable, assign, invoke,
+  add, subtract, multiply, divide, raise,
+  polygamma,
+  differentiate
 } from '../Tree'
 import { treeParser } from "../treeParser";
 import { Evaluation } from './Evaluation';
+
+type Scope = Map<string, Expression>
+
+const scope = (): Scope => new Map<string, Expression>()
+
+const evaluate = (input: string, scope: Scope | undefined) => {
+  const evaluation = new Evaluation(scope)
+  return treeParser.value(input).accept(evaluation)
+}
 
 const expectReal = (actual: Real, expected: Real, precision: number) => {
   if(expected === Real.NaN) {
@@ -23,18 +36,21 @@ const expectComplex = (actual: Complex, expected: Complex, precision: number) =>
   }
 }
 
-const expectObject = (input: string, expected: Tree, precision: number = 15) => {
-  const parsed = treeParser.value(input)
-  const evaluation = new Evaluation()
+const expectObject = (input: string, expected: Tree | undefined, precision: number = 15) => {
   let output: Tree | undefined = undefined
-  expect(() => {output = parsed.accept(evaluation)}).not.toThrow()
-  expect(output).not.toBeUndefined()
-  if( expected instanceof Real ){
-    expectReal(output as unknown as Real, expected, precision)
-  } else if( expected instanceof Complex ){
-    expectComplex(output as unknown as Complex, expected, precision)
+  const apply = () => expect(() => {output = evaluate(input, undefined)})
+  if( expected === undefined ) {
+    apply().toThrow()
   } else {
-    expect(output).toMatchObject(expected)
+    apply().not.toThrow()
+    expect(output).not.toBeUndefined()
+    if( expected instanceof Real ){
+      expectReal(output as unknown as Real, expected, precision)
+    } else if( expected instanceof Complex ){
+      expectComplex(output as unknown as Complex, expected, precision)
+    } else {
+      expect(output).toMatchObject(expected)
+    }  
   }
 }
 
@@ -127,13 +143,252 @@ describe(Evaluation, () => {
       expectObject('atanh(0)', real(0))
     })
 
+    // TODO: revisit this once E is implemented
+    // TODO: Implement configuration precision?
+    it('evaluates logarithmic functions', () => {
+      expectObject('lg(1000)', real(3))
+      expectObject('lb(1024)', real(10))
+      expectObject('ln(10)', real(2.302585092994046))
+    })
+
+    it('evaluates factorials', () => {
+      expectObject('5!', real(120))
+    })
+
+    it('fails to evaluate a negative number factorial', () => {
+      expectObject('(-5)!', Real.NaN)
+    })
+
+    it('casts reals to complexes for mixed binary ops', () => {
+      expectObject(`2 + 3${Unicode.i}`, complex(2, 3))
+    })
+
+    it('computes the gamma function for integers', () => {
+      expectObject(`${Unicode.gamma}(5)`, real(24), 10)
+    })
+
+    it('computes the gamma function for reals', () => {
+      expectObject(`${Unicode.gamma}(5.5)`, real(52.34277778455362))
+    })
+
+    it('computes the gamma function for complexes', () => {
+      expectObject(`${Unicode.gamma}(1 - ${Unicode.i})`, complex(0.49801566811835646, 0.15494982830181053))
+    })
+
+    it.todo('computes the digamma function for reals')
+    it.todo('computes the digamma function for complexes')
+
+    it('computes the absolute value for reals', () => {
+      expectObject('abs(5)', real(5))
+      expectObject('abs(-5)', real(5))
+    })
+
+    it('computes the absolute value of infinity', () => {
+      expectObject(`abs(-${Unicode.infinity})`, Real.Infinity)
+    })
+
+    it('computes the absolute value of complexes', () => {
+      expectObject(`abs(2 + 3${Unicode.i})`, complex(3.6055512754639896))
+    })
   })
 
   describe('with variables without scope', () => {
+    it('returns the same node structure', () => {
+      expectObject('1 + x', add(real(1), variable('x')))
+    })
 
+    it('evaluates numeric sub-expressions', () => {
+      expectObject('(10 / 5) * x', multiply(real('2'), variable('x')))
+    })
+
+    it('throws an error if no scope given on assignment', () => {
+      expectObject('x <- 5', undefined)
+    })
+
+    it('evaluates expressions of functions', () => {
+      expectObject(`${Unicode.digamma}(x)`, polygamma(variable('x')))
+    })
+
+    it('computes derivatives', () => {
+      expectObject(`${Unicode.derivative}(x)`, real(1))
+    })
+
+    it('computes nested derivatives', () => {
+      expectObject(
+        `${Unicode.derivative}(${Unicode.derivative}(x + 2))`,
+        real(0)
+      )
+    })
   })
 
   describe('with variables and scope', () => {
+    it('assigns variables in the context object', () => {
+      const s = scope()
+      const output = evaluate('x <- 5', s)
+      expect(s.has('x'))
+      expect(s.get('x')).toMatchObject(real('5'))
+      expect(output).toMatchObject(real('5'))
+    })
 
+    it('evaluates the value of an expression before assigning', () => {
+      const s = scope()
+      const output = evaluate('x <- 2^3', s)
+      expect(s.get('x')).toMatchObject(real('8'))
+      expect(output).toMatchObject(real('8'))
+    })
+
+    it('returns the value of a variable as the value of the assignment', () => {
+      const s = scope()
+      const output = evaluate('x <- 5', s)
+      expect(s.get('x')).toMatchObject(output)
+      expect(output).not.toBeUndefined()
+    })
+
+    it('assigns expressions with valueless variables to variables', () => {
+      const s = scope()
+      evaluate('y <- x + 5', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('y')).toMatchObject(add(
+        variable('x'), real(5)
+      ))
+    })
+
+    it('evaluates variables when assigning to variables', () => {
+      const s = scope()
+      evaluate('x <- 2^10', s)
+      evaluate('y <- x * 4', s)
+      expect(s.get('x')).toMatchObject(real('1024'))
+      expect(s.get('y')).toMatchObject(real('4096'))
+    })
+
+    it('returns the value of a variable when referenced', () => {
+      const s = scope()
+      evaluate('x <- 10', s)
+      const output = evaluate('x + 1', s)
+      expect(output).toMatchObject(real('11'))
+    })
+
+    it('returns an unevaluated variable if assigned to itself', () => {
+      const s = scope()
+      expect(() => evaluate('x <- x', s)).not.toThrow()
+      const output = evaluate('x(1)', s)
+      expect(output).toMatchObject(real('1'))
+    })
+
+    it('evaluates a variable in the current context when referenced', () => {
+      const s = scope()
+      evaluate('y <- x * 5', s)
+      evaluate('x <- 10', s)
+      expect(s.get('x')).toMatchObject(real('10'))
+      expect(s.get('y')).toMatchObject(multiply(variable('x'), real(5)))
+      const output = evaluate('y', s)
+      expect(output).toMatchObject(real('50'))
+    })
+
+    it('stops evaluation if function undefined', () => {
+      const s = scope()
+      const output = evaluate('x(2^3)', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(output).toMatchObject(
+        invoke(variable('x'), raise(real(2), real(3)))
+      )
+    })
+
+    it('temporarily sets context when invoking a variable', () => {
+      const s = scope()
+      evaluate('y <- x * 5', s)
+      const output = evaluate('y(10)', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('y')).toMatchObject(
+        multiply(variable('x'), real(5))
+      )
+      expect(output).toMatchObject(real('50'))
+    })
+
+    it('partially sets context if not enough arguments are supplied', () => {
+      const s = scope()
+      evaluate('f <- x * y', s)
+      const output = evaluate('f(10)', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('y')).toBeUndefined()
+      expect(s.get('f')).toMatchObject(
+        multiply(variable('x'), variable('y'))
+      )
+      expect(output).toMatchObject(
+        multiply(real(10), variable('y'))
+      )
+    })
+
+    it('handles multiple arguments correctly', () => {
+      const s = scope()
+      evaluate('f <- x * y', s)
+      const output = evaluate('f(10, 5)', s)
+      expect(output).toMatchObject(real('50'))
+    })
+
+    it('ignores an excess of arguments', () => {
+      const s = scope()
+      evaluate('f <- x * y', s)
+      const output = evaluate('f(10, 5, 2)', s)
+      expect(output).toMatchObject(real('50'))
+    })
+
+    it('evaluates the arguments before evaluating the variable', () => {
+      const s = scope()
+      evaluate('f <- x * y', s)
+      const output = evaluate('f(2^3, 2^4)', s)
+      expect(output).toMatchObject(real('128'))
+    })
+
+    it('handles variables passed as argument', () => {
+      const s = scope()
+      evaluate('f <- lb(x)', s)
+      evaluate('y <- 2 ^ 10', s)
+      const output = evaluate('f(y)', s)
+      expect(output).toMatchObject(real('10'))
+    })
+
+    it('handles undefined variables as argument', () => {
+      const s = scope()
+      evaluate('f <- x + x', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('f')).toMatchObject(
+        add(variable('x'), variable('x'))
+      )
+      const output = evaluate('f(x)', s)
+      expect(output).toMatchObject(
+        add(variable('x'), variable('x'))
+      )
+    })
+
+    it('replaces variables with functional composition', () => {
+      const s = scope()
+      evaluate('f <- x * 5', s)
+      expect(s.get('f')).toMatchObject(
+        multiply(variable('x'), real(5))
+      )
+
+      evaluate('g <- f(y)', s)
+      expect(s.get('x')).toBeUndefined()
+      expect(s.get('y')).toBeUndefined()
+      expect(s.get('g')).toMatchObject(
+        multiply(variable('y'), real(5))
+      )
+    })
+
+    it('handles functional composition', () => {
+      const s = scope()
+      evaluate('f <- 2 * x', s)
+      evaluate('g <- f(x) * 3', s)
+      evaluate('h <- g(x)', s)
+      expect(s.get('h')).toMatchObject(
+        multiply(
+          multiply(real(2), variable('x')),
+          real(3)
+        )
+      )
+      const output = evaluate('h(g(5))', s)
+      expect(output).toMatchObject(real('180'))
+    })
   })
 })
