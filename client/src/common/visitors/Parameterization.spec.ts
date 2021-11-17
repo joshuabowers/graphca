@@ -1,8 +1,10 @@
+import { add, variable } from '../Tree'
 import { treeParser } from "../treeParser";
 import { Parameterization } from "./Parameterization";
+import { Scope, scope } from './Visitor'
 
-const parameterize = (input: string) => {
-  const parameterization = new Parameterization()
+const parameterize = (input: string, scope: Scope | undefined = undefined) => {
+  const parameterization = new Parameterization(scope)
   return treeParser.value(input).accept(parameterization)
 }
 
@@ -52,5 +54,21 @@ describe(Parameterization, () => {
 
   it('only yields one instance of a variable', () => {
     expect(parameterize('x^2 + 2 * x + y')).toEqual(new Set(['x', 'y']))
+  })
+
+  it('only looks at the expression of an invocation', () => {
+    expect(parameterize('(x + y)(z)(1)')).toEqual(new Set(['x', 'y']))
+  })
+
+  it('yields variables found in an expression value of a variable', () => {
+    const s = scope()
+    s.set('x', add(variable('y'), variable('z')))
+    expect(parameterize('x(1, 2)', s)).toEqual(new Set(['y', 'z']))
+  })
+
+  it('yields the variable if it has been assigned to itself', () => {
+    const s = scope()
+    s.set('x', variable('x'))
+    expect(parameterize('x(1)')).toEqual(new Set('x'))
   })
 })

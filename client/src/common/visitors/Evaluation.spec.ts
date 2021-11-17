@@ -9,10 +9,7 @@ import {
 } from '../Tree'
 import { treeParser } from "../treeParser";
 import { Evaluation } from './Evaluation';
-
-type Scope = Map<string, Expression>
-
-const scope = (): Scope => new Map<string, Expression>()
+import { Scope, scope } from './Visitor';
 
 const evaluate = (input: string, scope: Scope | undefined) => {
   const evaluation = new Evaluation(scope)
@@ -285,12 +282,12 @@ describe(Evaluation, () => {
       expect(output).toMatchObject(real('50'))
     })
 
-    it('stops evaluation if function undefined', () => {
+    it('returns the argument if applied to an undefined variable', () => {
       const s = scope()
       const output = evaluate('x(2^3)', s)
       expect(s.get('x')).toBeUndefined()
       expect(output).toMatchObject(
-        invoke(variable('x'), raise(real(2), real(3)))
+        real(8)
       )
     })
 
@@ -389,6 +386,16 @@ describe(Evaluation, () => {
       )
       const output = evaluate('h(g(5))', s)
       expect(output).toMatchObject(real('180'))
+    })
+
+    it('curries expression invocation', () => {
+      const s = scope()
+      expect(evaluate('(x + y + z)(1)(2)(3)', s)).toMatchObject(
+        real(6)
+      )
+      expect(evaluate('(x + y + z)(5)(10)', s)).toMatchObject(
+        add(real(15), variable('z'))
+      )
     })
   })
 })

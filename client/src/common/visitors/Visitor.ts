@@ -1,5 +1,5 @@
 import {
-  Real, Complex,
+  Expression, Real, Complex,
   Variable, Assignment, Invocation,
   Addition, Subtraction, Multiplication, Division, Exponentiation,
   Negation, AbsoluteValue,
@@ -15,6 +15,10 @@ import {
   Factorial, Gamma, Polygamma,
   Derivative
 } from '../Tree'
+
+export type Scope = Map<string, Expression>
+
+export const scope = (): Scope => new Map<string, Expression>()
 
 export interface Visitor<Value> {
   visitReal(node: Real): Value

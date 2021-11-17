@@ -1,4 +1,6 @@
+import { match, instanceOf, not } from 'ts-pattern'
 import {
+  Expression,
   Real, Complex, Variable, Assignment, Invocation, 
   AbsoluteValue, Addition, ArcusCosecant, ArcusCosine, 
   ArcusCotangent, ArcusSecant, ArcusSine, ArcusTangent, 
@@ -10,9 +12,11 @@ import {
   HyperbolicSecant, HyperbolicSine, HyperbolicTangent, Multiplication,
   NaturalLogarithm, Negation, Polygamma, Secant, Sine, Subtraction, Tangent
 } from '../Tree'
-import { Visitor } from './Visitor'
+import { Visitor, Scope, scope } from './Visitor'
 
 export class Parameterization implements Visitor<Set<string>> {
+  constructor(public scope: Scope | undefined = undefined) {}
+
   visitReal(node: Real): Set<string> {
     return new Set()
   }
@@ -22,7 +26,11 @@ export class Parameterization implements Visitor<Set<string>> {
   }
 
   visitVariable(node: Variable): Set<string> {
-    return new Set(node.name)
+    const expression = this.scope?.get(node.name)
+    return match<Expression | undefined, Set<string>>(expression)
+      .with(instanceOf(Variable), v => v.name === node.name, v => new Set(v.name))
+      .with(not(undefined), e => e.accept(this))
+      .otherwise(() => new Set(node.name))
   }
 
   visitAssignment(node: Assignment): Set<string> {

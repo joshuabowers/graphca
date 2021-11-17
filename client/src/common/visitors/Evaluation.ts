@@ -28,6 +28,7 @@ import {
 } from '../Tree'
 import { Tree } from "../Tree"
 import { Differentiation } from './Differentiation'
+import { Parameterization } from './Parameterization'
 import { match, instanceOf } from 'ts-pattern'
 
 type WhenBinaryNumeric = <C extends Field<C>>(a: C, b: C) => C
@@ -64,11 +65,21 @@ export class Evaluation implements Visitor<Tree> {
     if(!this.scope){ throw new Error('No scope provided for invocation context'); }
     const previousScope = new Map(this.scope)
     try {
-      // Find variables within node.expression
-      // Set value of each variable to comparable node.args index
+      const parameters = node.expression.accept(new Parameterization(this.scope))
+      let index = 0
+      for(const parameter of parameters){
+        const argument = node.args[index]?.accept(this)
+        if(argument){
+          this.scope.set(parameter, argument)
+        }
+        index++
+      }
       return node.expression.accept(this)
     } finally {
-      this.scope = previousScope
+      this.scope.clear()
+      for(const [key, value] of previousScope){
+        this.scope.set(key, value)
+      }
     }
   }
 
