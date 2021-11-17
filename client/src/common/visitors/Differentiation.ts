@@ -1,4 +1,4 @@
-import { Visitor } from './Visitor'
+import { Visitor, Scope } from './Visitor'
 import {
   Expression, Binary, Unary, Field,
   Addition, Subtraction, Multiplication, Division, Exponentiation,
@@ -30,6 +30,8 @@ import { Tree } from "../Tree"
 
 
 export class Differentiation implements Visitor<Tree> {
+  constructor(public scope?: Scope) {}
+
   visitReal(_: Real): Tree {
     return real(0)
   }

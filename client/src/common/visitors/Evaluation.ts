@@ -1,4 +1,4 @@
-import { Visitor } from './Visitor'
+import { Visitor, Scope } from './Visitor'
 import {
   Expression, Binary, Unary, Field,
   Addition, Subtraction, Multiplication, Division, Exponentiation,
@@ -37,7 +37,7 @@ type WhenUnaryNumeric = <C extends Field<C>>(a: C) => C
 type WhenUnarySymbolic<T extends Tree | Unary> = <E extends Expression>(e: E) => T
 
 export class Evaluation implements Visitor<Tree> {
-  constructor(public scope?: Map<string, Expression>){}
+  constructor(public scope?: Scope){}
 
   visitReal(node: Real): Tree {
     return node

@@ -21,6 +21,8 @@ export type Scope = Map<string, Expression>
 export const scope = (): Scope => new Map<string, Expression>()
 
 export interface Visitor<Value> {
+  scope?: Scope
+
   visitReal(node: Real): Value
   visitComplex(node: Complex): Value
 
