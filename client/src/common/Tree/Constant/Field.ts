@@ -1,3 +1,4 @@
+import { Unicode } from '../../MathSymbols'
 import { Expression, Node, Kind, Visitor } from '../Expression'
 export type { Expression, Node, Visitor }
 export { Kind }
@@ -33,6 +34,13 @@ const bernoulli = [
   -23749461029/870,
   8615841276005/14322
 ]
+
+const specialNumbers = new Map([
+  [Number.POSITIVE_INFINITY.toString(), Unicode.infinity],
+  [Number.NEGATIVE_INFINITY.toString(), `-${Unicode.infinity}`],
+  [Math.PI.toString(), Unicode.pi],
+  [Math.E.toString(), Unicode.e]
+])
 
 export abstract class Field<T extends Field<T>> extends Expression {
   abstract add(that: T): T
@@ -148,6 +156,11 @@ export abstract class Field<T extends Field<T>> extends Expression {
         )
       )
     }
+  }
+
+  protected symbolic(value: number): string {
+    const converted = String(value)
+    return specialNumbers.get(converted) ?? converted
   }
 }
 

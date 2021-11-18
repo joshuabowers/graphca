@@ -19,7 +19,7 @@ export class Real extends Field<Real> {
   }
 
   toString(): string {
-    return this.value === Infinity ? Unicode.infinity : this.value.toString()
+    return this.symbolic(this.value)
   }
 
   equals(that: Node): boolean {

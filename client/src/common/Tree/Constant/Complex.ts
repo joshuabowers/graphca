@@ -1,12 +1,9 @@
+import { match, when } from 'ts-pattern'
 import { Unicode } from '../../MathSymbols'
 import { Field, Node, Kind, Visitor } from './Field'
 
-const nIfNot1 = (n: number, sign: boolean = false) => {
-  return ((n === 1 || n === -1)
-    ? (
-      (sign && n === -1) ? '-' : undefined
-    ): n)
-}
+const isNegative = when<number, number>(n => n < 0)
+const isPositive = when<number, number>(n => n > 0)
 
 export class Complex extends Field<Complex> {
   static NaN = new Complex(Number.NaN, Number.NaN)
@@ -33,16 +30,17 @@ export class Complex extends Field<Complex> {
   }
 
   toString(): string {
-    const result: any[] = [];
-    if(this.a !== 0) result.push(this.a)
-    if(result.length > 0){
-      if(this.b < 0 ) result.push(' - ', nIfNot1(Math.abs(this.b)), Unicode.i)
-      else if(this.b > 0) result.push(' + ', nIfNot1(this.b), Unicode.i)
-    } else {
-      if(this.b !== 0) result.push(nIfNot1(this.b, true), Unicode.i)
-      else result.push(0)
-    }
-    return result.join('');
+    const symA = (n: number) => this.symbolic(Math.abs(n))
+    const symB = (n: number, v = Math.abs(n)) => `${v === 1 ? '' : this.symbolic(v)}${Unicode.i}`
+    return match<[number, number], string>([this.a, this.b])
+      .with([0, 0], () => '0')
+      .with([0, isPositive], ([, b]) => symB(b))
+      .with([0, isNegative], ([, b]) => `-${symB(b)}`)
+      .with([isPositive, 0], ([a, ]) => symA(a))
+      .with([isNegative, 0], ([a, ]) => `-${symA(a)}`)
+      .with([isPositive, isNegative], ([a, b]) => `${symA(a)} - ${symB(b)}`)
+      .with([isNegative, isNegative], ([a, b]) => `-${symA(a)} - ${symB(b)}`)
+      .otherwise(([a, b]) => `${symA(a)} + ${symB(b)}`)
   }
 
   equals(that: Node): boolean {

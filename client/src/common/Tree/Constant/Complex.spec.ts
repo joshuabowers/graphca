@@ -34,6 +34,10 @@ describe(Complex, () => {
     it('handles 0 correctly', () => {
       expect(new Complex(0, 0).toString()).toEqual('0')
     })
+
+    it('converts special constants to symbolic representations', () => {
+      expect(new Complex(Math.PI, -Math.E).toString()).toEqual(`${Unicode.pi} - ${Unicode.e}${Unicode.i}`)
+    })
   })
 
   describe(Complex.prototype.add, () => {
