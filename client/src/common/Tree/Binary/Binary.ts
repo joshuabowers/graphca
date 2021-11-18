@@ -38,3 +38,12 @@ export function binary<
     return new type(a, b)
   }
 }
+
+export function fixRight<
+  L extends Expression,
+  T extends Binary<L, Expression>
+>(f: (a: L, b: Expression) => T, b: Expression): (a: L) => T {
+  return function(a: L): T {
+    return f(a, b)
+  }
+}

@@ -5,7 +5,7 @@ export {
   Binary, 
   Addition, Subtraction, Multiplication, Division, Exponentiation, Assignment,
   binary, 
-  add, subtract, multiply, divide, raise, assign
+  add, subtract, multiply, divide, raise, square, sqrt, assign
 } from './Binary'
 export {
   Unary, 
@@ -19,7 +19,7 @@ export {
   HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
-  Factorial, Gamma, Polygamma,
+  Factorial, Gamma,
   unary, 
   negate, abs,
   lb, ln, lg,
@@ -27,7 +27,7 @@ export {
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  factorial, gamma, polygamma
+  factorial, gamma
 } from './Unary'
 export type { Logarithm } from './Unary'
 export {
@@ -39,6 +39,7 @@ export {
 } from './Variable'
 export { Derivative, differentiate } from './Derivative'
 export { Invocation, invoke } from './Invocation'
+export { Polygamma, polygamma, digamma } from './Polygamma'
 export type { Tree } from './Tree'
 
 import { 
@@ -56,14 +57,14 @@ import {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
-  Gamma, Polygamma,
+  Gamma,
   abs,
   lb, ln, lg,
   cos, sin, tan, sec, csc, cot,
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  gamma, polygamma
+  gamma
 } from './Unary'
 
 type Additive = typeof add | typeof subtract
@@ -83,7 +84,7 @@ type Hyperbolic =
 type AreaHyperbolic = 
   | typeof acosh | typeof asinh | typeof atanh
   | typeof asech | typeof acsch | typeof acoth
-type FactorialLike = typeof gamma | typeof polygamma
+type FactorialLike = typeof gamma
 type Functions = 
 | Logarithmic 
 | Trigonometric 
@@ -139,5 +140,4 @@ export const functions = new Map<string, Functions>([
   [Cotangent.function, cot],
   [AbsoluteValue.function, abs],
   [Gamma.function, gamma],
-  [Polygamma.function, polygamma]
 ])

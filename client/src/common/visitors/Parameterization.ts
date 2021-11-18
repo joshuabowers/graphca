@@ -186,7 +186,7 @@ export class Parameterization implements Visitor<Set<string>> {
   }
 
   visitPolygamma(node: Polygamma): Set<string> {
-    return node.expression.accept(this)
+    return this.union(node.order.accept(this), node.expression.accept(this))
   }
 
   visitDerivative(node: Derivative): Set<string> {

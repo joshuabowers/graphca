@@ -1,11 +1,11 @@
 import { Unicode } from './MathSymbols'
 import {
   real, complex, variable,
-  raise, negate, factorial,
+  raise, negate, factorial, digamma, polygamma,
   differentiate, assign, invoke,
   operators, additive, multiplicative, functions,
   Addition, Exponentiation, Subtraction, Factorial,
-  Assignment
+  Assignment, Polygamma
 } from './Tree'
 import { Tree } from "./Tree"
 import { peg, $fail } from 'pegase'
@@ -106,6 +106,10 @@ functional:
 | <name>builtInFunction '(' ^ <>expression ')' ${
   ({name, expression}) => builtInFunction(name, expression)
 }
+| ${Polygamma.function} '(' <order>expression ',' ^ <>expression ')' ${
+  ({order, expression}) => polygamma(order, expression)
+}
+| ${Polygamma.function} '(' ^ <>expression ')' ${({expression}) => digamma(expression)}
 
 builtInFunction: ${functional}
 

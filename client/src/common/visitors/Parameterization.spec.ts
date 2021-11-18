@@ -1,3 +1,4 @@
+import { Unicode } from '../MathSymbols';
 import { add, variable } from '../Tree'
 import { treeParser } from "../treeParser";
 import { Parameterization } from "./Parameterization";
@@ -70,5 +71,9 @@ describe(Parameterization, () => {
     const s = scope()
     s.set('x', variable('x'))
     expect(parameterize('x(1)')).toEqual(new Set('x'))
+  })
+
+  it('yields variables in the order of the polygamma function', () => {
+    expect(parameterize(`${Unicode.digamma}(n, x)`)).toEqual(new Set(['n', 'x']))
   })
 })

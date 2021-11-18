@@ -37,7 +37,6 @@ export { AreaHyperbolicCotangent, acoth } from './AreaHyperbolicCotangent'
 
 export { Factorial, factorial } from './Factorial'
 export { Gamma, gamma } from './Gamma'
-export { Polygamma, polygamma } from './Polygamma'
 
 import { BinaryLogarithm } from './BinaryLogarithm'
 import { CommonLogarithm } from './CommonLogarithm'
@@ -86,5 +85,4 @@ export type AreaHyperbolic =
 
 import { Factorial } from './Factorial'
 import { Gamma } from './Gamma'
-import { Polygamma } from './Polygamma'
-export type FactorialLike = Factorial | Gamma | Polygamma
+export type FactorialLike = Factorial | Gamma

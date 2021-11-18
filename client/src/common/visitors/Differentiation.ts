@@ -16,7 +16,7 @@ import {
   Real, Complex, Variable, Assignment, Invocation,
   Derivative,
   Logarithm, Kind,
-  add, subtract, multiply, divide, raise, 
+  add, subtract, multiply, divide, raise, square, sqrt,
   real, complex, variable, assign, invoke, differentiate,
   negate, abs,
   lb, ln, lg,
@@ -24,7 +24,7 @@ import {
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  factorial, gamma, polygamma
+  factorial, gamma, polygamma, digamma
 } from '../Tree'
 import { Tree } from "../Tree"
 
@@ -41,15 +41,24 @@ export class Differentiation implements Visitor<Tree> {
   }
 
   visitVariable(node: Variable): Tree {
-    return real(1)
+    const value = this.scope?.get(node.name)
+    return value?.accept(this) ?? real(1)
   }
 
   visitAssignment(node: Assignment): Tree {
-    return real(0)
+    return assign(node.a, node.b.accept(this))
   }
 
+  /**
+   * Performs the derivative of the expression the invocation is
+   * applied to.
+   * @param node an invocation to visit
+   * @returns a new invocation, whose body is the derivative of
+   * node.expression; the parameters are unaffected and passed-
+   * through.
+   */
   visitInvocation(node: Invocation): Tree {
-    return real(0)
+    return invoke(node.expression.accept(this), ...node.args)
   }
 
   visitAddition(node: Addition): Tree {
@@ -98,7 +107,10 @@ export class Differentiation implements Visitor<Tree> {
   }
 
   visitAbsoluteValue(node: AbsoluteValue): Tree {
-    return real(0)
+    return divide(
+      multiply(node.expression, node.expression.accept(this)),
+      node
+    )
   }
 
   visitBinaryLogarithm(node: BinaryLogarithm): Tree {
@@ -129,115 +141,259 @@ export class Differentiation implements Visitor<Tree> {
 
   visitTangent(node: Tangent): Tree {
     return multiply(
-      add(
-        real(1),
-        raise(
-          tan(node.expression),
-          real(2)
-        )
-      ),
+      raise(
+        sec(node.expression),
+        real(2)
+      ),  
       node.expression.accept(this)
     )
   }
 
   visitSecant(node: Secant): Tree {
-    return real(0)
+    return multiply(
+      multiply(
+        sec(node.expression),
+        tan(node.expression)
+      ),
+      node.expression.accept(this)
+    )
   }
 
   visitCosecant(node: Cosecant): Tree {
-    return real(0)
+    return multiply(
+      multiply(
+        negate(csc(node.expression)),
+        cot(node.expression)
+      ),
+      node.expression.accept(this)
+    )
   }
 
   visitCotangent(node: Cotangent): Tree {
-    return real(0)
+    return multiply(
+      negate(square(csc(node.expression))),
+      node.expression.accept(this)
+    )
   }
 
   visitArcusCosine(node: ArcusCosine): Tree {
-    return real(0)
+    return negate(
+      divide(
+        node.expression.accept(this),
+        sqrt(
+          subtract(
+            real(1),
+            square(node.expression)
+          )
+        )
+      )
+    )
   }
 
   visitArcusSine(node: ArcusSine): Tree {
-    return real(0)
+    return divide(
+      node.expression.accept(this),
+      sqrt(
+        subtract(
+          real(1),
+          square(node.expression)
+        )
+      )
+    )
   }
 
   visitArcusTangent(node: ArcusTangent): Tree {
-    return real(0)
+    return divide(
+      node.expression.accept(this),
+      add(
+        real(1),
+        raise(node.expression, real(2))
+      )
+    )
   }
 
   visitArcusSecant(node: ArcusSecant): Tree {
-    return real(0)
+    return divide(
+      node.expression.accept(this),
+      multiply(
+        abs(node.expression),
+        sqrt(
+          subtract(
+            square(node.expression),
+            real(1)
+          )
+        )
+      )
+    )
   }
 
   visitArcusCosecant(node: ArcusCosecant): Tree {
-    return real(0)
+    return negate(
+      divide(
+        node.expression.accept(this),
+        multiply(
+          abs(node.expression),
+          sqrt(
+            subtract(
+              square(node.expression),
+              real(1)
+            )
+          )
+        )
+      )
+    )
   }
 
   visitArcusCotangent(node: ArcusCotangent): Tree {
-    return real(0)
+    return negate(
+      divide(
+        node.expression.accept(this),
+        add(
+          square(node.expression),
+          real(1)
+        )
+      )
+    )
   }
 
   visitHyperbolicCosine(node: HyperbolicCosine): Tree {
-    return real(0)
+    return multiply(
+      sinh(node.expression),
+      node.expression.accept(this)
+    )
   }
 
   visitHyperbolicSine(node: HyperbolicSine): Tree {
-    return real(0)
+    return multiply(
+      cosh(node.expression),
+      node.expression.accept(this)
+    )
   }
 
   visitHyperbolicTangent(node: HyperbolicTangent): Tree {
-    return real(0)
+    return multiply(
+      square(sech(node.expression)),
+      node.expression.accept(this)
+    )
   }
 
   visitHyperbolicSecant(node: HyperbolicSecant): Tree {
-    return real(0)
+    return multiply(
+      multiply(negate(tanh(node.expression)), sech(node.expression)),
+      node.expression.accept(this)
+    )
   }
 
   visitHyperbolicCosecant(node: HyperbolicCosecant): Tree {
-    return real(0)
+    return multiply(
+      multiply(negate(coth(node.expression)), csch(node.expression)),
+      node.expression.accept(this)
+    )
   }
 
   visitHyperbolicCotangent(node: HyperbolicCotangent): Tree {
-    return real(0)
+    return multiply(
+      negate(square(csch(node.expression))),
+      node.expression.accept(this)
+    )
   }
 
   visitAreaHyperbolicCosine(node: AreaHyperbolicCosine): Tree {
-    return real(0)
+    return divide(
+      node.expression.accept(this),
+      raise(
+        subtract(
+          raise(node.expression, real(2)),
+          real(1)
+        ),
+        real(0.5)
+      )
+    )
   }
 
   visitAreaHyperbolicSine(node: AreaHyperbolicSine): Tree {
-    return real(0)
+    return divide(
+      node.expression.accept(this),
+      raise(
+        add(
+          real(1),
+          raise(node.expression, real(2))
+        ),
+        real(0.5)
+      )
+    )
   }
 
   visitAreaHyperbolicTangent(node: AreaHyperbolicTangent): Tree {
-    return real(0)
+    return divide(
+      node.expression.accept(this),
+      subtract(real(1), square(node.expression))
+    )
   }
 
   visitAreaHyperbolicSecant(node: AreaHyperbolicSecant): Tree {
-    return real(0)
+    return negate(
+      divide(
+        node.expression.accept(this),
+        multiply(
+          node.expression,
+          sqrt(subtract(real(1), square(node.expression)))
+        )
+      )
+    )
   }
 
   visitAreaHyperbolicCosecant(node: AreaHyperbolicCosecant): Tree {
-    return real(0)
+    return negate(
+      divide(
+        node.expression.accept(this),
+        multiply(
+          abs(node.expression),
+          sqrt(add(real(1), square(node.expression)))
+        )
+      )
+    )
   }
 
   visitAreaHyperbolicCotangent(node: AreaHyperbolicCotangent): Tree {
-    return real(0)
+    return divide(
+      node.expression.accept(this),
+      subtract(real(1), square(node.expression))
+    )
   }
 
   visitFactorial(node: Factorial): Tree {
-    return real(0)
+    return multiply(
+      multiply(
+        factorial(node.expression),
+        digamma(add(node.expression, real(1)))
+      ),
+      node.expression.accept(this)
+    )
   }
 
   visitGamma(node: Gamma): Tree {
-    return real(0)
+    return multiply(
+      multiply(
+        gamma(node.expression),
+        digamma(node.expression)
+      ),
+      node.expression.accept(this)
+    )
   }
 
   visitPolygamma(node: Polygamma): Tree {
-    return real(0)
+    return multiply(
+      polygamma(
+        add(node.order, real(1)),
+        node.expression
+      ),
+      node.expression.accept(this)
+    )
   }
 
   visitDerivative(node: Derivative): Tree {
-    return real(0)
+    return node.expression.accept(this).accept(this)
   }
 
   private logarithm(base: number, node: Logarithm): Tree {

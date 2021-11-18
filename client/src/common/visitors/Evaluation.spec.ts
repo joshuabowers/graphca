@@ -203,7 +203,7 @@ describe(Evaluation, () => {
     })
 
     it('evaluates expressions of functions', () => {
-      expectObject(`${Unicode.digamma}(x)`, polygamma(variable('x')))
+      expectObject(`${Unicode.digamma}(x)`, polygamma(real(0), variable('x')))
     })
 
     it('computes derivatives', () => {

@@ -228,7 +228,11 @@ export class Evaluation implements Visitor<Tree> {
   }
 
   visitPolygamma(node: Polygamma): Tree {
-    return this.unary(node, e => e.digamma(), polygamma)
+    const e = node.expression.accept(this)
+    const order = node.order.accept(this)
+    return match<Tree, Tree>(e)
+      .with(instanceOf(Real), instanceOf(Complex), e => e.digamma())
+      .otherwise(e => polygamma(order, e))
   }
 
   visitDerivative(node: Derivative): Tree {

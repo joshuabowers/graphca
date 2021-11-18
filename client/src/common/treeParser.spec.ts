@@ -9,7 +9,7 @@ import {
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  factorial, gamma, polygamma,
+  factorial, gamma, polygamma, digamma,
   differentiate
 } from './Tree'
 import { treeParser } from "./treeParser";
@@ -351,8 +351,16 @@ describe('treeParser', () => {
       expectObject(`${Unicode.gamma}(x)`, gamma(variable('x')))
     })
 
+    it('matches digamma', () => {
+      expectObject(`${Unicode.digamma}(x)`, digamma(variable('x')))
+    })
+
     it('matches polygamma', () => {
-      expectObject(`${Unicode.digamma}(x)`, polygamma(variable('x')))
+      expectObject(`${Unicode.digamma}(1, x)`, polygamma(real(1), variable('x')))
+    })
+
+    it('matches polygamma with non-real order', () => {
+      expectObject(`${Unicode.digamma}(n, x)`, polygamma(variable('n'), variable('x')))
     })
   })
 

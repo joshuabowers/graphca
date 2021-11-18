@@ -10,6 +10,7 @@ import { Complex, Real } from './Constant';
 import { Variable } from './Variable';
 import { Derivative } from './Derivative';
 import { Invocation } from './Invocation';
+import { Polygamma } from './Polygamma';
 
 export type Tree = 
 | Real 
@@ -30,4 +31,5 @@ export type Tree =
 | AreaHyperbolic
 | Logarithm
 | FactorialLike
+| Polygamma
 | Derivative
