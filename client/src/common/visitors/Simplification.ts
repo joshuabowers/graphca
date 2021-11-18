@@ -38,11 +38,11 @@ export class Simplification implements Visitor<Tree> {
   }
 
   visitAssignment(node: Assignment): Tree {
-    throw new Error('Method not implemented.')
+    return node
   }
 
   visitInvocation(node: Invocation): Tree {
-    throw new Error('Method not implemented.')
+    return node
   }
 
   visitAddition(node: Addition): Tree {

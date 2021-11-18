@@ -13,6 +13,12 @@ export class Variable extends Expression {
     return this.name;
   }
 
+  equals(that: Node): boolean {
+    const asVariable = that as Variable
+    return super.equals(that)
+      && this.name === asVariable.name
+  }
+
   accept<Value>(visitor: Visitor<Value>): Value {
     return visitor.visitVariable(this)
   }
