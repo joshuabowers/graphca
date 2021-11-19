@@ -43,21 +43,21 @@ describe(Componentization, () => {
   })
 
   it('renders binary operator expressions', () => {
-    expectMarkup('1 + 2', '.binary.addition')
-    expectMarkup('2 - 3', '.binary.subtraction', `2 ${Unicode.minus} 3`)
-    expectMarkup('3 * 4', '.binary.multiplication', `3 ${Unicode.multiplication} 4`)
-    expectMarkup('4 / 5', '.binary.division', `4 ${Unicode.division} 5`)
+    expectMarkup('1 + 2', '.binary.addition', '1+2')
+    expectMarkup('2 - 3', '.binary.subtraction', `2${Unicode.minus}3`)
+    expectMarkup('3 * 4', '.binary.multiplication', `3${Unicode.multiplication}4`)
+    expectMarkup('4 / 5', '.binary.division', `4${Unicode.division}5`)
     expectMarkup(
       '1 + 2 - 3 * 4 / 5', 
       '.binary', 
-      `1 + 2 ${Unicode.minus} 3 ${Unicode.multiplication} 4 ${Unicode.division} 5`
+      `1+2${Unicode.minus}3${Unicode.multiplication}4${Unicode.division}5`
     )
   })
 
   it('renders parentheses when needed to disambiguate', () => {
-    expectMarkup('2 * (1 - 3)', '.binary', `2 ${Unicode.multiplication} (1 ${Unicode.minus} 3)`)
-    expectMarkup('(1 + 3) / 2', '.binary', `(1 + 3) ${Unicode.division} 2`)
-    expectMarkup('(2 * x) ^ 2', '.binary', `(2 ${Unicode.multiplication} x) ^ 2`)
+    expectMarkup('2 * (1 - 3)', '.binary', `2${Unicode.multiplication}(1${Unicode.minus}3)`)
+    expectMarkup('(1 + 3) / 2', '.binary', `(1+3)${Unicode.division}2`)
+    expectMarkup('(2 * x) ^ 2', '.binary', `(2${Unicode.multiplication}x)^2`)
   })
 
   it('renders variables', () => {
@@ -70,7 +70,7 @@ describe(Componentization, () => {
   })
 
   it('renders exponents', () => {
-    expectMarkup('x ^ 2', '.binary.exponentiation')
+    expectMarkup('x ^ 2', '.binary.exponentiation', 'x^2')
   })
 
   it('renders trigonometric functions', () => {
@@ -137,6 +137,6 @@ describe(Componentization, () => {
 
   it('renders factorials', () => {
     expectMarkup('x!', '.factorial')
-    expectMarkup('(x + 10)!', '.factorial')
+    expectMarkup('(x + 10)!', '.factorial', '(x+10)!')
   })
 })

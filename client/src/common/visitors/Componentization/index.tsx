@@ -227,7 +227,9 @@ export class Componentization implements Visitor<JSX.Element> {
     const op = node.operators[0]
     return (
       <span className={[styles.binary, styles[className]].join(' ')}>
-        {this.parenthesize(node, node.a, a)} {op} {this.parenthesize(node, node.b, b)}
+        {this.parenthesize(node, node.a, a)}
+        <span className={styles.operator}>{op}</span>
+        {this.parenthesize(node, node.b, b)}
       </span>
     )
   }
