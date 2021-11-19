@@ -55,6 +55,22 @@ export class Simplification implements Visitor<Tree> {
         [instanceOf(Real), instanceOf(Real)], 
         ([a, b]) => real(a.value + b.value)
       )
+      .with( // 1 + (1 + x) => 2 + x
+        [instanceOf(Real), {$kind: Kind.Addition, a: instanceOf(Real)}],
+        ([a, b]) => add(real(a.value + b.a.value), b.b).accept(this)
+      )
+      .with( // 1 + (x + 1) => 2 + x
+        [instanceOf(Real), {$kind: Kind.Addition, b: instanceOf(Real)}],
+        ([a, b]) => add(real(a.value + b.b.value), b.a).accept(this)
+      )
+      .with( // (1 + x) + 1 => 2 + x
+        [{$kind: Kind.Addition, a: instanceOf(Real)}, instanceOf(Real)],
+        ([a, b]) => add(real(a.a.value + b.value), a.b).accept(this)
+      )
+      .with( // (x + 1) + 1 => 2 + x
+        [{$kind: Kind.Addition, b: instanceOf(Real)}, instanceOf(Real)],
+        ([a, b]) => add(real(a.b.value + b.value), a.a).accept(this)
+      )
       .with( // (2 * x) + x => 3 * x
         [{$kind: Kind.Multiplication, a: instanceOf(Real)}, not(instanceOf(Multiplication))],
         ([a, b]) => a.b.equals(b),
@@ -120,6 +136,7 @@ export class Simplification implements Visitor<Tree> {
       .with([__, {value: 0}], () => real(0))
       .with([{value: 1}, __], ([, b]) => b)
       .with([__, {value: 1}], ([a, ]) => a)
+      .with([instanceOf(Real), instanceOf(Real)], ([a, b]) => a.multiply(b))
       .with( // (x / y) * (z / w) => (x * z) / (y * w)
         [instanceOf(Division), instanceOf(Division)],
         ([a, b]) => divide(multiply(a.a, b.a), multiply(a.b, b.b)).accept(this)
@@ -149,6 +166,26 @@ export class Simplification implements Visitor<Tree> {
         [instanceOf(Exponentiation), instanceOf(Exponentiation)],
         ([a, b]) => a.a.equals(b.a),
         ([a, b]) => raise(a.a, add(a.b, b.b).accept(this))
+      )
+      .with( // (x * y) * x
+        [instanceOf(Multiplication), __],
+        ([a, b]) => a.a.equals(b),
+        ([a, ]) => multiply(square(a.a), a.b).accept(this)
+      )
+      .with( // (y * x) * x
+        [instanceOf(Multiplication), __],
+        ([a, b]) => a.b.equals(b),
+        ([a, ]) => multiply(square(a.b), a.a).accept(this)
+      )
+      .with( // x * (x * y)
+        [__, instanceOf(Multiplication)],
+        ([a, b]) => a.equals(b.a),
+        ([, b]) => multiply(b.b, square(b.a)).accept(this)
+      )
+      .with( // x * (y * x)
+        [__, instanceOf(Multiplication)],
+        ([a, b]) => a.equals(b.b),
+        ([, b]) => multiply(b.a, square(b.b)).accept(this)
       )
       .when(([a, b]) => a.equals(b), ([a, ]) => square(a))
       .otherwise(([a, b]) => multiply(a, b))
@@ -216,6 +253,26 @@ export class Simplification implements Visitor<Tree> {
         ([a, b]) => a.a.equals(b.b),
         ([a, b]) => divide(raise(a.a, subtract(a.b, real(1))), b.a).accept(this)
       )
+      .with( // (x^2 * y) / x^3 => y / x
+        [{$kind: Kind.Multiplication, a: instanceOf(Exponentiation)}, instanceOf(Exponentiation)],
+        ([a, b]) => a.a.a.equals(b.a),
+        ([a, b]) => multiply(raise(a.a.a, subtract(a.a.b, b.b)), a.b).accept(this)
+      )
+      .with( // (y * x^2) / x^3 => y / x
+        [{$kind: Kind.Multiplication, b: instanceOf(Exponentiation)}, instanceOf(Exponentiation)],
+        ([a, b]) => a.b.a.equals(b.a),
+        ([a, b]) => multiply(a.a, raise(a.b.a, subtract(a.b.b, b.b))).accept(this)
+      )
+      .with( // x^3 / (x^2 * y)
+        [instanceOf(Exponentiation), {$kind: Kind.Multiplication, a: instanceOf(Exponentiation)}],
+        ([a, b]) => a.a.equals(b.a.a),
+        ([a, b]) => divide(raise(a.a, subtract(a.b, b.a.b)), b.b).accept(this)
+      )
+      .with( // x^3 / (y * x^2)
+        [instanceOf(Exponentiation), {$kind: Kind.Multiplication, b: instanceOf(Exponentiation)}],
+        ([a, b]) => a.a.equals(b.b.a),
+        ([a, b]) => divide(raise(a.a, subtract(a.b, b.b.b)), b.a).accept(this)
+      )
       .with( // (x * y) / x => y
         [instanceOf(Multiplication), not(instanceOf(Multiplication))],
         ([a, b]) => a.a.equals(b),
@@ -266,16 +323,20 @@ export class Simplification implements Visitor<Tree> {
       .with([__, {value: 0}], () => real(1))
       .with([{value: 1}, __], ([a,]) => a)
       .with([__, {value: 1}], ([a,]) => a)
-      .with([__, instanceOf(Negation)], ([a, b]) => divide(real(1), raise(a, b.expression)))
-      .with([__, {value: -1}], ([a, ]) => divide(real(1), a))
+      .with([__, instanceOf(Negation)], ([a, b]) => divide(real(1), raise(a, b.expression)).accept(this))
+      .with([__, {value: -1}], ([a, ]) => divide(real(1), a).accept(this))
       .with( // x^-2 => 1 / x^2
         [__, instanceOf(Real)],
         ([, b]) => b.value < 0,
-        ([a, b]) => divide(real(1), raise(a, real(-b.value)))
+        ([a, b]) => divide(real(1), raise(a, real(-b.value))).accept(this)
       )
       .with([{value: 2}, instanceOf(BinaryLogarithm)], ([, b]) => b.expression as Tree)
       .with([{value: Math.E}, instanceOf(NaturalLogarithm)], ([, b]) => b.expression as Tree)
       .with([{value: 10}, instanceOf(CommonLogarithm)], ([, b]) => b.expression as Tree)
+      .with( // (x^2)^2 => x^4
+        [instanceOf(Exponentiation), __],
+        ([a, b]) => raise(a.a, multiply(a.b, b)).accept(this)
+      )
       .otherwise(([a, b]) => raise(a, b))
   }
 
@@ -283,6 +344,11 @@ export class Simplification implements Visitor<Tree> {
     const expression = node.expression.accept(this)
     return match<Tree, Tree>(expression)
       .with(instanceOf(Negation), e => e.expression as Tree)
+      // Negated Reals can occur when a substitution results in a real
+      // e.g. -(x / x) => -(1) => -1
+      .with(instanceOf(Real), e => e.negate())
+      .with(instanceOf(Multiplication), e => multiply(negate(e.a), e.b).accept(this))
+      .with(instanceOf(Division), e => divide(negate(e.a), e.b).accept(this))
       .otherwise(e => negate(e))
   }
 

@@ -2,7 +2,7 @@ import { Unicode } from '../MathSymbols'
 import { 
   Expression,
   real, variable,
-  add, subtract, multiply, divide, raise,
+  add, subtract, multiply, divide, raise, square,
   ln, negate, cos
 } from '../Tree'
 import { treeParser } from "../treeParser"
@@ -72,6 +72,14 @@ describe(Simplification, () => {
         multiply(real(2), variable('x')),
         multiply(real(3), variable('y'))
       ))
+    })
+
+    it('simplifies nested additions of reals', () => {
+      const expected = add(real(2), variable('x'))
+      expectObject('1 + (1 + x)', expected)
+      expectObject('1 + (x + 1)', expected)
+      expectObject('(1 + x) + 1', expected)
+      expectObject('(x + 1) + 1', expected)
     })
   })
 
@@ -161,6 +169,14 @@ describe(Simplification, () => {
       expectObject('3 * (2 * x)', multiply(real(6), variable('x')))
       expectObject('(2 * x) * 3', multiply(real(6), variable('x')))
     })
+
+    it('combines like terms across nesting multiplications', () => {
+      const expected = multiply(real(2), square(variable('x')))
+      expectObject('x * (2 * x)', expected)
+      expectObject('x * (x * 2)', expected)
+      expectObject('(2 * x) * x', expected)
+      expectObject('(x * 2) * x', expected)
+    })
   })
 
   describe('of divisions', () => {
@@ -237,6 +253,16 @@ describe(Simplification, () => {
       expectObject('x^2 / (x * y)', divide(variable('x'), variable('y')))
       expectObject('x^2 / (y * x)', divide(variable('x'), variable('y')))
     })
+
+    it('cancels a power multiplicand in the numerator if a similar power denominator', () => {
+      expectObject('(x^3 * y) / x^2', multiply(variable('x'), variable('y')))
+      expectObject('(y * x^3) / x^2', multiply(variable('y'), variable('x')))
+    })
+
+    it('cancels a power multiplicand in the denominator if a similar power numerator', () => {
+      expectObject('x^3 / (x^2 * y)', divide(variable('x'), variable('y')))
+      expectObject('x^3 / (y * x^2)', divide(variable('x'), variable('y')))
+    })
   })
 
   describe('of exponentiations', () => {
@@ -281,6 +307,13 @@ describe(Simplification, () => {
     it('returns the argument of a common logarithm power of 10', () => {
       expectObject('10^lg(x)', variable('x'))
     })
+
+    it('simplifies nested exponentiations', () => {
+      expectObject('(x^y)^z', raise(
+        variable('x'), 
+        multiply(variable('y'), variable('z'))
+      ))
+    })
   })
 
   describe('of logarithms', () => {
@@ -295,11 +328,30 @@ describe(Simplification, () => {
     it('returns the nested expression of a negation of a negation', () => {
       expectObject('--x', variable('x'))
     })
+
+    it('returns the negation of a real', () => {
+      expectObject('-((x / x)-2)', real(1))
+    })
+
+    it('negates the first multiplicand of a multiplication', () => {
+      expectObject('-(-2 * x)', multiply(real(2), variable('x')))
+    })
+
+    it('negates the numerator of a division', () => {
+      expectObject('-(1 / x)', divide(real(-1), variable('x')))
+    })
   })
 
   describe('of derivatives', () => {
     it('returns the simplified form of the derivative', () => {
       expectObject(`${Unicode.derivative}(x^2)`, multiply(real(2), variable('x')))
+    })
+
+    it('returns the simplified form a triple derivative', () => {
+      expectObject(
+        `${Unicode.derivative}(${Unicode.derivative}(${Unicode.derivative}(x^3)))`,
+        real(6)
+      )
     })
   })
 
