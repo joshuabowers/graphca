@@ -1,6 +1,6 @@
 import { Kind } from "./Kind";
-export { Kind }
 import { Visitor } from "../visitors/Visitor";
+export { Kind }
 export type { Visitor }
 
 export interface Node {

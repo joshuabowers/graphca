@@ -1,3 +1,28 @@
+import { 
+  Addition, Subtraction, Multiplication, Division, 
+  add, subtract, multiply, divide
+} from './Binary'
+import {
+  AbsoluteValue,
+  Cosine, Sine, Tangent,
+  Secant, Cosecant, Cotangent,
+  ArcusCosine, ArcusSine, ArcusTangent,
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
+  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
+  BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
+  Gamma,
+  abs,
+  lb, ln, lg,
+  cos, sin, tan, sec, csc, cot,
+  acos, asin, atan, asec, acsc, acot,
+  cosh, sinh, tanh, sech, csch, coth,
+  acosh, asinh, atanh, asech, acsch, acoth,
+  gamma
+} from './Unary'
+
 export type { Node } from './Node'
 export { Kind } from './Kind'
 export type { Expression } from './Expression'
@@ -41,31 +66,6 @@ export { Derivative, differentiate } from './Derivative'
 export { Invocation, invoke } from './Invocation'
 export { Polygamma, polygamma, digamma } from './Polygamma'
 export type { Tree } from './Tree'
-
-import { 
-  Addition, Subtraction, Multiplication, Division, 
-  add, subtract, multiply, divide
-} from './Binary'
-import {
-  AbsoluteValue,
-  Cosine, Sine, Tangent,
-  Secant, Cosecant, Cotangent,
-  ArcusCosine, ArcusSine, ArcusTangent,
-  ArcusSecant, ArcusCosecant, ArcusCotangent,
-  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
-  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
-  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
-  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
-  BinaryLogarithm, NaturalLogarithm, CommonLogarithm,
-  Gamma,
-  abs,
-  lb, ln, lg,
-  cos, sin, tan, sec, csc, cot,
-  acos, asin, atan, asec, acsc, acot,
-  cosh, sinh, tanh, sech, csch, coth,
-  acosh, asinh, atanh, asech, acsch, acoth,
-  gamma
-} from './Unary'
 
 type Additive = typeof add | typeof subtract
 type Multiplicative = typeof multiply | typeof divide
