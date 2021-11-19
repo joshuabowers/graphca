@@ -397,5 +397,16 @@ describe(Evaluation, () => {
         add(real(15), variable('z'))
       )
     })
+
+    it('replaces variables with invoked expressions', () => {
+      const s = scope()
+      evaluate('f <- 2 * x', s)
+      evaluate('g <- y+z', s)
+      const output = evaluate('(f(g))(5)', s)
+      expect(output).toMatchObject(multiply(
+        real(2),
+        add(real(5), variable('z'))
+      ))
+    })
   })
 })

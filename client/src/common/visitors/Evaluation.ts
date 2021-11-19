@@ -64,8 +64,9 @@ export class Evaluation implements Visitor<Tree> {
   visitInvocation(node: Invocation): Tree {
     if(!this.scope){ throw new Error('No scope provided for invocation context'); }
     const previousScope = new Map(this.scope)
+    const notInvoked = node.expression.accept(this)
     try {
-      const parameters = node.expression.accept(new Parameterization(this.scope))
+      const parameters = notInvoked.accept(new Parameterization(this.scope))
       let index = 0
       for(const parameter of parameters){
         const argument = node.args[index]?.accept(this)
@@ -74,7 +75,7 @@ export class Evaluation implements Visitor<Tree> {
         }
         index++
       }
-      return node.expression.accept(this)
+      return notInvoked.accept(this)
     } finally {
       this.scope.clear()
       for(const [key, value] of previousScope){

@@ -440,5 +440,12 @@ describe('treeParser', () => {
         real(3)
       ))
     })
+
+    it('recursively associates correctly', () => {
+      expectObject('x(y)(1)', invoke(
+        invoke(variable('x'), variable('y')),
+        real(1)
+      ))
+    })
   })
 })
