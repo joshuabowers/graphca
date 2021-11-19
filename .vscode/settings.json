@@ -8,6 +8,14 @@
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "cSpell.words": [
+    "acot",
+    "acoth",
+    "acsc",
+    "acsch",
+    "asec",
+    "asech",
+    "Componentization",
+    "Polygamma",
     "significand"
   ]
 }

@@ -1,10 +1,6 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
-import { parser } from '../../common/parser';
-import { componentVisitor } from '../../common/visitors/componentVisitor';
-import { evaluateVisitor } from '../../common/visitors/evaluateVisitor';
-import { simplifyVisitor } from '../../common/visitors/simplifyVisitor';
-import { Scope } from '../../common/Scope';
+import { parse, Scope, scope as createScope } from '../../common/parse'
 import styles from './Terminal.module.css';
 import { RootState } from '../../app/store';
 import { createArraySelector } from 'reselect-map';
@@ -15,22 +11,6 @@ export interface TerminalProps {
 
 }
 
-const parse = (entry: TerminalEntryState, scope: Scope) => {
-  console.log('parsing expression: ', entry.content)
-  try {
-    const parsing = parser.value(
-      entry.content,
-      {
-        visit: [evaluateVisitor, simplifyVisitor, componentVisitor],
-        context: scope
-      }
-    ) as unknown as JSX.Element  
-    return <div className={styles.result}>{'=>'} {parsing}</div>
-  } catch(err: any) {
-    return <div className={styles.error}>{err.message}</div>
-  }
-}
-
 const getTerminal = (state: RootState) => state.terminal
 const getCurrentLine = createSelector(
   getTerminal,
@@ -39,11 +19,11 @@ const getCurrentLine = createSelector(
 const getHistory = createSelector(getTerminal, (terminal) => terminal.history)
 
 export const Terminal = (props: TerminalProps) => {
-  const [scope, setScope] = useState(new Scope())
+  const [scope, setScope] = useState(createScope())
   const getParsings = useMemo(
     () => createArraySelector<RootState, TerminalEntryState, JSX.Element>(
       (state: RootState) => state.terminal.history,
-      (entry: TerminalEntryState) => parse(entry, scope)
+      (entry: TerminalEntryState) => parse(entry.content, scope, styles)
     ) as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>,
     [scope]
   )
