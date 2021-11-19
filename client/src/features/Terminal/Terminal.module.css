@@ -22,3 +22,12 @@
   border-radius: 0.25em;
   padding: 0.5em;
 }
+
+.result, .result span {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.result > span:first-child {
+  margin-right: 0.5em;
+}

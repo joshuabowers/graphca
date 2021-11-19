@@ -20,7 +20,7 @@ export function parse(input: string, scope: Scope, styles: Styles): JSX.Element 
         .accept(new Evaluation(scope))
         .accept(new Simplification(scope))
         .accept(new Componentization(scope))
-    return <div className={styles.result}>{'=>'} {output}</div>
+    return <div className={styles.result}><span>{'=>'}</span>{output}</div>
   } catch(error: any) {
     return <div className={styles.error}>{error.message}</div>
   }

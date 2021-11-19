@@ -267,6 +267,7 @@ export class Simplification implements Visitor<Tree> {
       .with([{value: 1}, __], ([a,]) => a)
       .with([__, {value: 1}], ([a,]) => a)
       .with([__, instanceOf(Negation)], ([a, b]) => divide(real(1), raise(a, b.expression)))
+      .with([__, {value: -1}], ([a, ]) => divide(real(1), a))
       .with( // x^-2 => 1 / x^2
         [__, instanceOf(Real)],
         ([, b]) => b.value < 0,

@@ -1,0 +1,5 @@
+.super {
+  display: inline-flex;
+  flex-direction: column;
+  font-size: small;
+}

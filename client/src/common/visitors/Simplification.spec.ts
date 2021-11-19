@@ -198,6 +198,7 @@ describe(Simplification, () => {
         real(1),
         raise(variable('x'), real(2))
       ))
+      expectObject('x^2 / x^3', divide(real(1), variable('x')))
     })
 
     it('cancels a multiplicand in the numerator if a similar denominator', () => {
