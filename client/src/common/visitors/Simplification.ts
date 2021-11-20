@@ -342,14 +342,15 @@ export class Simplification implements Visitor<Tree> {
 
   visitNegation(node: Negation): Tree {
     const expression = node.expression.accept(this)
-    return match<Tree, Tree>(expression)
-      .with(instanceOf(Negation), e => e.expression as Tree)
+    const [output, transform] = match<Tree, [Tree, string]>(expression)
+      .with(instanceOf(Negation), e => [e.expression as Tree, 'double negation'])
       // Negated Reals can occur when a substitution results in a real
       // e.g. -(x / x) => -(1) => -1
-      .with(instanceOf(Real), e => e.negate())
-      .with(instanceOf(Multiplication), e => multiply(negate(e.a), e.b).accept(this))
-      .with(instanceOf(Division), e => divide(negate(e.a), e.b).accept(this))
-      .otherwise(e => negate(e))
+      .with(instanceOf(Real), e => [e.negate(), 'negate real'])
+      .with(instanceOf(Multiplication), e => [multiply(negate(e.a), e.b), 'multiply negation'])
+      .with(instanceOf(Division), e => [divide(negate(e.a), e.b), 'negate numerator'])
+      .otherwise(e => [negate(e), ''])
+    return this.guardedAcceptAndReport(node, output, transform)
   }
 
   visitAbsoluteValue(node: AbsoluteValue): Tree {
@@ -488,5 +489,14 @@ export class Simplification implements Visitor<Tree> {
         e => e.b as Tree
       )
       .otherwise(e => log(e))
+  }
+  
+  private guardedAcceptAndReport(input: Tree, output: Tree, transform: string): Tree {
+    if(!input.equals(output)) {
+      // this.transform(input, transform)
+      return output.accept(this)
+    } else {
+      return output
+    }
   }
 }
