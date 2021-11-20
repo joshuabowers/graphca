@@ -22,9 +22,20 @@ import {
 } from '../Tree'
 import { Scope, Visitor } from './Visitor'
 
+enum Transform {
+  DoubleNegation,
+  NegateReal
+}
+
+function transformDescription(t: Transform): string {
+  return Transform[t].split(/(!$)[A-Z]/).map(s => s.toLowerCase()).join(' ')
+}
+
+const aTransform = transformDescription(Transform.DoubleNegation)
+
 export class Simplification implements Visitor<Tree> {
   constructor(public scope?: Scope) {}
-
+ 
   visitReal(node: Real): Tree {
     return node
   }
