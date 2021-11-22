@@ -31,13 +31,13 @@ type Multiply = Multi
 export const multiply: Multiply = multi(
   method([not(Real), Real], (l: Base, r: Real) => multiply(r, l)),
   method([notAny<Base>(Real, Complex), Complex], (l: Base, r: Complex) => multiply(r, l)),
+  method([Real, Real], multiplyReals),
+  method([Real, Complex], multiplyRC),
+  method([Complex, Complex], multiplyComplexes),
   method([real(0), Base], real(0)),
   method([real(1), Base], selectRight),
   method([real(Infinity), Base], real(Infinity)),
   method([real(-Infinity), Base], real(-Infinity)),
-  method([Real, Real], multiplyReals),
-  method([Real, Complex], multiplyRC),
-  method([Complex, Complex], multiplyComplexes),
   method(equals, (l: Base, _r: Base) => square(l)),
   method([Base, Base], otherwise)
 )

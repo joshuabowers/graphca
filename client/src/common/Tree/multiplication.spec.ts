@@ -16,6 +16,10 @@ describe('multiply', () => {
     )
   })
 
+  it('is NaN if 0 and Infinity', () => {
+    expect(multiply(real(0), real(Infinity))).toEqual(real(NaN))
+  })
+
   it('is real 0 if left is real 0', () => {
     expect(multiply(real(0), variable('x'))).toEqual(real(0))
   })
