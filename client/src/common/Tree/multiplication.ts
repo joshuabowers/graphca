@@ -2,21 +2,49 @@ import { method, multi, Multi } from '@arrows/multimethod';
 import { Kind, Tree, Multiplication, Base, Real, Complex } from "./Expression";
 import { partial } from "./partial";
 import { real } from "./real";
-import { reciprocal } from "./exponentiation";
+import { complex } from './complex';
+import { reciprocal, square } from "./exponentiation";
+import { equals } from './equality';
+
+const swap = <B, T>(f: (l: B, r: B) => T) => (l: B, r: B) => f(r, l)
+const not = <T>(type: new(...args: any[]) => T) => (value: unknown) => !(value instanceof type)
+const selectLeft = <L, R>(l: L, _r: R) => l
+const selectRight = <L, R>(_l: L, r: R) => r
+
+const notAny = <T extends Base>(...types: (new(...args: any[]) => T)[]) => (value: unknown) => types.every((type) => !(value instanceof type))
 
 const multiplyReals = (left: Real, right: Real) => real(left.value * right.value)
+const multiplyComplexes = (left: Complex, right: Complex) => 
+  complex( // 2 + 3i * 3 + 4i => -6 + 17i
+    (left.a * right.a) - (left.b * right.b),
+    (left.a * right.b) + (left.b * right.a)
+  )
+const multiplyRC = (left: Real, right: Complex) => complex(left.value * right.a, left.value * right.b)
 const otherwise = (left: Base, right: Base) => new Multiplication(left, right)
 
-type Multiply = Multi & typeof multiplyReals & typeof otherwise
+type Multiply = Multi 
+  & typeof multiplyReals 
+  & typeof multiplyComplexes
+  & typeof multiplyRC
+  & typeof otherwise
 
 export const multiply: Multiply = multi(
+  method([not(Real), Real], (l: Base, r: Real) => multiply(r, l)),
+  method([notAny<Base>(Real, Complex), Complex], (l: Base, r: Complex) => multiply(r, l)),
+  method([real(0), Base], real(0)),
+  method([real(1), Base], selectRight),
+  method([real(Infinity), Base], real(Infinity)),
+  method([real(-Infinity), Base], real(-Infinity)),
   method([Real, Real], multiplyReals),
+  method([Real, Complex], multiplyRC),
+  method([Complex, Complex], multiplyComplexes),
+  method(equals, (l: Base, _r: Base) => square(l)),
   method([Base, Base], otherwise)
 )
 
 export const negate = partial(multiply, real(-1))
 export const double = partial(multiply, real(2))
 
-export function divide(left: Tree, right: Tree): Tree {
+export function divide(left: Base, right: Base): Base {
   return multiply(left, reciprocal(right))
 }
