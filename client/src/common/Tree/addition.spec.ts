@@ -54,13 +54,37 @@ describe('add', () => {
     })
   })
 
+  describe('with {X + 1} + 2', () => {
+    it('replaces with a single addition', () => {
+      expect(add(add(variable('x'), real(1)), real(2))).toEqual(add(variable('x'), real(3)))
+    })
+  })
+
+  describe('with {1 + x} + 2', () => {
+    it('replaces with a single addition', () => {
+      expect(add(add(real(1), variable('x')), real(2))).toEqual(add(variable('x'), real(3)))
+    })
+  })
+
+  describe('with 2 + {X + 1}', () => {
+    it('replaces with a single addition', () => {
+      expect(add(real(2), add(variable('x'), real(1)))).toEqual(add(variable('x'), real(3)))
+    })
+  })
+
+  describe('with 2 + {1 + X}', () => {
+    it('replaces with a single addition', () => {
+      expect(add(real(2), add(real(1), variable('x')))).toEqual(add(variable('x'), real(3)))
+    })
+  })
+
   describe('with the same object twice', () => {
     it('replaces the addition with a multiplication', () => {
       expect(add(variable('x'), variable('x'))).toEqual(double(variable('x')))
     })
   })
 
-  describe('with {X, Y}, X', () => {
+  describe('with {X + Y}, X', () => {
     it('replaces the nested addition with an addition of a multiplication', () => {
       expect(
         add(add(variable('x'), real(1)), variable('x'))
@@ -68,7 +92,7 @@ describe('add', () => {
     })
   })
 
-  describe('with {Y, X}, X', () => {
+  describe('with {Y + X}, X', () => {
     it('replaces the nested addition with an addition of a multiplication', () => {
       expect(
         add(add(variable('y'), variable('x')), variable('x'))
@@ -76,7 +100,7 @@ describe('add', () => {
     })
   })
 
-  describe('with X, {X, Y}', () => {
+  describe('with X, {X + Y}', () => {
     it('replaces the nested addition and an addition of a multiplication', () => {
       expect(
         add(variable('x'), add(variable('x'), variable('y')))
@@ -84,11 +108,83 @@ describe('add', () => {
     })
   })
 
-  describe('with X, {Y, X}', () => {
+  describe('with X, {Y + X}', () => {
     it('replaces the nested addition with an addition of a multiplication', () => {
       expect(
         add(variable('x'), add(variable('y'), variable('x')))
       ).toEqual(add(double(variable('x')), variable('y')))
+    })
+  })
+
+  describe('with {X * Y}, X', () => {
+    it('replaces the addition with a multiplication of an addition', () => {
+      expect(
+        add(multiply(variable('x'), variable('y')), variable('x'))
+      ).toEqual(multiply(add(variable('y'), real(1)), variable('x')))
+    })
+  })
+
+  describe('with {Y * X}, X', () => {
+    it('replaces the addition with a multiplication of an addition', () => {
+      expect(
+        add(multiply(variable('y'), variable('x')), variable('x'))
+      ).toEqual(multiply(add(variable('y'), real(1)), variable('x')))
+    })
+  })
+
+  describe('with X, {X * Y}', () => {
+    it('replaces the addition with a multiplication of an addition', () => {
+      expect(
+        add(variable('x'), multiply(variable('x'), variable('y')))
+      ).toEqual(multiply(add(variable('y'), real(1)), variable('x')))
+    })
+  })
+
+  describe('with X, {Y * X}', () => {
+    it('replaces the addition with a multiplication of an addition', () => {
+      expect(
+        add(variable('x'), multiply(variable('y'), variable('x')))
+      ).toEqual(multiply(add(variable('y'), real(1)), variable('x')))
+    })
+  })
+
+  describe('with {X * Z}, {Y * Z}', () => {
+    it('factors out z as a multiplication', () => {
+      expect(
+        add(multiply(variable('x'), variable('z')), multiply(variable('y'), variable('z')))
+      ).toEqual(multiply(add(variable('x'), variable('y')), variable('z')))
+    })
+  })
+
+  describe('with {Z * X}, {Y * Z}', () => {
+    it('factors out z as a multiplication', () => {
+      expect(
+        add(multiply(variable('z'), variable('x')), multiply(variable('y'), variable('z')))
+      ).toEqual(multiply(add(variable('x'), variable('y')), variable('z')))
+    })
+  })
+
+  describe('with {X * Z}, {Z * Y}', () => {
+    it('factors out z as a multiplication', () => {
+      expect(
+        add(multiply(variable('x'), variable('z')), multiply(variable('z'), variable('y')))
+      ).toEqual(multiply(add(variable('x'), variable('y')), variable('z')))
+    })
+  })
+
+  describe('with {Z * X}, {Z * Y}', () => {
+    it('factors out z as a multiplication', () => {
+      expect(
+        add(multiply(variable('z'), variable('x')), multiply(variable('z'), variable('y')))
+      ).toEqual(multiply(add(variable('x'), variable('y')), variable('z')))
+    })
+  })
+
+  describe('with {2 * X}, {X * 3}', () => {
+    it('combines like terms', () => {
+      expect(
+        add(multiply(real(2), variable('x')), multiply(variable('x'), real(3)))
+      ).toEqual(multiply(real(5), variable('x')))
     })
   })
 
@@ -106,5 +202,13 @@ describe('subtract', () => {
 
   it('returns the negated right when subtracting from zero', () => {
     expect(subtract(real(0), variable('x'))).toEqual(new Multiplication(real(-1), variable('x')))
+  })
+
+  it('returns the subtraction of reals', () => {
+    expect(subtract(real(4), real(1))).toEqual(real(3))
+  })
+
+  it('returns 0 if subtracting a quantity from itself', () => {
+    expect(subtract(variable('x'), variable('x'))).toEqual(real(0))
   })
 })
