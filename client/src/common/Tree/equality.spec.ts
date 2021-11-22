@@ -2,6 +2,7 @@ import { real } from './real'
 import { complex } from './complex'
 import { variable } from './var'
 import { add } from './addition'
+import { multiply } from './multiplication'
 import { equals } from './equality'
 
 describe(equals, () => {
@@ -45,6 +46,14 @@ describe(equals, () => {
     it('returns false for two binaries with different left, right', () => {
       expect(
         equals(add(variable('x'), real(1)), add(variable('y'), real(2)))
+      ).toBeFalsy()
+    })
+
+    it('returns false if matching otherwise equal distinct binaries', () => {
+      expect(
+        equals(
+          add(variable('x'), variable('y')), multiply(variable('x'), variable('y'))
+        )
       ).toBeFalsy()
     })
   })

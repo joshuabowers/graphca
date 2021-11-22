@@ -8,7 +8,8 @@ const equalsComplex = (left: Complex, right: Complex) =>
   left.a === right.a && left.b === right.b
 const equalsVariable = (left: Variable, right: Variable) => 
   left.name === right.name
-const equalsBinary = (left: Binary, right: Binary) => 
+const equalsBinary = (left: Binary, right: Binary): boolean => 
+  left.$kind === right.$kind &&
   equals(left.left, right.left) && equals(left.right, right.right)
 const equalsBase = (left: Base, right: Base) => false
 
