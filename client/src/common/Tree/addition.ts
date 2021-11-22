@@ -22,8 +22,8 @@ export type Add = Multi
 
 const isXpR_R = (l: Base, r: Base) =>
   l instanceof Addition 
-  && l.right instanceof Real 
-  && r instanceof Real
+  && (l.right instanceof Real || l.right instanceof Complex)
+  && (r instanceof Real || r instanceof Complex)
 
 const isXpY_X = (l: Base, r: Base) => 
   l instanceof Addition && equals(l.left, r)

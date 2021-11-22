@@ -78,6 +78,12 @@ describe('add', () => {
     })
   })
 
+  describe('with {X + 1} + i', () => {
+    it('replaces with a single addition', () => {
+      expect(add(add(variable('x'), real(1)), complex(0, 1))).toEqual(add(variable('x'), complex(1, 1)))
+    })
+  })
+
   describe('with the same object twice', () => {
     it('replaces the addition with a multiplication', () => {
       expect(add(variable('x'), variable('x'))).toEqual(double(variable('x')))
