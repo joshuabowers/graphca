@@ -15,6 +15,8 @@ export enum Kind {
   Negation,
   AbsoluteValue,
 
+  Logarithm,
+
   BinaryLogarithm,
   NaturalLogarithm,
   CommonLogarithm,

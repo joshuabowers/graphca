@@ -6,13 +6,9 @@ export abstract class Binary<
   Left extends Expression = Expression, 
   Right extends Expression = Expression
 > extends Expression {
-  readonly a: Left
-  readonly b: Right
   
-  constructor(a: Left, b: Right){
+  constructor(readonly a: Left, readonly b: Right){
     super()
-    this.a = a
-    this.b = b
   }
 
   toString(): string {

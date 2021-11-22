@@ -54,6 +54,47 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "SOFT",
         }]
       ]],
+      ["@arrows/array", [
+        ["npm:1.4.1", {
+          "packageLocation": "./.yarn/cache/@arrows-array-npm-1.4.1-f87a1d22ff-39de47a497.zip/node_modules/@arrows/array/",
+          "packageDependencies": [
+            ["@arrows/array", "npm:1.4.1"],
+            ["@arrows/composition", "npm:1.2.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@arrows/composition", [
+        ["npm:1.2.2", {
+          "packageLocation": "./.yarn/cache/@arrows-composition-npm-1.2.2-227535c48b-3219e9a4e2.zip/node_modules/@arrows/composition/",
+          "packageDependencies": [
+            ["@arrows/composition", "npm:1.2.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@arrows/error", [
+        ["npm:1.0.2", {
+          "packageLocation": "./.yarn/cache/@arrows-error-npm-1.0.2-057e151e1d-35ad67e8d2.zip/node_modules/@arrows/error/",
+          "packageDependencies": [
+            ["@arrows/error", "npm:1.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@arrows/multimethod", [
+        ["npm:2.1.0", {
+          "packageLocation": "./.yarn/cache/@arrows-multimethod-npm-2.1.0-3f1d29142e-5f9861b4bd.zip/node_modules/@arrows/multimethod/",
+          "packageDependencies": [
+            ["@arrows/multimethod", "npm:2.1.0"],
+            ["@arrows/array", "npm:1.4.1"],
+            ["@arrows/composition", "npm:1.2.2"],
+            ["@arrows/error", "npm:1.0.2"],
+            ["fast-deep-equal", "npm:3.1.3"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@babel/code-frame", [
         ["npm:7.10.4", {
           "packageLocation": "./.yarn/cache/@babel-code-frame-npm-7.10.4-ab1ee3c93e-feb4543c8a.zip/node_modules/@babel/code-frame/",
@@ -12761,6 +12802,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./client/",
           "packageDependencies": [
             ["client", "workspace:client"],
+            ["@arrows/multimethod", "npm:2.1.0"],
             ["@mdx-js/react", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:1.6.22"],
             ["@reduxjs/toolkit", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:1.6.1"],
             ["@storybook/addon-actions", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:6.3.8"],
