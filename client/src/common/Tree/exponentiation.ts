@@ -1,6 +1,6 @@
 import { method, multi, Multi, _ } from '@arrows/multimethod';
 import { Kind, Base, Real, Complex, Exponentiation, Logarithm } from './Expression';
-import { partialRight } from './partial';
+// import { partialRight } from './partial';
 import { real } from './real';
 import { complex } from './complex';
 import { multiply } from './multiplication';
@@ -46,6 +46,16 @@ export const raise: Raise = multi(
   method([Base, Base], raiseBase)
 )
 
-export const reciprocal = partialRight(raise, real(-1))
-export const square = partialRight(raise, real(2))
-export const sqrt = partialRight(raise, real(0.5))
+function partialRight(right: Real) {
+  type Unary = Multi
+    & ((expression: Real) => Real)
+    & ((expression: Complex) => Complex)
+    & ((expression: Base) => Exponentiation)
+  return multi(
+    method(Base, (left: Base) => raise(left, right))
+  ) as Unary
+}
+
+export const reciprocal = partialRight(real(-1))
+export const square = partialRight(real(2))
+export const sqrt = partialRight(real(0.5))
