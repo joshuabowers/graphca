@@ -1,8 +1,10 @@
 import { method, multi, Multi, _ } from '@arrows/multimethod';
-import { Kind, Base, Real, Complex, Exponentiation } from './Expression';
+import { Kind, Base, Real, Complex, Exponentiation, Logarithm } from './Expression';
 import { partialRight } from './partial';
 import { real } from './real';
 import { complex } from './complex';
+import { multiply } from './multiplication';
+import { equals } from './equality';
 
 const raiseReals = (left: Real, right: Real) => real(left.value ** right.value)
 const raiseComplex = (left: Complex, right: Complex) => {
@@ -18,6 +20,11 @@ const raiseRC = (left: Real, right: Complex) => raise(complex(left.value, 0), ri
 const raiseCR = (left: Complex, right: Real) => raise(left, complex(right.value, 0))
 const raiseBase = (left: Base, right: Base) => new Exponentiation(left, right)
 
+const isN_LofN = (left: Base, right: Base) =>
+  right instanceof Logarithm && equals(left, right.left)
+const isE_A = (left: Base, _right: Base) =>
+  left instanceof Exponentiation
+
 export type Raise = Multi
   & typeof raiseReals
   & typeof raiseComplex
@@ -30,6 +37,12 @@ export const raise: Raise = multi(
   method([Complex, Complex], raiseComplex),
   method([Real, Complex], raiseRC),
   method([Complex, Real], raiseCR),
+  method([real(0), _], real(0)),
+  method([_, real(0)], real(1)),
+  method([real(1), _], real(1)),
+  method([_, real(1)], (l: Base, _r: Real) => l),
+  method(isN_LofN, (_l: Base, r: Logarithm) => r.right),
+  method(isE_A, (l: Exponentiation, r: Base) => raise(l.left, multiply(l.right, r))),
   method([Base, Base], raiseBase)
 )
 
