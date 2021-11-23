@@ -3,7 +3,7 @@ import {
 } from './Expression'
 import { real } from './real'
 import { complex } from './complex'
-import { divide } from './multiplication'
+import { reciprocal } from './exponentiation'
 import { unary } from './unary'
 
 export const cos = unary(
@@ -40,22 +40,22 @@ export const tan = unary(
 export type Tan = typeof tan
 
 export const sec = unary(
-  r => real(1 / Math.cos(r.value)),
-  c => divide(real(1), cos(c)),
+  r => reciprocal(cos(r)),
+  c => reciprocal(cos(c)),
   e => new Secant(e)
 )
 export type Sec = typeof sec
 
 export const csc = unary(
-  r => real(1 / Math.sin(r.value)),
-  c => divide(real(1), sin(c)),
+  r => reciprocal(sin(r)),
+  c => reciprocal(sin(c)),
   e => new Cosecant(e)
 )
 export type Csc = typeof csc
 
 export const cot = unary(
-  r => real(1 / Math.tan(r.value)),
-  c => divide(real(1), tan(c)),
+  r => reciprocal(tan(r)),
+  c => reciprocal(tan(c)),
   e => new Cotangent(e)
 )
 export type Cot = typeof cot
