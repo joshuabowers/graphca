@@ -45,6 +45,7 @@ export const multiply: Multiply = multi(
 export const negate = partial(multiply, real(-1))
 export const double = partial(multiply, real(2))
 
-export function divide(left: Base, right: Base): Base {
-  return multiply(left, reciprocal(right))
-}
+// Defined as a multimethod to propagate type information.
+export const divide: Multiply = multi(
+  method([Base, Base], (l: Base, r: Base) => multiply(l, reciprocal(r)))
+)

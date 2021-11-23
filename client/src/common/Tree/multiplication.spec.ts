@@ -1,3 +1,4 @@
+import { expectCloseTo } from './expectations'
 import { real } from './real'
 import { complex } from './complex'
 import { variable } from './var'
@@ -95,7 +96,7 @@ describe(double, () => {
   })
 })
 
-describe(divide, () => {
+describe('divide', () => {
   it('results in a division of the two real arguments', () => {
     expect(divide(real(10), real(5))).toEqual(real(2))
   })
@@ -108,5 +109,9 @@ describe(divide, () => {
 
   it('handles division by zero correctly', () => {
     expect(divide(variable('x'), real(0))).toEqual(real(Infinity))
+  })
+
+  it('properly calculates real / complex division', () => {
+    expectCloseTo(divide(real(1), complex(1, 2)), complex(0.2, -0.4), 10)
   })
 })
