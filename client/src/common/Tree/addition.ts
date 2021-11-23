@@ -83,6 +83,6 @@ export const add: Add = multi(
   method([_, _], failure)
 )
 
-export function subtract(left: Base, right: Base) {
-  return add(left, negate(right))
-}
+export const subtract: Add = multi(
+  method([Base, Base], (l: Base, r: Base) => add(l, negate(r)))
+)
