@@ -1,24 +1,12 @@
-import { Base, Real, Complex, Cosine, Sine, Tangent, Secant, Cosecant, Cotangent } from './Expression'
+import { 
+  Cosine, Sine, Tangent, Secant, Cosecant, Cotangent 
+} from './Expression'
 import { real } from './real'
 import { complex } from './complex'
 import { divide } from './multiplication'
-import { method, multi, Multi } from '@arrows/multimethod'
+import { unary } from './unary'
 
-function trigonometric(
-  whenReal: (expression: Real) => Real, 
-  whenComplex: (expression: Complex) => Complex, 
-  otherwise: (expression: Base) => Base
-) {
-  type TrigFn = Multi & typeof whenReal & typeof whenComplex & typeof otherwise
-  const result: TrigFn = multi(
-    method(Real, whenReal),
-    method(Complex, whenComplex),
-    method(Base, otherwise)
-  )
-  return result
-}
-
-export const cos = trigonometric(
+export const cos = unary(
   r => real(Math.cos(r.value)),
   c => complex(
     Math.cos(c.a) * Math.cosh(c.b),
@@ -28,7 +16,7 @@ export const cos = trigonometric(
 )
 export type Cos = typeof cos
 
-export const sin = trigonometric(
+export const sin = unary(
   r => real(Math.sin(r.value)),
   c => complex(
     Math.sin(c.a) * Math.cosh(c.b),
@@ -38,7 +26,7 @@ export const sin = trigonometric(
 )
 export type Sin = typeof sin
 
-export const tan = trigonometric(
+export const tan = unary(
   r => real(Math.tan(r.value)),
   c => {
     const divisor = Math.cos(2 * c.a) + Math.cosh(2 * c.b)
@@ -51,21 +39,21 @@ export const tan = trigonometric(
 )
 export type Tan = typeof tan
 
-export const sec = trigonometric(
+export const sec = unary(
   r => real(1 / Math.cos(r.value)),
   c => divide(real(1), cos(c)),
   e => new Secant(e)
 )
 export type Sec = typeof sec
 
-export const csc = trigonometric(
+export const csc = unary(
   r => real(1 / Math.sin(r.value)),
   c => divide(real(1), sin(c)),
   e => new Cosecant(e)
 )
 export type Csc = typeof csc
 
-export const cot = trigonometric(
+export const cot = unary(
   r => real(1 / Math.tan(r.value)),
   c => divide(real(1), tan(c)),
   e => new Cotangent(e)
