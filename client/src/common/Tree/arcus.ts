@@ -31,14 +31,6 @@ export const asin = unary(
 )
 export const AsinFn = typeof asin
 
-// atan() {
-//   const ni2 = new Complex(0, -0.5)
-//   const inz = Complex.i.subtract(this)
-//   const ipz = Complex.i.add(this)
-//   const ratio = inz.divide(ipz)
-//   return ni2.multiply(ratio.ln())
-// }
-
 export const atan = unary(
   r => real(Math.atan(r.value)),
   c => {
