@@ -69,6 +69,18 @@ describe('multiply', () => {
     expect(multiply(variable('x'), variable('x'))).toEqual(square(variable('x')))
   })
 
+  it('multiplies complex infinity against complex 1 correctly', () => {
+    expect(multiply(complex(-Infinity, 0), complex(1, 0))).toEqual(complex(-Infinity, 0))
+  })
+
+  it('multiplies a complex wrapped real by a pure imaginary correctly', () => {
+    expect(multiply(complex(Infinity, 0), complex(0, 3))).toEqual(complex(0, Infinity))
+  })
+
+  it('multiplies a pure imaginary by a complex wrapped real correctly', () => {
+    expect(multiply(complex(0, 3), complex(Infinity, 0))).toEqual(complex(0, Infinity))
+  })
+
   it('creates a Multiplication for unhandled edge cases', () => {
     expect(multiply(real(2), variable('x'))).toEqual(
       new Multiplication(real(2), variable('x'))
@@ -113,5 +125,21 @@ describe('divide', () => {
 
   it('properly calculates real / complex division', () => {
     expectCloseTo(divide(real(1), complex(1, 2)), complex(0.2, -0.4), 10)
+  })
+
+  it('properly handles dividing complex 0 by another complex', () => {
+    expectCloseTo(divide(complex(0, 0), complex(0, 2)), complex(0, 0), 10)
+  })
+
+  it('properly handles dividing a complex by complex 0', () => {
+    expectCloseTo(divide(complex(0, 2), complex(0, 0)), complex(0, Infinity), 10)
+  })
+
+  it('properly divides a complex value by complex 1', () => {
+    expect(divide(complex(2, 0), complex(1, 0))).toEqual(complex(2, 0))
+  })
+
+  it('properly divides complex negative infinity by complex 1', () => {
+    expect(divide(complex(-Infinity, 0), complex(1, 0))).toEqual(complex(-Infinity, 0))
   })
 })

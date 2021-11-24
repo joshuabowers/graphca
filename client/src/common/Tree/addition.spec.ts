@@ -194,6 +194,12 @@ describe('add', () => {
     })
   })
 
+  describe('when adding a complex to itself', () => {
+    it('results in a doubled complex', () => {
+      expect(add(complex(0, 1), complex(0, 1))).toEqual(complex(0, 2))
+    })
+  })
+
   describe('when unable to fully evaluate', () => {
     it('returns an addition expression', () => {
       expect(add(variable('x'), real(1))).toEqual(new Addition(variable('x'), real(1)))
@@ -216,5 +222,9 @@ describe('subtract', () => {
 
   it('returns 0 if subtracting a quantity from itself', () => {
     expect(subtract(variable('x'), variable('x'))).toEqual(real(0))
+  })
+
+  it('returns 0 if subtracting a complex from itself', () => {
+    expect(subtract(complex(0, 1), complex(0, 1))).toEqual(complex(0, 0))
   })
 })

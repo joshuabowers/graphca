@@ -75,6 +75,18 @@ describe('reciprocal', () => {
   it('raises its argument to the power of -1', () => {
     expect(reciprocal(variable('x'))).toEqual(raise(variable('x'), real(-1)))
   })
+
+  it('raises complex 1 to -1 correctly', () => {
+    expect(reciprocal(complex(1, 0))).toEqual(complex(1, 0))
+  })
+
+  it('calculates a complex reciprocal correctly', () => {
+    expectCloseTo(reciprocal(complex(1, 1)), complex(0.5, -0.5), 10)
+  })
+
+  it('calculates a reciprocal of complex 0 correctly', () => {
+    expectCloseTo(reciprocal(complex(0, 0)), complex(Infinity, 0), 10)
+  })
 })
 
 describe('square', () => {

@@ -41,6 +41,14 @@ describe('ln', () => {
   it('has a base of e', () => {
     expect(ln(variable('x')).left).toEqual(real(Math.E))
   })
+
+  it('calculates the base e logarithm of complex 0', () => {
+    expect(ln(complex(0, 0))).toEqual(complex(-Infinity, 0))
+  })
+
+  it('calculates the base e complex logarithm of infinity * i', () => {
+    expect(ln(complex(0, Infinity))).toEqual(complex(Infinity, 0))
+  })
 })
 
 describe('lg', () => {

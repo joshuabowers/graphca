@@ -33,6 +33,7 @@ export type Raise = Multi
   & typeof raiseBase
 
 export const raise: Raise = multi(
+  method([complex(0, 0), real(-1)], complex(Infinity, 0)),
   method([Real, Real], raiseReals),
   method([Complex, Complex], raiseComplex),
   method([Real, Complex], raiseRC),

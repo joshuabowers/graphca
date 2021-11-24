@@ -22,6 +22,9 @@ const multiplyComplexes = (left: Complex, right: Complex) =>
 const multiplyRC = (left: Real, right: Complex) => complex(left.value * right.a, left.value * right.b)
 const otherwise = (left: Base, right: Base) => new Multiplication(left, right)
 
+const isCasR = (v: Base) => v instanceof Complex && v.b === 0
+const isPureI = (v: Base) => v instanceof Complex && v.a === 0
+
 type Multiply = Multi 
   & typeof multiplyReals 
   & typeof multiplyComplexes
@@ -33,6 +36,10 @@ export const multiply: Multiply = multi(
   method([notAny<Base>(Real, Complex), Complex], (l: Base, r: Complex) => multiply(r, l)),
   method([Real, Real], multiplyReals),
   method([Real, Complex], multiplyRC),
+  method([isCasR, isCasR], (l: Complex, r: Complex) => complex(l.a * r.a, 0)),
+  method([isCasR, isPureI], (l: Complex, r: Complex) => complex(0, l.a * r.b)),
+  method([isPureI, isCasR], (l: Complex, r: Complex) => complex(0, l.b * r.a)),
+  method([Complex, isCasR], (l: Complex, r: Complex) => complex(l.a * r.a, 0)),
   method([Complex, Complex], multiplyComplexes),
   method([real(0), Base], real(0)),
   method([real(1), Base], selectRight),
