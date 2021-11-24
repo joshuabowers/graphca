@@ -81,6 +81,14 @@ describe('multiply', () => {
     expect(multiply(complex(0, 3), complex(Infinity, 0))).toEqual(complex(0, Infinity))
   })
 
+  it('multiplies two complexes together correctly', () => {
+    expectCloseTo(
+      multiply(complex(1.098684113467, 0.455089860562), complex(1.755317301824, 0.284848784593)), 
+      complex(1.79890743995, 1.11178594050), 
+      10
+    )
+  })
+
   it('creates a Multiplication for unhandled edge cases', () => {
     expect(multiply(real(2), variable('x'))).toEqual(
       new Multiplication(real(2), variable('x'))

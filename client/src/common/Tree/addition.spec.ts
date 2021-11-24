@@ -200,6 +200,12 @@ describe('add', () => {
     })
   })
 
+  describe('when adding a real to a complex', () => {
+    it('calculates a complex value correctly', () => {
+      expect(add(complex(2, 1), real(1))).toEqual(complex(3, 1))
+    })
+  })
+
   describe('when unable to fully evaluate', () => {
     it('returns an addition expression', () => {
       expect(add(variable('x'), real(1))).toEqual(new Addition(variable('x'), real(1)))
@@ -226,5 +232,9 @@ describe('subtract', () => {
 
   it('returns 0 if subtracting a complex from itself', () => {
     expect(subtract(complex(0, 1), complex(0, 1))).toEqual(complex(0, 0))
+  })
+
+  it('properly subtracts a real from a complex', () => {
+    expect(subtract(complex(2, 1), real(1))).toEqual(complex(1, 1))
   })
 })

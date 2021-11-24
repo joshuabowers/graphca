@@ -93,10 +93,22 @@ describe('square', () => {
   it('raises its argument to the power of 2', () => {
     expect(square(variable('x'))).toEqual(raise(variable('x'), real(2)))
   })
+
+  it('calculates the proper square of a complex number', () => {
+    expectCloseTo(square(complex(1, 1)), complex(0, 2), 10)
+  })
 })
 
 describe('sqrt', () => {
   it('raises its argument to the power of 0.5', () => {
     expect(sqrt(variable('x'))).toEqual(raise(variable('x'), real(0.5)))
+  })
+
+  it('calculates the proper sqrt of a complex number', () => {
+    expectCloseTo(sqrt(complex(1, 1)), complex(1.098684113467, 0.455089860562), 10)
+  })
+
+  it('calculates the complex sqrt of a complex number', () => {
+    expectCloseTo(sqrt(complex(3, 1)), complex(1.755317301824, 0.284848784593), 10)
   })
 })

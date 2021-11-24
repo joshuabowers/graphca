@@ -60,13 +60,7 @@ export const AcscFn = typeof acsc
 
 export const acot = unary(
   r => subtract(halfPi, atan(r)),
-  c => {
-    const nHalfI = complex(0, -0.5)
-    const zpi = add(c, i)
-    const zmi = subtract(c, i)
-    const ratio = divide(zpi, zmi)
-    return multiply(nHalfI, ln(ratio))
-  },
+  c => atan(reciprocal(c)),
   e => new ArcusCotangent(e)
 )
 export const AcotFn = typeof acot

@@ -11,6 +11,8 @@ const lnComplex = (c: Complex) => complex(
 
 const logReal = (base: Real, expression: Real) => real(Math.log(expression.value) / Math.log(base.value))
 const logComplex = (base: Complex, expression: Complex) => {
+  const n = lnComplex(expression)
+  if(base.a === Math.E && base.b === 0){ return n }
   return divide(lnComplex(expression), lnComplex(base))
 }
 const logRC = (base: Real, expression: Complex) => log(complex(base.value, 0), expression)

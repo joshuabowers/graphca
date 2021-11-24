@@ -84,7 +84,7 @@ describe('acot', () => {
   })
 
   it('calculates the arcus cotangent of a complex number', () => {
-    expectCloseTo(acot(complex(0, 1)), complex(0, -Infinity), 10)
+    expectCloseTo(acot(complex(1, 1)), complex(0.553574358897, -0.402359478108), 10)
   })
 
   it('generates an arcus cotangent node for a variable expression', () => {
