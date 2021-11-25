@@ -1,9 +1,10 @@
 import { method, multi, Multi } from '@arrows/multimethod';
-import { Kind, Tree, Multiplication, Base, Real, Complex } from "./Expression";
+import { Multiplication, Base, Real, Complex, Exponentiation } from "./Expression";
 import { partial } from "./partial";
 import { real } from "./real";
 import { complex } from './complex';
-import { reciprocal, square } from "./exponentiation";
+import { add } from './addition';
+import { raise, reciprocal, square } from "./exponentiation";
 import { equals } from './equality';
 
 const swap = <B, T>(f: (l: B, r: B) => T) => (l: B, r: B) => f(r, l)
@@ -24,6 +25,29 @@ const otherwise = (left: Base, right: Base) => new Multiplication(left, right)
 
 const isCasR = (v: Base) => v instanceof Complex && v.b === 0
 const isPureI = (v: Base) => v instanceof Complex && v.a === 0
+
+// Ea => Exponentiation(a, R)
+const isEaxEa = (l: Base, r: Base) =>
+  l instanceof Exponentiation && r instanceof Exponentiation
+  && equals(l.left, r.left)
+const isEaxA = (l: Base, r: Base) =>
+  l instanceof Exponentiation && equals(l.left, r)
+const isAxEa = (l: Base, r: Base ) =>
+  r instanceof Exponentiation && equals(l, r.left)
+  
+// N => Real | Complex, Nn => N[n]
+// isN1_N2xA
+
+// An => Anything[n]
+// isEa_A2xEa
+// isEa_EaxA2
+// isA2xEa_Ea
+// isEaxA2_Ea
+
+// isA1_A1xA2
+// isA1_A2xA1
+// isA1xA2_A1
+// isA2xA2_A1
 
 type Multiply = Multi 
   & typeof multiplyReals 
@@ -46,6 +70,9 @@ export const multiply: Multiply = multi(
   method([real(Infinity), Base], real(Infinity)),
   method([real(-Infinity), Base], real(-Infinity)),
   method(equals, (l: Base, _r: Base) => square(l)),
+  method(isEaxEa, (l: Exponentiation, r: Exponentiation) => raise(l.left, add(l.right, r.right))),
+  method(isEaxA, (l: Exponentiation, r: Base) => raise(r, add(l.right, real(1)))),
+  method(isAxEa, (l: Base, r: Exponentiation) => raise(l, add(r.right, real(1)))),
   method([Base, Base], otherwise)
 )
 

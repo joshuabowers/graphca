@@ -284,4 +284,12 @@ describe('differentiate', () => {
       )
     })
   })
+
+  describe('of derivatives', () => {
+    it('returns the second derivative of the nested expression', () => {
+      expect(differentiate(differentiate(cos(variable('x'))))).toEqual(
+        negate(cos(variable('x')))
+      )
+    })
+  })
 })

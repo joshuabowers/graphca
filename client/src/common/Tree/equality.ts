@@ -1,7 +1,5 @@
-// import { Kind, FunExp } from './Expression'
-import { Kind, Base, Real, Complex, Variable, Binary } from './Expression'
-// import { match, select } from 'ts-pattern'
 import { method, multi, Multi } from '@arrows/multimethod'
+import { Base, Real, Complex, Variable, Unary, Binary } from './Expression'
 
 const equalsReal = (left: Real, right: Real) => left.value === right.value
 const equalsComplex = (left: Complex, right: Complex) => 
@@ -11,6 +9,8 @@ const equalsVariable = (left: Variable, right: Variable) =>
 const equalsBinary = (left: Binary, right: Binary): boolean => 
   left.$kind === right.$kind &&
   equals(left.left, right.left) && equals(left.right, right.right)
+const equalsUnary = (left: Unary, right: Unary): boolean =>
+  left.$kind === right.$kind && equals(left.expression, right.expression)
 const equalsBase = (left: Base, right: Base) => false
 
 export type Equality = Multi
@@ -18,6 +18,7 @@ export type Equality = Multi
   & typeof equalsComplex
   & typeof equalsVariable
   & typeof equalsBinary
+  & typeof equalsUnary
   & typeof equalsBase
 
 export const equals: Equality = multi(
@@ -25,28 +26,6 @@ export const equals: Equality = multi(
   method([Complex, Complex], equalsComplex),
   method([Variable, Variable], equalsVariable),
   method([Binary, Binary], equalsBinary),
+  method([Unary, Unary], equalsUnary),
   method([Base, Base], false)
 )
-
-// export function equals(left: Base, right: Base): boolean {
-//   if(left.$kind !== right.$kind){ return false }
-//   return match<[Tree, Tree], boolean>([left, right])
-//     .with([{$kind: 'Real'}, {$kind: 'Real'}], ([l, r]) => l.value === r.value)
-//     .with(
-//       [{$kind: 'Complex'}, {$kind: 'Complex'}],
-//       ([l, r]) => l.a === r.a && l.b === r.b
-//     )
-//     .with(
-//       [{$kind: 'Variable'}, {$kind: 'Variable'}],
-//       ([l, r]) => l.name === r.name
-//     )
-//     .with(
-//       [{left: select('ll'), right: select('lr')}, {left: select('rl'), right: select('rr')}],
-//       ({ll, lr, rl, rr}) => equals(ll, rl) && equals(lr, rr)
-//     )
-//     .with(
-//       [{expression: select('l')}, {expression: select('r')}],
-//       ({l, r}) => equals(l, r)
-//     )
-//     .otherwise(() => false)
-// }

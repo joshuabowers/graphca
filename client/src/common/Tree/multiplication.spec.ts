@@ -3,7 +3,7 @@ import { real } from './real'
 import { complex } from './complex'
 import { variable } from './var'
 import { multiply, negate, double, divide } from './multiplication'
-import { reciprocal, square } from './exponentiation'
+import { raise, reciprocal, square } from './exponentiation'
 import { Multiplication } from './Expression'
 
 describe('multiply', () => {
@@ -67,6 +67,26 @@ describe('multiply', () => {
 
   it('squares left if right is equal', () => {
     expect(multiply(variable('x'), variable('x'))).toEqual(square(variable('x')))
+  })
+
+  it('adds to the power when multiplying by the base from the left', () => {
+    expect(multiply(variable('x'), square(variable('x')))).toEqual(
+      raise(variable('x'), real(3))
+    )
+  })
+
+  it('adds to the power when multiplying by the base from the right', () => {
+    expect(multiply(square(variable('x')), variable('x'))).toEqual(
+      raise(variable('x'), real(3))
+    )
+  })
+
+  it('combines equivalent based powers together', () => {
+    expect(
+      multiply(square(variable('x')), raise(variable('x'), real(3)))
+    ).toEqual(
+      raise(variable('x'), real(5))
+    )
   })
 
   it('multiplies complex infinity against complex 1 correctly', () => {

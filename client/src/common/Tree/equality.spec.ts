@@ -3,6 +3,8 @@ import { complex } from './complex'
 import { variable } from './var'
 import { add } from './addition'
 import { multiply } from './multiplication'
+import { raise } from './exponentiation'
+import { cos, sin } from './trigonometric'
 import { equals } from './equality'
 
 describe(equals, () => {
@@ -56,10 +58,39 @@ describe(equals, () => {
         )
       ).toBeFalsy()
     })
+
+    it('returns true for exponentiations', () => {
+      expect(
+        equals(
+          raise(variable('x'), variable('y')), raise(variable('x'), variable('y'))
+        )
+      )
+    })
   })
 
   describe('of Unary functions', () => {
-    it.todo('returns true for two unaries with same expression')
-    it.todo('returns false for two unaries with different expression')
+    it('returns true for two unary functions with same expression', () => {
+      expect(
+        equals(
+          cos(variable('x')), cos(variable('x'))
+        )
+      ).toBeTruthy()
+    })
+
+    it('returns false for two unary functions with different expression', () => {
+      expect(
+        equals(
+          cos(variable('x')), cos(variable('y'))
+        )
+      ).toBeFalsy()
+    })
+
+    it('returns false for two unary functions of different kind', () => {
+      expect(
+        equals(
+          cos(variable('x')), sin(variable('y'))
+        )
+      ).toBeFalsy()
+    })
   })
 })
