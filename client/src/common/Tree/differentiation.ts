@@ -4,7 +4,11 @@ import {
   Logarithm, AbsoluteValue,
   Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
   ArcusCosine, ArcusSine, ArcusTangent,
-  ArcusSecant, ArcusCosecant, ArcusCotangent
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
+  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent
 } from './Expression'
 import { real } from './real'
 import { complex } from './complex'
@@ -14,6 +18,7 @@ import { raise, square, sqrt, reciprocal } from './exponentiation'
 import { ln } from './logarithmic'
 import { abs } from './absolute'
 import { cos, sin, tan, sec, csc, cot } from './trigonometric'
+import { cosh, sinh, tanh, sech, csch, coth } from './hyperbolic'
 
 const chain = (derivative: Base, argument: Base) =>
   multiply(derivative, differentiate(argument))
@@ -100,6 +105,72 @@ const whenArcusCosecant: when<ArcusCosecant> = e =>
 
 const whenArcusCotangent: when<ArcusCotangent> = e =>
   negate(chain(reciprocal(add(square(e.expression), real(1))), e.expression))
+
+const whenHyperbolicCosine: when<HyperbolicCosine> = e =>
+  chain(sinh(e.expression), e.expression)
+
+const whenHyperbolicSine: when<HyperbolicSine> = e =>
+  chain(cosh(e.expression), e.expression)
+
+const whenHyperbolicTangent: when<HyperbolicTangent> = e =>
+  chain(square(sech(e.expression)), e.expression)
+
+const whenHyperbolicSecant: when<HyperbolicSecant> = e =>
+  chain(
+    multiply(negate(tanh(e.expression)), sech(e.expression)), 
+    e.expression
+  )
+
+const whenHyperbolicCosecant: when<HyperbolicCosecant> = e =>
+  chain(
+    multiply(negate(coth(e.expression)), csch(e.expression)),
+    e.expression
+  )
+
+const whenHyperbolicCotangent: when<HyperbolicCotangent> = e =>
+  chain(
+    negate(square(csch(e.expression))),
+    e.expression
+  )
+
+const whenAreaHyperbolicCosine: when<AreaHyperbolicCosine> = e =>
+  chain(
+    reciprocal(sqrt(subtract(square(e.expression), real(1)))),
+    e.expression
+  )
+
+const whenAreaHyperbolicSine: when<AreaHyperbolicSine> = e =>
+  chain(
+    reciprocal(sqrt(add(real(1), square(e.expression)))),
+    e.expression
+  )
+
+const whenAreaHyperbolicTangent: when<AreaHyperbolicTangent> = e =>
+  chain(
+    reciprocal(subtract(real(1), square(e.expression))),
+    e.expression
+  )
+
+const whenAreaHyperbolicSecant: when<AreaHyperbolicSecant> = e =>
+  negate(chain(
+    reciprocal(multiply(
+      e.expression, 
+      sqrt(subtract(real(1), square(e.expression)))
+    )),
+    e.expression
+  ))
+
+const whenAreaHyperbolicCosecant: when<AreaHyperbolicCosecant> = e =>
+  negate(chain(
+    reciprocal(multiply(
+      abs(e.expression),
+      sqrt(add(real(1), square(e.expression)))
+    )),
+    e.expression
+  ))
+
+const whenAreaHyperbolicCotangent: when<AreaHyperbolicCotangent> = e =>
+  chain(reciprocal(subtract(real(1), square(e.expression))), e.expression)
   
 const whenBase = (expression: Base) => expression
 
@@ -111,28 +182,51 @@ export type DifferentiateFn = Multi
   & typeof whenSecant & typeof whenCosecant & typeof whenCotangent
   & typeof whenArcusCosine & typeof whenArcusSine & typeof whenArcusTangent
   & typeof whenArcusSecant & typeof whenArcusCosecant & typeof whenArcusCotangent
+  & typeof whenHyperbolicCosine & typeof whenHyperbolicSine
+  & typeof whenHyperbolicTangent & typeof whenHyperbolicSecant
+  & typeof whenHyperbolicCosecant & typeof whenHyperbolicCotangent
+  & typeof whenAreaHyperbolicCosine & typeof whenAreaHyperbolicSine
+  & typeof whenAreaHyperbolicTangent & typeof whenAreaHyperbolicSecant
+  & typeof whenAreaHyperbolicCosecant & typeof whenAreaHyperbolicCotangent
   & typeof whenBase
 
 export const differentiate: DifferentiateFn = multi(
   method(Real, whenReal),
   method(Complex, whenComplex),
   method(Variable, whenVariable),
+
   method(Addition, whenAddition),
   method(Multiplication, whenMultiplication),
   method(Exponentiation, whenExponentiation),
   method(Logarithm, whenLogarithm),
+
   method(AbsoluteValue, whenAbsolute),
+
   method(Cosine, whenCosine),
   method(Sine, whenSine),
   method(Tangent, whenTangent),
   method(Secant, whenSecant),
   method(Cosecant, whenCosecant),
   method(Cotangent, whenCotangent),
+
   method(ArcusCosine, whenArcusCosine),
   method(ArcusSine, whenArcusSine),
   method(ArcusTangent, whenArcusTangent),
   method(ArcusSecant, whenArcusSecant),
   method(ArcusCosecant, whenArcusCosecant),
-  method(ArcusCotangent, whenArcusCotangent)
-  // method(Base, whenBase)
+  method(ArcusCotangent, whenArcusCotangent),
+
+  method(HyperbolicCosine, whenHyperbolicCosine),
+  method(HyperbolicSine, whenHyperbolicSine),
+  method(HyperbolicTangent, whenHyperbolicTangent),
+  method(HyperbolicSecant, whenHyperbolicSecant),
+  method(HyperbolicCosecant, whenHyperbolicCosecant),
+  method(HyperbolicCotangent, whenHyperbolicCotangent),
+
+  method(AreaHyperbolicCosine, whenAreaHyperbolicCosine),
+  method(AreaHyperbolicSine, whenAreaHyperbolicSine),
+  method(AreaHyperbolicTangent, whenAreaHyperbolicTangent),
+  method(AreaHyperbolicSecant, whenAreaHyperbolicSecant),
+  method(AreaHyperbolicCosecant, whenAreaHyperbolicCosecant),
+  method(AreaHyperbolicCotangent, whenAreaHyperbolicCotangent)
 )

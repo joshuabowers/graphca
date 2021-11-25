@@ -8,6 +8,8 @@ import { lb, ln, lg } from "./logarithmic";
 import { abs } from "./absolute";
 import { cos, sin, tan, sec, csc, cot } from './trigonometric';
 import { acos, asin, atan, asec, acsc, acot } from './arcus';
+import { cosh, sinh, tanh, sech, csch, coth } from './hyperbolic';
+import { acosh, asinh, atanh, asech, acsch, acoth } from './areaHyperbolic';
 
 import { differentiate } from "./differentiation";
 
@@ -196,10 +198,90 @@ describe('differentiate', () => {
   })
 
   describe('of hyperbolic functions', () => {
+    it('returns the chain rule of the derivative of the cosh', () => {
+      expect(differentiate(cosh(variable('x')))).toEqual(
+        sinh(variable('x'))
+      )
+    })
 
+    it('returns the chain rule of the derivative of the sinh', () => {
+      expect(differentiate(sinh(variable('x')))).toEqual(
+        cosh(variable('x'))
+      )
+    })
+
+    it('returns the chain rule of the derivative of the tanh', () => {
+      expect(differentiate(tanh(variable('x')))).toEqual(
+        square(sech(variable('x')))
+      )
+    })
+
+    it('returns the chain rule of the derivative of the sech', () => {
+      expect(differentiate(sech(variable('x')))).toEqual(
+        multiply(
+          negate(tanh(variable('x'))),
+          sech(variable('x'))
+        )
+      )
+    })
+
+    it('returns the chain rule of the derivative of the csch', () => {
+      expect(differentiate(csch(variable('x')))).toEqual(
+        multiply(
+          negate(coth(variable('x'))),
+          csch(variable('x'))
+        )
+      )
+    })
+
+    it('returns the chain rule of the derivative of the coth', () => {
+      expect(differentiate(coth(variable('x')))).toEqual(
+        negate(square(csch(variable('x'))))
+      )
+    })
   })
 
   describe('of area hyperbolic functions', () => {
+    it('returns the chain rule of the derivative of the acosh', () => {
+      expect(differentiate(acosh(variable('x')))).toEqual(
+        reciprocal(sqrt(subtract(square(variable('x')), real(1))))
+      )
+    })
 
+    it('returns the chain rule of the derivative of the asinh', () => {
+      expect(differentiate(asinh(variable('x')))).toEqual(
+        reciprocal(sqrt(add(real(1), square(variable('x')))))
+      )
+    })
+
+    it('returns the chain rule of the derivative of the atanh', () => {
+      expect(differentiate(atanh(variable('x')))).toEqual(
+        reciprocal(subtract(real(1), square(variable('x'))))
+      )
+    })
+
+    it('returns the chain rule of the derivative of the asech', () => {
+      expect(differentiate(asech(variable('x')))).toEqual(
+        negate(reciprocal(multiply(
+          variable('x'),
+          sqrt(subtract(real(1), square(variable('x'))))
+        )))
+      )
+    })
+
+    it('returns the chain rule of the derivative of the acsch', () => {
+      expect(differentiate(acsch(variable('x')))).toEqual(
+        negate(reciprocal(multiply(
+          abs(variable('x')),
+          sqrt(add(real(1), square(variable('x'))))
+        )))
+      )
+    })
+
+    it('returns the chain rule of the derivative of the acoth', () => {
+      expect(differentiate(acoth(variable('x')))).toEqual(
+        reciprocal(subtract(real(1), square(variable('x'))))
+      )
+    })
   })
 })
