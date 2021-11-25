@@ -2,9 +2,47 @@ import { expectCloseTo } from './expectations'
 import { real } from './real'
 import { complex } from './complex'
 import { variable } from './var'
-import { multiply, negate, double, divide } from './multiplication'
+import { canFormExponential, multiply, negate, double, divide, exponentialCollect } from './multiplication'
 import { raise, reciprocal, square } from './exponentiation'
 import { Multiplication } from './Expression'
+
+describe('canFormExponential', () => {
+  it('is true for equivalent things', () => {
+    expect(canFormExponential(variable('x'), variable('x'))).toBeTruthy()
+  })
+
+  it('is false for non-equitable things', () => {
+    expect(canFormExponential(variable('y'), variable('x'))).toBeFalsy()
+  })
+
+  it('is true if a thing is multiplied by a product of itself', () => {
+    expect(canFormExponential(variable('x'), multiply(variable('y'), variable('x'))))
+  })
+
+  it('is true if an exponential is multiplied by a multiplication of its base', () => {
+    expect(canFormExponential(square(variable('x')), double(variable('x'))))
+  })
+})
+
+describe('exponentialCollect', () => {
+  it('squares equivalent things', () => {
+    expect(exponentialCollect(variable('x'), variable('x'))).toEqual(
+      square(variable('x'))
+    )
+  })
+
+  it('creates a new exponential from a nested multiplication', () => {
+    expect(
+      exponentialCollect(variable('x'), multiply(variable('y'), variable('x')))
+    ).toEqual(multiply(variable('y'), square(variable('x'))))
+  })
+
+  it('collects an exponential across a multiplication', () => {
+    expect(
+      exponentialCollect(square(variable('x')), double(variable('x')))
+    ).toEqual(multiply(real(2), raise(variable('x'), real(3))))
+  })
+})
 
 describe('multiply', () => {
   it('reorders a real right multiplicand to the left', () => {

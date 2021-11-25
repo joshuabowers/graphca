@@ -1,5 +1,5 @@
 import { method, multi, Multi } from '@arrows/multimethod';
-import { Multiplication, Base, Real, Complex, Exponentiation } from "./Expression";
+import { Binary, Multiplication, Base, Real, Complex, Exponentiation } from "./Expression";
 import { partial } from "./partial";
 import { real } from "./real";
 import { complex } from './complex';
@@ -26,78 +26,140 @@ const otherwise = (left: Base, right: Base) => new Multiplication(left, right)
 
 const isCasR = (v: Base) => v instanceof Complex && v.b === 0
 const isPureI = (v: Base) => v instanceof Complex && v.a === 0
-
-// Ea => Exponentiation(a, R)
-const isEaxEa = (l: Base, r: Base) =>
-  l instanceof Exponentiation && r instanceof Exponentiation
-  && equals(l.left, r.left)
-const isEaxA = (l: Base, r: Base) =>
-  l instanceof Exponentiation && equals(l.left, r)
-const isAxEa = (l: Base, r: Base ) =>
-  r instanceof Exponentiation && equals(l, r.left)
   
 // N => Real | Complex, Nn => N[n]
 const isN1_N2A = (l: Base, r: Base) =>
   any<Base>(Real, Complex)(l) && r instanceof Multiplication && any<Base>(Real, Complex)(r.left)
 
-// An => Anything[n]
-const isEa_A2xEa = (l: Base, r: Base) =>
-  l instanceof Exponentiation && r instanceof Multiplication 
-  && r.right instanceof Exponentiation
-  && equals(l.left, r.right.left)
-const isEa_EaxA2 = (l: Base, r: Base) =>
-  l instanceof Exponentiation && r instanceof Multiplication
-  && r.left instanceof Exponentiation
-  && equals(l.left, r.left.left)
-const isA2xEa_Ea = (l: Base, r: Base) =>
-  l instanceof Multiplication && r instanceof Exponentiation
-  && l.right instanceof Exponentiation
-  && equals(l.right.left, r.left)
-const isEaxA2_Ea = (l: Base, r: Base) =>
-  l instanceof Multiplication && r instanceof Exponentiation
-  && l.left instanceof Exponentiation
-  && equals(l.left.left, r.left)
+const identity = <T>(t: T) => t
+const leftBranch = <T extends Binary>(t: T) => t.left
+const rightBranch = <T extends Binary>(t: T) => t.right
 
-const isA1_A2xEa1 = (l: Base, r: Base) =>
-  r instanceof Multiplication && r.right instanceof Exponentiation
-  && equals(l, r.right.left)
-const isA1_Ea1xA2 = (l: Base, r: Base) =>
-  r instanceof Multiplication && r.left instanceof Exponentiation
-  && equals(l, r.left.left)
-const isA2xEa1_A1 = (l: Base, r: Base) =>
-  l instanceof Multiplication && l.right instanceof Exponentiation
-  && equals(r, l.right.left)
-const isEa1xA2_A1 = (l: Base, r: Base) =>
-  l instanceof Multiplication && l.left instanceof Exponentiation
-  && equals(r, l.left.left)
+type Which<T> = (t: T) => Base
+const equivalent = (a: Which<Multiplication>, b: Which<Multiplication>) =>
+  (left: Multiplication, right: Multiplication) => canFormExponential(a(left), b(right))
 
-const isEa1_A1xA2 = (l: Base, r: Base) =>
-  l instanceof Exponentiation && r instanceof Multiplication
-  && equals(l.left, r.left)
-const isEa1_A2xA1 = (l: Base, r: Base) =>
-  l instanceof Exponentiation && r instanceof Multiplication
-  && equals(l.left, r.right)
-const isA1xA2_Ea1 = (l: Base, r: Base) =>
-  l instanceof Multiplication && r instanceof Exponentiation
-  && equals(l.left, r.left)
-const isA2xA1_Ea1 = (l: Base, r: Base) =>
-  l instanceof Multiplication && r instanceof Exponentiation
-  && equals(l.right, r.left)
+type Transform = (left: Multiplication, right: Multiplication) => Base
+const flip: Transform = (l, r) => collectFromProducts(r, l)
 
-const isA1_A1xA2 = (l: Base, r: Base) =>
-  r instanceof Multiplication && equals(l, r.left)
-const isA1_A2xA1 = (l: Base, r: Base) =>
-  r instanceof Multiplication && equals(l, r.right)
-const isA1xA2_A1 = (l: Base, r: Base) =>
-  l instanceof Multiplication && equals(l.left, r)
-const isA2xA1_A1 = (l: Base, r: Base) =>
-  l instanceof Multiplication && equals(l.right, r)
+type CollectFromProductsFn = Multi & Transform
+
+export const collectFromProducts: CollectFromProductsFn = multi(
+  method(equivalent(identity, identity), <Transform>((l, r) => square(l))),
+  method(equivalent(leftBranch, leftBranch), <Transform>((l, r) => 
+    multiply(
+      multiply(l.left, r.left),
+      multiply(l.right, r.right)
+    )
+  )),
+  method(equivalent(leftBranch, rightBranch), <Transform>((l, r) =>
+    multiply(
+      multiply(l.left, r.right),
+      multiply(l.right, r.left)
+    )
+  )),
+  method(equivalent(identity, leftBranch), <Transform>((l, r) =>
+    multiply(square(l), r.right)
+  )),
+  method(equivalent(identity, rightBranch), <Transform>((l, r) =>
+    multiply(square(l), r.left)
+  )),
+  method(equivalent(rightBranch, leftBranch), flip),
+  method(equivalent(rightBranch, rightBranch), flip),
+  method(equivalent(leftBranch, identity), flip),
+  method(equivalent(rightBranch, identity), flip)
+)
+
+export type CanFormExponentialFn = Multi
+  & ((left: Multiplication, right: Multiplication) => boolean)
+  & ((left: Base, right: Multiplication) => boolean)
+  & ((left: Multiplication, right: Base) => boolean)
+  & ((left: Base, right: Exponentiation) => boolean)
+  & ((left: Exponentiation, right: Base) => boolean)
+  & ((left: Exponentiation, right: Multiplication) => boolean)
+  & ((left: Multiplication, right: Exponentiation) => boolean)
+  & ((left: Exponentiation, right: Exponentiation) => boolean)
+  & ((left: Base, right: Base) => boolean)
+
+export const canFormExponential: CanFormExponentialFn = multi(
+  method(
+    [Multiplication, Multiplication], (l: Multiplication, r: Multiplication) =>
+      canFormExponential(l, r)
+      || canFormExponential(l.left, r.left)
+      || canFormExponential(l.left, r.right)
+      || canFormExponential(l.right, r.left)
+      || canFormExponential(l.right, r.right)
+      || canFormExponential(l.left, r)
+      || canFormExponential(l.right, r)
+      || canFormExponential(l, r.left)
+      || canFormExponential(l, r.right)
+  ),
+  method(
+    [Base, Multiplication], (l: Base, r: Multiplication) => 
+      canFormExponential(l, r.left) || canFormExponential(l, r.right)
+  ),
+  method([Multiplication, Base], (l: Base, r: Base) => canFormExponential(r, l)),
+  method([Exponentiation, Exponentiation], (l: Exponentiation, r: Exponentiation) => equals(l.left, r.left)),
+  method(
+    [Base, Exponentiation], (l: Base, r: Exponentiation) => 
+      canFormExponential(l, r.left)
+  ),
+  method([Exponentiation, Base], (l: Base, r: Base) => canFormExponential(r, l)),
+  method(
+    [Exponentiation, Multiplication], (l: Exponentiation, r: Multiplication) =>
+      canFormExponential(l, r.left) 
+      || canFormExponential(l, r.right)
+      || canFormExponential(l.left, r.left) 
+      || canFormExponential(l.left, r.right)
+  ),
+  method([Multiplication, Exponentiation], (l: Base, r: Base) => canFormExponential(r, l)),
+  method(equals)
+)
+
+export type ExponentialCollectFn = Multi
+  & ((left: Multiplication, right: Multiplication) => Base)
+  & ((left: Base, right: Multiplication) => Base)
+  & ((left: Multiplication, right: Base) => Base)
+  & ((left: Base, right: Exponentiation) => Base)
+  & ((left: Exponentiation, right: Base) => Base)
+  & ((left: Exponentiation, right: Exponentiation) => Base)
+  & ((left: Base, right: Base) => Base)
+
+export const exponentialCollect: ExponentialCollectFn = multi(
+  method(
+    [Multiplication, Multiplication],
+    (l: Multiplication, r: Multiplication) => collectFromProducts
+  ),
+  method(
+    [Base, Multiplication], 
+    (l: Base, r: Multiplication, isLeft = canFormExponential(l, r.left)) =>
+      multiply(
+        isLeft ? r.right : r.left, 
+        exponentialCollect(l, isLeft ? r.left : r.right)
+      )
+  ),
+  method([Multiplication, Base], (l: Base, r: Base) => exponentialCollect(r, l)),
+  method(
+    [Exponentiation, Exponentiation], (l: Exponentiation, r: Exponentiation) => 
+      raise(l.left, add(l.right, r.right))
+  ),
+  method([Base, Exponentiation], (l: Base, r: Exponentiation) => raise(l, add(r.right, real(1)))),
+  method([Exponentiation, Base], (l: Base, r: Base) => exponentialCollect(r, l)),
+  method([Base, Base], (l: Base, _r: Base) => square(l))
+)
 
 type Multiply = Multi 
   & typeof multiplyReals 
   & typeof multiplyComplexes
   & typeof multiplyRC
   & typeof otherwise
+
+// Potential for simplification:
+// No enforced order currently exists for terms, other
+// than constants get bubbled left. So, use degree to order the
+// results. This will not guarantee that a given node kind will
+// always exist in a given position:
+// (x^5 * y^3) * z^15, but z^2 * (x^5 * y^3)
 
 export const multiply: Multiply = multi(
   method([not(Real), Real], (l: Base, r: Real) => multiply(r, l)),
@@ -114,26 +176,7 @@ export const multiply: Multiply = multi(
   method([real(Infinity), Base], real(Infinity)),
   method([real(-Infinity), Base], real(-Infinity)),
   method(isN1_N2A, (l: Base, r: Multiplication) => multiply(multiply(l, r.left), r.right)),
-  method(equals, (l: Base, _r: Base) => square(l)),
-  method(isEaxEa, (l: Exponentiation, r: Exponentiation) => raise(l.left, add(l.right, r.right))),
-  method(isEaxA, (l: Exponentiation, r: Base) => raise(r, add(l.right, real(1)))),
-  method(isAxEa, (l: Base, r: Exponentiation) => raise(l, add(r.right, real(1)))),
-  method(isA1_A2xEa1, (l: Base, r: Multiplication) => multiply(r.left, multiply(l, r.right))),
-  method(isA1_Ea1xA2, (l: Base, r: Multiplication) => multiply(r.right, multiply(l, r.left))),
-  method(isA2xEa1_A1, (l: Multiplication, r: Base) => multiply(l.left, multiply(r, l.right))),
-  method(isEa1xA2_A1, (l: Multiplication, r: Base) => multiply(l.right, multiply(r, l.left))),
-  method(isEa_A2xEa, (l: Exponentiation, r: Multiplication) => multiply(r.left, multiply(l, r.right))),
-  method(isEa_EaxA2, (l: Exponentiation, r: Multiplication) => multiply(r.right, multiply(l, r.left))),
-  method(isA2xEa_Ea, (l: Multiplication, r: Exponentiation) => multiply(l.left, multiply(l.right, r))),
-  method(isEaxA2_Ea, (l: Multiplication, r: Exponentiation) => multiply(l.right, multiply(l.left, r))),
-  method(isA1_A1xA2, (l: Base, r: Multiplication) => multiply(r.right, multiply(l, r.left))),
-  method(isA1_A2xA1, (l: Base, r: Multiplication) => multiply(r.left, multiply(l, r.right))),
-  method(isA1xA2_A1, (l: Multiplication, r: Base) => multiply(l.right, multiply(l.left, r))),
-  method(isA2xA1_A1, (l: Multiplication, r: Base) => multiply(l.left, multiply(l.right, r))),
-  method(isEa1_A1xA2, (l: Exponentiation, r: Multiplication) => multiply(r.right, multiply(l, r.left))),
-  method(isEa1_A2xA1, (l: Exponentiation, r: Multiplication) => multiply(r.left, multiply(l, r.right))),
-  method(isA1xA2_Ea1, (l: Multiplication, r: Exponentiation) => multiply(l.right, multiply(r, l.left))),
-  method(isA2xA1_Ea1, (l: Multiplication, r: Exponentiation) => multiply(l.left, multiply(r, l.right))),
+  method(canFormExponential, exponentialCollect),
   method([Base, Base], otherwise)
 )
 
