@@ -71,10 +71,18 @@ const isEa1xA2_A1 = (l: Base, r: Base) =>
   l instanceof Multiplication && l.left instanceof Exponentiation
   && equals(r, l.left.left)
 
-// isEa1_A1xA2
-// isEa1_A2xA1
-// isA1xA2_Ea1
-// isA2xA1_Ea1
+const isEa1_A1xA2 = (l: Base, r: Base) =>
+  l instanceof Exponentiation && r instanceof Multiplication
+  && equals(l.left, r.left)
+const isEa1_A2xA1 = (l: Base, r: Base) =>
+  l instanceof Exponentiation && r instanceof Multiplication
+  && equals(l.left, r.right)
+const isA1xA2_Ea1 = (l: Base, r: Base) =>
+  l instanceof Multiplication && r instanceof Exponentiation
+  && equals(l.left, r.left)
+const isA2xA1_Ea1 = (l: Base, r: Base) =>
+  l instanceof Multiplication && r instanceof Exponentiation
+  && equals(l.right, r.left)
 
 const isA1_A1xA2 = (l: Base, r: Base) =>
   r instanceof Multiplication && equals(l, r.left)
@@ -122,6 +130,10 @@ export const multiply: Multiply = multi(
   method(isA1_A2xA1, (l: Base, r: Multiplication) => multiply(r.left, multiply(l, r.right))),
   method(isA1xA2_A1, (l: Multiplication, r: Base) => multiply(l.right, multiply(l.left, r))),
   method(isA2xA1_A1, (l: Multiplication, r: Base) => multiply(l.left, multiply(l.right, r))),
+  method(isEa1_A1xA2, (l: Exponentiation, r: Multiplication) => multiply(r.right, multiply(l, r.left))),
+  method(isEa1_A2xA1, (l: Exponentiation, r: Multiplication) => multiply(r.left, multiply(l, r.right))),
+  method(isA1xA2_Ea1, (l: Multiplication, r: Exponentiation) => multiply(l.right, multiply(r, l.left))),
+  method(isA2xA1_Ea1, (l: Multiplication, r: Exponentiation) => multiply(l.left, multiply(r, l.right))),
   method([Base, Base], otherwise)
 )
 

@@ -259,6 +259,54 @@ describe('multiply', () => {
     )
   })
 
+  // isEa1_A1xA2
+  it('isEa1_A1xA2: adds to an exponential across nested multiplications', () => {
+    expect(
+      multiply(
+        square(variable('x')),
+        multiply(variable('x'), variable('y'))
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(3)))
+    )
+  })
+
+  // isEa1_A2xA1
+  it('isEa1_A2xA1: adds to an exponential across nested multiplications', () => {
+    expect(
+      multiply(
+        square(variable('x')),
+        multiply(variable('y'), variable('x'))
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(3)))
+    )
+  })
+
+  // isA1xA2_Ea1
+  it('isA1xA2_Ea1: adds to an exponential across nested multiplications', () => {
+    expect(
+      multiply(
+        multiply(variable('x'), variable('y')),
+        square(variable('x'))
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(3)))
+    )
+  })
+
+  // isA2xA1_Ea1
+  it('isA2xA1_Ea1: adds to an exponential across nested multiplications', () => {
+    expect(
+      multiply(
+        multiply(variable('y'), variable('x')),
+        square(variable('x'))
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(3)))
+    )
+  })
+
   it('creates a Multiplication for unhandled edge cases', () => {
     expect(multiply(real(2), variable('x'))).toEqual(
       new Multiplication(real(2), variable('x'))
@@ -319,5 +367,41 @@ describe('divide', () => {
 
   it('properly divides complex negative infinity by complex 1', () => {
     expect(divide(complex(-Infinity, 0), complex(1, 0))).toEqual(complex(-Infinity, 0))
+  })
+
+  it('cancels like terms in a division of multiplications', () => {
+    expect(
+      divide(
+        multiply(variable('x'), variable('y')), 
+        multiply(variable('z'), variable('y'))
+      )
+    ).toEqual(divide(variable('x'), variable('z')))
+  })
+
+  it('cancels like terms in a division of multiplications', () => {
+    expect(
+      divide(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('x'), variable('z'))
+      )
+    ).toEqual(divide(variable('y'), variable('z')))
+  })
+
+  it('cancels like terms in a division of multiplications', () => {
+    expect(
+      divide(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('y'), variable('z'))
+      )
+    ).toEqual(divide(variable('x'), variable('z')))
+  })
+
+  it('cancels like terms in a division of multiplications', () => {
+    expect(
+      divide(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('z'), variable('x'))
+      )
+    ).toEqual(divide(variable('y'), variable('z')))
   })
 })
