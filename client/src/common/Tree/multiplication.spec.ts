@@ -109,6 +109,156 @@ describe('multiply', () => {
     )
   })
 
+  it('simplifies a constant multiplied against a multiplication with a constant', () => {
+    expect(multiply(real(5), multiply(variable('x'), complex(1, 1)))).toEqual(
+      multiply(complex(5, 5), variable('x'))
+    )
+  })
+
+  it('isEa_A2xEa: combines nested multiplications involving similar exponentiations', () => {
+    expect(
+      multiply(
+        square(variable('x')), 
+        multiply(
+          variable('y'), 
+          raise(variable('x'), real(3))
+        )
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(5)))
+    )
+  })
+
+  it('isEa_EaxA2: combines nested multiplications involving similar exponentiations', () => {
+    expect(
+      multiply(
+        square(variable('x')), 
+        multiply(
+          raise(variable('x'), real(3)),
+          variable('y')
+        )
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(5)))
+    )
+  })
+
+  it('isA2xEa_Ea: combines nested multiplications involving similar exponentiations', () => {
+    expect(
+      multiply(
+        multiply(
+          variable('y'), 
+          raise(variable('x'), real(3))
+        ),
+        square(variable('x'))
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(5)))
+    )
+  })
+
+  it('isEaxA2_Ea: combines nested multiplications involving similar exponentiations', () => {
+    expect(
+      multiply(
+        multiply(
+          raise(variable('x'), real(3)),
+          variable('y')
+        ),
+        square(variable('x'))
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(5)))
+    )
+  })
+
+  it('isA1_A1xA2: combines nested multiplications involving similar terms', () => {
+    expect(
+      multiply(
+        variable('x'),
+        multiply(variable('x'), variable('y'))
+      )
+    ).toEqual(
+      multiply(variable('y'), square(variable('x')))
+    )
+  })
+
+  it('isA1_A2xA1: combines nested multiplications involving similar terms', () => {
+    expect(
+      multiply(
+        variable('x'),
+        multiply(variable('y'), variable('x'))
+      )
+    ).toEqual(
+      multiply(variable('y'), square(variable('x')))
+    )
+  })
+
+  it('isA1xA2_A1: combines nested multiplications involving similar terms', () => {
+    expect(
+      multiply(
+        multiply(variable('x'), variable('y')),
+        variable('x')
+      )
+    ).toEqual(
+      multiply(variable('y'), square(variable('x')))
+    )
+  })
+
+  it('isA2xA1_A1: combines nested multiplications involving similar terms', () => {
+    expect(
+      multiply(
+        multiply(variable('y'), variable('x')),
+        variable('x')
+      )
+    ).toEqual(
+      multiply(variable('y'), square(variable('x')))
+    )    
+  })
+
+  it('isA1_A2xEa1: adds to an exponential across nested multiplications', () => {
+    expect(
+      multiply(
+        variable('x'),
+        multiply(variable('y'), square(variable('x')))
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(3)))
+    )
+  })
+
+  it('isA1_Ea1xA2: adds to an exponential across nested multiplications', () => {
+    expect(
+      multiply(
+        variable('x'),
+        multiply(square(variable('x')), variable('y'))
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(3)))
+    )
+  })
+
+  it('isA2xEa1_A1: adds to an exponential across nested multiplications', () => {
+    expect(
+      multiply(
+        multiply(variable('y'), square(variable('x'))),
+        variable('x')
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(3)))
+    )
+  })
+
+  it('isEa1xA2_A1: adds to an exponential across nested multiplications', () => {
+    expect(
+      multiply(
+        multiply(square(variable('x')), variable('y')),
+        variable('x')
+      )
+    ).toEqual(
+      multiply(variable('y'), raise(variable('x'), real(3)))
+    )
+  })
+
   it('creates a Multiplication for unhandled edge cases', () => {
     expect(multiply(real(2), variable('x'))).toEqual(
       new Multiplication(real(2), variable('x'))

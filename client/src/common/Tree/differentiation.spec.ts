@@ -50,7 +50,7 @@ describe('differentiate', () => {
     it('handles divisions correctly', () => {
       expect(differentiate(divide(real(5), variable('x')))).toEqual(
         divide(
-          real(5),
+          real(-5),
           square(variable('x'))
         )
       )
