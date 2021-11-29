@@ -2,7 +2,10 @@ import { expectCloseTo } from './expectations'
 import { real } from './real'
 import { complex } from './complex'
 import { variable } from './var'
-import { canFormExponential, multiply, negate, double, divide, exponentialCollect } from './multiplication'
+import { 
+  canFormExponential, multiply, negate, double, divide, 
+  exponentialCollect, collectFromProducts 
+} from './multiplication'
 import { raise, reciprocal, square } from './exponentiation'
 import { Multiplication } from './Expression'
 
@@ -21,6 +24,24 @@ describe('canFormExponential', () => {
 
   it('is true if an exponential is multiplied by a multiplication of its base', () => {
     expect(canFormExponential(square(variable('x')), double(variable('x'))))
+  })
+
+  it('is true if two products multiplied together have similar terms', () => {
+    expect(
+      canFormExponential(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('x'), variable('z'))
+      )
+    ).toBeTruthy()
+  })
+
+  it('is true for two products dividing each other with similar terms', () => {
+    expect(
+      canFormExponential(
+        multiply(variable('x'), variable('y')),
+        reciprocal(multiply(variable('x'), variable('z')))
+      )
+    ).toBeTruthy()
   })
 })
 
@@ -41,6 +62,31 @@ describe('exponentialCollect', () => {
     expect(
       exponentialCollect(square(variable('x')), double(variable('x')))
     ).toEqual(multiply(real(2), raise(variable('x'), real(3))))
+  })
+})
+
+describe('collectsFromProducts', () => {
+  it('squares equivalent things', () => {
+    expect(
+      collectFromProducts(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('x'), variable('y'))
+      )
+    ).toEqual(multiply(square(variable('x')), square(variable('y'))))
+  })
+
+  it('collects like terms across multiplications', () => {
+    expect(
+      collectFromProducts(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('x'), variable('z'))
+      )
+    ).toEqual(
+      multiply(
+        square(variable('x')),
+        multiply(variable('y'), variable('z'))
+      )
+    )
   })
 })
 
@@ -407,7 +453,7 @@ describe('divide', () => {
     expect(divide(complex(-Infinity, 0), complex(1, 0))).toEqual(complex(-Infinity, 0))
   })
 
-  it('cancels like terms in a division of multiplications', () => {
+  it('a: cancels like terms in a division of multiplications', () => {
     expect(
       divide(
         multiply(variable('x'), variable('y')), 
@@ -416,7 +462,7 @@ describe('divide', () => {
     ).toEqual(divide(variable('x'), variable('z')))
   })
 
-  it('cancels like terms in a division of multiplications', () => {
+  it('b; cancels like terms in a division of multiplications', () => {
     expect(
       divide(
         multiply(variable('x'), variable('y')),
@@ -425,7 +471,7 @@ describe('divide', () => {
     ).toEqual(divide(variable('y'), variable('z')))
   })
 
-  it('cancels like terms in a division of multiplications', () => {
+  it('c: cancels like terms in a division of multiplications', () => {
     expect(
       divide(
         multiply(variable('x'), variable('y')),
@@ -434,7 +480,7 @@ describe('divide', () => {
     ).toEqual(divide(variable('x'), variable('z')))
   })
 
-  it('cancels like terms in a division of multiplications', () => {
+  it('d: cancels like terms in a division of multiplications', () => {
     expect(
       divide(
         multiply(variable('x'), variable('y')),

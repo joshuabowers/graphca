@@ -65,6 +65,17 @@ describe('raise', () => {
       raise(raise(variable('x'), variable('y')), variable('z'))
     ).toEqual(raise(variable('x'), multiply(variable('y'), variable('z'))))
   })
+
+  it('converts a base multiplication into a product of exponentiations', () => {
+    expect(
+      raise(multiply(variable('x'), variable('y')), variable('z'))
+    ).toEqual(
+      multiply(
+        raise(variable('x'), variable('z')), 
+        raise(variable('y'), variable('z'))
+      )
+    )
+  })
   
   it('creates an Exponentiation when given non-constants', () => {
     expect(raise(variable('x'), real(3))).toEqual(new Exponentiation(variable('x'), real(3)))

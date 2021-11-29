@@ -31,12 +31,12 @@ const isPureI = (v: Base) => v instanceof Complex && v.a === 0
 const isN1_N2A = (l: Base, r: Base) =>
   any<Base>(Real, Complex)(l) && r instanceof Multiplication && any<Base>(Real, Complex)(r.left)
 
-const identity = <T>(t: T) => t
-const leftBranch = <T extends Binary>(t: T) => t.left
-const rightBranch = <T extends Binary>(t: T) => t.right
+export const identity = <T>(t: T) => t
+export const leftBranch = <T extends Binary>(t: T) => t.left
+export const rightBranch = <T extends Binary>(t: T) => t.right
 
 type Which<T> = (t: T) => Base
-const equivalent = (a: Which<Multiplication>, b: Which<Multiplication>) =>
+export const equivalent = (a: Which<Multiplication>, b: Which<Multiplication>) =>
   (left: Multiplication, right: Multiplication) => canFormExponential(a(left), b(right))
 
 type Transform = (left: Multiplication, right: Multiplication) => Base
@@ -45,7 +45,6 @@ const flip: Transform = (l, r) => collectFromProducts(r, l)
 type CollectFromProductsFn = Multi & Transform
 
 export const collectFromProducts: CollectFromProductsFn = multi(
-  method(equivalent(identity, identity), <Transform>((l, r) => square(l))),
   method(equivalent(leftBranch, leftBranch), <Transform>((l, r) => 
     multiply(
       multiply(l.left, r.left),
@@ -58,16 +57,27 @@ export const collectFromProducts: CollectFromProductsFn = multi(
       multiply(l.right, r.left)
     )
   )),
+  method(equivalent(rightBranch, leftBranch), <Transform>((l, r) =>
+    multiply(
+      multiply(l.right, r.left),
+      multiply(l.left, r.right)
+    )
+  )),
+  method(equivalent(rightBranch, rightBranch), <Transform>((l, r) =>
+    multiply(
+      multiply(l.left, r.left),
+      multiply(l.right, r.right)
+    )
+  )),
   method(equivalent(identity, leftBranch), <Transform>((l, r) =>
     multiply(square(l), r.right)
   )),
   method(equivalent(identity, rightBranch), <Transform>((l, r) =>
     multiply(square(l), r.left)
   )),
-  method(equivalent(rightBranch, leftBranch), flip),
-  method(equivalent(rightBranch, rightBranch), flip),
   method(equivalent(leftBranch, identity), flip),
-  method(equivalent(rightBranch, identity), flip)
+  method(equivalent(rightBranch, identity), flip),
+  method(equivalent(identity, identity), <Transform>((l, r) => square(l)))
 )
 
 export type CanFormExponentialFn = Multi
@@ -84,7 +94,7 @@ export type CanFormExponentialFn = Multi
 export const canFormExponential: CanFormExponentialFn = multi(
   method(
     [Multiplication, Multiplication], (l: Multiplication, r: Multiplication) =>
-      canFormExponential(l, r)
+      equals(l, r)
       || canFormExponential(l.left, r.left)
       || canFormExponential(l.left, r.right)
       || canFormExponential(l.right, r.left)
@@ -93,6 +103,13 @@ export const canFormExponential: CanFormExponentialFn = multi(
       || canFormExponential(l.right, r)
       || canFormExponential(l, r.left)
       || canFormExponential(l, r.right)
+  ),
+  method(
+    [Exponentiation, Multiplication], (l: Exponentiation, r: Multiplication) =>
+      canFormExponential(l, r.left) 
+      || canFormExponential(l, r.right)
+      || canFormExponential(l.left, r.left) 
+      || canFormExponential(l.left, r.right)
   ),
   method(
     [Base, Multiplication], (l: Base, r: Multiplication) => 
@@ -105,13 +122,6 @@ export const canFormExponential: CanFormExponentialFn = multi(
       canFormExponential(l, r.left)
   ),
   method([Exponentiation, Base], (l: Base, r: Base) => canFormExponential(r, l)),
-  method(
-    [Exponentiation, Multiplication], (l: Exponentiation, r: Multiplication) =>
-      canFormExponential(l, r.left) 
-      || canFormExponential(l, r.right)
-      || canFormExponential(l.left, r.left) 
-      || canFormExponential(l.left, r.right)
-  ),
   method([Multiplication, Exponentiation], (l: Base, r: Base) => canFormExponential(r, l)),
   method(equals)
 )
@@ -126,9 +136,10 @@ export type ExponentialCollectFn = Multi
   & ((left: Base, right: Base) => Base)
 
 export const exponentialCollect: ExponentialCollectFn = multi(
+  method([Multiplication, Multiplication], collectFromProducts),
   method(
-    [Multiplication, Multiplication],
-    (l: Multiplication, r: Multiplication) => collectFromProducts
+    [Exponentiation, Exponentiation], (l: Exponentiation, r: Exponentiation) => 
+      raise(l.left, add(l.right, r.right))
   ),
   method(
     [Base, Multiplication], 
@@ -139,10 +150,6 @@ export const exponentialCollect: ExponentialCollectFn = multi(
       )
   ),
   method([Multiplication, Base], (l: Base, r: Base) => exponentialCollect(r, l)),
-  method(
-    [Exponentiation, Exponentiation], (l: Exponentiation, r: Exponentiation) => 
-      raise(l.left, add(l.right, r.right))
-  ),
   method([Base, Exponentiation], (l: Base, r: Exponentiation) => raise(l, add(r.right, real(1)))),
   method([Exponentiation, Base], (l: Base, r: Base) => exponentialCollect(r, l)),
   method([Base, Base], (l: Base, _r: Base) => square(l))
