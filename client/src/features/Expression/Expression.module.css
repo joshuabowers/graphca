@@ -1,0 +1,10 @@
+.super {
+  display: inline-flex;
+  flex-direction: column;
+  font-size: small;
+}
+
+.operator {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}

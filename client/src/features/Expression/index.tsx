@@ -1,5 +1,5 @@
 import React from 'react'
-import { method, multi, Multi } from '@arrows/multimethod'
+import { method, multi, Multi, _ } from '@arrows/multimethod'
 import styles from './Expression.module.css'
 import {
   Base, Unary, Binary,
@@ -14,6 +14,9 @@ import {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent
 } from '../../common/Tree/Expression'
+import { real } from '../../common/Tree/real'
+import { multiply, negate } from '../../common/Tree/multiplication'
+import { reciprocal } from '../../common/Tree/exponentiation'
 import { Unicode } from '../../common/MathSymbols'
 
 type FnNameFn<T extends Unary> = Multi & ((node: T) => string)
@@ -59,6 +62,17 @@ const unary: FnNameFn<Unary> = multi(
   method(Gamma, Unicode.gamma)
 )
 
+type LogarithmNameFn = Multi
+  & ((base: Real) => string)
+  & ((base: Base) => string)
+
+const logarithm: LogarithmNameFn = multi(
+  method(real(2), 'lb'),
+  method(real(Math.E), 'ln'),
+  method(real(10), 'lg'),
+  method('log')
+)
+
 const isNegative = multi(
   method(Real, (e: Real) => e.value < 0),
   method(Multiplication, (e: Multiplication) => isNegative(e.left) || isNegative(e.right)),
@@ -72,16 +86,61 @@ const isReciprocal = multi(
 
 const isInverse = (expression: Base) => isNegative(expression) || isReciprocal(expression)
 
+const notAny = <T extends Base>(...types: (new(...args: any[]) => T)[]) => (value: unknown) => types.every((type) => !(value instanceof type))
+
+const identity = (n: JSX.Element) => n
+const wrap = (n: JSX.Element) => <>({n})</>
+
+type ParenthesizeFn = Multi
+  & ((node: Binary, child: Base) => (component: JSX.Element) => JSX.Element)
+
+const parenthesize: ParenthesizeFn = multi(
+  method([Multiplication, Addition], () => wrap),
+  method([Multiplication, Multiplication], () => wrap),
+  method([Exponentiation, notAny<Base>(Real, Variable)], () => wrap),
+  method(() => identity)
+)
+
+const specialNumbers = new Map([
+  [Number.POSITIVE_INFINITY.toString(), Unicode.infinity],
+  [Number.NEGATIVE_INFINITY.toString(), `-${Unicode.infinity}`],
+  [Math.PI.toString(), Unicode.pi],
+  [Math.E.toString(), Unicode.e]
+])
+
+const symbolic = (value: number): string => {
+  const converted = String(value)
+  return specialNumbers.get(converted) ?? converted
+}
+
+const symA = (n: number) => symbolic(Math.abs(n))
+const symB = (n: number, v = Math.abs(n)) => `${v === 1 ? '' : symbolic(v)}${Unicode.i}`
+const isP = (n: number) => n > 0
+const isN = (n: number) => n < 0
+
+type StringifyComplexFn = Multi & ((a: number, b: number) => string)
+
+const stringifyComplex: StringifyComplexFn = multi(
+  method([0, 0], () => '0'),
+  method([0, isP], (_a: number, b: number) => symB(b)),
+  method([0, isN], (_a: number, b: number) => `-${symB(b)}`),
+  method([isP, 0], (a: number, _b: number) => symA(a)),
+  method([isN, 0], (a: number, _b: number) => `-${symA(a)}`),
+  method([isP, isN], (a: number, b: number) => `${symA(a)} - ${symB(b)}`),
+  method([isN, isN], (a: number, b: number) => `-${symA(a)} - ${symB(b)}`),
+  method((a: number, b: number) => `${symA(a)} + ${symB(b)}`)
+)
+
 type when<T> = (expression: T) => JSX.Element
 
 const whenReal: when<Real> = e => 
   <span className={[styles.constant, styles.real].join(' ')}>
-    {e.value}
+    {symbolic(e.value)}
   </span>
 
 const whenComplex: when<Complex> = e => 
   <span className={[styles.constant, styles.complex].join(' ')}>
-    {e.a} + {e.b}{Unicode.i}
+    {stringifyComplex(e.a, e.b)}
   </span>
 
 const whenVariable: when<Variable> = e => 
@@ -89,62 +148,64 @@ const whenVariable: when<Variable> = e =>
     {e.name}
   </span>
 
-
-// const a = node.a.accept(this), b = node.b.accept(this)
-// const op = node.operators[0]
-// return (
-//   <span className={[styles.binary, styles[className]].join(' ')}>
-//     {this.parenthesize(node, node.a, a)}
-//     <span className={styles.operator}>{op}</span>
-//     {this.parenthesize(node, node.b, b)}
-//   </span>
-// )
-
-
-// const createBinary = <T extends Binary>(metaClass: string, whenBasic: string, whenInverse: string): when<T> =>
-//   (node: T) => {
-//     const l = <Expression node={node.left} />,
-//       r = <Expression node={node.right} />
-//     return (
-//       <span className={[styles.binary, styles[metaClass]].join(' ')}>
-//         {l}
-//         <span className={styles.operator}>{operator}</span>
-//         {r}
-//       </span>  
-//     )
-//   }
+const binary = (className: string, operator: string, l: JSX.Element, r: JSX.Element) => (
+  <span className={[styles.binary, styles[className]].join(' ')}>
+    {l}
+    <span className={styles.operator}>{operator}</span>
+    {r}
+  </span>
+)
 
 const whenAddition: when<Addition> = e => {
-  // Consider ordering l and r based on which is negative.
-  // i.e., l === -x, r === 5 => 5 - x, but
-  // l === x, r === -5 => x - 5.
-  // Would minimize negations
-  // Further complication: if r is negative, the rendered expression needs
-  // to be the negation of that. 
-  const l = <Expression node={e.left} />,
-    r = <Expression node={e.right} />
-  const operator = isNegative(e.right) ? Unicode.minus : '+'
-  return (
-    <span className={[styles.binary, styles.addition].join(' ')}>
-      {l}
-      <span className={styles.operator}>{operator}</span>
-      {r}
-    </span>  
+  const lNegative = isNegative(e.left), rNegative = isNegative(e.right)
+  const either = lNegative || rNegative, lExclusive = lNegative && !rNegative
+  const left = lExclusive ? e.right : e.left, 
+    right = lExclusive ? e.left : e.right
+  const l = componentize(left), 
+    r = componentize(either ? negate(right) : right)
+  const className = either ? 'subtraction' : 'addition'
+  const operator = either ? Unicode.minus : '+'
+  return binary(className, operator, parenthesize(e, left)(l), parenthesize(e, right)(r))
+}
+
+const whenMultiplication: when<Multiplication> = e => {
+  const lReciprocal = isReciprocal(e.left), rReciprocal = isReciprocal(e.right)
+  const either = lReciprocal || rReciprocal, lExclusive = lReciprocal && !rReciprocal
+  const both = lReciprocal && rReciprocal
+  const reorderLeft = lExclusive ? e.right : e.left,
+    reorderRight = lExclusive ? e.left : e.right
+  const left = both ? real(1) : reorderLeft,
+    right = both ? multiply(reciprocal(reorderLeft), reciprocal(reorderRight)) : (
+      rReciprocal ? reciprocal(reorderRight) : reorderRight
+    )
+  const lNegative = left instanceof Real && left.value === -1
+  const l = componentize(left), r = componentize(right)
+  const className = either ? 'division' : (lNegative ? 'negation' : 'multiplication')
+  const operator = either ? Unicode.division : (lNegative ? Unicode.minus : Unicode.multiplication)
+  return binary(
+    className, operator, 
+    lNegative ? <></> : parenthesize(e, left)(l), 
+    parenthesize(e, right)(r)
   )
 }
 
-const whenMultiplication: when<Multiplication> = e => <span></span>
+const whenExponentiation: when<Exponentiation> = e => {
+  const l = componentize(e.left), r = componentize(e.right)
+  return binary('exponentiation', '^', parenthesize(e, e.left)(l), parenthesize(e, e.right)(r))
+}
 
-const whenExponentiation: when<Exponentiation> = e => <span></span>
-const whenLogarithm: when<Logarithm> = e => <span></span>
-
-// const whenAddition = createBinary<Addition>('addition', '+', Unicode.minus)
-// const whenMultiplication = createBinary<Multiplication>('multiplication', Unicode.multiplication, Unicode.division)
+const whenLogarithm: when<Logarithm> = e => {
+  const functionName = logarithm(e.left)
+  const base = functionName === 'log' ? componentize(e.left) : <></>
+  return <span className={[styles.functional, styles.logarithmic].join(' ')}>
+    {functionName}{base}({componentize(e.right)})
+  </span>
+}
 
 const createUnary = <T extends Unary>(metaClass: string, fnNames: FnNameFn<T>): when<T> =>
   (node: T) =>
     <span className={[styles.functional, styles[metaClass]].join(' ')}>
-      {fnNames(node)}(<Expression node={node.expression}/>)
+      {fnNames(node)}({componentize(node.expression)})
     </span>
 
 const whenTrigonometric = createUnary('trigonometric', trigonometric)
@@ -152,6 +213,14 @@ const whenArcus = createUnary('arcus', arcus)
 const whenHyperbolic = createUnary('hyperbolic', hyperbolic)
 const whenAreaHyperbolic = createUnary('areaHyperbolic', areaHyperbolic)
 const whenUnary = createUnary('unary', unary)
+
+const whenFactorial: when<Factorial> = e => {
+  const child = componentize(e.expression)
+  const shouldWrap = e.expression instanceof Binary
+  return <span className={styles.factorial}>
+    {shouldWrap ? <>({child})</> : child}!
+  </span>
+}
 
 const whenBase: when<Base> = e => <span className={styles.unhandled}>Unhandled: {e.$kind}</span>
 
@@ -161,7 +230,7 @@ export type ComponentizeFn = Multi
   & typeof whenExponentiation & typeof whenLogarithm
   & typeof whenTrigonometric & typeof whenArcus
   & typeof whenHyperbolic & typeof whenAreaHyperbolic
-  & typeof whenUnary
+  & typeof whenUnary & typeof whenFactorial
   & typeof whenBase
 
 export const componentize: ComponentizeFn = multi(
@@ -178,6 +247,7 @@ export const componentize: ComponentizeFn = multi(
   method(Arcus, whenArcus),
   method(Hyperbolic, whenHyperbolic),
   method(AreaHyperbolic, whenAreaHyperbolic),
+  method(Factorial, whenFactorial),
   method(Unary, whenUnary),
 
   method(Base, whenBase)
