@@ -171,6 +171,36 @@ const whenAreaHyperbolicCosecant: when<AreaHyperbolicCosecant> = e =>
 
 const whenAreaHyperbolicCotangent: when<AreaHyperbolicCotangent> = e =>
   chain(reciprocal(subtract(real(1), square(e.expression))), e.expression)
+
+  // visitFactorial(node: Factorial): Tree {
+  //   return multiply(
+  //     multiply(
+  //       factorial(node.expression),
+  //       digamma(add(node.expression, real(1)))
+  //     ),
+  //     node.expression.accept(this)
+  //   )
+  // }
+
+  // visitGamma(node: Gamma): Tree {
+  //   return multiply(
+  //     multiply(
+  //       gamma(node.expression),
+  //       digamma(node.expression)
+  //     ),
+  //     node.expression.accept(this)
+  //   )
+  // }
+
+  // visitPolygamma(node: Polygamma): Tree {
+  //   return multiply(
+  //     polygamma(
+  //       add(node.order, real(1)),
+  //       node.expression
+  //     ),
+  //     node.expression.accept(this)
+  //   )
+  // }
   
 const whenBase = (expression: Base) => expression
 

@@ -312,11 +312,6 @@ describe(Differentiation, () => {
     })
   })
 
-  // subtract(
-  //   real('1'),
-  //   raise(tanh(variable('x')), real('2'))
-  // ),
-
   describe('of hyperbolic tangents', () => {
     it('returns the chain rule of the derivative of the tanh', () => {
       expectObject('tanh(x)', multiply(

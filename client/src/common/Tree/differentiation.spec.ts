@@ -30,6 +30,11 @@ describe('differentiate', () => {
     it('is 1 when unbound', () => {
       expect(differentiate(variable('x'))).toEqual(real(1))
     })
+
+    it.todo('is the derivative of the value of a bound variable')
+    // it('returns the derivative of variable if it is defined', () => {
+    //   expectObject('x', real('0'), scope([['x', real(5)]]))
+    // })
   })
 
   describe('of additions', () => {
@@ -284,6 +289,33 @@ describe('differentiate', () => {
       )
     })
   })
+
+  // describe('of factorials', () => {
+  //   it('returns the chain rule of the derivative of the factorial', () => {
+  //     expectObject('x!', multiply(
+  //       multiply(factorial(variable('x')), polygamma(real(0), add(variable('x'), real(1)))),
+  //       real(1)
+  //     ))
+  //   })
+  // })
+
+  // describe('of gamma', () => {
+  //   it('returns the chain rule of the derivative of gamma', () => {
+  //     expectObject(`${Unicode.gamma}(x)`, multiply(
+  //       multiply(gamma(variable('x')), polygamma(real(0), variable('x'))),
+  //       real(1)
+  //     ))
+  //   })
+  // })
+
+  // describe('of polygamma', () => {
+  //   it('returns the chain rule of the derivative of the polygamma', () => {
+  //     expectObject(`${Unicode.digamma}(n, x)`, multiply(
+  //       polygamma(add(variable('n'), real(1)), variable('x')),
+  //       real(1)
+  //     ))
+  //   })
+  // })
 
   describe('of derivatives', () => {
     it('returns the second derivative of the nested expression', () => {
