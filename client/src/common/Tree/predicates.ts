@@ -13,7 +13,9 @@ export const any = <T extends Base>(...types: (new(...args: any[]) => T)[]) =>
 export type Which<T extends Base> = (t: T) => Base
 export type Constructor<T> = Function & { prototype: T }
 
-export const is = <T>(type: Constructor<T>) => (v: unknown): v is T => v instanceof type
+// type can occasionally be undefined, so the guard needs to account for that.
+export const is = <T>(type: Constructor<T>) => 
+  (v: unknown): v is T => type && v instanceof type
 
 export const areEqual = <L extends Base, R extends Base>(leftType: Constructor<L>, rightType: Constructor<R>) =>
   (leftSelect: Which<L>, rightSelect: Which<R>) =>
@@ -27,7 +29,7 @@ export const rightChild = <T extends Binary>(t: T) => t.right
 
 export type AreEqualFn = typeof areEqual
 
-export const rewriteIf = <L extends Base, R extends Base>(leftType: Constructor<L>, rightType: Constructor<R>) =>
+export const visit = <L extends Base, R extends Base>(leftType: Constructor<L>, rightType: Constructor<R>) =>
   (leftSelect: Which<L>, rightSelect: Which<R>) =>
     (fn: (left: L, right: R) => Base) =>
       method(areEqual(leftType, rightType)(leftSelect, rightSelect), fn)

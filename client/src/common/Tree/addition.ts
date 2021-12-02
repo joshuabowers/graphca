@@ -1,5 +1,5 @@
-import { method, fromMulti, multi, Multi, _ } from '@arrows/multimethod'
-import { notAny, rewriteIf, leftChild, rightChild, identity } from './predicates'
+import { method, fromMulti, _ } from '@arrows/multimethod'
+import { notAny, visit, leftChild, rightChild, identity } from './predicates'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
@@ -23,11 +23,11 @@ const rawAdd = binary(
 )
 export type AddFn = typeof rawAdd
 
-const ApB = rewriteIf(Addition, Base)
-const BpA = rewriteIf(Base, Addition)
-const MpM = rewriteIf(Multiplication, Multiplication)
-const MpB = rewriteIf(Multiplication, Base)
-const BpM = rewriteIf(Base, Multiplication)
+const ApB = visit(Addition, Base)
+const BpA = visit(Base, Addition)
+const MpM = visit(Multiplication, Multiplication)
+const MpB = visit(Multiplication, Base)
+const BpM = visit(Base, Multiplication)
 
 export const add: AddFn = fromMulti(
   method([real(0), _], (_l: Real, r: Base) => r),
