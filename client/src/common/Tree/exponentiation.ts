@@ -1,11 +1,15 @@
 import { method, multi, Multi, _ } from '@arrows/multimethod';
-import { 
-  Base, Real, Complex, Exponentiation, Logarithm, Multiplication 
-} from './Expression';
-import { real } from './real';
-import { complex } from './complex';
-import { multiply } from './multiplication';
+import { Base } from './Expression';
+import { Real, real } from './real';
+import { Complex, complex } from './complex';
+import { Binary } from './binary';
+import { Multiplication, multiply } from './multiplication';
+import { Logarithm } from './logarithmic';
 import { equals } from './equality';
+
+export class Exponentiation extends Binary {
+  readonly $kind = 'Exponentiation'
+}
 
 const raiseReals = (left: Real, right: Real) => real(left.value ** right.value)
 const raiseComplex = (left: Complex, right: Complex) => {

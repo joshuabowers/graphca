@@ -1,8 +1,7 @@
-import { Factorial } from './Expression'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var';
-import { factorial } from "./factorial";
+import { variable } from './variable';
+import { Factorial, factorial } from "./factorial";
 
 describe('factorial', () => {
   it('returns 1 for an input of 0', () => {

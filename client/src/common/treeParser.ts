@@ -1,32 +1,39 @@
 import { Unicode } from './MathSymbols'
 import {
+  Base,
   real, complex, variable,
-  raise, negate, factorial, digamma, polygamma,
-  differentiate, assign, invoke,
+  raise, negate, factorial, polygamma, // digamma,
+  differentiate, // assign, invoke,
   operators, additive, multiplicative, functions,
-  Addition, Exponentiation, Subtraction, Factorial,
-  Assignment, Polygamma
 } from './Tree'
-import { Tree } from "./Tree"
 import { peg, $fail } from 'pegase'
+
+export type Scope = Map<string, Base>
+
+export const scope = (entries?: [[string, Base]]): Scope => 
+  new Map<string, Base>(entries)
 
 const capture = (s: string) => `"${s}"`
 const additiveOperators = peg([...additive.keys()].map(capture).join('|'))
 const multiplicativeOperators = peg([...multiplicative.keys()].map(capture).join('|'))
-const exponentiationOperator = peg(Exponentiation.operators.map(capture).join('|'))
-const additionOperators = peg(Addition.operators.map(capture).join('|'))
-const subtractionOperators = peg(Subtraction.operators.map(capture).join('|'))
+const exponentiationOperator = peg(['^'].map(capture).join('|'))
+const additionOperators = peg(['+'].map(capture).join('|'))
+const subtractionOperators = peg([Unicode.minus, '-'].map(capture).join('|'))
 const functional = peg([...functions.keys()].map(capture).join('|'))
-const factorialOPerator = peg(capture(Factorial.function))
-const assignmentOperators = peg(Assignment.operators.map(capture).join('|'))
+const factorialOPerator = peg(capture('!'))
+const assignmentOperators = peg(['<-'].map(capture).join('|'))
+
+// TODO: stubs until fully implemented
+const invoke = (...params: Base[]) => params[0]
+const assign = (a: Base, b: Base) => b
 
 type Tail = {
   op: string,
-  a: Tree,
+  a: Base,
   b?: Tail
 }
 
-const leftAssociate = (node: Tree, tail: Tail | undefined): Tree | undefined => {
+const leftAssociate = (node: Base, tail: Tail | undefined): Base | undefined => {
   if(!tail){ return node; }
   const operator = operators.get(tail.op)
   if(!operator){ 
@@ -40,16 +47,16 @@ const leftAssociate = (node: Tree, tail: Tail | undefined): Tree | undefined => 
 }
 
 type InvokeList = {
-  a: Tree[],
+  a: Base[],
   b?: InvokeList
 }
 
-const createInvoke = (node: Tree, tail: InvokeList | undefined): Tree | undefined => {
+const createInvoke = (node: Base, tail: InvokeList | undefined): Base | undefined => {
   if(!tail){ return node }
   return createInvoke(invoke(node, ...tail.a), tail.b)
 }
 
-const builtInFunction = (name: string, expression: Tree): Tree | undefined => {
+const builtInFunction = (name: string, expression: Base): Base | undefined => {
   const f = functions.get(name)
   if(!f){ 
     $fail(`could not locate built-in function '${name}'`)
@@ -58,7 +65,7 @@ const builtInFunction = (name: string, expression: Tree): Tree | undefined => {
   return f(expression)
 }
 
-export const treeParser = peg<Tree>`
+export const treeParser = peg<Base>`
 expression: assignment
 
 assignment:
@@ -106,10 +113,10 @@ functional:
 | <name>builtInFunction '(' ^ <>expression ')' ${
   ({name, expression}) => builtInFunction(name, expression)
 }
-| ${Polygamma.function} '(' <order>expression ',' ^ <>expression ')' ${
+| ${Unicode.digamma} '(' <order>expression ',' ^ <>expression ')' ${
   ({order, expression}) => polygamma(order, expression)
 }
-| ${Polygamma.function} '(' ^ <>expression ')' ${({expression}) => digamma(expression)}
+| ${Unicode.digamma} '(' ^ <>expression ')' ${({expression}) => polygamma(real(0), expression)}
 
 builtInFunction: ${functional}
 

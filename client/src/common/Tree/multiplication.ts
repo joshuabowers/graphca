@@ -1,11 +1,16 @@
 import { method, multi, Multi } from '@arrows/multimethod';
-import { Binary, Multiplication, Base, Real, Complex, Exponentiation } from "./Expression";
+import { Base } from "./Expression";
 import { partial } from "./partial";
-import { real } from "./real";
-import { complex } from './complex';
+import { Real, real } from "./real";
+import { Complex, complex } from './complex';
+import { Binary } from './binary';
 import { add } from './addition';
-import { raise, reciprocal, square } from "./exponentiation";
+import { Exponentiation, raise, reciprocal, square } from "./exponentiation";
 import { equals } from './equality';
+
+export class Multiplication extends Binary {
+  readonly $kind = 'Multiplication'
+}
 
 const swap = <B, T>(f: (l: B, r: B) => T) => (l: B, r: B) => f(r, l)
 const not = <T>(type: new(...args: any[]) => T) => (value: unknown) => !(value instanceof type)

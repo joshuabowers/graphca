@@ -1,10 +1,10 @@
 import { method, fromMulti } from '@arrows/multimethod'
-import { Base, Factorial, Real, Complex } from './Expression'
-import { real } from './real'
-import { complex } from './complex'
+import { Base } from './Expression'
+import { Real, real } from './real'
+import { Complex, complex } from './complex'
 import { subtract } from './addition'
 import { multiply } from './multiplication'
-import { unary } from './unary'
+import { Unary, unary } from './unary'
 
 const isNotInteger = (r: Real) => !Number.isInteger(r.value)
 const isNonPositive = (r: Real) => r.value < 0
@@ -12,6 +12,10 @@ const isInvalidReal = (r: Base) => r instanceof Real
   && (isNonPositive(r) || isNotInteger(r))
 const isInvalidComplex = (c: Base) => c instanceof Complex 
   && (c.b !== 0 || isInvalidReal(real(c.a)))
+
+export class Factorial extends Unary {
+  readonly $kind = 'Factorial'
+}  
 
 export const baseFactorial = unary(
   r => multiply(r, factorial(subtract(r, real(1)))),

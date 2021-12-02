@@ -1,13 +1,12 @@
 import { expectCloseTo } from './expectations'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
+import { variable } from './variable'
 import { 
-  canFormExponential, multiply, negate, double, divide, 
+  Multiplication, canFormExponential, multiply, negate, double, divide, 
   exponentialCollect, collectFromProducts 
 } from './multiplication'
 import { raise, reciprocal, square } from './exponentiation'
-import { Multiplication } from './Expression'
 
 describe('canFormExponential', () => {
   it('is true for equivalent things', () => {

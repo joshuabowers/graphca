@@ -1,6 +1,10 @@
-import { Complex } from './Expression';
-// import { Complex } from './Constant/Complex'
+import { Base } from './Expression';
 
-export function complex(a: number, b: number) {
-  return new Complex(a, b)
+export class Complex extends Base {
+  readonly $kind = 'Complex'
+  constructor(readonly a: number, readonly b: number) { super() }
+}
+
+export function complex(a: number|string, b: number|string) {
+  return new Complex(Number(a), Number(b))
 }

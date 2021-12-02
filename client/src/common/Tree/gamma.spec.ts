@@ -1,9 +1,8 @@
 import { expectCloseTo } from './expectations'
-import { Gamma } from './Expression'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
-import { gamma } from './gamma'
+import { variable } from './variable'
+import { Gamma, gamma } from './gamma'
 
 describe('gamma', () => {
   it('calculates the value of the gamma function for reals', () => {

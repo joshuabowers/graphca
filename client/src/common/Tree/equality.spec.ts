@@ -1,6 +1,6 @@
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
+import { variable } from './variable'
 import { add } from './addition'
 import { multiply } from './multiplication'
 import { raise } from './exponentiation'

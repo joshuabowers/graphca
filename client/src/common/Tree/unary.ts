@@ -1,6 +1,11 @@
 import { method, multi, Multi } from '@arrows/multimethod'
-import { Base, Real, Complex } from './Expression'
-import { real } from './real'
+import { Base } from './Expression'
+import { Real } from './real'
+import { Complex } from './complex'
+
+export abstract class Unary extends Base {
+  constructor(readonly expression: Base) { super() }
+}
 
 export function unary(
   whenReal: (expression: Real) => Real, 

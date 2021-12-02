@@ -1,24 +1,35 @@
 import { method, multi, Multi } from '@arrows/multimethod'
+import { Base } from './Expression'
+import { Real, real } from './real'
+import { Complex, complex } from './complex'
+import { Variable } from './variable'
+import { Addition, add, subtract } from './addition'
+import { Multiplication, multiply, divide, negate } from './multiplication'
+import { Exponentiation, square, sqrt, reciprocal } from './exponentiation'
+import { Logarithm, ln } from './logarithmic'
+import { AbsoluteValue, abs } from './absolute'
 import { 
-  Base, Real, Complex, Variable, Addition, Multiplication, Exponentiation,
-  Logarithm, AbsoluteValue,
   Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
+  cos, sin, tan, sec, csc, cot 
+} from './trigonometric'
+import {
   ArcusCosine, ArcusSine, ArcusTangent,
   ArcusSecant, ArcusCosecant, ArcusCotangent,
+} from './arcus'
+import { 
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
   HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
+  cosh, sinh, tanh, sech, csch, coth 
+} from './hyperbolic'
+import {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent
-} from './Expression'
-import { real } from './real'
-import { complex } from './complex'
-import { add, subtract } from './addition'
-import { multiply, divide, negate } from './multiplication'
-import { raise, square, sqrt, reciprocal } from './exponentiation'
-import { ln } from './logarithmic'
-import { abs } from './absolute'
-import { cos, sin, tan, sec, csc, cot } from './trigonometric'
-import { cosh, sinh, tanh, sech, csch, coth } from './hyperbolic'
+} from './areaHyperbolic'
+
+export class Derivative extends Base {
+  readonly $kind = 'Derivative'
+  constructor(readonly expression: Base, readonly order: Base, readonly wrt: Variable[]) { super() }
+}
 
 const chain = (derivative: Base, argument: Base) =>
   multiply(derivative, differentiate(argument))

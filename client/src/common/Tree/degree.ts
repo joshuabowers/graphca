@@ -1,9 +1,13 @@
 import { method, multi, Multi } from '@arrows/multimethod'
-import {
-  Base, Real, Complex, Variable, Unary, 
-  Addition, Multiplication, Exponentiation, Logarithm
-} from './Expression'
-import { equals } from './equality'
+import { Base } from './Expression'
+import { Real } from './real'
+import { Complex } from './complex'
+import { Variable } from './variable'
+import { Unary } from './unary'
+import { Addition } from './addition'
+import { Multiplication } from './multiplication'
+import { Exponentiation } from './exponentiation'
+import { Logarithm } from './logarithmic'
 
 export type DegreeFn = Multi 
   & ((expression: Real) => number)

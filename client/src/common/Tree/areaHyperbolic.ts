@@ -1,14 +1,35 @@
-import {
-  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
-  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent
-} from './Expression'
 import { real } from './real'
-import { complex } from './complex'
 import { add, subtract } from './addition'
 import { multiply, divide } from './multiplication'
 import { reciprocal, square, sqrt } from './exponentiation'
 import { ln } from './logarithmic'
-import { unary } from './unary'
+import { Unary, unary } from './unary'
+
+export abstract class AreaHyperbolic extends Unary {}
+
+export class AreaHyperbolicCosine extends AreaHyperbolic {
+  readonly $kind = 'AreaHyperbolicCosine'
+}
+
+export class AreaHyperbolicSine extends AreaHyperbolic {
+  readonly $kind = 'AreaHyperbolicSine'
+}
+
+export class AreaHyperbolicTangent extends AreaHyperbolic {
+  readonly $kind = 'AreaHyperbolicTangent'
+}
+
+export class AreaHyperbolicSecant extends AreaHyperbolic {
+  readonly $kind = 'AreaHyperbolicSecant'
+}
+
+export class AreaHyperbolicCosecant extends AreaHyperbolic {
+  readonly $kind = 'AreaHyperbolicCosecant'
+}
+
+export class AreaHyperbolicCotangent extends AreaHyperbolic {
+  readonly $kind = 'AreaHyperbolicCotangent'
+}
 
 export const acosh = unary(
   r => real(Math.acosh(r.value)),

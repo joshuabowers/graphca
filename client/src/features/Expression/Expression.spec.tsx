@@ -2,7 +2,7 @@ import { Unicode } from '../../common/MathSymbols'
 import { Base } from '../../common/Tree/Expression'
 import { real } from '../../common/Tree/real'
 import { complex } from '../../common/Tree/complex'
-import { variable } from '../../common/Tree/var'
+import { variable } from '../../common/Tree/variable'
 import { add, subtract } from '../../common/Tree/addition'
 import { multiply, divide, negate } from '../../common/Tree/multiplication'
 import { raise, reciprocal, square } from '../../common/Tree/exponentiation'
@@ -106,6 +106,10 @@ describe(Expression, () => {
     it('renders negations', () => {
       expectMarkup(negate(variable('x')), '.binary.negation', `${Unicode.minus}x`)
       expectMarkup(negate(real(1)), '.constant.real', `-1`)
+    })
+
+    it('renders negated reciprocals', () => {
+      expectMarkup(divide(real(-1), variable('x')), '.binary.division', `-1${Unicode.division}x`)
     })
   })
 

@@ -1,6 +1,10 @@
-import { Real } from "./Expression";
-// import { Real } from './Constant/Real'
+import { Base } from "./Expression";
 
-export function real(value: number) {
-  return new Real(value)
+export class Real extends Base {
+  readonly $kind = 'Real'
+  constructor(readonly value: number) { super() }
+}
+
+export function real(value: number|string) {
+  return new Real(Number(value))
 }

@@ -1,9 +1,14 @@
-import { Addition, Multiplication, Real, Complex, Base} from './Expression'
-import { method, multi, Multi, _ } from '@arrows/multimethod';
-import { real } from './real';
-import { complex } from "./complex";
-import { multiply, negate, double } from './multiplication';
-import { equals } from "./equality";
+import { method, multi, Multi, _ } from '@arrows/multimethod'
+import { Base } from './Expression'
+import { Real, real } from './real'
+import { Complex, complex } from './complex'
+import { Binary } from './binary'
+import { Multiplication, multiply, negate, double } from './multiplication'
+import { equals } from './equality'
+
+export class Addition extends Binary {
+  readonly $kind = 'Addition'
+}
 
 const addReals = (left: Real, right: Real) => real(left.value + right.value)
 const addComplex = (left: Complex, right: Complex) => complex(left.a + right.a, left.b + right.b)

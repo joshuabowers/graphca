@@ -1,11 +1,11 @@
-import { 
-  ArcusCosine, ArcusSine, ArcusTangent,
-  ArcusSecant, ArcusCosecant, ArcusCotangent
-} from './Expression'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
-import { acos, asin, atan, asec, acsc, acot } from './arcus'
+import { variable } from './variable'
+import { 
+  ArcusCosine, ArcusSine, ArcusTangent,
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
+  acos, asin, atan, asec, acsc, acot 
+} from './arcus'
 import { expectCloseTo } from './expectations'
 
 describe('acos', () => {

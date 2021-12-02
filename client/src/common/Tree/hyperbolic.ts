@@ -1,11 +1,33 @@
-import {
-  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
-  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent
-} from './Expression'
 import { real } from './real';
 import { complex } from './complex';
 import { reciprocal } from './exponentiation';
-import { unary } from "./unary";
+import { Unary, unary } from "./unary";
+
+export abstract class Hyperbolic extends Unary {}
+
+export class HyperbolicCosine extends Hyperbolic {
+  readonly $kind = 'HyperbolicCosine'
+}
+
+export class HyperbolicSine extends Hyperbolic {
+  readonly $kind = 'HyperbolicSine'
+}
+
+export class HyperbolicTangent extends Hyperbolic {
+  readonly $kind = 'HyperbolicTangent'
+}
+
+export class HyperbolicSecant extends Hyperbolic {
+  readonly $kind = 'HyperbolicSecant'
+}
+
+export class HyperbolicCosecant extends Hyperbolic {
+  readonly $kind = 'HyperbolicCosecant'
+}
+
+export class HyperbolicCotangent extends Hyperbolic {
+  readonly $kind = 'HyperbolicCotangent'
+}
 
 export const cosh = unary(
   r => real(Math.cosh(r.value)),

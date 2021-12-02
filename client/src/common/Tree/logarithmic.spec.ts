@@ -1,9 +1,8 @@
 import { expectCloseTo } from './expectations'
-import { log, lb, ln, lg } from './logarithmic'
+import { Logarithm, log, lb, ln, lg } from './logarithmic'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
-import { Logarithm } from './Expression'
+import { variable } from './variable'
 
 describe('log', () => {
   it('calculates the real log of a real value', () => {

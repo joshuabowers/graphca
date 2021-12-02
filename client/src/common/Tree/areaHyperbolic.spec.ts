@@ -1,12 +1,12 @@
 import { expectCloseTo } from './expectations'
-import {
-  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
-  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent
-} from './Expression'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
-import { acosh, asinh, atanh, asech, acsch, acoth } from './areaHyperbolic'
+import { variable } from './variable'
+import { 
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
+  acosh, asinh, atanh, asech, acsch, acoth 
+} from './areaHyperbolic'
 
 describe('acosh', () => {
   it('calculates the area hyperbolic cosine of a real value', () => {

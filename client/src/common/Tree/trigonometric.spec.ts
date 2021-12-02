@@ -1,9 +1,11 @@
 import { expectCloseTo } from './expectations'
-import { Real, Complex, Cosine, Sine, Tangent, Secant, Cosecant, Cotangent } from './Expression'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
-import { cos, sin, tan, sec, csc, cot } from './trigonometric'
+import { variable } from './variable'
+import { 
+  Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
+  cos, sin, tan, sec, csc, cot 
+} from './trigonometric'
 
 describe('cos', () => {
   it('returns the appropriate real value when given real', () => {

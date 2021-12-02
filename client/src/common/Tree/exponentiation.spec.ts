@@ -1,9 +1,8 @@
 import { expectCloseTo } from './expectations'
-import { Exponentiation } from './Expression'
-import { raise, reciprocal, square, sqrt } from './exponentiation'
+import { Exponentiation, raise, reciprocal, square, sqrt } from './exponentiation'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
+import { variable } from './variable'
 import { multiply } from './multiplication'
 import { log, lb, ln, lg } from './logarithmic'
 

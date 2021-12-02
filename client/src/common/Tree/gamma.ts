@@ -1,11 +1,11 @@
-import { Base, Gamma, Real, Complex } from "./Expression";
-import { real } from './real'
-import { complex } from "./complex";
+import { Base } from "./Expression";
+import { Real, real } from './real'
+import { Complex, complex } from "./complex";
 import { add, subtract } from "./addition";
 import { multiply, divide, negate } from "./multiplication";
 import { raise, sqrt } from "./exponentiation";
 import { sin } from './trigonometric';
-import { unary } from "./unary";
+import { Unary, unary } from "./unary";
 
 const lanczos = {
   p: [
@@ -42,6 +42,10 @@ const calculateGamma = (input: Real|Complex, ltHalf: boolean, cast: (n: number) 
       multiply(raise(real(Math.E), negate(t)), x)
     )
   )
+}
+
+export class Gamma extends Unary {
+  readonly $kind = 'Gamma'
 }
 
 export const gamma = unary(

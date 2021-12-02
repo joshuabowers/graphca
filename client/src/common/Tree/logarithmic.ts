@@ -1,8 +1,13 @@
 import { method, multi, Multi, _ } from '@arrows/multimethod'
-import { Base, Logarithm, Real, Complex } from './Expression'
-import { real } from './real'
-import { complex } from './complex'
+import { Base } from './Expression'
+import { Real, real } from './real'
+import { Complex, complex } from './complex'
+import { Binary } from './binary'
 import { divide } from './multiplication'
+
+export class Logarithm extends Binary {
+  readonly $kind = 'Logarithm'
+}
 
 const lnComplex = (c: Complex) => complex(
   Math.log(Math.hypot(c.a, c.b)),

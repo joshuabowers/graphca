@@ -1,8 +1,7 @@
-import { AbsoluteValue } from "./Expression";
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from "./var";
-import { abs } from "./absolute";
+import { variable } from "./variable";
+import { AbsoluteValue, abs } from "./absolute";
 
 describe('abs', () => {
   it('returns the absolute value of a real number', () => {

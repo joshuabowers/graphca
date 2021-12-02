@@ -1,5 +1,10 @@
 import { method, multi, Multi } from '@arrows/multimethod'
-import { Base, Real, Complex, Variable, Unary, Binary } from './Expression'
+import { Base } from './Expression'
+import { Real } from './real'
+import { Complex } from './complex'
+import { Variable } from './variable'
+import { Unary } from './unary'
+import { Binary } from './binary'
 
 const equalsReal = (left: Real, right: Real) => left.value === right.value
 const equalsComplex = (left: Complex, right: Complex) => 

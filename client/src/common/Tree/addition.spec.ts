@@ -1,9 +1,8 @@
-import { Kind, Addition, Multiplication } from './Expression'
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
-import { add, subtract } from './addition'
-import { double, multiply } from './multiplication'
+import { variable } from './variable'
+import { Addition, add, subtract } from './addition'
+import { Multiplication, double, multiply } from './multiplication'
 
 describe('add', () => {
   describe('with Real, Real', () => {

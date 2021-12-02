@@ -1,20 +1,25 @@
 import { Unicode } from './MathSymbols';
 import {
-  Tree,
+  Base,
   add, subtract, multiply, divide, raise, 
-  real, complex, variable, assign, invoke,
+  real, complex, variable, //assign, invoke,
   negate, abs,
   lb, ln, lg,
   cos, sin, tan, sec, csc, cot,
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  factorial, gamma, polygamma, digamma,
+  factorial, gamma, polygamma, // digamma,
   differentiate
 } from './Tree'
 import { treeParser } from "./treeParser";
 
-const expectObject = (input: string, expected: Tree) => {
+// TODO: stubs until fully implemented
+const invoke = (...params: Base[]) => params[0]
+const assign = (a: Base, b: Base) => b
+const digamma = (e: Base) => polygamma(real(0), e)
+
+const expectObject = (input: string, expected: Base) => {
   let output = undefined
   expect(() => {output = treeParser.value(input)}).not.toThrow()
   expect(output).not.toBeUndefined()

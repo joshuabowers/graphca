@@ -1,10 +1,33 @@
-import { 
-  Cosine, Sine, Tangent, Secant, Cosecant, Cotangent 
-} from './Expression'
 import { real } from './real'
 import { complex } from './complex'
 import { reciprocal } from './exponentiation'
-import { unary } from './unary'
+import { Unary, unary } from './unary'
+
+export abstract class Trigonometric extends Unary {}
+
+export class Cosine extends Trigonometric {
+  readonly $kind = 'Cosine'
+}
+
+export class Sine extends Trigonometric {
+  readonly $kind = 'Sine'
+}
+
+export class Tangent extends Trigonometric {
+  readonly $kind = 'Tangent'
+}
+
+export class Secant extends Trigonometric {
+  readonly $kind = 'Secant'
+}
+
+export class Cosecant extends Trigonometric {
+  readonly $kind = 'Cosecant'
+}
+
+export class Cotangent extends Trigonometric {
+  readonly $kind = 'Cotangent'
+}
 
 export const cos = unary(
   r => real(Math.cos(r.value)),

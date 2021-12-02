@@ -1,17 +1,17 @@
-import { real } from "./real";
-import { complex } from "./complex";
-import { variable } from "./var";
+import { real } from './real';
+import { complex } from './complex';
+import { variable } from './variable';
 import { add, subtract } from './addition';
-import { multiply, divide, negate } from "./multiplication";
+import { multiply, divide, negate } from './multiplication';
 import { raise, square, sqrt, reciprocal } from './exponentiation';
-import { lb, ln, lg } from "./logarithmic";
-import { abs } from "./absolute";
+import { lb, ln, lg } from './logarithmic';
+import { abs } from './absolute';
 import { cos, sin, tan, sec, csc, cot } from './trigonometric';
 import { acos, asin, atan, asec, acsc, acot } from './arcus';
 import { cosh, sinh, tanh, sech, csch, coth } from './hyperbolic';
 import { acosh, asinh, atanh, asech, acsch, acoth } from './areaHyperbolic';
 
-import { differentiate } from "./differentiation";
+import { differentiate } from './differentiation';
 
 describe('differentiate', () => {
   describe('of reals', () => {

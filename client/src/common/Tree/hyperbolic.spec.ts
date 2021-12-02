@@ -1,11 +1,11 @@
 import { real } from './real'
 import { complex } from './complex'
-import { variable } from './var'
+import { variable } from './variable'
 import { 
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
-  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent
-} from './Expression'
-import { cosh, sinh, tanh, sech, csch, coth } from './hyperbolic'
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
+  cosh, sinh, tanh, sech, csch, coth 
+} from './hyperbolic'
 import { expectCloseTo } from './expectations'
 
 describe('cosh', () => {

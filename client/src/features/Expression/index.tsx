@@ -1,5 +1,5 @@
 import React from 'react'
-import { method, multi, Multi, _ } from '@arrows/multimethod'
+import { method, multi, Multi } from '@arrows/multimethod'
 import styles from './Expression.module.css'
 import {
   Base, Unary, Binary,
@@ -12,11 +12,9 @@ import {
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
   HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
-  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent
-} from '../../common/Tree/Expression'
-import { real } from '../../common/Tree/real'
-import { multiply, negate } from '../../common/Tree/multiplication'
-import { reciprocal } from '../../common/Tree/exponentiation'
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
+  real, multiply, negate, reciprocal
+} from '../../common/Tree'
 import { Unicode } from '../../common/MathSymbols'
 
 type FnNameFn<T extends Unary> = Multi & ((node: T) => string)
@@ -83,8 +81,6 @@ const isReciprocal = multi(
   method(Exponentiation, (e: Exponentiation) => isNegative(e.right)),
   method(false)
 )
-
-const isInverse = (expression: Base) => isNegative(expression) || isReciprocal(expression)
 
 const notAny = <T extends Base>(...types: (new(...args: any[]) => T)[]) => (value: unknown) => types.every((type) => !(value instanceof type))
 
@@ -184,7 +180,7 @@ const whenMultiplication: when<Multiplication> = e => {
   const operator = either ? Unicode.division : (lNegative ? Unicode.minus : Unicode.multiplication)
   return binary(
     className, operator, 
-    lNegative ? <></> : parenthesize(e, left)(l), 
+    className === 'negation' ? <></> : parenthesize(e, left)(l), 
     parenthesize(e, right)(r)
   )
 }
@@ -221,6 +217,14 @@ const whenFactorial: when<Factorial> = e => {
     {shouldWrap ? <>({child})</> : child}!
   </span>
 }
+
+// visitPolygamma(node: Polygamma): JSX.Element {
+//   const order = node.order.accept(this)
+//   const expression = node.expression.accept(this)
+//   return <span className={[styles.functional, styles.polygamma].join(' ')}>
+//     {node.function}<span className={styles.super}>{order}</span>({expression})
+//   </span>
+// }
 
 const whenBase: when<Base> = e => <span className={styles.unhandled}>Unhandled: {e.$kind}</span>
 

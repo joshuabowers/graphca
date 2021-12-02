@@ -1,5 +1,6 @@
 import { method, multi, Multi, _ } from '@arrows/multimethod'
-import { Real, Complex } from './Expression'
+import { Real } from './real'
+import { Complex } from './complex'
 
 export type ExpectCloseTo = Multi 
   & ((actual: Real, expected: Real, precision: number) => void)

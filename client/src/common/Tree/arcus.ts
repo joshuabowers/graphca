@@ -1,14 +1,36 @@
-import {
-  ArcusCosine, ArcusSine, ArcusTangent,
-  ArcusSecant, ArcusCosecant, ArcusCotangent
-} from './Expression'
 import { real } from './real'
 import { complex } from './complex'
 import { add, subtract } from './addition'
 import { multiply, divide } from './multiplication'
 import { reciprocal, square, sqrt } from './exponentiation'
 import { ln } from './logarithmic'
-import { unary } from './unary'
+import { Unary, unary } from './unary'
+
+export abstract class Arcus extends Unary {}
+
+export class ArcusCosine extends Arcus {
+  readonly $kind = 'ArcusCosine'
+}
+
+export class ArcusSine extends Arcus {
+  readonly $kind = 'ArcusSine'
+}
+
+export class ArcusTangent extends Arcus {
+  readonly $kind = 'ArcusTangent'
+}
+
+export class ArcusSecant extends Arcus {
+  readonly $kind = 'ArcusSecant'
+}
+
+export class ArcusCosecant extends Arcus {
+  readonly $kind = 'ArcusCosecant'
+}
+
+export class ArcusCotangent extends Arcus {
+  readonly $kind = 'ArcusCotangent'
+}
 
 const i = complex(0, 1)
 const halfPi = real(Math.PI/2)
