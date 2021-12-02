@@ -1,4 +1,4 @@
-import { Binary, binary } from './binary'
+import { Binary, binary, unaryFrom, bindLeft } from './binary'
 import { real } from './real'
 import { complex } from './complex'
 
@@ -68,10 +68,8 @@ const bernoulli = [
 export const polygamma = binary(
   (l, r) => real(NaN),
   (l, r) => complex(NaN, NaN),
-  (l, r) => complex(NaN, NaN),
-  (l, r) => complex(NaN, NaN),
   (l, r) => new Polygamma(l, r)
 )
 export type PolygammaFn = typeof polygamma
 
-// export const digamma = fixLeft(polygamma, Real.Zero)
+export const digamma = unaryFrom(polygamma, bindLeft, real(0))
