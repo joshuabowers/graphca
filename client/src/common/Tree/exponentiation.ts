@@ -1,8 +1,8 @@
-import { method, multi, Multi, _ } from '@arrows/multimethod';
+import { method, fromMulti, _ } from '@arrows/multimethod';
 import { Base } from './Expression';
 import { Real, real } from './real';
-import { Complex, complex } from './complex';
-import { Binary } from './binary';
+import { complex } from './complex';
+import { Binary, binary, unaryFrom, bindRight } from './binary';
 import { Multiplication, multiply } from './multiplication';
 import { Logarithm } from './logarithmic';
 import { equals } from './equality';
@@ -11,20 +11,6 @@ export class Exponentiation extends Binary {
   readonly $kind = 'Exponentiation'
 }
 
-const raiseReals = (left: Real, right: Real) => real(left.value ** right.value)
-const raiseComplex = (left: Complex, right: Complex) => {
-  const p = Math.hypot(left.a, left.b), arg = Math.atan2(left.b, left.a)
-  const dLnP = right.b * Math.log(p), cArg = right.a * arg
-  const multiplicand = (p ** right.a) * Math.exp(-right.b * arg)
-  return complex(
-    multiplicand * Math.cos(dLnP + cArg),
-    multiplicand * Math.sin(dLnP + cArg)
-  )
-}
-const raiseRC = (left: Real, right: Complex) => raise(complex(left.value, 0), right)
-const raiseCR = (left: Complex, right: Real) => raise(left, complex(right.value, 0))
-const raiseBase = (left: Base, right: Base) => new Exponentiation(left, right)
-
 const isN_LofN = (left: Base, right: Base) =>
   right instanceof Logarithm && equals(left, right.left)
 const isE_A = (left: Base, _right: Base) =>
@@ -32,19 +18,25 @@ const isE_A = (left: Base, _right: Base) =>
 const isM_A = (left: Base, _right: Base) =>
   left instanceof Multiplication
 
-export type Raise = Multi
-  & typeof raiseReals
-  & typeof raiseComplex
-  & typeof raiseRC
-  & typeof raiseCR
-  & typeof raiseBase
+const rawRaise = binary(
+  (l, r) => real(l.value ** r.value),
+  (l, r) => {
+    const p = Math.hypot(l.a, l.b), arg = Math.atan2(l.b, l.a)
+    const dLnP = r.b * Math.log(p), cArg = r.a * arg
+    const multiplicand = (p ** r.a) * Math.exp(-r.b * arg)
+    return complex(
+      multiplicand * Math.cos(dLnP + cArg),
+      multiplicand * Math.sin(dLnP + cArg)
+    )
+  },
+  (l, r) => new Exponentiation(l, r)
+)
+export type RaiseFn = typeof rawRaise
 
-export const raise: Raise = multi(
+export const raise: RaiseFn = fromMulti(
   method([complex(0, 0), real(-1)], complex(Infinity, 0)),
-  method([Real, Real], raiseReals),
-  method([Complex, Complex], raiseComplex),
-  method([Real, Complex], raiseRC),
-  method([Complex, Real], raiseCR),
+  method([real(0), real(-1)], real(Infinity)),
+  method([real(-0), real(-1)], real(-Infinity)),
   method([real(0), _], real(0)),
   method([_, real(0)], real(1)),
   method([real(1), _], real(1)),
@@ -52,19 +44,8 @@ export const raise: Raise = multi(
   method(isN_LofN, (_l: Base, r: Logarithm) => r.right),
   method(isE_A, (l: Exponentiation, r: Base) => raise(l.left, multiply(l.right, r))),
   method(isM_A, (l: Multiplication, r: Base) => multiply(raise(l.left, r), raise(l.right, r))),
-  method([Base, Base], raiseBase)
-)
+)(rawRaise)
 
-function partialRight(right: Real) {
-  type Unary = Multi
-    & ((expression: Real) => Real)
-    & ((expression: Complex) => Complex)
-    & ((expression: Base) => Exponentiation)
-  return multi(
-    method(Base, (left: Base) => raise(left, right))
-  ) as Unary
-}
-
-export const reciprocal = partialRight(real(-1))
-export const square = partialRight(real(2))
-export const sqrt = partialRight(real(0.5))
+export const reciprocal = unaryFrom(raise, bindRight, real(-1))
+export const square = unaryFrom(raise, bindRight, real(2))
+export const sqrt = unaryFrom(raise, bindRight, real(0.5))
