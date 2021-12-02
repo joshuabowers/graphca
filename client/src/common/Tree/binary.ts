@@ -41,3 +41,11 @@ export const unaryFrom = (fn: BinaryFn, bind: BindTo) => {
     method(Base, (unbound: Base) => fn(...bind(unbound, bound)))
   ) as UnaryFn
 }
+
+type BinaryMapFn = (left: Base, right: Base) => [Base, Base]
+
+export const binaryFrom = (fn: BinaryFn, map: BinaryMapFn): BinaryFn => (
+  multi(
+    method([Base, Base], (l: Base, r: Base) => fn(...map(l, r)))
+  )
+)

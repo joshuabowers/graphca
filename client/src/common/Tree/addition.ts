@@ -1,8 +1,9 @@
-import { method, multi, Multi, _ } from '@arrows/multimethod'
+import { method, fromMulti, multi, Multi, _ } from '@arrows/multimethod'
+import { notAny, rewriteIf, leftChild, rightChild, identity } from './predicates'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
-import { Binary } from './binary'
+import { Binary, binary, binaryFrom } from './binary'
 import { Multiplication, multiply, negate, double } from './multiplication'
 import { equals } from './equality'
 
@@ -10,84 +11,43 @@ export class Addition extends Binary {
   readonly $kind = 'Addition'
 }
 
-const addReals = (left: Real, right: Real) => real(left.value + right.value)
-const addComplex = (left: Complex, right: Complex) => complex(left.a + right.a, left.b + right.b)
-const addRC = (left: Real, right: Complex) => complex(left.value + right.a, right.b)
-const addCR = (left: Complex, right: Real) => complex(left.a + right.value, left.b)
-const otherwise = (left: Base, right: Base) => new Addition(left, right)
-const failure = (_left: never, _right: never) => undefined
-
-export type Add = Multi 
-  & typeof addReals 
-  & typeof addComplex 
-  & typeof addRC 
-  & typeof addCR
-  & typeof otherwise
-  & typeof failure
-
 const isXpR_R = (l: Base, r: Base) =>
   l instanceof Addition 
   && (l.right instanceof Real || l.right instanceof Complex)
   && (r instanceof Real || r instanceof Complex)
 
-const isXpY_X = (l: Base, r: Base) => 
-  l instanceof Addition && equals(l.left, r)
-const isYpX_X = (l: Base, r: Base) =>
-  l instanceof Addition && equals(l.right, r)
-const isX_XpY = (l: Base, r: Base) =>
-  r instanceof Addition && equals(l, r.left)
-const isX_YpX = (l: Base, r: Base) =>
-  r instanceof Addition && equals(l, r.right)
+const rawAdd = binary(
+  (l, r) => real(l.value + r.value),
+  (l, r) => complex(l.a + r.a, l.b + r.b),
+  (l, r) => new Addition(l, r)
+)
+export type AddFn = typeof rawAdd
 
-const isXxY_X = (l: Base, r: Base) =>
-  l instanceof Multiplication && equals(l.left, r)
-const isYxX_X = (l: Base, r: Base) =>
-  l instanceof Multiplication && equals(l.right, r)
-const isX_XxY = (l: Base, r: Base) =>
-  r instanceof Multiplication && equals(l, r.left)
-const isX_YxX = (l: Base, r: Base) =>
-  r instanceof Multiplication && equals(l, r.right)
+const ApB = rewriteIf(Addition, Base)
+const BpA = rewriteIf(Base, Addition)
+const MpM = rewriteIf(Multiplication, Multiplication)
+const MpB = rewriteIf(Multiplication, Base)
+const BpM = rewriteIf(Base, Multiplication)
 
-const isXxZ_YxZ = (l: Base, r: Base) =>
-  l instanceof Multiplication && r instanceof Multiplication 
-  && equals(l.right, r.right)
-const isZxX_YxZ = (l: Base, r: Base) =>
-  l instanceof Multiplication && r instanceof Multiplication
-  && equals(l.left, r.right)
-const isXxZ_ZxY = (l: Base, r: Base) =>
-  l instanceof Multiplication && r instanceof Multiplication
-  && equals(l.right, r.left)
-const isZxX_ZxY = (l: Base, r: Base) =>
-  l instanceof Multiplication && r instanceof Multiplication
-  && equals(l.left, r.left)
-
-export const add: Add = multi(
+export const add: AddFn = fromMulti(
   method([real(0), _], (_l: Real, r: Base) => r),
   method([_, real(0)], (l: Base, _r: Real) => l),
-  method([Real, Real], addReals),
-  method([Complex, Complex], addComplex),
-  method([Real, Complex], addRC),
-  method([Complex, Real], addCR),
-  method([Complex, _], (l: Complex, r: Base) => add(r, l)),
-  method([Real, _], (l: Real, r: Base) => add(r, l)),
+  method([Complex, notAny<Base>(Complex, Real)], (l: Complex, r: Base) => add(r, l)),
+  method([Real, notAny<Base>(Complex, Real)], (l: Real, r: Base) => add(r, l)),
   method(equals, (l: Base, _r: Base) => double(l)),
   method(isXpR_R, (l: Addition, r: Real) => add(l.left, add(l.right, r))),
-  method(isXpY_X, (l: Addition, r: Base) => add(double(r), l.right)),
-  method(isYpX_X, (l: Addition, r: Base) => add(double(r), l.left)),
-  method(isX_XpY, (l: Base, r: Addition) => add(double(l), r.right)),
-  method(isX_YpX, (l: Base, r: Addition) => add(double(l), r.left)),
-  method(isXxZ_YxZ, (l: Multiplication, r: Multiplication) => multiply(add(l.left, r.left), l.right)),
-  method(isZxX_YxZ, (l: Multiplication, r: Multiplication) => multiply(add(l.right, r.left), l.left)),
-  method(isXxZ_ZxY, (l: Multiplication, r: Multiplication) => multiply(add(l.left, r.right), l.right)),
-  method(isZxX_ZxY, (l: Multiplication, r: Multiplication) => multiply(add(l.right, r.right), l.left)),
-  method(isXxY_X, (l: Multiplication, r: Base) => multiply(add(real(1), l.right), r)),
-  method(isYxX_X, (l: Multiplication, r: Base) => multiply(add(real(1), l.left), r)),
-  method(isX_XxY, (l: Base, r: Multiplication) => multiply(add(real(1), r.right), l)),
-  method(isX_YxX, (l: Base, r: Multiplication) => multiply(add(real(1), r.left), l)),
-  method([Base, Base], otherwise),
-  method([_, _], failure)
-)
+  ApB(leftChild, identity)((l, r) => add(double(r), l.right)),
+  ApB(rightChild, identity)((l, r) => add(double(r), l.left)),
+  BpA(identity, leftChild)((l, r) => add(double(l), r.right)),
+  BpA(identity, rightChild)((l, r) => add(double(l), r.left)),
+  MpM(rightChild, rightChild)((l, r) => multiply(add(l.left, r.left), l.right)),
+  MpM(leftChild, rightChild)((l, r) => multiply(add(l.right, r.left), l.left)),
+  MpM(rightChild, leftChild)((l, r) => multiply(add(l.left, r.right), l.right)),
+  MpM(leftChild, leftChild)((l, r) => multiply(add(l.right, r.right), l.left)),
+  MpB(leftChild, identity)((l, r) => multiply(add(real(1), l.right), r)),
+  MpB(rightChild, identity)((l, r) => multiply(add(real(1), l.left), r)),
+  BpM(identity, leftChild)((l, r) => multiply(add(real(1), r.right), l)),
+  BpM(identity, rightChild)((l, r) => multiply(add(real(1), r.left), l))
+)(rawAdd)
 
-export const subtract: Add = multi(
-  method([Base, Base], (l: Base, r: Base) => add(l, negate(r)))
-)
+export const subtract = binaryFrom(add, (l, r) => [l, negate(r)])
