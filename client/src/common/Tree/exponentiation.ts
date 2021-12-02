@@ -46,6 +46,7 @@ export const raise: RaiseFn = fromMulti(
   method(isM_A, (l: Multiplication, r: Base) => multiply(raise(l.left, r), raise(l.right, r))),
 )(rawRaise)
 
-export const reciprocal = unaryFrom(raise, bindRight, real(-1))
-export const square = unaryFrom(raise, bindRight, real(2))
-export const sqrt = unaryFrom(raise, bindRight, real(0.5))
+const fromRaise = unaryFrom(raise, bindRight)
+export const reciprocal = fromRaise(real(-1))
+export const square = fromRaise(real(2))
+export const sqrt = fromRaise(real(0.5))

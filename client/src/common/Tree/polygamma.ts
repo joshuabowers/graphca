@@ -72,4 +72,4 @@ export const polygamma = binary(
 )
 export type PolygammaFn = typeof polygamma
 
-export const digamma = unaryFrom(polygamma, bindLeft, real(0))
+export const digamma = unaryFrom(polygamma, bindLeft)(real(0))

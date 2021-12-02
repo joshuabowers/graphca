@@ -32,12 +32,12 @@ type BindTo = (unbound: Base, bound: Base) => [Base, Base]
 export const bindLeft: BindTo = (unbound, bound) => [bound, unbound]
 export const bindRight: BindTo = (unbound, bound) => [unbound, bound]
 
-export const unaryFrom = (fn: BinaryFn, bind: BindTo, bound: Base) => {
+export const unaryFrom = (fn: BinaryFn, bind: BindTo) => {
   type UnaryFn = Multi
     & ((expression: Real) => Real)
     & ((expression: Complex) => Complex)
     & ((expression: Base) => Base)
-  return multi(
+  return (bound: Base) => multi(
     method(Base, (unbound: Base) => fn(...bind(unbound, bound)))
   ) as UnaryFn
 }

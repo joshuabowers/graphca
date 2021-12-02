@@ -1,9 +1,11 @@
-import { method, multi, Multi, _ } from '@arrows/multimethod'
+import { method, fromMulti } from '@arrows/multimethod'
 import { Base } from './Expression'
-import { Real, real } from './real'
+import { real } from './real'
 import { Complex, complex } from './complex'
-import { Binary } from './binary'
+import { Binary, binary, unaryFrom, bindLeft } from './binary'
 import { divide } from './multiplication'
+import { Exponentiation } from './exponentiation'
+import { equals } from './equality'
 
 export class Logarithm extends Binary {
   readonly $kind = 'Logarithm'
@@ -14,41 +16,25 @@ const lnComplex = (c: Complex) => complex(
   Math.atan2(c.b, c.a)
 )
 
-const logReal = (base: Real, expression: Real) => real(Math.log(expression.value) / Math.log(base.value))
-const logComplex = (base: Complex, expression: Complex) => {
-  const n = lnComplex(expression)
-  if(base.a === Math.E && base.b === 0){ return n }
-  return divide(lnComplex(expression), lnComplex(base))
-}
-const logRC = (base: Real, expression: Complex) => log(complex(base.value, 0), expression)
-const logCR = (base: Complex, expression: Real) => log(base, complex(expression.value, 0))
-const logBase = (base: Base, expression: Base) => new Logarithm(base, expression)
+const isMatchingBases = (left: Base, right: Base) =>
+  right instanceof Exponentiation && equals(left, right.left)
 
-export type Log = Multi
-  & typeof logReal
-  & typeof logComplex
-  & typeof logRC
-  & typeof logCR
-  & typeof logBase
-
-export const log: Log = multi(
-  method([Real, Real], logReal),
-  method([Complex, Complex], logComplex),
-  method([Real, Complex], logRC),
-  method([Complex, Real], logCR),
-  method([Base, Base], logBase)
+const rawLog = binary(
+  (l, r) => real(Math.log(r.value) / Math.log(l.value)),
+  (l, r) => {
+    const n = lnComplex(r)
+    if(l.a === Math.E && l.b === 0){ return n }
+    return divide(lnComplex(r), lnComplex(l))
+  },
+  (l, r) => new Logarithm(l, r)
 )
+export type LogFn = typeof rawLog
 
-function unary(base: Real) {
-  type Unary = Multi
-    & ((expression: Real) => Real)
-    & ((expression: Complex) => Complex)
-    & ((expression: Base) => Logarithm)
-  return multi(
-    method(Base, (expression: Base) => log(base, expression))
-  ) as Unary
-}
+export const log: LogFn = fromMulti(
+  method(isMatchingBases, (_l: Base, r: Exponentiation) => r.right)
+)(rawLog)
 
-export const lb = unary(real(2))
-export const ln = unary(real(Math.E))
-export const lg = unary(real(10))
+const fromLog = unaryFrom(log, bindLeft)
+export const lb = fromLog(real(2))
+export const ln = fromLog(real(Math.E))
+export const lg = fromLog(real(10))
