@@ -139,10 +139,13 @@ const whenComplex: when<Complex> = e =>
     {stringifyComplex(e.a, e.b)}
   </span>
 
-const whenVariable: when<Variable> = e => 
-  <span className={styles.variable}>
-    {e.name}
-  </span>
+const whenVariable: when<Variable> = e => (
+  e.value
+    ? componentize(e.value)
+    : <span className={styles.variable}>
+        {e.name}
+      </span>
+)
 
 const binary = (className: string, operator: string, l: JSX.Element, r: JSX.Element) => (
   <span className={[styles.binary, styles[className]].join(' ')}>

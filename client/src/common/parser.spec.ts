@@ -1,8 +1,8 @@
 import { Unicode } from './MathSymbols';
 import {
-  Base,
-  add, subtract, multiply, divide, raise, 
-  real, complex, variable, //assign, invoke,
+  Base, Variable,
+  add, subtract, multiply, divide, raise, double, square,
+  real, complex, variable, assign, // invoke,
   negate, abs,
   lb, ln, lg,
   cos, sin, tan, sec, csc, cot,
@@ -12,18 +12,28 @@ import {
   factorial, gamma, polygamma, // digamma,
   differentiate
 } from './Tree'
-import { parser } from "./parser";
+import { parser, Scope, scope } from "./parser";
 
 // TODO: stubs until fully implemented
 const invoke = (...params: Base[]) => params[0]
-const assign = (a: Base, b: Base) => b
 const digamma = (e: Base) => polygamma(real(0), e)
 
-const expectObject = (input: string, expected: Base) => {
+const expectObject = (input: string, expected: Base, scope?: Scope) => {
   let output = undefined
-  expect(() => {output = parser.value(input)}).not.toThrow()
+  expect(() => {output = parser.value(input, {context: scope})}).not.toThrow()
   expect(output).not.toBeUndefined()
   expect(output).toMatchObject(expected)
+}
+
+const expectInScope = (scope: Scope, input: string, ...expected: Variable[]) => {
+  expectObject(input, expected[0].value ?? real(0xdeadbeef), scope)
+  for(let e of expected){
+    if(e.value) {
+      expect(scope.get(e.name)).toEqual(e)
+    } else {
+      expect(scope.get(e.name)).toBeUndefined()
+    }
+  }
 }
 
 describe('parser', () => {
@@ -76,6 +86,12 @@ describe('parser', () => {
 
     it('does not match reserved words', () => {
       expect(() => parser.value('cos')).toThrow()
+    })
+
+    it('returns the value of the variable if present in scope', () => {
+      const s = scope()
+      s.set('x', variable('x', real(5)))
+      expectInScope(s, 'x', variable('x', real(5)))
     })
   })
 
@@ -390,21 +406,22 @@ describe('parser', () => {
 
   describe('of assignments', () => {
     it('matches a basic assignment', () => {
-      expectObject('x <- 2', assign(variable('x'), real(2)))
+      expectInScope(scope(), 'x <- 2', variable('x', real(2)))
     })
 
     it('matches the assignment of a variable expression', () => {
-      expectObject('y <- 2 * x^2', assign(
-        variable('y'),
-        multiply(real(2), raise(variable('x'), real(2)))
-      ))
+      expectInScope(scope(), 'y <- 2 * x^2', 
+        variable('y', double(square(variable('x')))),
+        variable('x')
+      )
     })
 
     it('matches assignments right-associatively', () => {
-      expectObject('z <- y <- x', assign(
-        variable('z'),
-        assign(variable('y'), variable('x'))
-      ))
+      expectInScope(scope(), 'z <- y <- x', 
+        variable('z', variable('x')),
+        variable('y', variable('x')),
+        variable('x')        
+      )
     })
   })
 

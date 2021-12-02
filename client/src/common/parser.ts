@@ -1,17 +1,14 @@
 import { Unicode } from './MathSymbols'
 import {
   Base,
-  real, complex, variable,
+  real, complex, variable, assign,
   raise, negate, factorial, polygamma, // digamma,
-  differentiate, // assign, invoke,
+  differentiate, // invoke,
   operators, additive, multiplicative, functions,
 } from './Tree'
-import { peg, $fail } from 'pegase'
-
-export type Scope = Map<string, Base>
-
-export const scope = (entries?: [[string, Base]]): Scope => 
-  new Map<string, Base>(entries)
+import { peg, $fail, $context } from 'pegase'
+export { scope } from './Tree/scope'
+export type { Scope } from './Tree/scope'
 
 const capture = (s: string) => `"${s}"`
 const additiveOperators = peg([...additive.keys()].map(capture).join('|'))
@@ -25,7 +22,6 @@ const assignmentOperators = peg(['<-'].map(capture).join('|'))
 
 // TODO: stubs until fully implemented
 const invoke = (...params: Base[]) => params[0]
-const assign = (a: Base, b: Base) => b
 
 type Tail = {
   op: string,
@@ -69,7 +65,7 @@ export const parser = peg<Base>`
 expression: assignment
 
 assignment:
-| <a>variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b)}
+| <a>$variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b, $context()).value}
 | addition
 
 addition: leftAssociative(multiplication, ${additiveOperators})
@@ -134,7 +130,7 @@ constant:
 | real
 
 variable:
-| <name>$variable ${({name}) => variable(name)}
+| <name>$variable ${({name}) => $context()?.get(name)?.value ?? variable(name)}
 
 complex:
 | <n>${subtractionOperators}? <a>real ${additionOperators} <b>real? $i ${({n, a, b}) => {

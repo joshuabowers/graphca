@@ -60,8 +60,14 @@ describe(Expression, () => {
     })  
   })
 
-  it('renders variables', () => {
-    expectMarkup(variable('x'), '.variable', 'x')
+  describe('of variables', () => {
+    it('renders unbound variables as their name', () => {
+      expectMarkup(variable('x'), '.variable', 'x')
+    })
+
+    it('renders bound variables as their value', () => {
+      expectMarkup(variable('x', real(5)), '.constant.real', '5')
+    })
   })
 
   describe('of additions', () => {

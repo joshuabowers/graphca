@@ -4,7 +4,7 @@ import { Unary } from './unary'
 import { Binary } from './binary'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
-import { Variable, variable } from './variable'
+import { Variable, variable, assign } from './variable'
 import { Addition, add, subtract } from './addition'
 import { Multiplication, multiply, double, negate, divide } from './multiplication'
 import { Exponentiation, raise, square, sqrt, reciprocal } from './exponentiation'
@@ -52,7 +52,7 @@ export {
   Logarithm, Factorial, Gamma, Polygamma, Derivative
 }
 export {
-  real, complex, variable,
+  real, complex, variable, assign,
   add, subtract, multiply, divide, raise, abs,
   double, negate, square, sqrt, reciprocal,
   cos, sin, tan, sec, csc, cot,
