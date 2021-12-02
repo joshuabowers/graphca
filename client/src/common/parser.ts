@@ -65,7 +65,7 @@ const builtInFunction = (name: string, expression: Base): Base | undefined => {
   return f(expression)
 }
 
-export const treeParser = peg<Base>`
+export const parser = peg<Base>`
 expression: assignment
 
 assignment:

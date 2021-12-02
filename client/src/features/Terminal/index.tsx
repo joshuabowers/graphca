@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
-// import { parse, Scope, scope as createScope } from '../../common/parse'
-import { scope as createScope } from '../../common/treeParser'
+import { scope as createScope } from '../../common/parser'
 import { Parse } from '../Parse';
 import styles from './Terminal.module.css';
 import { RootState } from '../../app/store';

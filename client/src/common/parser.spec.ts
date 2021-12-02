@@ -12,7 +12,7 @@ import {
   factorial, gamma, polygamma, // digamma,
   differentiate
 } from './Tree'
-import { treeParser } from "./treeParser";
+import { parser } from "./parser";
 
 // TODO: stubs until fully implemented
 const invoke = (...params: Base[]) => params[0]
@@ -21,12 +21,12 @@ const digamma = (e: Base) => polygamma(real(0), e)
 
 const expectObject = (input: string, expected: Base) => {
   let output = undefined
-  expect(() => {output = treeParser.value(input)}).not.toThrow()
+  expect(() => {output = parser.value(input)}).not.toThrow()
   expect(output).not.toBeUndefined()
   expect(output).toMatchObject(expected)
 }
 
-describe('treeParser', () => {
+describe('parser', () => {
   describe('of constants', () => {
     it('matches reals', () => {
       expectObject('1.2345', real(1.2345))
@@ -75,7 +75,7 @@ describe('treeParser', () => {
     })
 
     it('does not match reserved words', () => {
-      expect(() => treeParser.value('cos')).toThrow()
+      expect(() => parser.value('cos')).toThrow()
     })
   })
 
