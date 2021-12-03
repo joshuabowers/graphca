@@ -5,14 +5,13 @@ import { complex } from './complex';
 import { Binary, binary, unaryFrom, bindRight } from './binary';
 import { Multiplication, multiply } from './multiplication';
 import { Logarithm } from './logarithmic';
+import { visit, identity, leftChild } from './predicates';
 import { equals } from './equality';
 
 export class Exponentiation extends Binary {
   readonly $kind = 'Exponentiation'
 }
 
-const isN_LofN = (left: Base, right: Base) =>
-  right instanceof Logarithm && equals(left, right.left)
 const isE_A = (left: Base, _right: Base) =>
   left instanceof Exponentiation
 const isM_A = (left: Base, _right: Base) =>
@@ -41,7 +40,7 @@ export const raise: RaiseFn = fromMulti(
   method([_, real(0)], real(1)),
   method([real(1), _], real(1)),
   method([_, real(1)], (l: Base, _r: Real) => l),
-  method(isN_LofN, (_l: Base, r: Logarithm) => r.right),
+  visit(Base, Logarithm)(identity, leftChild)((_l, r) => r.right),
   method(isE_A, (l: Exponentiation, r: Base) => raise(l.left, multiply(l.right, r))),
   method(isM_A, (l: Multiplication, r: Base) => multiply(raise(l.left, r), raise(l.right, r))),
 )(rawRaise)
