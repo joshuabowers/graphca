@@ -1,33 +1,16 @@
-import { method, multi, Multi } from '@arrows/multimethod';
+import { method, fromMulti, multi, Multi } from '@arrows/multimethod';
 import { Base } from "./Expression";
-import { partial } from "./partial";
 import { Real, real } from "./real";
 import { Complex, complex } from './complex';
-import { Binary } from './binary';
+import { Binary, binary, unaryFrom, binaryFrom, bindLeft } from './binary';
+import { equals } from './equality';
+import { any, not, notAny, Which, leftChild, rightChild, identity } from './predicates';
 import { add } from './addition';
 import { Exponentiation, raise, reciprocal, square } from "./exponentiation";
-import { equals } from './equality';
 
 export class Multiplication extends Binary {
   readonly $kind = 'Multiplication'
 }
-
-const swap = <B, T>(f: (l: B, r: B) => T) => (l: B, r: B) => f(r, l)
-const not = <T>(type: new(...args: any[]) => T) => (value: unknown) => !(value instanceof type)
-const selectLeft = <L, R>(l: L, _r: R) => l
-const selectRight = <L, R>(_l: L, r: R) => r
-
-const notAny = <T extends Base>(...types: (new(...args: any[]) => T)[]) => (value: unknown) => types.every((type) => !(value instanceof type))
-const any = <T extends Base>(...types: (new(...args: any[]) => T)[]) => (value: unknown) => types.some(type => value instanceof type)
-
-const multiplyReals = (left: Real, right: Real) => real(left.value * right.value)
-const multiplyComplexes = (left: Complex, right: Complex) => 
-  complex( // 2 + 3i * 3 + 4i => -6 + 17i
-    (left.a * right.a) - (left.b * right.b),
-    (left.a * right.b) + (left.b * right.a)
-  )
-const multiplyRC = (left: Real, right: Complex) => complex(left.value * right.a, left.value * right.b)
-const otherwise = (left: Base, right: Base) => new Multiplication(left, right)
 
 const isCasR = (v: Base) => v instanceof Complex && v.b === 0
 const isPureI = (v: Base) => v instanceof Complex && v.a === 0
@@ -36,11 +19,6 @@ const isPureI = (v: Base) => v instanceof Complex && v.a === 0
 const isN1_N2A = (l: Base, r: Base) =>
   any<Base>(Real, Complex)(l) && r instanceof Multiplication && any<Base>(Real, Complex)(r.left)
 
-export const identity = <T>(t: T) => t
-export const leftBranch = <T extends Binary>(t: T) => t.left
-export const rightBranch = <T extends Binary>(t: T) => t.right
-
-type Which<T> = (t: T) => Base
 export const equivalent = (a: Which<Multiplication>, b: Which<Multiplication>) =>
   (left: Multiplication, right: Multiplication) => canFormExponential(a(left), b(right))
 
@@ -50,38 +28,38 @@ const flip: Transform = (l, r) => collectFromProducts(r, l)
 type CollectFromProductsFn = Multi & Transform
 
 export const collectFromProducts: CollectFromProductsFn = multi(
-  method(equivalent(leftBranch, leftBranch), <Transform>((l, r) => 
+  method(equivalent(leftChild, leftChild), <Transform>((l, r) => 
     multiply(
       multiply(l.left, r.left),
       multiply(l.right, r.right)
     )
   )),
-  method(equivalent(leftBranch, rightBranch), <Transform>((l, r) =>
+  method(equivalent(leftChild, rightChild), <Transform>((l, r) =>
     multiply(
       multiply(l.left, r.right),
       multiply(l.right, r.left)
     )
   )),
-  method(equivalent(rightBranch, leftBranch), <Transform>((l, r) =>
+  method(equivalent(rightChild, leftChild), <Transform>((l, r) =>
     multiply(
       multiply(l.right, r.left),
       multiply(l.left, r.right)
     )
   )),
-  method(equivalent(rightBranch, rightBranch), <Transform>((l, r) =>
+  method(equivalent(rightChild, rightChild), <Transform>((l, r) =>
     multiply(
       multiply(l.left, r.left),
       multiply(l.right, r.right)
     )
   )),
-  method(equivalent(identity, leftBranch), <Transform>((l, r) =>
+  method(equivalent(identity, leftChild), <Transform>((l, r) =>
     multiply(square(l), r.right)
   )),
-  method(equivalent(identity, rightBranch), <Transform>((l, r) =>
+  method(equivalent(identity, rightChild), <Transform>((l, r) =>
     multiply(square(l), r.left)
   )),
-  method(equivalent(leftBranch, identity), flip),
-  method(equivalent(rightBranch, identity), flip),
+  method(equivalent(leftChild, identity), flip),
+  method(equivalent(rightChild, identity), flip),
   method(equivalent(identity, identity), <Transform>((l, r) => square(l)))
 )
 
@@ -160,42 +138,35 @@ export const exponentialCollect: ExponentialCollectFn = multi(
   method([Base, Base], (l: Base, _r: Base) => square(l))
 )
 
-type Multiply = Multi 
-  & typeof multiplyReals 
-  & typeof multiplyComplexes
-  & typeof multiplyRC
-  & typeof otherwise
+const rawMultiply = binary(
+  (l, r) => real(l.value * r.value),
+  (l, r) => complex(
+    (l.a * r.a) - (l.b * r.b),
+    (l.a * r.b) + (l.b * r.a)
+  ),
+  (l, r) => new Multiplication(l, r)
+)
+export type MultiplyFn = typeof rawMultiply
 
-// Potential for simplification:
-// No enforced order currently exists for terms, other
-// than constants get bubbled left. So, use degree to order the
-// results. This will not guarantee that a given node kind will
-// always exist in a given position:
-// (x^5 * y^3) * z^15, but z^2 * (x^5 * y^3)
-
-export const multiply: Multiply = multi(
+export const multiply: MultiplyFn = fromMulti(
   method([not(Real), Real], (l: Base, r: Real) => multiply(r, l)),
   method([notAny<Base>(Real, Complex), Complex], (l: Base, r: Complex) => multiply(r, l)),
-  method([Real, Real], multiplyReals),
-  method([Real, Complex], multiplyRC),
   method([isCasR, isCasR], (l: Complex, r: Complex) => complex(l.a * r.a, 0)),
   method([isCasR, isPureI], (l: Complex, r: Complex) => complex(0, l.a * r.b)),
   method([isPureI, isCasR], (l: Complex, r: Complex) => complex(0, l.b * r.a)),
   method([Complex, isCasR], (l: Complex, r: Complex) => complex(l.a * r.a, 0)),
-  method([Complex, Complex], multiplyComplexes),
+  method([real(0), real(Infinity)], real(NaN)),
+  method([real(Infinity), real(0)], real(NaN)),
   method([real(0), Base], real(0)),
-  method([real(1), Base], selectRight),
+  method([real(1), Base], (_l: Base, r: Base) => r),
   method([real(Infinity), Base], real(Infinity)),
   method([real(-Infinity), Base], real(-Infinity)),
   method(isN1_N2A, (l: Base, r: Multiplication) => multiply(multiply(l, r.left), r.right)),
-  method(canFormExponential, exponentialCollect),
-  method([Base, Base], otherwise)
-)
+  method(canFormExponential, exponentialCollect)
+)(rawMultiply)
 
-export const negate = partial(multiply, real(-1))
-export const double = partial(multiply, real(2))
+const fromMultiply = unaryFrom(multiply, bindLeft)
+export const negate = fromMultiply(real(-1))
+export const double = fromMultiply(real(2))
 
-// Defined as a multimethod to propagate type information.
-export const divide: Multiply = multi(
-  method([Base, Base], (l: Base, r: Base) => multiply(l, reciprocal(r)))
-)
+export const divide = binaryFrom(multiply, (l, r) => [l, reciprocal(r)])
