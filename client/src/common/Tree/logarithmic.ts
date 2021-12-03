@@ -19,14 +19,13 @@ const lnComplex = (c: Complex) => complex(
 const isMatchingBases = (left: Base, right: Base) =>
   right instanceof Exponentiation && equals(left, right.left)
 
-const rawLog = binary(
+const rawLog = binary(Logarithm)(
   (l, r) => real(Math.log(r.value) / Math.log(l.value)),
   (l, r) => {
     const n = lnComplex(r)
     if(l.a === Math.E && l.b === 0){ return n }
     return divide(lnComplex(r), lnComplex(l))
-  },
-  (l, r) => new Logarithm(l, r)
+  }
 )
 export type LogFn = typeof rawLog
 

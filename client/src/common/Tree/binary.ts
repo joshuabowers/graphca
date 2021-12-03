@@ -17,20 +17,38 @@ type BinaryFn<T> = Multi
   & when<Complex>
   & when<Base, T>
 
-export const binary = <T extends Binary>(
-  whenRxR: when<Real>, 
-  whenCxC: when<Complex>, 
-  whenBxB: when<Base, T>
-) => {
-  const fn = multi(
-    method([Real, Real], whenRxR),
-    method([Complex, Complex], whenCxC),
-    method([Real, Complex], (l: Real, r: Complex) => fn(complex(l.value, 0), r)),
-    method([Complex, Real], (l: Complex, r: Real) => fn(l, complex(r.value, 0))),
-    method([Base, Base], whenBxB)
-  ) as BinaryFn<T>
-  return fn
-}
+type Constructor<T> = new(...args: any[]) => T
+
+export const binary = <T extends Binary>(type: Constructor<T>) =>
+  (
+    whenRxR: when<Real>,
+    whenCxC: when<Complex>
+  ) => {
+    const whenBxB: when<Base, T> = (l, r) => new type(l, r)
+    const fn: BinaryFn<T> = multi(
+      method([Real, Real], whenRxR),
+      method([Complex, Complex], whenCxC),
+      method([Real, Complex], (l: Real, r: Complex) => fn(complex(l.value, 0), r)),
+      method([Complex, Real], (l: Complex, r: Real) => fn(l, complex(r.value, 0))),
+      method([Base, Base], whenBxB)
+    )
+    return fn  
+  }
+
+// export const binary = <T extends Binary>(
+//   whenRxR: when<Real>, 
+//   whenCxC: when<Complex>, 
+//   whenBxB: when<Base, T>
+// ) => {
+//   const fn = multi(
+//     method([Real, Real], whenRxR),
+//     method([Complex, Complex], whenCxC),
+//     method([Real, Complex], (l: Real, r: Complex) => fn(complex(l.value, 0), r)),
+//     method([Complex, Real], (l: Complex, r: Real) => fn(l, complex(r.value, 0))),
+//     method([Base, Base], whenBxB)
+//   ) as BinaryFn<T>
+//   return fn
+// }
 
 type BindTo = (unbound: Base, bound: Base) => [Base, Base]
 

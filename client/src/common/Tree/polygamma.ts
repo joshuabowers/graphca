@@ -63,10 +63,9 @@ const calculatePolygamma = <C extends Real|Complex>(
   return input
 }
 
-export const polygamma = binary(
+export const polygamma = binary(Polygamma)(
   (l, r) => calculatePolygamma(l, r, (l, r) => l.value < r, real),
   (l, r) => calculatePolygamma(l, r, (l, r) => l.a < r, n => complex(n, 0)),
-  (l, r) => new Polygamma(l, r)
 )
 export type PolygammaFn = typeof polygamma
 

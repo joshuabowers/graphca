@@ -16,10 +16,9 @@ const isXpR_R = (l: Base, r: Base) =>
   && (l.right instanceof Real || l.right instanceof Complex)
   && (r instanceof Real || r instanceof Complex)
 
-const rawAdd = binary(
+const rawAdd = binary(Addition)(
   (l, r) => real(l.value + r.value),
-  (l, r) => complex(l.a + r.a, l.b + r.b),
-  (l, r) => new Addition(l, r)
+  (l, r) => complex(l.a + r.a, l.b + r.b)
 )
 export type AddFn = typeof rawAdd
 

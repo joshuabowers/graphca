@@ -138,13 +138,12 @@ export const exponentialCollect: ExponentialCollectFn = multi(
   method([Base, Base], (l: Base, _r: Base) => square(l))
 )
 
-const rawMultiply = binary(
+const rawMultiply = binary(Multiplication)(
   (l, r) => real(l.value * r.value),
   (l, r) => complex(
     (l.a * r.a) - (l.b * r.b),
     (l.a * r.b) + (l.b * r.a)
-  ),
-  (l, r) => new Multiplication(l, r)
+  )
 )
 export type MultiplyFn = typeof rawMultiply
 

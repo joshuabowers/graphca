@@ -6,7 +6,6 @@ import { Binary, binary, unaryFrom, bindRight } from './binary';
 import { Multiplication, multiply } from './multiplication';
 import { Logarithm } from './logarithmic';
 import { visit, identity, leftChild } from './predicates';
-import { equals } from './equality';
 
 export class Exponentiation extends Binary {
   readonly $kind = 'Exponentiation'
@@ -17,7 +16,7 @@ const isE_A = (left: Base, _right: Base) =>
 const isM_A = (left: Base, _right: Base) =>
   left instanceof Multiplication
 
-const rawRaise = binary(
+const rawRaise = binary(Exponentiation)(
   (l, r) => real(l.value ** r.value),
   (l, r) => {
     const p = Math.hypot(l.a, l.b), arg = Math.atan2(l.b, l.a)
@@ -27,8 +26,7 @@ const rawRaise = binary(
       multiplicand * Math.cos(dLnP + cArg),
       multiplicand * Math.sin(dLnP + cArg)
     )
-  },
-  (l, r) => new Exponentiation(l, r)
+  }
 )
 export type RaiseFn = typeof rawRaise
 
