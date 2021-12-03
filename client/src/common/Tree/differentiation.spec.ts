@@ -10,6 +10,9 @@ import { cos, sin, tan, sec, csc, cot } from './trigonometric';
 import { acos, asin, atan, asec, acsc, acot } from './arcus';
 import { cosh, sinh, tanh, sech, csch, coth } from './hyperbolic';
 import { acosh, asinh, atanh, asech, acsch, acoth } from './areaHyperbolic';
+import { factorial } from './factorial';
+import { gamma } from './gamma';
+import { polygamma, digamma } from './polygamma';
 
 import { differentiate } from './differentiation';
 
@@ -290,32 +293,35 @@ describe('differentiate', () => {
     })
   })
 
-  // describe('of factorials', () => {
-  //   it('returns the chain rule of the derivative of the factorial', () => {
-  //     expectObject('x!', multiply(
-  //       multiply(factorial(variable('x')), polygamma(real(0), add(variable('x'), real(1)))),
-  //       real(1)
-  //     ))
-  //   })
-  // })
+  describe('of factorials', () => {
+    it('returns the chain rule of the derivative of the factorial', () => {
+      expect(
+        differentiate(factorial(variable('x')))
+      ).toEqual(
+        multiply(factorial(variable('x')), digamma(add(variable('x'), real(1))))
+      )
+    })
+  })
 
-  // describe('of gamma', () => {
-  //   it('returns the chain rule of the derivative of gamma', () => {
-  //     expectObject(`${Unicode.gamma}(x)`, multiply(
-  //       multiply(gamma(variable('x')), polygamma(real(0), variable('x'))),
-  //       real(1)
-  //     ))
-  //   })
-  // })
+  describe('of gamma', () => {
+    it('returns the chain rule of the derivative of gamma', () => {
+      expect(
+        differentiate(gamma(variable('x')))
+      ).toEqual(
+        multiply(gamma(variable('x')), digamma(variable('x')))
+      )
+    })
+  })
 
-  // describe('of polygamma', () => {
-  //   it('returns the chain rule of the derivative of the polygamma', () => {
-  //     expectObject(`${Unicode.digamma}(n, x)`, multiply(
-  //       polygamma(add(variable('n'), real(1)), variable('x')),
-  //       real(1)
-  //     ))
-  //   })
-  // })
+  describe('of polygamma', () => {
+    it('returns the chain rule of the derivative of the polygamma', () => {
+      expect(
+        differentiate(polygamma(variable('n'), variable('x')))
+      ).toEqual(
+        polygamma(add(variable('n'), real(1)), variable('x'))
+      )
+    })
+  })
 
   describe('of derivatives', () => {
     it('returns the second derivative of the nested expression', () => {

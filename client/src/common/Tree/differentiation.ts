@@ -25,6 +25,9 @@ import {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent
 } from './areaHyperbolic'
+import { Factorial, factorial } from './factorial'
+import { Gamma, gamma } from './gamma'
+import { Polygamma, polygamma, digamma } from './polygamma'
 
 export class Derivative extends Base {
   readonly $kind = 'Derivative'
@@ -183,35 +186,14 @@ const whenAreaHyperbolicCosecant: when<AreaHyperbolicCosecant> = e =>
 const whenAreaHyperbolicCotangent: when<AreaHyperbolicCotangent> = e =>
   chain(reciprocal(subtract(real(1), square(e.expression))), e.expression)
 
-  // visitFactorial(node: Factorial): Tree {
-  //   return multiply(
-  //     multiply(
-  //       factorial(node.expression),
-  //       digamma(add(node.expression, real(1)))
-  //     ),
-  //     node.expression.accept(this)
-  //   )
-  // }
+const whenFactorial: when<Factorial> = e =>
+  chain(multiply(e, digamma(add(e.expression, real(1)))), e.expression)
 
-  // visitGamma(node: Gamma): Tree {
-  //   return multiply(
-  //     multiply(
-  //       gamma(node.expression),
-  //       digamma(node.expression)
-  //     ),
-  //     node.expression.accept(this)
-  //   )
-  // }
+const whenGamma: when<Gamma> = e =>
+  chain(multiply(e, digamma(e.expression)), e.expression)
 
-  // visitPolygamma(node: Polygamma): Tree {
-  //   return multiply(
-  //     polygamma(
-  //       add(node.order, real(1)),
-  //       node.expression
-  //     ),
-  //     node.expression.accept(this)
-  //   )
-  // }
+const whenPolygamma: when<Polygamma> = e =>
+  chain(polygamma(add(e.left, real(1)), e.right), e.right)
   
 const whenBase = (expression: Base) => expression
 
@@ -229,6 +211,7 @@ export type DifferentiateFn = Multi
   & typeof whenAreaHyperbolicCosine & typeof whenAreaHyperbolicSine
   & typeof whenAreaHyperbolicTangent & typeof whenAreaHyperbolicSecant
   & typeof whenAreaHyperbolicCosecant & typeof whenAreaHyperbolicCotangent
+  & typeof whenFactorial & typeof whenGamma & typeof whenPolygamma
   & typeof whenBase
 
 export const differentiate: DifferentiateFn = multi(
@@ -269,5 +252,9 @@ export const differentiate: DifferentiateFn = multi(
   method(AreaHyperbolicTangent, whenAreaHyperbolicTangent),
   method(AreaHyperbolicSecant, whenAreaHyperbolicSecant),
   method(AreaHyperbolicCosecant, whenAreaHyperbolicCosecant),
-  method(AreaHyperbolicCotangent, whenAreaHyperbolicCotangent)
+  method(AreaHyperbolicCotangent, whenAreaHyperbolicCotangent),
+
+  method(Factorial, whenFactorial),
+  method(Gamma, whenGamma),
+  method(Polygamma, whenPolygamma)
 )
