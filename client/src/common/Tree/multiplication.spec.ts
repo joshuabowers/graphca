@@ -68,8 +68,8 @@ describe('collectsFromProducts', () => {
   it('squares equivalent things', () => {
     expect(
       collectFromProducts(
-        multiply(variable('x'), variable('y')) as Multiplication,
-        multiply(variable('x'), variable('y')) as Multiplication
+        multiply(variable('x'), variable('y')),
+        multiply(variable('x'), variable('y'))
       )
     ).toEqual(multiply(square(variable('x')), square(variable('y'))))
   })
@@ -77,8 +77,8 @@ describe('collectsFromProducts', () => {
   it('collects like terms across multiplications', () => {
     expect(
       collectFromProducts(
-        multiply(variable('x'), variable('y')) as Multiplication,
-        multiply(variable('x'), variable('z')) as Multiplication
+        multiply(variable('x'), variable('y')),
+        multiply(variable('x'), variable('z'))
       )
     ).toEqual(
       multiply(
