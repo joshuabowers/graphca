@@ -1,19 +1,14 @@
 import { Unicode } from '../../common/MathSymbols'
-import { Base } from '../../common/Tree/Expression'
-import { real } from '../../common/Tree/real'
-import { complex } from '../../common/Tree/complex'
-import { variable } from '../../common/Tree/variable'
-import { add, subtract } from '../../common/Tree/addition'
-import { multiply, divide, negate } from '../../common/Tree/multiplication'
-import { raise, reciprocal, square } from '../../common/Tree/exponentiation'
-import { cos, sin, tan, sec, csc, cot } from '../../common/Tree/trigonometric'
-import { acos, asin, atan, asec, acsc, acot } from '../../common/Tree/arcus'
-import { cosh, sinh, tanh, sech, csch, coth } from '../../common/Tree/hyperbolic'
-import { acosh, asinh, atanh, asech, acsch, acoth } from '../../common/Tree/areaHyperbolic'
-import { log, lb, ln, lg } from '../../common/Tree/logarithmic'
-import { gamma } from '../../common/Tree/gamma'
-import { factorial } from '../../common/Tree/factorial'
-import { abs } from '../../common/Tree/absolute'
+import {
+  Base,
+  real, complex, variable, add, subtract, multiply, divide, negate,
+  raise, reciprocal, square, log, lb, ln, lg,
+  cos, sin, tan, sec, csc, cot,
+  acos, asin, atan, asec, acsc, acot,
+  cosh, sinh, tanh, sech, csch, coth,
+  acosh, asinh, atanh, asech, acsch, acoth,
+  abs, factorial, gamma, polygamma
+} from '../../common/Tree'
 import { Expression } from '.'
 import { shallow } from 'enzyme'
 
@@ -193,12 +188,12 @@ describe(Expression, () => {
       expectMarkup(gamma(variable('x')), '.functional.unary', `${Unicode.gamma}(x)`)
     })
   
-    it.todo('renders polygamma') //, () => {
-    //   expectMarkup(
-    //     `${Unicode.digamma}(x)`, '.functional.polygamma',
-    //     `${Unicode.digamma}0(x)`
-    //   )
-    // })
+    it('renders polygamma', () => {
+      expectMarkup(
+        polygamma(real(1), variable('x')), '.functional.polygamma',
+        `${Unicode.digamma}(1)(x)`
+      )
+    })
   
     it('renders absolute values', () => {
       expectMarkup(abs(variable('x')), '.functional.unary', 'abs(x)')

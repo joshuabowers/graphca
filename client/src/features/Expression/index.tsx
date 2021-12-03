@@ -13,7 +13,7 @@ import {
   HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
-  real, multiply, negate, reciprocal
+  real, multiply, negate, reciprocal, Polygamma
 } from '../../common/Tree'
 import { Unicode } from '../../common/MathSymbols'
 
@@ -221,13 +221,13 @@ const whenFactorial: when<Factorial> = e => {
   </span>
 }
 
-// visitPolygamma(node: Polygamma): JSX.Element {
-//   const order = node.order.accept(this)
-//   const expression = node.expression.accept(this)
-//   return <span className={[styles.functional, styles.polygamma].join(' ')}>
-//     {node.function}<span className={styles.super}>{order}</span>({expression})
-//   </span>
-// }
+const whenPolygamma: when<Polygamma> = e => {
+  const order = componentize(e.left)
+  const expression = componentize(e.right)
+  return <span className={[styles.functional, styles.polygamma].join(' ')}>
+    {Unicode.digamma}<span className={styles.super}><span>({order})</span></span>({expression})
+  </span>
+}
 
 const whenBase: when<Base> = e => <span className={styles.unhandled}>Unhandled: {e.$kind}</span>
 
@@ -237,7 +237,7 @@ export type ComponentizeFn = Multi
   & typeof whenExponentiation & typeof whenLogarithm
   & typeof whenTrigonometric & typeof whenArcus
   & typeof whenHyperbolic & typeof whenAreaHyperbolic
-  & typeof whenUnary & typeof whenFactorial
+  & typeof whenUnary & typeof whenFactorial & typeof whenPolygamma
   & typeof whenBase
 
 export const componentize: ComponentizeFn = multi(
@@ -256,6 +256,7 @@ export const componentize: ComponentizeFn = multi(
   method(AreaHyperbolic, whenAreaHyperbolic),
   method(Factorial, whenFactorial),
   method(Unary, whenUnary),
+  method(Polygamma, whenPolygamma),
 
   method(Base, whenBase)
 )
