@@ -2,8 +2,8 @@ import { Unicode } from './MathSymbols'
 import {
   Base,
   real, complex, variable, assign,
-  raise, negate, factorial, polygamma, // digamma,
-  differentiate, // invoke,
+  raise, negate, factorial, polygamma, digamma,
+  differentiate, invoke,
   operators, additive, multiplicative, functions,
 } from './Tree'
 import { peg, $fail, $context } from 'pegase'
@@ -19,9 +19,6 @@ const subtractionOperators = peg([Unicode.minus, '-'].map(capture).join('|'))
 const functional = peg([...functions.keys()].map(capture).join('|'))
 const factorialOPerator = peg(capture('!'))
 const assignmentOperators = peg(['<-'].map(capture).join('|'))
-
-// TODO: stubs until fully implemented
-const invoke = (...params: Base[]) => params[0]
 
 type Tail = {
   op: string,
@@ -49,7 +46,7 @@ type InvokeList = {
 
 const createInvoke = (node: Base, tail: InvokeList | undefined): Base | undefined => {
   if(!tail){ return node }
-  return createInvoke(invoke(node, ...tail.a), tail.b)
+  return createInvoke(invoke($context())(node)(...tail.a), tail.b)
 }
 
 const builtInFunction = (name: string, expression: Base): Base | undefined => {
@@ -112,7 +109,7 @@ functional:
 | ${Unicode.digamma} '(' <order>expression ',' ^ <>expression ')' ${
   ({order, expression}) => polygamma(order, expression)
 }
-| ${Unicode.digamma} '(' ^ <>expression ')' ${({expression}) => polygamma(real(0), expression)}
+| ${Unicode.digamma} '(' ^ <>expression ')' ${({expression}) => digamma(expression)}
 
 builtInFunction: ${functional}
 

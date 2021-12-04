@@ -2,21 +2,17 @@ import { Unicode } from './MathSymbols';
 import {
   Base, Variable,
   add, subtract, multiply, divide, raise, double, square,
-  real, complex, variable, assign, // invoke,
+  real, complex, variable, 
   negate, abs,
   lb, ln, lg,
   cos, sin, tan, sec, csc, cot,
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  factorial, gamma, polygamma, // digamma,
+  factorial, gamma, polygamma, digamma,
   differentiate
 } from './Tree'
 import { parser, Scope, scope } from "./parser";
-
-// TODO: stubs until fully implemented
-const invoke = (...params: Base[]) => params[0]
-const digamma = (e: Base) => polygamma(real(0), e)
 
 const expectObject = (input: string, expected: Base, scope?: Scope) => {
   let output = undefined
@@ -427,47 +423,27 @@ describe('parser', () => {
 
   describe('of invocations', () => {
     it('matches a basic invocation', () => {
-      expectObject('x(2)', invoke(variable('x'), real(2)))
+      expectObject('x(2)', real(2), scope())
     })
 
     it('allows multiple arguments to be passed', () => {
-      expectObject('x(2, y, 4)', invoke(
-        variable('x'), real(2), variable('y'), real(4)
-      ))
+      expectObject('x(2, y, 4)', real(2), scope())
     })
 
     it('can invoke a parenthetical', () => {
-      expectObject('(x^2 + x)(5)', invoke(
-        add(raise(variable('x'), real(2)), variable('x')),
-        real(5)
-      ))
+      expectObject('(x^2 + x)(5)', real(30), scope())
     })
 
     it('can invoke a derivative', () => {
-      expectObject(`${Unicode.derivative}(x^2)(5)`, invoke(
-        differentiate(raise(variable('x'), real(2))),
-        real(5)
-      ))
+      expectObject(`${Unicode.derivative}(x^2)(5)`, real(10), scope())
     })
 
     it('can recursively invoke', () => {
-      expectObject('(x + y + z)(1)(2)(3)', invoke(
-        invoke(
-          invoke(
-            add(add(variable('x'), variable('y')), variable('z')),
-            real(1)
-          ),
-          real(2)
-        ),
-        real(3)
-      ))
+      expectObject('(x + y * z)(1)(2)(3)', real(7), scope())
     })
 
     it('recursively associates correctly', () => {
-      expectObject('x(y)(1)', invoke(
-        invoke(variable('x'), variable('y')),
-        real(1)
-      ))
+      expectObject('(x*2)(y+3)(1)', real(8), scope())
     })
   })
 })

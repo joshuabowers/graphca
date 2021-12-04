@@ -35,8 +35,9 @@ import {
 import { Logarithm, log, lb, ln, lg } from './logarithmic'
 import { Factorial, factorial } from './factorial'
 import { Gamma, gamma } from './gamma'
-import { Polygamma, polygamma } from './polygamma'
+import { Polygamma, polygamma, digamma } from './polygamma'
 import { Derivative, differentiate } from './differentiation'
+import { invoke } from './invocation'
 
 export { 
   Base, Unary, Binary, Real, Complex, Variable,
@@ -59,8 +60,8 @@ export {
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  log, lb, ln, lg, factorial, gamma, polygamma,
-  differentiate
+  log, lb, ln, lg, factorial, gamma, polygamma, digamma,
+  differentiate, invoke
 }
 
 type Additive = typeof add | typeof subtract
