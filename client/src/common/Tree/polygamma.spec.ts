@@ -24,7 +24,7 @@ describe('polygamma', () => {
     it('reflects and calculates for a mapped positive real', () => {
       expectCloseTo(
         polygamma(real(1), real(-100.5)), 
-        real(9.85970), 
+        real(9.85970349187), 
         10
       )
     })

@@ -15,6 +15,7 @@ import { abs } from './absolute'
 import { is } from './predicates'
 import { reciprocal } from './exponentiation'
 import { differentiate } from './differentiation'
+import { invoke } from './invocation'
 
 export class Polygamma extends Binary {
   readonly $kind = 'Polygamma'
@@ -84,9 +85,6 @@ const calculatePolygamma = (
   )
 }
 
-// TODO: stubbed...
-const invoke = (...args: any[]) => args[0]
-
 const polygammaReflection = (m: Base, z: Base) => {
   const pi = real(Math.PI)
   const order = real(is(Real)(m) ? m.value : is(Complex)(m) ? m.a : 0)
@@ -96,11 +94,7 @@ const polygammaReflection = (m: Base, z: Base) => {
       raise(real(-1), m),
       polygamma(m, subtract(real(1), z))
     ),
-    multiply(
-      pi,
-      z
-      // invoke(d, multiply(pi, z))
-    )
+    multiply(pi, invoke()(d)(z))
   )
 }
 

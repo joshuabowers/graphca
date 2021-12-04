@@ -1,7 +1,8 @@
-// import { Base } from './Expression'
 import { Variable } from "./variable"
 
 export type Scope = Map<string, Variable>
 
-export const scope = (entries?: [[string, Variable]]): Scope => 
+type Entries = Iterable<readonly [string, Variable]>
+
+export const scope = (entries: Entries = []): Scope => 
   new Map<string, Variable>(entries)
