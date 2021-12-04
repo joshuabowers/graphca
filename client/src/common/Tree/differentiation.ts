@@ -25,8 +25,8 @@ import {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent
 } from './areaHyperbolic'
-import { Factorial, factorial } from './factorial'
-import { Gamma, gamma } from './gamma'
+import { Factorial } from './factorial'
+import { Gamma } from './gamma'
 import { Polygamma, polygamma, digamma } from './polygamma'
 
 export class Derivative extends Base {
@@ -38,6 +38,14 @@ const chain = (derivative: Base, argument: Base) =>
   multiply(derivative, differentiate(argument))
 
 type when<T> = (expression: T) => Base
+
+const whenNthDerivative = (order: Real, expression: Base) => {
+  let d: Base = expression
+  for(let i = 0; i < order.value; i++) {
+    d = differentiate(d)
+  }
+  return d
+}
 
 const whenReal: when<Real> = _ => real(0)
 const whenComplex: when<Complex> = _ => complex(0, 0)
@@ -198,6 +206,7 @@ const whenPolygamma: when<Polygamma> = e =>
 const whenBase = (expression: Base) => expression
 
 export type DifferentiateFn = Multi
+  & typeof whenNthDerivative
   & typeof whenReal & typeof whenComplex & typeof whenVariable
   & typeof whenAddition & typeof whenMultiplication 
   & typeof whenExponentiation & typeof whenLogarithm & typeof whenAbsolute
@@ -215,6 +224,7 @@ export type DifferentiateFn = Multi
   & typeof whenBase
 
 export const differentiate: DifferentiateFn = multi(
+  method([Real, Base], whenNthDerivative), // omg
   method(Real, whenReal),
   method(Complex, whenComplex),
   method(Variable, whenVariable),

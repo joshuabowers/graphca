@@ -330,4 +330,12 @@ describe('differentiate', () => {
       )
     })
   })
+
+  describe('of orders', () => {
+    it('returns the nth derivative of an expression', () => {
+      expect(differentiate(real(2), cos(variable('x')))).toEqual(
+        negate(cos(variable('x')))
+      )
+    })
+  })
 })

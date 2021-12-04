@@ -1,4 +1,4 @@
-import { fromMulti, multi, Multi, method, _ } from '@arrows/multimethod'
+import { fromMulti, multi, Multi, method } from '@arrows/multimethod'
 import { Base } from './Expression'
 import { Binary, binary } from './binary'
 import { unary } from './unary'
@@ -12,7 +12,7 @@ import { cot } from './trigonometric'
 import { ln } from './logarithmic'
 import { factorial } from './factorial'
 import { abs } from './absolute'
-import { is, any } from './predicates'
+import { is } from './predicates'
 import { reciprocal } from './exponentiation'
 import { differentiate } from './differentiation'
 
@@ -84,21 +84,13 @@ const calculatePolygamma = (
   )
 }
 
-const mthDerivative = (m: number, e: Base) => {
-  let d: Base = e
-  for(let i = 0; i < m; i++){
-    d = differentiate(d)
-  }
-  return d
-}
-
 // TODO: stubbed...
 const invoke = (...args: any[]) => args[0]
 
 const polygammaReflection = (m: Base, z: Base) => {
   const pi = real(Math.PI)
-  const order = is(Real)(m) ? m.value : is(Complex)(m) ? m.a : 0
-  const d = mthDerivative(order, cot(multiply(pi, variable('x'))))
+  const order = real(is(Real)(m) ? m.value : is(Complex)(m) ? m.a : 0)
+  const d = differentiate(order, cot(multiply(pi, variable('x'))))
   return subtract(
     multiply(
       raise(real(-1), m),
