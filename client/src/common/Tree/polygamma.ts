@@ -14,7 +14,7 @@ import { factorial } from './factorial'
 import { abs } from './absolute'
 import { is, any } from './predicates'
 import { reciprocal } from './exponentiation'
-// import { differentiate } from './differentiation'
+import { differentiate } from './differentiation'
 
 export class Polygamma extends Binary {
   readonly $kind = 'Polygamma'
@@ -87,7 +87,7 @@ const calculatePolygamma = (
 const mthDerivative = (m: number, e: Base) => {
   let d: Base = e
   for(let i = 0; i < m; i++){
-    // d = differentiate(d)
+    d = differentiate(d)
   }
   return d
 }

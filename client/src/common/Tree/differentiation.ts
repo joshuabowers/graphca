@@ -256,5 +256,10 @@ export const differentiate: DifferentiateFn = multi(
 
   method(Factorial, whenFactorial),
   method(Gamma, whenGamma),
-  method(Polygamma, whenPolygamma)
+  method((v: unknown) => v instanceof Polygamma, whenPolygamma)
+  // The above predicate used as Polygamma uses differentiate,
+  // but differentiate uses Polygamma. Circular dependency hell;
+  // by offsetting when Polygamma is referenced, both constants
+  // can be established prior to use. Cleaner, perhaps, than
+  // migrating Polygamma's definition to a separate file.
 )
