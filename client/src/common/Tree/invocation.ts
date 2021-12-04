@@ -2,8 +2,7 @@ import { method, multi, Multi } from '@arrows/multimethod'
 import { Base } from './Expression'
 import { Binary } from './binary'
 import { Unary } from './unary'
-import { Scope, scope as createScope } from './scope'
-import { identity } from './predicates'
+import { Scope, scope as createScope, scope } from './scope'
 import { Real } from './real'
 import { Complex } from './complex'
 import { Variable, variable } from './variable'
@@ -35,55 +34,62 @@ import { Factorial, factorial } from './factorial'
 import { Gamma, gamma } from './gamma'
 import { Polygamma, polygamma } from './polygamma'
 
-const createEvaluate = (scope: Scope) => {
-  const binary = (b: (...args: Base[]) => Base) => (e: Binary) => b(fn(e.left), fn(e.right))
-  const unary = (u: (arg: Base) => Base) => (e: Unary) => u(fn(e.expression))
-  const fn = multi(
-    method(Real, identity),
-    method(Complex, identity),
-    method(Variable, (v: Variable) => scope.get(v.name)?.value ?? v),
+const constant = <T>() => (_s: Scope, n: T) => n
+const binary = (b: (...args: Base[]) => Base) => 
+  (s: Scope, e: Binary) => b(evaluate(s, e.left), evaluate(s, e.right))
+const unary = (u: (arg: Base) => Base) => 
+  (s: Scope, e: Unary) => u(evaluate(s, e.expression))
 
-    method(Addition, binary(add)),
-    method(Multiplication, binary(multiply)),
-    method(Exponentiation, binary(raise)),
-    method(Logarithm, binary(log)),
+type EvaluateFn = Multi & ((scope: Scope, expression: Base) => Base)
 
-    method(AbsoluteValue, unary(abs)),
+const evaluate: EvaluateFn = multi(
+  (_scope: Scope, expression: Base) => expression,
+  method(Real, constant<Real>()),
+  method(Complex, constant<Complex>()),
+  method(Variable, (s: Scope, v: Variable) => s.get(v.name)?.value ?? v),
 
-    method(Cosine, unary(cos)),
-    method(Sine, unary(sin)),
-    method(Tangent, unary(tan)),
-    method(Secant, unary(sec)),
-    method(Cosecant, unary(csc)),
-    method(Cotangent, unary(cot)),
-  
-    method(ArcusCosine, unary(acos)),
-    method(ArcusSine, unary(asin)),
-    method(ArcusTangent, unary(atan)),
-    method(ArcusSecant, unary(asec)),
-    method(ArcusCosecant, unary(acsc)),
-    method(ArcusCotangent, unary(acot)),
-  
-    method(HyperbolicCosine, unary(cosh)),
-    method(HyperbolicSine, unary(sinh)),
-    method(HyperbolicTangent, unary(tanh)),
-    method(HyperbolicSecant, unary(sech)),
-    method(HyperbolicCosecant, unary(csch)),
-    method(HyperbolicCotangent, unary(coth)),
-  
-    method(AreaHyperbolicCosine, unary(acosh)),
-    method(AreaHyperbolicSine, unary(asinh)),
-    method(AreaHyperbolicTangent, unary(atanh)),
-    method(AreaHyperbolicSecant, unary(asech)),
-    method(AreaHyperbolicCosecant, unary(acsch)),
-    method(AreaHyperbolicCotangent, unary(acoth)),
-  
-    method(Factorial, unary(factorial)),
-    method(Gamma, unary(gamma)),
-    method((v: unknown) => v instanceof Polygamma, binary(polygamma))
+  method(Addition, binary(add)),
+  method(Multiplication, binary(multiply)),
+  method(Exponentiation, binary(raise)),
+  method(Logarithm, binary(log)),
+
+  method(AbsoluteValue, unary(abs)),
+
+  method(Cosine, unary(cos)),
+  method(Sine, unary(sin)),
+  method(Tangent, unary(tan)),
+  method(Secant, unary(sec)),
+  method(Cosecant, unary(csc)),
+  method(Cotangent, unary(cot)),
+
+  method(ArcusCosine, unary(acos)),
+  method(ArcusSine, unary(asin)),
+  method(ArcusTangent, unary(atan)),
+  method(ArcusSecant, unary(asec)),
+  method(ArcusCosecant, unary(acsc)),
+  method(ArcusCotangent, unary(acot)),
+
+  method(HyperbolicCosine, unary(cosh)),
+  method(HyperbolicSine, unary(sinh)),
+  method(HyperbolicTangent, unary(tanh)),
+  method(HyperbolicSecant, unary(sech)),
+  method(HyperbolicCosecant, unary(csch)),
+  method(HyperbolicCotangent, unary(coth)),
+
+  method(AreaHyperbolicCosine, unary(acosh)),
+  method(AreaHyperbolicSine, unary(asinh)),
+  method(AreaHyperbolicTangent, unary(atanh)),
+  method(AreaHyperbolicSecant, unary(asech)),
+  method(AreaHyperbolicCosecant, unary(acsch)),
+  method(AreaHyperbolicCotangent, unary(acoth)),
+
+  method(Factorial, unary(factorial)),
+  method(Gamma, unary(gamma)),
+  method(
+    (v: unknown) => v instanceof Polygamma, 
+    (s: Scope, e: Binary) => polygamma(evaluate(s, e.left), evaluate(s, e.right))
   )
-  return fn
-}
+)
 
 const union = <T>(a: Set<T>, b: Set<T>) => {
   const r = new Set<T>(a)
@@ -115,14 +121,13 @@ function* zip<T, U>(parameters: Set<T>, args: U[]) {
 
 export const invoke = (scope?: Scope) => {
   const inner = createScope(scope)
-  const evaluate = createEvaluate(inner)
   return (expression: Base) => {
     const parameters = parameterize(expression)
     return (...args: Base[]): Base => {
       for(const [name, value] of zip(parameters, args)) {
         inner.set(name, variable(name, value))
       }
-      return evaluate(expression)
+      return evaluate(inner, expression)
     }
   }
 }
