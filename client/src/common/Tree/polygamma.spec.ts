@@ -1,39 +1,48 @@
 import { expectCloseTo } from './expectations'
-import { real } from './real'
+import { EulerMascheroni, real } from './real'
 import { complex } from './complex'
 import { variable } from './variable'
-import { Polygamma, polygamma } from './polygamma'
+import { negate } from './multiplication'
+import { Polygamma, polygamma, digamma } from './polygamma'
 
 describe('polygamma', () => {
-  describe('of reals', () => {
-    // 2.2517525890667 211076474561638858515372118089180283303694482010190...
-    it('calculates an approximate value for positive reals for digamma', () => {
-      expectCloseTo(polygamma(real(0), real(10)), real(2.2517525890667), 10)
+  describe('for large inputs', () => {
+    it('calculates an approximate value for positive reals for m=1', () => {
+      expectCloseTo(polygamma(real(1), real(100)), real(0.0100501666633), 10)
     })
 
-    // 0.0100501666633 335713952456684657014225356282011755346238824472488...
-    it('calculates an approximate value for positive reals for trigamma', () => {
-      expectCloseTo(polygamma(real(1), real(100)), real(0.0100501666633), 10)
+    it('calculates an approximate value for complex numbers for m=1', () => {
+      expectCloseTo(
+        polygamma(real(1), complex(0, 100)),
+        complex(-0.0000499999999, -0.0099998333299),
+        10
+      )
     })
   })
 
-  describe('of complex numbers', () => {
-    // 2.3034192636714 12535169217706005055981231525010822967923821662274... +
-    // 1.6207963267948 96619231321693260153536542076932105598472687028231... i
-    it('calculates an approximate value for complex numbers for digamma', () => {
+  describe('for negative inputs', () => {
+    it('reflects and calculates for a mapped positive real', () => {
       expectCloseTo(
-        polygamma(real(0), complex(0, 10)), 
-        complex(2.3034192636714, 1.6207963267948), 
+        polygamma(real(1), real(-100.5)), 
+        real(9.85970), 
+        10
+      )
+    })
+  })
+
+  describe('for small positive inputs', () => {
+    it('uses a recurrence relation to calculate for a mapped large', () => {
+      expectCloseTo(
+        polygamma(real(1), real(1)),
+        real(1.644934066848),
         10
       )
     })
 
-    // -0.0000499999999 9999999999999999999999999999999999999999999999999... -
-    // 0.0099998333299 99761871420993138692763427545395192794130579908... i
-    it('calculates an approximate value for complex numbers for trigamma', () => {
+    it('uses a recurrence relation to calculate for a mapped large complex', () => {
       expectCloseTo(
-        polygamma(real(1), complex(0, 100)),
-        complex(-0.0000499999999, -0.0099998333299),
+        polygamma(real(1), complex(1, 1)),
+        complex(0.463000096622, -0.794233542759),
         10
       )
     })
@@ -43,5 +52,45 @@ describe('polygamma', () => {
     expect(polygamma(variable('x'), variable('y'))).toEqual(
       new Polygamma(variable('x'), variable('y'))
     )
+  })
+})
+
+describe('digamma', () => {
+  describe('for large inputs', () => {
+    it('calculates an approximate value for positive reals', () => {
+      expectCloseTo(digamma(real(10)), real(2.2517525890667), 10)
+    })
+
+    it('calculates an approximate value for complex numbers', () => {
+      expectCloseTo(
+        digamma(complex(0, 10)), 
+        complex(2.3034192636714, 1.6207963267948), 
+        10
+      )
+    })
+  })
+
+  describe('for negative inputs', () => {
+    it('reflects and calculates for a mapped positive real', () => {
+      expectCloseTo(digamma(real(-100.5)), real(4.61512460133), 10)
+    })
+  })
+
+  describe('for small positive inputs', () => {
+    it('uses a recurrence relation to calculate for a mapped large real', () => {
+      expectCloseTo(digamma(real(1)), negate(EulerMascheroni), 10)
+    })
+
+    it('uses a recurrence relation to calculate for a mapped large complex', () => {
+      expectCloseTo(
+        digamma(complex(1, 1)),
+        complex(0.094650320622, 1.076674047468),
+        10
+      )
+    })
+  })
+
+  it('generates a polygamma node of order 0 on an expression', () => {
+    expect(digamma(variable('x'))).toEqual(new Polygamma(real(0), variable('x')))
   })
 })
