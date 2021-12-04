@@ -8,3 +8,5 @@ export class Complex extends Base {
 export function complex(a: number|string, b: number|string) {
   return new Complex(Number(a), Number(b))
 }
+
+export const ComplexInfinity = complex(Infinity, NaN)

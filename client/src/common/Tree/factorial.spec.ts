@@ -1,7 +1,8 @@
 import { real } from './real'
-import { complex } from './complex'
+import { complex, ComplexInfinity } from './complex'
 import { variable } from './variable';
 import { Factorial, factorial } from "./factorial";
+import { gamma } from './gamma'
 
 describe('factorial', () => {
   it('returns 1 for an input of 0', () => {
@@ -20,16 +21,16 @@ describe('factorial', () => {
     expect(factorial(complex(5, 0))).toEqual(complex(120, 0))
   })
 
-  it('returns NaN for non-positive integer reals', () => {
-    expect(factorial(real(-5))).toEqual(real(NaN))
+  it('returns complex infinity for non-positive integer reals', () => {
+    expect(factorial(real(-5))).toEqual(ComplexInfinity)
   })
 
-  it('returns NaN for non-integer reals', () => {
-    expect(factorial(real(5.5))).toEqual(real(NaN))
+  it('returns a shifted gamma for non-integer reals', () => {
+    expect(factorial(real(5.5))).toEqual(gamma(real(6.5)))
   })
 
-  it('returns NaN for non-integer complex numbers', () => {
-    expect(factorial(complex(1, 1))).toEqual(complex(NaN, NaN))
+  it('returns a shifted gamma for non-integer complex numbers', () => {
+    expect(factorial(complex(1, 1))).toEqual(gamma(complex(2, 1)))
   })
 
   it('returns a Factorial node for unbound variables', () => {

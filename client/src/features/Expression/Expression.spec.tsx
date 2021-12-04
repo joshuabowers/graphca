@@ -11,6 +11,7 @@ import {
 } from '../../common/Tree'
 import { Expression } from '.'
 import { shallow } from 'enzyme'
+import { ComplexInfinity } from '../../common/Tree/complex'
 
 const expectMarkup = (input: Base, className: string, expected: string) => {
   expect(() => <Expression node={input} />).not.toThrow()
@@ -34,6 +35,10 @@ describe(Expression, () => {
         complex(Math.E, Math.PI), '.constant.complex',
         `${Unicode.e} + ${Unicode.pi}${Unicode.i}`
       )
+    })
+
+    it('renders complex infinity', () => {
+      expectMarkup(ComplexInfinity, '.constant.complex', Unicode.complexInfinity)
     })
   })
 

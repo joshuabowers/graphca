@@ -118,6 +118,7 @@ type StringifyComplexFn = Multi & ((a: number, b: number) => string)
 
 const stringifyComplex: StringifyComplexFn = multi(
   method([0, 0], () => '0'),
+  method([Infinity, NaN], () => Unicode.complexInfinity),
   method([0, isP], (_a: number, b: number) => symB(b)),
   method([0, isN], (_a: number, b: number) => `-${symB(b)}`),
   method([isP, 0], (a: number, _b: number) => symA(a)),
