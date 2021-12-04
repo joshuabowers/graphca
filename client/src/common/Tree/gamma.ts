@@ -1,4 +1,6 @@
+import { fromMulti, method } from "@arrows/multimethod";
 import { Base } from "./Expression";
+import { is } from './predicates';
 import { Real, real } from './real'
 import { Complex, complex } from "./complex";
 import { add, subtract } from "./addition";
@@ -6,6 +8,13 @@ import { multiply, divide, negate } from "./multiplication";
 import { raise, sqrt } from "./exponentiation";
 import { sin } from './trigonometric';
 import { Unary, unary } from "./unary";
+import { factorial } from './factorial';
+
+const isPIN = (n: number) => n > 0 && n <= 15 && Number.isInteger(n)
+
+const isPositiveInteger = (e: Base) =>
+  (is(Real)(e) && isPIN(e.value))
+  || (is(Complex)(e) && e.b === 0 && isPIN(e.a))
 
 const lanczos = {
   p: [
@@ -48,9 +57,13 @@ export class Gamma extends Unary {
   readonly $kind = 'Gamma'
 }
 
-export const gamma = unary(
+const rawGamma = unary(
   r => calculateGamma(r, r.value < 0.5, real) as Real,
   c => calculateGamma(c, c.a < 0.5, n => complex(n, 0)) as Complex,
   e => new Gamma(e)
 )
-export type GammaFn = typeof gamma
+export type GammaFn = typeof rawGamma
+
+export const gamma: GammaFn = fromMulti(
+  method(isPositiveInteger, (e: Base) => factorial(subtract(e, real(1))))
+)(rawGamma)
