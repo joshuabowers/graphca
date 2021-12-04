@@ -34,6 +34,62 @@ const bernoulli = [
   8615841276005/14322
 ]
 
+// NOTES For implementation:
+// polygamma and digamma should be split into two separate functions.
+// Unless the app attempts to define fractional calculus, where higher
+// order derivatives and integrals are defined for (most) reals and
+// complex numbers, restricting order to integers makes intuitive sense.
+// (I.e., polygamma's order refers to which derivative of digamma is
+// being referenced.)
+
+// In the following code, b2 represents the Bernoulli numbers of the
+// second kind (i.e. n === +0.5), starting at B[2], sans all odd-indices.
+// As such, any map/reduce on them would need to shift the referenced
+// k-index appropriately: k would range between 0 and b2.length; values
+// from b2 therefore represent B[2*(k+1)], so any associated index k needs
+// to be similarly adjusted (i.e. k => 2 * (k+1))
+
+// Seemingly accurate values for both digamma and polygamma, which comport
+// with values coming from Wolfram-Alpha, are obtainable via the following
+// implementations: (psi === polygamma, order > 0; dig === digamma)
+
+// Note that psi is using a rough implementation of factorial for
+// calculating coefficients of each monomial. As factorial is not currently
+// defined for non-integers, this would result in NaN propagation.
+// Wolfram-Alpha seems to extend factorial to non-integers explicitly via
+// Gamma. (I.e. a! => gamma(a + 1), a E R; z! => gamma(z + 1), z E C)
+// Replacing the factorial computations with gamma, or extending factorial
+// to comparably handle non-integer edge cases, should result in parity.
+
+// b2 = [
+//   1/6,
+//   -1/30,
+//   1/42,
+//   -1/30,
+//   5/66,
+//   -691/2730,
+//   7/6,
+//   -3617/510,
+//   43867/798,
+//   -174611/330,
+//   854513/138,
+//   -236364091/2730,
+//   8553103/6,
+//   -23749461029/870,
+//   8615841276005/14322
+// ]
+
+// factorial = n => n === 0 ? 1 : n * factorial(n-1)
+// term = (m, z) => (((-1)**(m-1) * factorial(m-1) * (m + 2*z)) / (2 * z**(m+1)))
+// psi = (m, z) => term(m, z) - ((-1)**(m+1)) * b2.map(
+//   (b, k) => i = (b * factorial(2 * (k+1)+m-1)) / ((z**(2 * (k+1)+m)) * factorial(2 * (k+1)))
+// ).reduce((p, c) => p + c, 0)
+
+// first = (z) => 0.5 / z
+// dig = (z) => Math.log(z) - (0.5 / z) - b2.map(
+//   (b, k) => b / (2*(k+1) * z**(2*(k+1)))
+// ).reduce((p, c) => p+c, 0)
+
 const calculatePolygamma = <C extends Real|Complex>(
   order: C, 
   input: C,
