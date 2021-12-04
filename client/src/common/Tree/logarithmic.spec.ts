@@ -46,8 +46,6 @@ describe('ln', () => {
     expect(ln(complex(0, 0))).toEqual(complex(-Infinity, 0))
   })
 
-  it.todo('calculates the base e complex logarithm of infinity * i')
-
   it('calculates the natural logarithm of a complex', () => {
     expectCloseTo(ln(complex(3.79890743995, 2.1117859405)), complex(1.4693517444, 0.50735630322), 10)
   })

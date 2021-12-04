@@ -33,11 +33,6 @@ describe('differentiate', () => {
     it('is 1 when unbound', () => {
       expect(differentiate(variable('x'))).toEqual(real(1))
     })
-
-    it.todo('is the derivative of the value of a bound variable')
-    // it('returns the derivative of variable if it is defined', () => {
-    //   expectObject('x', real('0'), scope([['x', real(5)]]))
-    // })
   })
 
   describe('of additions', () => {
