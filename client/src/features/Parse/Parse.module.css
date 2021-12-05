@@ -1,0 +1,19 @@
+.error {
+  --fore-color: hsl(0, 60%, 25%);
+  font-size: 0.8em;
+  white-space: pre-wrap;
+  background-color: hsl(0, 60%, 75%);
+  color: var(--fore-color);
+  border: 0.25em solid var(--fore-color);
+  border-radius: 0.25em;
+  padding: 0.5em;
+}
+
+.result, .result span {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.result > span:first-child {
+  margin-right: 0.5em;
+}

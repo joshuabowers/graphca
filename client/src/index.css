@@ -18,3 +18,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* --background-color: #669999; */
+    --background-color: #558888;
+    --color: black;
+  }
+  body { background: #0a2832; color: #cacaca; }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* --background-color: #88acac; */
+    --background-color: #779999;
+    --color: whitesmoke;
+  }
+}

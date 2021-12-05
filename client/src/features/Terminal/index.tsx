@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
-import { parse, Scope, scope as createScope } from '../../common/parse'
+import { scope as createScope } from '../../common/parser'
+import { Parse } from '../Parse';
 import styles from './Terminal.module.css';
 import { RootState } from '../../app/store';
 import { createArraySelector } from 'reselect-map';
@@ -23,7 +24,7 @@ export const Terminal = (props: TerminalProps) => {
   const getParsings = useMemo(
     () => createArraySelector<RootState, TerminalEntryState, JSX.Element>(
       (state: RootState) => state.terminal.history,
-      (entry: TerminalEntryState) => parse(entry.content, scope, styles)
+      (entry: TerminalEntryState) => <Parse input={entry.content} scope={scope} />
     ) as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>,
     [scope]
   )

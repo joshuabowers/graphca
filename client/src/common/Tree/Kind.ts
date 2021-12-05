@@ -7,17 +7,12 @@ export enum Kind {
   Invocation,
 
   Addition,
-  Subtraction,
   Multiplication,
-  Division,
   Exponentiation,
 
-  Negation,
   AbsoluteValue,
 
-  BinaryLogarithm,
-  NaturalLogarithm,
-  CommonLogarithm,
+  Logarithm,
 
   Cosine,
   Sine,

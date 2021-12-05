@@ -5,6 +5,41 @@ __metadata:
   version: 4
   cacheKey: 8
 
+"@arrows/array@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "@arrows/array@npm:1.4.1"
+  dependencies:
+    "@arrows/composition": ^1.2.2
+  checksum: 39de47a49709376d91360955665f5cc33ad6fce85125a5b1fde777bf963bd2d053cc77a587253a55e6f4241a75ad7db991aacc26eb36edb7a746d824eb8ebd8a
+  languageName: node
+  linkType: hard
+
+"@arrows/composition@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@arrows/composition@npm:1.2.2"
+  checksum: 3219e9a4e220c9778d8919fef329608b9966667b61f26e403d368646ebc65d96b68abcb7a73621992baad678e444ceb36914f1f2db2d6502ddfe738e9230e737
+  languageName: node
+  linkType: hard
+
+"@arrows/error@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@arrows/error@npm:1.0.2"
+  checksum: 35ad67e8d2781879a22711f5c7ba3907d6772ff42b24abc8b94b5165414e802f6c207f2024f50508c8f40637465a91da268ebf321c0eef5aaf44fc3d4acc7a58
+  languageName: node
+  linkType: hard
+
+"@arrows/multimethod@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "@arrows/multimethod@npm:2.1.0"
+  dependencies:
+    "@arrows/array": ^1.4.1
+    "@arrows/composition": ^1.2.2
+    "@arrows/error": ^1.0.2
+    fast-deep-equal: ^3.1.3
+  checksum: 5f9861b4bd7f559e390ae9b762d78c116e69baccb237ddbc722c85b89bae1666008898d79122b28943c1f14a7337749f49a77a19ff592f680fca68cdc27bb820
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:7.10.4":
   version: 7.10.4
   resolution: "@babel/code-frame@npm:7.10.4"
@@ -6978,6 +7013,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "client@workspace:client"
   dependencies:
+    "@arrows/multimethod": ^2.1.0
     "@mdx-js/react": ^1.6.22
     "@reduxjs/toolkit": ^1.6.1
     "@storybook/addon-actions": ^6.3.8

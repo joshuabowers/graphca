@@ -25,7 +25,8 @@ export enum Unicode {
   theta = "\ud835\udf03",
   epsilon = "\u{025B}",
   n = "\ud835\udc5b",
-  infinity = "\u{221E}"
+  infinity = "\u{221E}",
+  complexInfinity = "\u{221E}\u{0304}",
 }
 
 export const functional = {
