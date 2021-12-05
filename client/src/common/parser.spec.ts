@@ -398,6 +398,10 @@ describe('parser', () => {
         differentiate(differentiate(variable('x')))
       )
     })
+
+    it('matches a derivative order', () => {
+      expectObject(`${Unicode.derivative}(2, x^2)`, differentiate(real(2), square(variable('x'))))
+    })
   })
 
   describe('of assignments', () => {

@@ -114,6 +114,9 @@ functional:
 builtInFunction: ${functional}
 
 derivative:
+| ${Unicode.derivative} '(' <order>real ',' ^ <>expression ')' ${
+  ({order, expression}) => differentiate(order, expression)
+}
 | ${Unicode.derivative} '(' <>expression ')' ${
   ({expression}) => differentiate(expression)
 }
