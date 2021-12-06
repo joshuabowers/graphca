@@ -25,42 +25,46 @@ export const equivalent = (a: Which<Multiplication>, b: Which<Multiplication>) =
 type Transform = (left: Multiplication, right: Multiplication) => Base
 const flip: Transform = (l, r) => collectFromProducts(r, l)
 
+const ifEquivalent = (a: Which<Multiplication>, b: Which<Multiplication>) =>
+  (fn: Transform) =>
+    method(equivalent(a, b), fn)
+
 type CollectFromProductsFn = Multi & Transform
 
 export const collectFromProducts: CollectFromProductsFn = multi(
-  method(equivalent(leftChild, leftChild), <Transform>((l, r) => 
+  ifEquivalent(leftChild, leftChild)((l, r) => 
     multiply(
       multiply(l.left, r.left),
       multiply(l.right, r.right)
     )
-  )),
-  method(equivalent(leftChild, rightChild), <Transform>((l, r) =>
+  ),
+  ifEquivalent(leftChild, rightChild)((l, r) => 
     multiply(
       multiply(l.left, r.right),
       multiply(l.right, r.left)
     )
-  )),
-  method(equivalent(rightChild, leftChild), <Transform>((l, r) =>
+  ),
+  ifEquivalent(rightChild, leftChild)((l, r) =>
     multiply(
       multiply(l.right, r.left),
       multiply(l.left, r.right)
     )
-  )),
-  method(equivalent(rightChild, rightChild), <Transform>((l, r) =>
+  ),
+  ifEquivalent(rightChild, rightChild)((l, r) => 
     multiply(
       multiply(l.left, r.left),
       multiply(l.right, r.right)
     )
-  )),
-  method(equivalent(identity, leftChild), <Transform>((l, r) =>
+  ),
+  ifEquivalent(identity, leftChild)((l, r) => 
     multiply(square(l), r.right)
-  )),
-  method(equivalent(identity, rightChild), <Transform>((l, r) =>
+  ),
+  ifEquivalent(identity, rightChild)((l, r) =>
     multiply(square(l), r.left)
-  )),
-  method(equivalent(leftChild, identity), flip),
-  method(equivalent(rightChild, identity), flip),
-  method(equivalent(identity, identity), <Transform>((l, r) => square(l)))
+  ),
+  ifEquivalent(leftChild, identity)(flip),
+  ifEquivalent(rightChild, identity)(flip),
+  ifEquivalent(identity, identity)((l, _r) => square(l))
 )
 
 export type CanFormExponentialFn = Multi
