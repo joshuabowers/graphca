@@ -15,14 +15,15 @@ const app = express()
 
 app.use( sslRedirect() )
 app.use( helmet({
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      styleSrc: ["'self'", 'https://fonts.googleapis.com'],
-      fontSrc: ["'self'", 'https://fonts.gstatic.com']  
-    },
-    reportOnly: false
-  }
+  contentSecurityPolicy: false
+  // contentSecurityPolicy: {
+  //   useDefaults: true,
+  //   directives: {
+  //     styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+  //     fontSrc: ["'self'", 'https://fonts.gstatic.com']  
+  //   },
+  //   reportOnly: false
+  // }
 }) )
 app.use( cors() )
 app.use( express.json() )
