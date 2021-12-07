@@ -14,7 +14,15 @@ const app = express()
 // const __dirname = dirname( fileURLToPath( import.meta.url ) )
 
 app.use( sslRedirect() )
-app.use( helmet() )
+app.use( helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      styleSrc: ["'self'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com']  
+    }
+  }
+}) )
 app.use( cors() )
 app.use( express.json() )
 app.use( express.urlencoded({ extended: true }) )
