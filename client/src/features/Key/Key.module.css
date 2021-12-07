@@ -2,13 +2,19 @@
   position: relative;
   z-index: 0;
   font-family: 'Fira Code', monospace;
-  font-size: 20px;
-  border: 0.2em solid var(--background-color);
+  font-size: clamp(1rem, 3.25vmin, 1.5rem);
+  border: 0.2em solid var(--key-background-color);
   border-radius: 0.9em 0.9em 1.15em 1.15em;
-  background-color: var(--color);
+  background-color: var(--key-color);
   width: 3.4em;
   padding: 0.2em;
   cursor: pointer;
+}
+
+@media(orientation: landscape) {
+  .normal {
+    font-size: clamp(0.5rem, 3.25vmin, 1.5rem);
+  }
 }
 
 .normal, .normal > .primary {
@@ -18,13 +24,20 @@
 
 .normal:hover {
   z-index: 1;
-  --color: orange;
-  --background-color: hsl(0, 10%, 25%);
-  box-shadow: 0 0 2em var(--color);
+  --key-color: var(--key-hover-color);
+  --key-background-color: var(--key-hover-background-color);
+  --key-box-shadow-color: var(--key-color);
+  box-shadow: 0 0 2em var(--key-box-shadow-color);
+}
+
+@media(prefers-color-scheme: dark) {
+  .normal:hover {
+    --key-box-shadow-color: var(--key-hover-background-color);
+  }
 }
 
 .normal:hover > .primary {
-  box-shadow: inset 0 0 0.25em var(--color);
+  box-shadow: inset 0 0 0.25em var(--key-color);
 }
 
 .primary {
@@ -34,44 +47,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--background-color);
-  color: var(--color);
+  background-color: var(--key-background-color);
+  color: var(--key-color);
   border: none;
   border-radius: 0.5em 0.5em 0.75em 0.75em;
 }
 
-/* .default {
-  --background-color: gray;
-  --color: whitesmoke;
-} */
-
 .shift {
-  --background-color: gray;
-  --color: hsl(180, 75%, 50%);
+  --key-color: var(--key-mode-shift-color);
+  --key-background-color: var(--key-mode-shift-background-color);
 }
 
 .shift:hover {
-  --color: hsl(180, 75%, 75%);
+  --key-color: var(--key-mode-shift-hover-color);
+  --key-hover-background-color: var(--key-mode-shift-hover-background-color);
 }
 
 .alpha {
-  --background-color: gray;
-  --color: hsl(90, 75%, 50%);
+  --key-color: var(--key-mode-alpha-color);
+  --key-background-color: var(--key-mode-alpha-background-color);
 }
 
 .alpha:hover {
-  --color: hsl(90, 75%, 75%);
+  --key-color: var(--key-mode-alpha-hover-color);
+  --key-hover-background-color: var(--key-mode-alpha-hover-background-color);
 }
 
 .trig {
-  --background-color: darkgray;
-  --color: hsl(293, 75%, 50%);
+  --key-color: var(--key-mode-trig-color);
+  --key-background-color: var(--key-mode-trig-background-color);
 }
 
 .trig:hover {
-  --color: hsl(293, 75%, 75%);
+  --key-color: var(--key-mode-trig-hover-color);
+  --key-hover-background-color: var(--key-mode-trig-hover-background-color);
 }
 
 .normal.activated, .normal:active {
-  --color: lawngreen;
+  --key-color: var(--key-activate-color);
 }
