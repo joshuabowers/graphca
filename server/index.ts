@@ -20,7 +20,8 @@ app.use( helmet({
     directives: {
       styleSrc: ["'self'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com']  
-    }
+    },
+    reportOnly: false
   }
 }) )
 app.use( cors() )
