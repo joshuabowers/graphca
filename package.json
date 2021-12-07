@@ -7,7 +7,7 @@
   "author": "Joshua Bowers <joshua.bowers+code@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">= 14.x"
+    "node": "~14.17"
   },
   "private": true,
   "workspaces": [
