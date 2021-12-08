@@ -1,5 +1,5 @@
 import { method, multi, Multi } from '@arrows/multimethod'
-import { is } from './predicates'
+import { is } from './is'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'

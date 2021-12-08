@@ -1,5 +1,6 @@
 import { method, fromMulti } from '@arrows/multimethod'
-import { is, notAny, visit, leftChild, rightChild, identity } from './predicates'
+import { is } from './is'
+import { notAny, visit, leftChild, rightChild, identity } from './predicates'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'

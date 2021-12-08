@@ -1,6 +1,6 @@
 import { fromMulti, method } from "@arrows/multimethod";
+import { is } from './is';
 import { Base } from "./Expression";
-import { is } from './predicates';
 import { Real, real } from './real'
 import { Complex, complex } from "./complex";
 import { add, subtract } from "./addition";

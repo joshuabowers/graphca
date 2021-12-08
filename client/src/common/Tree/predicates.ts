@@ -1,6 +1,7 @@
 import { method } from '@arrows/multimethod'
 import { Base } from './Expression'
 import { Binary } from './binary'
+import { is, Constructor } from './is'
 import { equals } from './equality'
 
 export const not = <T>(type: new(...args: any[]) => T) => 
@@ -11,11 +12,6 @@ export const any = <T extends Base>(...types: (new(...args: any[]) => T)[]) =>
   (value: unknown) => types.some(type => value instanceof type)
 
 export type Which<T extends Base> = (t: T) => Base
-export type Constructor<T> = Function & { prototype: T }
-
-// type can occasionally be undefined, so the guard needs to account for that.
-export const is = <T>(type: Constructor<T>) => 
-  (v: unknown): v is T => type && v instanceof type
 
 export const areEqual = <L extends Base, R extends Base>(leftType: Constructor<L>, rightType: Constructor<R>) =>
   (leftSelect: Which<L>, rightSelect: Which<R>) =>

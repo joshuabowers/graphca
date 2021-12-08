@@ -1,11 +1,11 @@
 import { method, fromMulti } from '@arrows/multimethod'
+import { is } from './is'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex, ComplexInfinity } from './complex'
 import { add, subtract } from './addition'
 import { multiply } from './multiplication'
 import { Unary, unary } from './unary'
-import { is } from './predicates'
 import { gamma } from './gamma'
 
 const isNegativeRealInteger = (e: Base) => is(Real)(e) && e.value < 0 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { method, multi, Multi } from '@arrows/multimethod'
+import { is } from '../../common/Tree/is'
 import styles from './Expression.module.css'
 import {
   Base, Unary, Binary,
@@ -15,7 +16,6 @@ import {
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   real, multiply, negate, reciprocal, Polygamma
 } from '../../common/Tree'
-import { is } from '../../common/Tree/predicates'
 import { Unicode } from '../../common/MathSymbols'
 
 type FnNameFn<T extends Unary> = Multi & ((node: T) => string)

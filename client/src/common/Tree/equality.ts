@@ -1,18 +1,11 @@
 import { method, multi, Multi } from '@arrows/multimethod'
+import { is } from './is'
 import { Base } from './Expression'
 import { Real } from './real'
 import { Complex } from './complex'
 import { Variable } from './variable'
 import { Unary } from './unary'
 import { Binary } from './binary'
-
-// The following two are redefined here (also in predicates) to
-// allow the rest of predicates to also incorporate equals.
-// Likely should be extracted to another file which both include.
-type Constructor<T> = Function & { prototype: T }
-
-const is = <T>(type: Constructor<T>) => 
-  (v: unknown): v is T => type && v instanceof type
 
 const equalsReal = (left: Real, right: Real) => left.value === right.value
 const equalsComplex = (left: Complex, right: Complex) => 
