@@ -1,4 +1,5 @@
 import { method, multi, Multi } from '@arrows/multimethod'
+import { is } from './predicates'
 import { Base } from './Expression'
 import { Real } from './real'
 import { Complex } from './complex'
@@ -14,8 +15,8 @@ export function unary(
 ) {
   type UnaryFn = (Multi & typeof whenReal & typeof whenComplex & typeof otherwise)
   return multi(
-    method(Real, whenReal),
-    method(Complex, whenComplex),
-    method(Base, otherwise)
+    method(is(Real), whenReal),
+    method(is(Complex), whenComplex),
+    method(is(Base), otherwise)
   ) as UnaryFn
 }

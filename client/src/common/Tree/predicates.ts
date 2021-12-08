@@ -19,7 +19,7 @@ export const is = <T>(type: Constructor<T>) =>
 
 export const areEqual = <L extends Base, R extends Base>(leftType: Constructor<L>, rightType: Constructor<R>) =>
   (leftSelect: Which<L>, rightSelect: Which<R>) =>
-    (left: Base, right: Base) =>
+    (left: Base, right: Base) => 
       is(leftType)(left) && is(rightType)(right)
       && equals(leftSelect(left), rightSelect(right))
 

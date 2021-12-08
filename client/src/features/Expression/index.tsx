@@ -15,49 +15,50 @@ import {
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   real, multiply, negate, reciprocal, Polygamma
 } from '../../common/Tree'
+import { is } from '../../common/Tree/predicates'
 import { Unicode } from '../../common/MathSymbols'
 
 type FnNameFn<T extends Unary> = Multi & ((node: T) => string)
 
 const trigonometric: FnNameFn<Trigonometric> = multi(
-  method(Cosine, 'cos'),
-  method(Sine, 'sin'),
-  method(Tangent, 'tan'),
-  method(Secant, 'sec'),
-  method(Cosecant, 'csc'),
-  method(Cotangent, 'cot')
+  method(is(Cosine), 'cos'),
+  method(is(Sine), 'sin'),
+  method(is(Tangent), 'tan'),
+  method(is(Secant), 'sec'),
+  method(is(Cosecant), 'csc'),
+  method(is(Cotangent), 'cot')
 )
 
 const arcus: FnNameFn<Arcus> = multi(
-  method(ArcusCosine, 'acos'),
-  method(ArcusSine, 'asin'),
-  method(ArcusTangent, 'atan'),
-  method(ArcusSecant, 'asec'),
-  method(ArcusCosecant, 'acsc'),
-  method(ArcusCotangent, 'acot'),
+  method(is(ArcusCosine), 'acos'),
+  method(is(ArcusSine), 'asin'),
+  method(is(ArcusTangent), 'atan'),
+  method(is(ArcusSecant), 'asec'),
+  method(is(ArcusCosecant), 'acsc'),
+  method(is(ArcusCotangent), 'acot'),
 )
 
 const hyperbolic: FnNameFn<Hyperbolic> = multi(
-  method(HyperbolicCosine, 'cosh'),
-  method(HyperbolicSine, 'sinh'),
-  method(HyperbolicTangent, 'tanh'),
-  method(HyperbolicSecant, 'sech'),
-  method(HyperbolicCosecant, 'csch'),
-  method(HyperbolicCotangent, 'coth'),
+  method(is(HyperbolicCosine), 'cosh'),
+  method(is(HyperbolicSine), 'sinh'),
+  method(is(HyperbolicTangent), 'tanh'),
+  method(is(HyperbolicSecant), 'sech'),
+  method(is(HyperbolicCosecant), 'csch'),
+  method(is(HyperbolicCotangent), 'coth'),
 )
 
 const areaHyperbolic: FnNameFn<AreaHyperbolic> = multi(
-  method(AreaHyperbolicCosine, 'acosh'),
-  method(AreaHyperbolicSine, 'asinh'),
-  method(AreaHyperbolicTangent, 'atanh'),
-  method(AreaHyperbolicSecant, 'asech'),
-  method(AreaHyperbolicCosecant, 'acsch'),
-  method(AreaHyperbolicCotangent, 'acoth'),
+  method(is(AreaHyperbolicCosine), 'acosh'),
+  method(is(AreaHyperbolicSine), 'asinh'),
+  method(is(AreaHyperbolicTangent), 'atanh'),
+  method(is(AreaHyperbolicSecant), 'asech'),
+  method(is(AreaHyperbolicCosecant), 'acsch'),
+  method(is(AreaHyperbolicCotangent), 'acoth'),
 )
 
 const unary: FnNameFn<Unary> = multi(
-  method(AbsoluteValue, 'abs'),
-  method(Gamma, Unicode.gamma)
+  method(is(AbsoluteValue), 'abs'),
+  method(is(Gamma), Unicode.gamma)
 )
 
 type LogarithmNameFn = Multi
@@ -72,13 +73,13 @@ const logarithm: LogarithmNameFn = multi(
 )
 
 const isNegative = multi(
-  method(Real, (e: Real) => e.value < 0),
-  method(Multiplication, (e: Multiplication) => isNegative(e.left) || isNegative(e.right)),
+  method(is(Real), (e: Real) => e.value < 0),
+  method(is(Multiplication), (e: Multiplication) => isNegative(e.left) || isNegative(e.right)),
   method(false)
 )
 
 const isReciprocal = multi(
-  method(Exponentiation, (e: Exponentiation) => isNegative(e.right)),
+  method(is(Exponentiation), (e: Exponentiation) => isNegative(e.right)),
   method(false)
 )
 
@@ -91,9 +92,9 @@ type ParenthesizeFn = Multi
   & ((node: Binary, child: Base) => (component: JSX.Element) => JSX.Element)
 
 const parenthesize: ParenthesizeFn = multi(
-  method([Multiplication, Addition], () => wrap),
-  method([Multiplication, Multiplication], () => wrap),
-  method([Exponentiation, notAny<Base>(Real, Variable)], () => wrap),
+  method([is(Multiplication), is(Addition)], () => wrap),
+  method([is(Multiplication), is(Multiplication)], () => wrap),
+  method([is(Exponentiation), notAny<Base>(Real, Variable)], () => wrap),
   method(() => identity)
 )
 
@@ -242,24 +243,24 @@ export type ComponentizeFn = Multi
   & typeof whenBase
 
 export const componentize: ComponentizeFn = multi(
-  method(Real, whenReal),
-  method(Complex, whenComplex),
-  method(Variable, whenVariable),
+  method(is(Real), whenReal),
+  method(is(Complex), whenComplex),
+  method(is(Variable), whenVariable),
 
-  method(Addition, whenAddition),
-  method(Multiplication, whenMultiplication),
-  method(Exponentiation, whenExponentiation),
-  method(Logarithm, whenLogarithm),
+  method(is(Addition), whenAddition),
+  method(is(Multiplication), whenMultiplication),
+  method(is(Exponentiation), whenExponentiation),
+  method(is(Logarithm), whenLogarithm),
 
-  method(Trigonometric, whenTrigonometric),
-  method(Arcus, whenArcus),
-  method(Hyperbolic, whenHyperbolic),
-  method(AreaHyperbolic, whenAreaHyperbolic),
-  method(Factorial, whenFactorial),
-  method(Unary, whenUnary),
-  method(Polygamma, whenPolygamma),
+  method(is(Trigonometric), whenTrigonometric),
+  method(is(Arcus), whenArcus),
+  method(is(Hyperbolic), whenHyperbolic),
+  method(is(AreaHyperbolic), whenAreaHyperbolic),
+  method(is(Factorial), whenFactorial),
+  method(is(Unary), whenUnary),
+  method(is(Polygamma), whenPolygamma),
 
-  method(Base, whenBase)
+  method(is(Base), whenBase)
 )
 
 export type ExpressionProps = {

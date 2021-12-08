@@ -1,4 +1,5 @@
 import { method, multi, Multi } from '@arrows/multimethod'
+import { is } from './predicates'
 import { Base } from './Expression'
 import { Real } from './real'
 import { Complex, complex } from './complex'
@@ -26,11 +27,11 @@ export const binary = <T extends Binary>(type: Constructor<T>) =>
   ) => {
     const whenBxB: when<Base, T> = (l, r) => new type(l, r)
     const fn: BinaryFn<T> = multi(
-      method([Real, Real], whenRxR),
-      method([Complex, Complex], whenCxC),
-      method([Real, Complex], (l: Real, r: Complex) => fn(complex(l.value, 0), r)),
-      method([Complex, Real], (l: Complex, r: Real) => fn(l, complex(r.value, 0))),
-      method([Base, Base], whenBxB)
+      method([is(Real), is(Real)], whenRxR),
+      method([is(Complex), is(Complex)], whenCxC),
+      method([is(Real), is(Complex)], (l: Real, r: Complex) => fn(complex(l.value, 0), r)),
+      method([is(Complex), is(Real)], (l: Complex, r: Real) => fn(l, complex(r.value, 0))),
+      method([is(Base), is(Base)], whenBxB)
     )
     return fn  
   }
@@ -46,7 +47,7 @@ export const unaryFrom = <T extends Binary>(fn: BinaryFn<T>, bind: BindTo) => {
     & ((expression: Complex) => Complex)
     & ((expression: Base) => T)
   return (bound: Base) => multi(
-    method(Base, (unbound: Base) => fn(...bind(unbound, bound)))
+    method(is(Base), (unbound: Base) => fn(...bind(unbound, bound)))
   ) as UnaryFn
 }
 
@@ -54,6 +55,6 @@ type BinaryMapFn = (left: Base, right: Base) => [Base, Base]
 
 export const binaryFrom = <T extends Binary>(fn: BinaryFn<T>, map: BinaryMapFn): BinaryFn<T> => (
   multi(
-    method([Base, Base], (l: Base, r: Base) => fn(...map(l, r)))
+    method([is(Base), is(Base)], (l: Base, r: Base) => fn(...map(l, r)))
   )
 )

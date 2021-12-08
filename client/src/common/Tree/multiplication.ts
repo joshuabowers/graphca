@@ -1,4 +1,5 @@
 import { method, fromMulti, multi, Multi } from '@arrows/multimethod';
+import { is } from './predicates';
 import { Base } from "./Expression";
 import { Real, real } from "./real";
 import { Complex, complex } from './complex';
@@ -80,7 +81,7 @@ export type CanFormExponentialFn = Multi
 
 export const canFormExponential: CanFormExponentialFn = multi(
   method(
-    [Multiplication, Multiplication], (l: Multiplication, r: Multiplication) =>
+    [is(Multiplication), is(Multiplication)], (l: Multiplication, r: Multiplication) =>
       equals(l, r)
       || canFormExponential(l.left, r.left)
       || canFormExponential(l.left, r.right)
@@ -92,24 +93,24 @@ export const canFormExponential: CanFormExponentialFn = multi(
       || canFormExponential(l, r.right)
   ),
   method(
-    [Exponentiation, Multiplication], (l: Exponentiation, r: Multiplication) =>
+    [is(Exponentiation), is(Multiplication)], (l: Exponentiation, r: Multiplication) =>
       canFormExponential(l, r.left) 
       || canFormExponential(l, r.right)
       || canFormExponential(l.left, r.left) 
       || canFormExponential(l.left, r.right)
   ),
   method(
-    [Base, Multiplication], (l: Base, r: Multiplication) => 
+    [is(Base), is(Multiplication)], (l: Base, r: Multiplication) => 
       canFormExponential(l, r.left) || canFormExponential(l, r.right)
   ),
-  method([Multiplication, Base], (l: Base, r: Base) => canFormExponential(r, l)),
-  method([Exponentiation, Exponentiation], (l: Exponentiation, r: Exponentiation) => equals(l.left, r.left)),
+  method([is(Multiplication), is(Base)], (l: Base, r: Base) => canFormExponential(r, l)),
+  method([is(Exponentiation), is(Exponentiation)], (l: Exponentiation, r: Exponentiation) => equals(l.left, r.left)),
   method(
-    [Base, Exponentiation], (l: Base, r: Exponentiation) => 
+    [is(Base), is(Exponentiation)], (l: Base, r: Exponentiation) => 
       canFormExponential(l, r.left)
   ),
-  method([Exponentiation, Base], (l: Base, r: Base) => canFormExponential(r, l)),
-  method([Multiplication, Exponentiation], (l: Base, r: Base) => canFormExponential(r, l)),
+  method([is(Exponentiation), is(Base)], (l: Base, r: Base) => canFormExponential(r, l)),
+  method([is(Multiplication), is(Exponentiation)], (l: Base, r: Base) => canFormExponential(r, l)),
   method(equals)
 )
 
@@ -123,23 +124,23 @@ export type ExponentialCollectFn = Multi
   & ((left: Base, right: Base) => Base)
 
 export const exponentialCollect: ExponentialCollectFn = multi(
-  method([Multiplication, Multiplication], collectFromProducts),
+  method([is(Multiplication), is(Multiplication)], collectFromProducts),
   method(
-    [Exponentiation, Exponentiation], (l: Exponentiation, r: Exponentiation) => 
+    [is(Exponentiation), is(Exponentiation)], (l: Exponentiation, r: Exponentiation) => 
       raise(l.left, add(l.right, r.right))
   ),
   method(
-    [Base, Multiplication], 
+    [is(Base), is(Multiplication)], 
     (l: Base, r: Multiplication, isLeft = canFormExponential(l, r.left)) =>
       multiply(
         isLeft ? r.right : r.left, 
         exponentialCollect(l, isLeft ? r.left : r.right)
       )
   ),
-  method([Multiplication, Base], (l: Base, r: Base) => exponentialCollect(r, l)),
-  method([Base, Exponentiation], (l: Base, r: Exponentiation) => raise(l, add(r.right, real(1)))),
-  method([Exponentiation, Base], (l: Base, r: Base) => exponentialCollect(r, l)),
-  method([Base, Base], (l: Base, _r: Base) => square(l))
+  method([is(Multiplication), is(Base)], (l: Base, r: Base) => exponentialCollect(r, l)),
+  method([is(Base), is(Exponentiation)], (l: Base, r: Exponentiation) => raise(l, add(r.right, real(1)))),
+  method([is(Exponentiation), is(Base)], (l: Base, r: Base) => exponentialCollect(r, l)),
+  method([is(Base), is(Base)], (l: Base, _r: Base) => square(l))
 )
 
 const rawMultiply = binary(Multiplication)(
@@ -152,18 +153,18 @@ const rawMultiply = binary(Multiplication)(
 export type MultiplyFn = typeof rawMultiply
 
 export const multiply: MultiplyFn = fromMulti(
-  method([not(Real), Real], (l: Base, r: Real) => multiply(r, l)),
-  method([notAny<Base>(Real, Complex), Complex], (l: Base, r: Complex) => multiply(r, l)),
+  method([not(Real), is(Real)], (l: Base, r: Real) => multiply(r, l)),
+  method([notAny<Base>(Real, Complex), is(Complex)], (l: Base, r: Complex) => multiply(r, l)),
   method([isCasR, isCasR], (l: Complex, r: Complex) => complex(l.a * r.a, 0)),
   method([isCasR, isPureI], (l: Complex, r: Complex) => complex(0, l.a * r.b)),
   method([isPureI, isCasR], (l: Complex, r: Complex) => complex(0, l.b * r.a)),
-  method([Complex, isCasR], (l: Complex, r: Complex) => complex(l.a * r.a, 0)),
+  method([is(Complex), isCasR], (l: Complex, r: Complex) => complex(l.a * r.a, 0)),
   method([real(0), real(Infinity)], real(NaN)),
   method([real(Infinity), real(0)], real(NaN)),
-  method([real(0), Base], real(0)),
-  method([real(1), Base], (_l: Base, r: Base) => r),
-  method([real(Infinity), Base], real(Infinity)),
-  method([real(-Infinity), Base], real(-Infinity)),
+  method([real(0), is(Base)], real(0)),
+  method([real(1), is(Base)], (_l: Base, r: Base) => r),
+  method([real(Infinity), is(Base)], real(Infinity)),
+  method([real(-Infinity), is(Base)], real(-Infinity)),
   method(isN1_N2A, (l: Base, r: Multiplication) => multiply(multiply(l, r.left), r.right)),
   method(canFormExponential, exponentialCollect)
 )(rawMultiply)

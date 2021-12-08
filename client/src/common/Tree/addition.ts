@@ -1,5 +1,5 @@
-import { method, fromMulti, _ } from '@arrows/multimethod'
-import { notAny, visit, leftChild, rightChild, identity } from './predicates'
+import { method, fromMulti } from '@arrows/multimethod'
+import { is, notAny, visit, leftChild, rightChild, identity } from './predicates'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
@@ -29,10 +29,10 @@ const MpB = visit(Multiplication, Base)
 const BpM = visit(Base, Multiplication)
 
 export const add: AddFn = fromMulti(
-  method([real(0), _], (_l: Real, r: Base) => r),
-  method([_, real(0)], (l: Base, _r: Real) => l),
-  method([Complex, notAny<Base>(Complex, Real)], (l: Complex, r: Base) => add(r, l)),
-  method([Real, notAny<Base>(Complex, Real)], (l: Real, r: Base) => add(r, l)),
+  method([real(0), is(Base)], (_l: Real, r: Base) => r),
+  method([is(Base), real(0)], (l: Base, _r: Real) => l),
+  method([is(Complex), notAny<Base>(Complex, Real)], (l: Complex, r: Base) => add(r, l)),
+  method([is(Real), notAny<Base>(Complex, Real)], (l: Real, r: Base) => add(r, l)),
   method(equals, (l: Base, _r: Base) => double(l)),
   method(isXpR_R, (l: Addition, r: Real) => add(l.left, add(l.right, r))),
   ApB(leftChild, identity)((l, r) => add(double(r), l.right)),

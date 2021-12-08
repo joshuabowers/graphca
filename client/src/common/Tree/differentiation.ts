@@ -1,4 +1,5 @@
 import { method, multi, Multi } from '@arrows/multimethod'
+import { is } from './predicates'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
@@ -224,48 +225,48 @@ export type DifferentiateFn = Multi
   & typeof whenBase
 
 export const differentiate: DifferentiateFn = multi(
-  method([Real, Base], whenNthDerivative), // omg
-  method(Real, whenReal),
-  method(Complex, whenComplex),
-  method(Variable, whenVariable),
+  method([is(Real), is(Base)], whenNthDerivative), // omg
+  method(is(Real), whenReal),
+  method(is(Complex), whenComplex),
+  method(is(Variable), whenVariable),
 
-  method(Addition, whenAddition),
-  method(Multiplication, whenMultiplication),
-  method(Exponentiation, whenExponentiation),
-  method(Logarithm, whenLogarithm),
+  method(is(Addition), whenAddition),
+  method(is(Multiplication), whenMultiplication),
+  method(is(Exponentiation), whenExponentiation),
+  method(is(Logarithm), whenLogarithm),
 
-  method(AbsoluteValue, whenAbsolute),
+  method(is(AbsoluteValue), whenAbsolute),
 
-  method(Cosine, whenCosine),
-  method(Sine, whenSine),
-  method(Tangent, whenTangent),
-  method(Secant, whenSecant),
-  method(Cosecant, whenCosecant),
-  method(Cotangent, whenCotangent),
+  method(is(Cosine), whenCosine),
+  method(is(Sine), whenSine),
+  method(is(Tangent), whenTangent),
+  method(is(Secant), whenSecant),
+  method(is(Cosecant), whenCosecant),
+  method(is(Cotangent), whenCotangent),
 
-  method(ArcusCosine, whenArcusCosine),
-  method(ArcusSine, whenArcusSine),
-  method(ArcusTangent, whenArcusTangent),
-  method(ArcusSecant, whenArcusSecant),
-  method(ArcusCosecant, whenArcusCosecant),
-  method(ArcusCotangent, whenArcusCotangent),
+  method(is(ArcusCosine), whenArcusCosine),
+  method(is(ArcusSine), whenArcusSine),
+  method(is(ArcusTangent), whenArcusTangent),
+  method(is(ArcusSecant), whenArcusSecant),
+  method(is(ArcusCosecant), whenArcusCosecant),
+  method(is(ArcusCotangent), whenArcusCotangent),
 
-  method(HyperbolicCosine, whenHyperbolicCosine),
-  method(HyperbolicSine, whenHyperbolicSine),
-  method(HyperbolicTangent, whenHyperbolicTangent),
-  method(HyperbolicSecant, whenHyperbolicSecant),
-  method(HyperbolicCosecant, whenHyperbolicCosecant),
-  method(HyperbolicCotangent, whenHyperbolicCotangent),
+  method(is(HyperbolicCosine), whenHyperbolicCosine),
+  method(is(HyperbolicSine), whenHyperbolicSine),
+  method(is(HyperbolicTangent), whenHyperbolicTangent),
+  method(is(HyperbolicSecant), whenHyperbolicSecant),
+  method(is(HyperbolicCosecant), whenHyperbolicCosecant),
+  method(is(HyperbolicCotangent), whenHyperbolicCotangent),
 
-  method(AreaHyperbolicCosine, whenAreaHyperbolicCosine),
-  method(AreaHyperbolicSine, whenAreaHyperbolicSine),
-  method(AreaHyperbolicTangent, whenAreaHyperbolicTangent),
-  method(AreaHyperbolicSecant, whenAreaHyperbolicSecant),
-  method(AreaHyperbolicCosecant, whenAreaHyperbolicCosecant),
-  method(AreaHyperbolicCotangent, whenAreaHyperbolicCotangent),
+  method(is(AreaHyperbolicCosine), whenAreaHyperbolicCosine),
+  method(is(AreaHyperbolicSine), whenAreaHyperbolicSine),
+  method(is(AreaHyperbolicTangent), whenAreaHyperbolicTangent),
+  method(is(AreaHyperbolicSecant), whenAreaHyperbolicSecant),
+  method(is(AreaHyperbolicCosecant), whenAreaHyperbolicCosecant),
+  method(is(AreaHyperbolicCotangent), whenAreaHyperbolicCotangent),
 
-  method(Factorial, whenFactorial),
-  method(Gamma, whenGamma),
+  method(is(Factorial), whenFactorial),
+  method(is(Gamma), whenGamma),
   method((v: unknown) => v instanceof Polygamma, whenPolygamma)
   // The above predicate used as Polygamma uses differentiate,
   // but differentiate uses Polygamma. Circular dependency hell;

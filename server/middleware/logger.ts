@@ -18,5 +18,8 @@ export default async function logger( req: Request, res: Response, next: NextFun
   if( Object.keys(req.body).length ){
     console.info( data('body'), ':', req.body );
   }
+  if( Object.keys(res.getHeaders()).length ){
+    console.info( data('Response headers'), ':', res.getHeaders() );
+  }
   next();
 }

@@ -27,8 +27,8 @@ type IsSmallFn = Multi & ((r: Real) => boolean) & ((c: Complex) => boolean)
 
 // 10 is arbitrary, but inputs around that comport with Wolfram-Alpha
 const isSmall: IsSmallFn = multi(
-  method(Real, (r: Real) => r.value < 10),
-  method(Complex, (c: Complex) => abs(c).a < 10),
+  method(is(Real), (r: Real) => r.value < 10),
+  method(is(Complex), (c: Complex) => abs(c).a < 10),
   method(false)
 )
 
@@ -115,9 +115,9 @@ const rawPolygamma = binary(Polygamma)(
 export type PolygammaFn = typeof rawPolygamma
 
 export const polygamma: PolygammaFn = fromMulti(
-  method([real(0), Base], (_l: Base, r: Base) => digamma(r)),
-  method([Real, isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),
-  method([Real, isSmall], (l: Base, r: Base) => polygammaRecurrence(l, r))
+  method([real(0), is(Base)], (_l: Base, r: Base) => digamma(r)),
+  method([is(Real), isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),
+  method([is(Real), isSmall], (l: Base, r: Base) => polygammaRecurrence(l, r))
 )(rawPolygamma)
 
 const calculateDigamma = (z: Real|Complex): Base => {

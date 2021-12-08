@@ -1,4 +1,5 @@
 import { method, multi, Multi } from '@arrows/multimethod'
+import { is } from './predicates'
 import { Base } from './Expression'
 import { Binary } from './binary'
 import { Unary } from './unary'
@@ -44,47 +45,47 @@ type EvaluateFn = Multi & ((scope: Scope, expression: Base) => Base)
 
 const evaluate: EvaluateFn = multi(
   (_scope: Scope, expression: Base) => expression,
-  method(Real, constant<Real>()),
-  method(Complex, constant<Complex>()),
-  method(Variable, (s: Scope, v: Variable) => s.get(v.name)?.value ?? v),
+  method(is(Real), constant<Real>()),
+  method(is(Complex), constant<Complex>()),
+  method(is(Variable), (s: Scope, v: Variable) => s.get(v.name)?.value ?? v),
 
-  method(Addition, binary(add)),
-  method(Multiplication, binary(multiply)),
-  method(Exponentiation, binary(raise)),
-  method(Logarithm, binary(log)),
+  method(is(Addition), binary(add)),
+  method(is(Multiplication), binary(multiply)),
+  method(is(Exponentiation), binary(raise)),
+  method(is(Logarithm), binary(log)),
 
-  method(AbsoluteValue, unary(abs)),
+  method(is(AbsoluteValue), unary(abs)),
 
-  method(Cosine, unary(cos)),
-  method(Sine, unary(sin)),
-  method(Tangent, unary(tan)),
-  method(Secant, unary(sec)),
-  method(Cosecant, unary(csc)),
-  method(Cotangent, unary(cot)),
+  method(is(Cosine), unary(cos)),
+  method(is(Sine), unary(sin)),
+  method(is(Tangent), unary(tan)),
+  method(is(Secant), unary(sec)),
+  method(is(Cosecant), unary(csc)),
+  method(is(Cotangent), unary(cot)),
 
-  method(ArcusCosine, unary(acos)),
-  method(ArcusSine, unary(asin)),
-  method(ArcusTangent, unary(atan)),
-  method(ArcusSecant, unary(asec)),
-  method(ArcusCosecant, unary(acsc)),
-  method(ArcusCotangent, unary(acot)),
+  method(is(ArcusCosine), unary(acos)),
+  method(is(ArcusSine), unary(asin)),
+  method(is(ArcusTangent), unary(atan)),
+  method(is(ArcusSecant), unary(asec)),
+  method(is(ArcusCosecant), unary(acsc)),
+  method(is(ArcusCotangent), unary(acot)),
 
-  method(HyperbolicCosine, unary(cosh)),
-  method(HyperbolicSine, unary(sinh)),
-  method(HyperbolicTangent, unary(tanh)),
-  method(HyperbolicSecant, unary(sech)),
-  method(HyperbolicCosecant, unary(csch)),
-  method(HyperbolicCotangent, unary(coth)),
+  method(is(HyperbolicCosine), unary(cosh)),
+  method(is(HyperbolicSine), unary(sinh)),
+  method(is(HyperbolicTangent), unary(tanh)),
+  method(is(HyperbolicSecant), unary(sech)),
+  method(is(HyperbolicCosecant), unary(csch)),
+  method(is(HyperbolicCotangent), unary(coth)),
 
-  method(AreaHyperbolicCosine, unary(acosh)),
-  method(AreaHyperbolicSine, unary(asinh)),
-  method(AreaHyperbolicTangent, unary(atanh)),
-  method(AreaHyperbolicSecant, unary(asech)),
-  method(AreaHyperbolicCosecant, unary(acsch)),
-  method(AreaHyperbolicCotangent, unary(acoth)),
+  method(is(AreaHyperbolicCosine), unary(acosh)),
+  method(is(AreaHyperbolicSine), unary(asinh)),
+  method(is(AreaHyperbolicTangent), unary(atanh)),
+  method(is(AreaHyperbolicSecant), unary(asech)),
+  method(is(AreaHyperbolicCosecant), unary(acsch)),
+  method(is(AreaHyperbolicCotangent), unary(acoth)),
 
-  method(Factorial, unary(factorial)),
-  method(Gamma, unary(gamma)),
+  method(is(Factorial), unary(factorial)),
+  method(is(Gamma), unary(gamma)),
   method(
     (v: unknown) => v instanceof Polygamma, 
     (s: Scope, e: Binary) => polygamma(evaluate(s, e.left), evaluate(s, e.right))
@@ -105,9 +106,9 @@ type ParameterizeFn = Multi
 // Potential speed boost alternative: write this as generators, and
 // coalesce the resulting iterable externally.
 export const parameterize: ParameterizeFn = multi(
-  method(Variable, (v: Variable) => new Set(v.name)),
-  method(Binary, (b: Binary) => union(parameterize(b.left), parameterize(b.right))),
-  method(Unary, (u: Unary) => parameterize(u.expression)),
+  method(is(Variable), (v: Variable) => new Set(v.name)),
+  method(is(Binary), (b: Binary) => union(parameterize(b.left), parameterize(b.right))),
+  method(is(Unary), (u: Unary) => parameterize(u.expression)),
   method(new Set<string>())
 )
 

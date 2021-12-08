@@ -1,4 +1,5 @@
 import { method, multi, Multi } from '@arrows/multimethod'
+import { is } from './predicates'
 import { Base } from './Expression'
 import { Real } from './real'
 import { Complex } from './complex'
@@ -25,20 +26,20 @@ export type SubDegreeFn = Multi
   & ((expression: Base) => number)
 
 const subDegree: SubDegreeFn = multi(
-  method(Real, (r: Real) => r.value),
-  method(Complex, (c: Complex) => Math.hypot(c.a, c.b)),
-  method(Variable, Infinity),
-  method(Base, 0)
+  method(is(Real), (r: Real) => r.value),
+  method(is(Complex), (c: Complex) => Math.hypot(c.a, c.b)),
+  method(is(Variable), Infinity),
+  method(is(Base), 0)
 )
 
 export const degree: DegreeFn = multi(
-  method(Real, 0),
-  method(Complex, 0),
-  method(Variable, 1),
-  method(Addition, (e: Addition) => Math.max(degree(e.left), degree(e.right))),
-  method(Multiplication, (e: Multiplication) => degree(e.left) + degree(e.right)),
-  method(Exponentiation, (e: Exponentiation) => subDegree(e.right)),
-  method(Logarithm, 0),
-  method(Unary, 1),
-  method(Base, 0)
+  method(is(Real), 0),
+  method(is(Complex), 0),
+  method(is(Variable), 1),
+  method(is(Addition), (e: Addition) => Math.max(degree(e.left), degree(e.right))),
+  method(is(Multiplication), (e: Multiplication) => degree(e.left) + degree(e.right)),
+  method(is(Exponentiation), (e: Exponentiation) => subDegree(e.right)),
+  method(is(Logarithm), 0),
+  method(is(Unary), 1),
+  method(is(Base), 0)
 )

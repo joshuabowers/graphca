@@ -17,6 +17,7 @@ export const Parse = (props: ParseProps) => {
       <Expression node={output} />
     </div>
   } catch(error: any) {
+    console.error(error)
     return <div className={styles.error}>{error.message}</div>
   }
 }
