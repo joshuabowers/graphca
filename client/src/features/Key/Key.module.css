@@ -23,22 +23,24 @@
   transition-property: box-shadow, background-color, color;
 }
 
-.normal:hover {
-  z-index: 1;
-  --key-color: var(--key-hover-color);
-  --key-background-color: var(--key-hover-background-color);
-  --key-box-shadow-color: var(--key-color);
-  box-shadow: 0 0 2em var(--key-box-shadow-color);
-}
-
-@media(prefers-color-scheme: dark) {
+@media (hover: hover) and (pointer: fine) {
   .normal:hover {
-    --key-box-shadow-color: var(--key-hover-background-color);
+    z-index: 1;
+    --key-color: var(--key-hover-color);
+    --key-background-color: var(--key-hover-background-color);
+    --key-box-shadow-color: var(--key-color);
+    box-shadow: 0 0 2em var(--key-box-shadow-color);
   }
-}
-
-.normal:hover > .primary {
-  box-shadow: inset 0 0 0.25em var(--key-color);
+  
+  @media(prefers-color-scheme: dark) {
+    .normal:hover {
+      --key-box-shadow-color: var(--key-hover-background-color);
+    }
+  }
+  
+  .normal:hover > .primary {
+    box-shadow: inset 0 0 0.25em var(--key-color);
+  }  
 }
 
 .primary {
@@ -59,19 +61,9 @@
   --key-background-color: var(--key-mode-shift-background-color);
 }
 
-.shift:hover {
-  --key-color: var(--key-mode-shift-hover-color);
-  --key-hover-background-color: var(--key-mode-shift-hover-background-color);
-}
-
 .alpha {
   --key-color: var(--key-mode-alpha-color);
   --key-background-color: var(--key-mode-alpha-background-color);
-}
-
-.alpha:hover {
-  --key-color: var(--key-mode-alpha-hover-color);
-  --key-hover-background-color: var(--key-mode-alpha-hover-background-color);
 }
 
 .trig {
@@ -79,11 +71,23 @@
   --key-background-color: var(--key-mode-trig-background-color);
 }
 
-.trig:hover {
-  --key-color: var(--key-mode-trig-hover-color);
-  --key-hover-background-color: var(--key-mode-trig-hover-background-color);
-}
-
 .normal.activated, .normal:active {
   --key-color: var(--key-activate-color);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .shift:hover {
+    --key-color: var(--key-mode-shift-hover-color);
+    --key-hover-background-color: var(--key-mode-shift-hover-background-color);
+  }
+  
+  .alpha:hover {
+    --key-color: var(--key-mode-alpha-hover-color);
+    --key-hover-background-color: var(--key-mode-alpha-hover-background-color);
+  }
+
+  .trig:hover {
+    --key-color: var(--key-mode-trig-hover-color);
+    --key-hover-background-color: var(--key-mode-trig-hover-background-color);
+  }  
 }

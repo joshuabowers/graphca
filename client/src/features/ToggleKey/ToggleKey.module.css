@@ -61,9 +61,11 @@
   box-sizing: border-box;
 }
 
-.normal:hover, .normal:focus {
-  --key-color: var(--key-hover-color);
-  --key-background-color: var(--key-hover-background-color);
+@media (hover: hover) and (pointer: fine) {
+  .normal:hover, .normal:focus {
+    --key-color: var(--key-hover-color);
+    --key-background-color: var(--key-hover-background-color);
+  }  
 }
 
 .normal.activated, .normal:active {
