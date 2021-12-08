@@ -12,6 +12,7 @@
   display: inline-grid;
   grid-template-areas: 'toggleKey';
   place-items: center;
+  user-select: none;
 }
 
 @media(orientation: landscape) {
