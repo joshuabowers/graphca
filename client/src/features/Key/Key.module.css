@@ -71,10 +71,6 @@
   --key-background-color: var(--key-mode-trig-background-color);
 }
 
-.normal.activated, .normal:active {
-  --key-color: var(--key-activate-color);
-}
-
 @media (hover: hover) and (pointer: fine) {
   .shift:hover {
     --key-color: var(--key-mode-shift-hover-color);
@@ -90,4 +86,8 @@
     --key-color: var(--key-mode-trig-hover-color);
     --key-hover-background-color: var(--key-mode-trig-hover-background-color);
   }  
+}
+
+.normal.activated, .normal:active {
+  --key-color: var(--key-activate-color);
 }

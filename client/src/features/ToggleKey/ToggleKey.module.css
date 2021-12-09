@@ -4,7 +4,7 @@
   z-index: 0;
   font-family: 'Fira Code', monospace;
   font-size: clamp(1rem, 3.25vmin, 1.5rem);
-  border: 0.2em solid var(--key-background-color);
+  border: 0.2em solid var(--toggle-key-background-color);
   border-radius: 0.9em 0.9em 1.15em 1.15em;
   background-color: var(--key-color);
   padding: 0.2em;
@@ -54,7 +54,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--key-background-color);
+  background-color: var(--toggle-key-background-color);
   color: var(--key-color);
   border: none;
   border-radius: 0.5em 0.5em 0.75em 0.75em;
@@ -64,7 +64,7 @@
 @media (hover: hover) and (pointer: fine) {
   .normal:hover, .normal:focus {
     --key-color: var(--key-hover-color);
-    --key-background-color: var(--key-hover-background-color);
+    --key-background-color: var(--toggle-key-hover-background-color);
   }  
 }
 
