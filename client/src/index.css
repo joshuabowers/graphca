@@ -40,6 +40,8 @@ code {
     --key-mode-trig-background-color: hsla(0, 80%, 80%, 55%);
     --key-mode-trig-hover-color: hsl(0, 80%, 30%);
     --key-mode-trig-hover-background-color: hsla(0, 80%, 80%, 75%);
+    --terminal-background-color: hsla(0, 0%, 50%, 35%);
+    --terminal-color: inherit;
   }
   body { background: #0a2832; color: #cacaca; }
 }
@@ -65,5 +67,7 @@ code {
     --key-mode-trig-background-color: hsla(0, 30%, 30%, 75%);
     --key-mode-trig-hover-color: hsl(0, 90%, 80%);
     --key-mode-trig-hover-background-color: hsla(0, 20%, 30%, 75%);
+    --terminal-background-color: hsla(0, 0%, 75%, 45%);
+    --terminal-color: black;
   }
 }

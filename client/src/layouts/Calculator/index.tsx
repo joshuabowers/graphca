@@ -11,9 +11,13 @@ export interface CalculatorProps {
 export const Calculator = (props: CalculatorProps) => {
   return (
     <main className={styles.calculator}>
-      <Keypad />
+      <header>
+        <h1>GraphCa</h1>
+      </header>
+      <footer></footer>
       <Graph />
       <Terminal />
+      <Keypad />
       {/* <Keypad />
       <Tabs>
         <Tab>

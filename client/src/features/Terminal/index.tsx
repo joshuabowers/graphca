@@ -38,13 +38,15 @@ export const Terminal = (props: TerminalProps) => {
     currentRef.current?.scrollIntoView({behavior: 'smooth'})
   }, [currentRef, history])
   return (
-    <ol reversed start={history.length} className={styles.terminal}>
-      {
-        history.map((item, key) => 
-          <li key={item.enteredAt}>{item.content}{parsings[key]}</li>
-        )
-      }
-      <li ref={currentRef}>{currentLine}</li>
-    </ol>
+    <div className={styles.normal}>
+      <ol className={styles.history}>
+        {
+          history.map((item, key) => 
+            <li key={item.enteredAt}>{item.content}{parsings[key]}</li>
+          )
+        }
+        <li ref={currentRef}>{currentLine}</li>
+      </ol>
+    </div>
   )
 }
