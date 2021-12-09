@@ -25,8 +25,13 @@ code {
     monospace;
 }
 
+:root {
+  --site-background-color: darkslategray;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
+    --calculator-background-color: hsla(170, 10%, 10%, 35%);
     --key-background-color: #558888;
     --key-color: black;
     --key-mode-background-color: #447777;
@@ -46,13 +51,14 @@ code {
     --key-mode-trig-background-color: hsla(0, 80%, 80%, 55%);
     --key-mode-trig-hover-color: hsl(0, 80%, 30%);
     --key-mode-trig-hover-background-color: hsla(0, 80%, 80%, 75%);
-    --terminal-background-color: hsla(0, 0%, 50%, 35%);
+    --terminal-background-color: hsla(0, 0%, 0%, 20%);
     --terminal-color: inherit;
   }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
+    --calculator-background-color: hsla(170, 10%, 95%, 90%);
     --key-background-color: #779999;
     --key-color: whitesmoke;
     --key-mode-background-color: #668888;

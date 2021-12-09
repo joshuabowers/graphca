@@ -8,20 +8,20 @@
 
 @media (prefers-color-scheme: dark) {
   .calculator {
-    background: #0a2832; 
+    background-color: var(--calculator-background-color);
     color: #cacaca;
   }
 }
 
 @media (prefers-color-scheme: light) {
   .calculator {
-    background: white;
-    color: black;  
+    background-color: var(--calculator-background-color);
+    color: black;
   }
 }
 
 .calculator > header, .calculator > footer {
-  background-color: darkslategray;
+  background-color: var(--site-background-color);
   color: whitesmoke;
   font-size: clamp(1rem, 3vmin, 1.5rem);
   min-height: 1em;
