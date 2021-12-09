@@ -10,6 +10,14 @@
   color: var(--terminal-color);
 }
 
+.history > li::marker {
+  color: gray;
+}
+
+.history > li:not(:last-child) {
+  margin-bottom: 0.25em;
+}
+
 .history > li:last-child {
   list-style-type: '\03bb. '
 }

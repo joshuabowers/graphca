@@ -53,6 +53,8 @@ code {
     --key-mode-trig-hover-background-color: hsla(0, 80%, 80%, 75%);
     --terminal-background-color: hsla(0, 0%, 0%, 20%);
     --terminal-color: inherit;
+    --error-color: hsl(0, 60%, 85%);
+    --error-background-color: hsla(0, 60%, 25%, 45%);
   }
 }
 
@@ -80,5 +82,7 @@ code {
     --key-mode-trig-hover-background-color: hsla(0, 20%, 30%, 75%);
     --terminal-background-color: hsla(0, 0%, 75%, 45%);
     --terminal-color: black;
+    --error-color: hsl(0, 60%, 25%);
+    --error-background-color: hsl(0, 60%, 75%);  
   }
 }
