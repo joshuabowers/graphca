@@ -13,6 +13,7 @@ import {
   differentiate
 } from './Tree'
 import { parser, Scope, scope } from "./parser";
+import { EulerMascheroni } from './Tree/real';
 
 const expectObject = (input: string, expected: Base, scope?: Scope) => {
   let output = undefined
@@ -48,6 +49,10 @@ describe('parser', () => {
 
     it(`matches ${Unicode.infinity}`, () => {
       expectObject(Unicode.infinity, real(Infinity))
+    })
+
+    it(`matches ${Unicode.euler}`, () => {
+      expectObject(Unicode.euler, EulerMascheroni)
     })
 
     it('matches complex numbers', () => {

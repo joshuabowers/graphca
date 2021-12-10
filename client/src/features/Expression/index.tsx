@@ -114,18 +114,24 @@ const symA = (n: number) => symbolic(Math.abs(n))
 const symB = (n: number, v = Math.abs(n)) => `${v === 1 ? '' : symbolic(v)}${Unicode.i}`
 const isP = (n: number) => n > 0
 const isN = (n: number) => n < 0
+const is0 = (n: number) => n === 0
+
+type NumericComp = (n: number) => boolean
+
+const are = (aFn: NumericComp, bFn: NumericComp) =>
+  (a: number, b: number) => aFn(a) && bFn(b)
 
 type StringifyComplexFn = Multi & ((a: number, b: number) => string)
 
 const stringifyComplex: StringifyComplexFn = multi(
-  method([0, 0], () => '0'),
+  method(are(is0, is0), () => '0'),
   method([Infinity, NaN], () => Unicode.complexInfinity),
-  method([0, isP], (_a: number, b: number) => symB(b)),
-  method([0, isN], (_a: number, b: number) => `-${symB(b)}`),
-  method([isP, 0], (a: number, _b: number) => symA(a)),
-  method([isN, 0], (a: number, _b: number) => `-${symA(a)}`),
-  method([isP, isN], (a: number, b: number) => `${symA(a)} - ${symB(b)}`),
-  method([isN, isN], (a: number, b: number) => `-${symA(a)} - ${symB(b)}`),
+  method(are(is0, isP), (_a: number, b: number) => symB(b)),
+  method(are(is0, isN), (_a: number, b: number) => `-${symB(b)}`),
+  method(are(isP, is0), (a: number, _b: number) => symA(a)),
+  method(are(isN, is0), (a: number, _b: number) => `-${symA(a)}`),
+  method(are(isP, isN), (a: number, b: number) => `${symA(a)} - ${symB(b)}`),
+  method(are(isN, isN), (a: number, b: number) => `-${symA(a)} - ${symB(b)}`),
   method((a: number, b: number) => `${symA(a)} + ${symB(b)}`)
 )
 

@@ -15,6 +15,7 @@ export enum Unicode {
   exponent = "\u2303",
   i = "\ud835\udc8a",
   e = "\ud835\udc86",
+  euler = "\u{1d6c4}",
   x = "\ud835\udc99",
   y = "\ud835\udc9a",
   alpha = "\u{03B1}",

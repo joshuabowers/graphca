@@ -19,7 +19,7 @@ const numberKeys = [
   ['2', Unicode.e, 'Y', 'coth'],
   ['3', Unicode.pi, 'Z', 'acot'],
   ['0', Unicode.infinity, Unicode.space, ''],
-  ['.', Unicode.epsilon, ':', ''],
+  ['.', Unicode.euler, ':', ''],
   ['<-', '', '', '']
 ]
 

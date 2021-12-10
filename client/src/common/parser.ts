@@ -4,9 +4,10 @@ import {
   real, complex, variable, assign,
   raise, negate, factorial, polygamma, digamma,
   differentiate, invoke,
-  operators, additive, multiplicative, functions,
+  operators, additive, multiplicative, functions, multiply,
 } from './Tree'
 import { peg, $fail, $context } from 'pegase'
+import { EulerMascheroni } from './Tree/real'
 export { scope } from './Tree/scope'
 export type { Scope } from './Tree/scope'
 
@@ -142,6 +143,7 @@ complex:
 real:
 | <value>$real ${({value}) => real(value)}
 | $e ${() => real(Math.E)}
+| $euler ${() => EulerMascheroni}
 | $pi ${() => real(Math.PI)}
 | $infinity ${() => real(Infinity)}
 
@@ -151,6 +153,7 @@ $real @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
 $variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
 $i @raw: ${RegExp(Unicode.i, 'u')}
 $e @raw: ${RegExp(Unicode.e, 'u')}
+$euler @raw: ${RegExp(Unicode.euler, 'u')}
 $pi @raw: ${RegExp(Unicode.pi, 'u')}
 $infinity @raw: ${RegExp(Unicode.infinity, 'u')}
 `
