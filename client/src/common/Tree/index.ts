@@ -36,6 +36,7 @@ import { Logarithm, log, lb, ln, lg } from './logarithmic'
 import { Factorial, factorial } from './factorial'
 import { Gamma, gamma } from './gamma'
 import { Polygamma, polygamma, digamma } from './polygamma'
+import { Permutation, Combination, permute, combine } from './combinatorics'
 import { Derivative, differentiate } from './differentiation'
 import { invoke } from './invocation'
 
@@ -50,7 +51,8 @@ export {
   HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
-  Logarithm, Factorial, Gamma, Polygamma, Derivative
+  Logarithm, Factorial, Gamma, Polygamma, Permutation, Combination,
+  Derivative
 }
 export {
   real, complex, variable, assign,
@@ -61,7 +63,7 @@ export {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   log, lb, ln, lg, factorial, gamma, polygamma, digamma,
-  differentiate, invoke
+  permute, combine, differentiate, invoke
 }
 
 type Additive = typeof add | typeof subtract
@@ -78,7 +80,7 @@ type Functions =
 | typeof sech | typeof csch | typeof coth
 | typeof acosh | typeof asinh | typeof atanh
 | typeof asech | typeof acsch | typeof acoth
-| typeof gamma | typeof abs
+| typeof gamma | typeof abs | typeof sqrt
 
 const coalesce = <T>(...ops: [string, T][][]) => ops.flat()
 
@@ -134,4 +136,5 @@ export const functions = new Map<string, Functions>([
   ['cot', cot],
   ['abs', abs],
   [Unicode.gamma, gamma],
+  [Unicode.squareRoot, sqrt]
 ])

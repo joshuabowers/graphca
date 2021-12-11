@@ -1,7 +1,7 @@
 import { Unicode } from './MathSymbols';
 import {
   Base, Variable,
-  add, subtract, multiply, divide, raise, double, square,
+  add, subtract, multiply, divide, raise, double, square, sqrt,
   real, complex, variable, 
   negate, abs,
   lb, ln, lg,
@@ -9,7 +9,7 @@ import {
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  factorial, gamma, polygamma, digamma,
+  factorial, gamma, polygamma, digamma, permute, combine,
   differentiate
 } from './Tree'
 import { parser, Scope, scope } from "./parser";
@@ -203,6 +203,10 @@ describe('parser', () => {
         raise(real(2), real(3))
       ))
     })
+
+    it('matches a square root shorthand', () => {
+      expectObject(`${Unicode.squareRoot}(x)`, sqrt(variable('x')))
+    })
   })
 
   describe('of grouping parentheses', () => {
@@ -383,6 +387,16 @@ describe('parser', () => {
 
     it('matches polygamma with non-real order', () => {
       expectObject(`${Unicode.digamma}(n, x)`, polygamma(variable('n'), variable('x')))
+    })
+  })
+
+  describe('of combinatorics', () => {
+    it('matches permutations', () => {
+      expectObject('P(n, r)', permute(variable('n'), variable('r')))
+    })
+
+    it('matches combinations', () => {
+      expectObject('C(n, r)', combine(variable('n'), variable('r')))
     })
   })
 

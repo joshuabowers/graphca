@@ -4,7 +4,7 @@ import {
   real, complex, variable, assign,
   raise, negate, factorial, polygamma, digamma,
   differentiate, invoke,
-  operators, additive, multiplicative, functions, multiply,
+  operators, additive, multiplicative, functions, permute, combine
 } from './Tree'
 import { peg, $fail, $context } from 'pegase'
 import { EulerMascheroni } from './Tree/real'
@@ -111,6 +111,8 @@ functional:
   ({order, expression}) => polygamma(order, expression)
 }
 | ${Unicode.digamma} '(' ^ <>expression ')' ${({expression}) => digamma(expression)}
+| 'P' '(' <n>expression ',' <r>expression ')' ${({n, r}) => permute(n, r)}
+| 'C' '(' <n>expression ',' <r>expression ')' ${({n, r}) => combine(n, r)}
 
 builtInFunction: ${functional}
 

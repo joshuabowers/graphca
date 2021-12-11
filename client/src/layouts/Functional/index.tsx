@@ -22,8 +22,8 @@ export const Functional = (args: FunctionalProps) => (
       trig={{type:'trig', display:'sin', activate: createKeyPress('sin(')}}
     />
     <Key
-      default={{type:'default', display:'nPr'}}
-      shift={{type:'shift', display:'nCr'}}
+      default={{type:'default', display:'nPr', activate: createKeyPress('P(')}}
+      shift={{type:'shift', display:'nCr', activate: createKeyPress('C(')}}
       alpha={{type:'alpha', display:'C', activate: createKeyPress('C')}}
       trig={{type:'trig', display:'sinh', activate: createKeyPress('sinh(')}}
     />
@@ -90,13 +90,13 @@ export const Functional = (args: FunctionalProps) => (
     />
     <Key
       default={{type:'default', display:functional.squared, displayHint:'functional', activate: createKeyPress('^2')}}
-      shift={{type:'shift', display:Unicode.squareRoot}}
+      shift={{type:'shift', display:Unicode.squareRoot, activate: createKeyPress(`${Unicode.squareRoot}(`)}}
       alpha={{type:'alpha', display:'N', activate: createKeyPress('N')}}
       trig={{type:'trig', display:'atan', activate: createKeyPress('atan(')}}
     />
     <Key
       default={{type:'default', display:functional.xY, displayHint:'functional', activate: createKeyPress('^')}}
-      shift={{type:'shift', display:functional.nRoot, displayHint:'functional'}}
+      shift={{type:'shift', display:''}}
       alpha={{type:'alpha', display:'O', activate: createKeyPress('O')}}
       trig={{type:'trig', display:'atanh', displayHint:'verbose', activate: createKeyPress('atanh(')}}
     />
