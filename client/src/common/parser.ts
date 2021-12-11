@@ -99,6 +99,8 @@ group:
 | functional
 | derivative
 | '(' expression ')'
+| '[' expression ']'
+| '{' expression '}'
 | primitive
 
 negationOperator: ${subtractionOperators}

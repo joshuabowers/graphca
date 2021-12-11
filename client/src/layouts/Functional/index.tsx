@@ -59,13 +59,13 @@ export const Functional = (args: FunctionalProps) => (
     />
     <Key
       default={{type:'default', display:'(', activate: createKeyPress('(')}}
-      shift={{type:'shift', display:'{'}}
+      shift={{type:'shift', display:'{', activate: createKeyPress('{')}}
       alpha={{type:'alpha', display:'I', activate: createKeyPress('I')}}
       trig={{type:'trig', display:'acos', activate: createKeyPress('acos(')}}
     />
     <Key
       default={{type:'default', display:')', activate: createKeyPress(')')}}
-      shift={{type:'shift', display:'}'}}
+      shift={{type:'shift', display:'}', activate: createKeyPress('}')}}
       alpha={{type:'alpha', display:'J', activate: createKeyPress('J')}}
       trig={{type:'trig', display:'acosh', displayHint:'verbose', activate: createKeyPress('acosh(')}}
       

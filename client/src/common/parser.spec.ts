@@ -220,6 +220,18 @@ describe('parser', () => {
         add(real(2), real(3))
       ))
     })
+
+    it('matches brackets', () => {
+      expectObject('[1 + 2]', real(3))
+    })
+
+    it('matches braces', () => {
+      expectObject('{1 + 2}', real(3))
+    })
+
+    it('matches nested different forms', () => {
+      expectObject('2 * (27 ^ [4 / {6 * 2}])', real(6))
+    })
   })
 
   describe('of negations', () => {
