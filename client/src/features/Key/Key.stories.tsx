@@ -26,12 +26,12 @@ TwoStateShift.args = {
 export const TwoStateAlpha = Template.bind({});
 TwoStateAlpha.args = {
   default: Multiply.args as ModeProps,
-  alpha: R.args as ModeProps
+  alphaMega: R.args as ModeProps
 }
 
 export const ThreeState = Template.bind({});
 ThreeState.args = {
   default: Exponent.args as ModeProps, 
   shift: PI.args as ModeProps, 
-  alpha: H.args as ModeProps
+  alphaMega: H.args as ModeProps
 }

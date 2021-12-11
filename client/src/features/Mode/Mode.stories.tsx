@@ -15,7 +15,7 @@ export const PI = Template.bind({})
 PI.args = {type: 'shift', display: Unicode.pi}
 
 export const H = Template.bind({})
-H.args = {type: 'alpha', display: 'H'}
+H.args = {type: 'alphaMega', display: 'H'}
 
 export const Exponent = Template.bind({})
 Exponent.args = {type: 'default', display: functional.xY, displayHint: 'functional'}
@@ -24,7 +24,7 @@ export const Multiply = Template.bind({})
 Multiply.args = {type: 'default', display: Unicode.multiplication}
 
 export const R = Template.bind({})
-R.args = {type: 'alpha', display: 'R'}
+R.args = {type: 'alphaMega', display: 'R'}
 
 export const Shift = Template.bind({})
 Shift.args = {type: 'default', display: Unicode.shift, displayHint: 'unicode'}

@@ -3,7 +3,7 @@ import { AppDispatch } from '../../app/hooks';
 import { MathSymbols } from '../../common/MathSymbols';
 import styles from './Mode.module.css';
 
-export type ModeType = 'default' | 'alpha' | 'shift' | 'trig';
+export type ModeType = 'default' | 'alphaMega' | 'alphaMicron' | 'shift' | 'trig';
 
 export interface ModeProps {
   type?: ModeType,

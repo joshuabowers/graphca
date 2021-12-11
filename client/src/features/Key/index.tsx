@@ -6,10 +6,11 @@ import styles from './Key.module.css';
 
 export interface KeyProps {
   default: ModeProps,
-  alpha?: ModeProps,
+  alphaMega?: ModeProps,
+  alphaMicron?: ModeProps,
   shift?: ModeProps,
   trig?: ModeProps,
-  modeOverride?: 'shift' | 'alpha' | 'trig'
+  modeOverride?: 'shift' | 'alphaMega' | 'alphaMicron' | 'trig'
 }
 
 export const createKeyPress = (value: string) =>

@@ -36,7 +36,7 @@ export const Togglable = (props: TogglableProps) => {
       <Key 
         default={{type: 'default', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
         shift={{type: 'shift', display: 'Ins'}}
-        alpha={{type: 'alpha', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
+        alphaMega={{type: 'alphaMega', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
         trig={{type: 'trig', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
       />
     </KeyGroup>

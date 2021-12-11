@@ -61,7 +61,7 @@
   --key-background-color: var(--key-mode-shift-background-color);
 }
 
-.alpha {
+.alphaMega, .alphaMicron {
   --key-color: var(--key-mode-alpha-color);
   --key-background-color: var(--key-mode-alpha-background-color);
 }
@@ -77,7 +77,7 @@
     --key-hover-background-color: var(--key-mode-shift-hover-background-color);
   }
   
-  .alpha:hover {
+  .alphaMega:hover, .alphaMicron:hover {
     --key-color: var(--key-mode-alpha-hover-color);
     --key-hover-background-color: var(--key-mode-alpha-hover-background-color);
   }

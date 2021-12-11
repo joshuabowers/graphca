@@ -15,9 +15,6 @@ export const Control = (props: ControlProps) => {
   const currentMode = useAppSelector(state => state.keypad.currentMode)
   return (
     <KeyGroup layout='vertical'>
-      <Key 
-        default={{type: 'default', display: ''}}
-      />
       <ToggleKey 
         default={{
           type: 'default', 
@@ -26,19 +23,27 @@ export const Control = (props: ControlProps) => {
         }}
         toggled={currentMode === 'shift'}
       />
+      <ToggleKey
+        default={{
+          type: 'default',
+          display: Unicode.alphaMega,
+          activate: (dispatch) => dispatch(changeMode(currentMode === 'alphaMega' ? 'default' : 'alphaMega'))
+        }}
+        toggled={currentMode === 'alphaMega'}
+      />
       <ToggleKey 
         default={{
           type: 'default', 
-          display: Unicode.alpha, 
-          activate: (dispatch) => dispatch(changeMode(currentMode === 'alpha' ? 'default' : 'alpha'))
+          display: Unicode.alphaMicron,
+          activate: (dispatch) => dispatch(changeMode(currentMode === 'alphaMicron' ? 'default' : 'alphaMicron'))
         }}
-        shift={{type: 'shift', display: 'Lock'}}
-        toggled={currentMode === 'alpha'}
+        toggled={currentMode === 'alphaMicron'}
       />
       <Key 
         default={{type: 'default', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
         shift={{type: 'shift', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
-        alpha={{type: 'alpha', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
+        alphaMega={{type: 'alphaMega', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
+        alphaMicron={{type: 'alphaMicron', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
         trig={{type: 'trig', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
       />
     </KeyGroup>

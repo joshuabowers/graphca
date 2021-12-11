@@ -25,5 +25,5 @@ Toggled.args = {
 export const NotToggled = Template.bind({})
 NotToggled.args = {
   toggled: false,
-  default: {type: 'default', display: Unicode.alpha, displayHint: 'unicode'}
+  default: {type: 'default', display: Unicode.alphaMega, displayHint: 'unicode'}
 }
