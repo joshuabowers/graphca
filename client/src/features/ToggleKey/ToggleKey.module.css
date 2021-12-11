@@ -37,6 +37,15 @@
   }
 }
 
+.normal.toggled, .normal.activated, .normal:active {
+  z-index: 1;
+  box-shadow: 0 0 2em var(--key-color);
+}
+
+.normal > :checked ~ *, .normal.activated > .primary, .normal:active > .primary {
+  box-shadow: inset 0 0 0.25em var(--key-color);
+}
+
 .normal > [type=checkbox] {
   opacity: 0;
   width: 1em;
