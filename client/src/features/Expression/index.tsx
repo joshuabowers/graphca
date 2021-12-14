@@ -14,6 +14,7 @@ import {
   HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
+  Permutation, Combination,
   real, multiply, negate, reciprocal, Polygamma
 } from '../../common/Tree'
 import { Unicode } from '../../common/MathSymbols'
@@ -237,6 +238,17 @@ const whenPolygamma: when<Polygamma> = e => {
   </span>
 }
 
+const createCombinatorial = (fnName: string) =>
+  (node: Binary) => {
+    const l = componentize(node.left), r = componentize(node.right)
+    return <span className={[styles.functional, styles.combinatorial].join(' ')}>
+      {fnName}({l}, {r})
+    </span>
+  }
+
+const whenPermutation = createCombinatorial('P')
+const whenCombination = createCombinatorial('C')
+
 const whenBase: when<Base> = e => <span className={styles.unhandled}>Unhandled: {e.$kind}</span>
 
 export type ComponentizeFn = Multi
@@ -246,6 +258,7 @@ export type ComponentizeFn = Multi
   & typeof whenTrigonometric & typeof whenArcus
   & typeof whenHyperbolic & typeof whenAreaHyperbolic
   & typeof whenUnary & typeof whenFactorial & typeof whenPolygamma
+  & typeof whenPermutation & typeof whenCombination
   & typeof whenBase
 
 export const componentize: ComponentizeFn = multi(
@@ -265,6 +278,9 @@ export const componentize: ComponentizeFn = multi(
   method(is(Factorial), whenFactorial),
   method(is(Unary), whenUnary),
   method(is(Polygamma), whenPolygamma),
+
+  method(is(Permutation), whenPermutation),
+  method(is(Combination), whenCombination),
 
   method(is(Base), whenBase)
 )

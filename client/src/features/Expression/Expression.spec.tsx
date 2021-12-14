@@ -7,7 +7,7 @@ import {
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  abs, factorial, gamma, polygamma
+  abs, factorial, gamma, polygamma, permute, combine
 } from '../../common/Tree'
 import { Expression } from '.'
 import { shallow } from 'enzyme'
@@ -143,6 +143,24 @@ describe(Expression, () => {
         log(variable('y'), variable('x')), 
         '.functional.logarithmic', 
         'logy(x)'
+      )
+    })
+  })
+
+  describe('of combinatorial functions', () => {
+    it('renders permutations', () => {
+      expectMarkup(
+        permute(variable('x'), variable('y')), 
+        '.functional.combinatorial',
+        'P(x, y)'
+      )
+    })
+
+    it('renders combinations', () => {
+      expectMarkup(
+        combine(variable('x'), variable('y')),
+        '.functional.combinatorial',
+        'C(x, y)'
       )
     })
   })
