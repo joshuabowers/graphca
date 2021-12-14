@@ -34,6 +34,7 @@ import {
 import { Factorial, factorial } from './factorial'
 import { Gamma, gamma } from './gamma'
 import { Polygamma, polygamma } from './polygamma'
+import { Permutation, Combination, permute, combine } from './combinatorics'
 
 type EvaluateFn = Multi & ((expression: Base) => Base)
 
@@ -53,6 +54,9 @@ const createEvaluate = (scope: Scope) => {
     method(is(Multiplication), binary(multiply)),
     method(is(Exponentiation), binary(raise)),
     method(is(Logarithm), binary(log)),
+
+    method(is(Permutation), binary(permute)),
+    method(is(Combination), binary(combine)),
   
     method(is(AbsoluteValue), unary(abs)),
   
