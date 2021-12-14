@@ -236,4 +236,18 @@ describe('subtract', () => {
   it('properly subtracts a real from a complex', () => {
     expect(subtract(complex(2, 1), real(1))).toEqual(complex(1, 1))
   })
+
+  it('combines like terms across multiplications', () => {
+    expect(
+      subtract(
+        multiply(multiply(variable('a'), variable('b')), variable('c')),
+        multiply(multiply(variable('d'), variable('b')), variable('c'))
+      )
+    ).toEqual(
+      multiply(
+        multiply(subtract(variable('a'), variable('d')), variable('b')),
+        variable('c')
+      )
+    )
+  })
 })

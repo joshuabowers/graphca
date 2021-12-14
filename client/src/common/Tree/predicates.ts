@@ -1,5 +1,6 @@
 import { method } from '@arrows/multimethod'
 import { Base } from './Expression'
+import { real } from './real'
 import { Binary } from './binary'
 import { is, Constructor } from './is'
 import { equals } from './equality'
@@ -22,6 +23,9 @@ export const areEqual = <L extends Base, R extends Base>(leftType: Constructor<L
 export const identity = <T extends Base>(t: T) => t
 export const leftChild = <T extends Binary>(t: T) => t.left
 export const rightChild = <T extends Binary>(t: T) => t.right
+export const negated = <T extends Binary, U extends Binary>(sub: Which<U>) =>
+  (t: T) =>
+    (equals(t.left, real(-1)) && is(Binary)(t.right) && sub(t.right as U)) || real(NaN)
 
 export type AreEqualFn = typeof areEqual
 

@@ -1,6 +1,6 @@
 import { method, fromMulti } from '@arrows/multimethod'
 import { is } from './is'
-import { notAny, visit, leftChild, rightChild, identity } from './predicates'
+import { notAny, visit, leftChild, rightChild, identity, negated } from './predicates'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
@@ -44,6 +44,14 @@ export const add: AddFn = fromMulti(
   MpM(leftChild, rightChild)((l, r) => multiply(add(l.right, r.left), l.left)),
   MpM(rightChild, leftChild)((l, r) => multiply(add(l.left, r.right), l.right)),
   MpM(leftChild, leftChild)((l, r) => multiply(add(l.right, r.right), l.left)),
+  MpM(rightChild, negated(rightChild))((l, r) => is(Binary)(r.right) && multiply(subtract(l.left, r.right.left), l.right) || real(NaN)),
+  MpM(rightChild, negated(leftChild))((l, r) => is(Binary)(r.right) && multiply(subtract(l.left, r.right.right), l.right) || real(NaN)),
+  MpM(leftChild, negated(rightChild))((l, r) => is(Binary)(r.right) && multiply(subtract(l.right, r.right.left), l.left) || real(NaN)),
+  MpM(leftChild, negated(leftChild))((l, r) => is(Binary)(r.right) && multiply(subtract(l.right, r.right.right), l.left) || real(NaN)),
+  MpM(negated(rightChild), leftChild)((l, r) => is(Binary)(l.right) && multiply(subtract(r.right, l.right.left), r.left) || real(NaN)),
+  MpM(negated(rightChild), rightChild)((l, r) => is(Binary)(l.right) && multiply(subtract(r.left, l.right.left), r.right) || real(NaN)),
+  MpM(negated(leftChild), leftChild)((l, r) => is(Binary)(l.right) && multiply(subtract(r.right, l.right.right), r.left) || real(NaN)),
+  MpM(negated(leftChild), rightChild)((l, r) => is(Binary)(l.right) && multiply(subtract(r.left, l.right.right), r.right) || real(NaN)),
   MpB(leftChild, identity)((l, r) => multiply(add(real(1), l.right), r)),
   MpB(rightChild, identity)((l, r) => multiply(add(real(1), l.left), r)),
   BpM(identity, leftChild)((l, r) => multiply(add(real(1), r.right), l)),
