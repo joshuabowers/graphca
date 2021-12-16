@@ -2,9 +2,19 @@ import * as THREE from 'three'
 import React, { useState, useRef } from 'react'
 import styles from './Graph.module.css';
 import { Canvas, useFrame } from '@react-three/fiber';
+import { Base, real, invoke } from '../../common/Tree'
+import { describe } from '../../common/description'
 
 export interface GraphProps {
 
+}
+
+function *valuesBetween(expression: Base, min: number, max: number, slices: number = 100) {
+  const increment = (max - min) / slices
+  for(let i = min; i < max; i += increment) {
+    const a = real(i)
+    yield [a, invoke()(expression)(a)]
+  }
 }
 
 function Box(props: JSX.IntrinsicElements['mesh']) {
