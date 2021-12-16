@@ -22,7 +22,7 @@ app.use( (req, res, next) => helmet({
       scriptSrc: ["'self'", "'unsafe-eval'"],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-      requireTrustedTypesFor: ["'script'"]
+      // requireTrustedTypesFor: ["'script'"]
     }
   }
 })(req, res, next) )
