@@ -4,7 +4,7 @@ import {
   add, subtract, multiply, divide, raise, double, square, sqrt,
   real, complex, variable, 
   negate, abs,
-  lb, ln, lg,
+  lb, ln, lg, log,
   cos, sin, tan, sec, csc, cot,
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
@@ -269,6 +269,10 @@ describe('parser', () => {
 
     it('matches the common logarithm', () => {
       expectObject('lg(x)', lg(variable('x')))
+    })
+
+    it('matches arbitrary logarithms', () => {
+      expectObject('log(x, y)', log(variable('x'), variable('y')))
     })
   })
 

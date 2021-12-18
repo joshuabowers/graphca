@@ -39,6 +39,7 @@ import { Polygamma, polygamma, digamma } from './polygamma'
 import { Permutation, Combination, permute, combine } from './combinatorics'
 import { Derivative, differentiate } from './differentiation'
 import { invoke } from './invocation'
+import { stringify } from './stringify'
 
 export { 
   Base, Unary, Binary, Real, Complex, Variable,
@@ -63,7 +64,7 @@ export {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   log, lb, ln, lg, factorial, gamma, polygamma, digamma,
-  permute, combine, differentiate, invoke
+  permute, combine, differentiate, invoke, stringify
 }
 
 type Additive = typeof add | typeof subtract

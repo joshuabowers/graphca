@@ -2,7 +2,7 @@ import { Unicode } from './MathSymbols'
 import {
   Base,
   real, complex, variable, assign,
-  raise, negate, factorial, polygamma, digamma,
+  raise, negate, factorial, polygamma, digamma, log,
   differentiate, invoke,
   operators, additive, multiplicative, functions, permute, combine
 } from './Tree'
@@ -115,6 +115,7 @@ functional:
 | ${Unicode.digamma} '(' ^ <>expression ')' ${({expression}) => digamma(expression)}
 | 'P' '(' <n>expression ',' <r>expression ')' ${({n, r}) => permute(n, r)}
 | 'C' '(' <n>expression ',' <r>expression ')' ${({n, r}) => combine(n, r)}
+| 'log' '(' <b>expression ',' <v>expression ')' ${({b, v}) => log(b, v)}
 
 builtInFunction: ${functional}
 

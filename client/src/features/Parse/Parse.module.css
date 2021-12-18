@@ -16,3 +16,11 @@
 .result > span:first-child {
   margin-right: 0.5em;
 }
+
+.control {
+  cursor: pointer;
+}
+
+.control > span {
+  display: inline;
+}

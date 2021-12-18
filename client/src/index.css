@@ -50,6 +50,7 @@ code {
     --terminal-color: inherit;
     --error-color: hsl(0, 60%, 85%);
     --error-background-color: hsla(0, 60%, 25%, 45%);
+    --curve-color: skyblue;
   }
 }
 
@@ -74,5 +75,6 @@ code {
     --terminal-color: black;
     --error-color: hsl(0, 60%, 25%);
     --error-background-color: hsl(0, 60%, 75%);  
+    --curve-color: black;
   }
 }
