@@ -96,7 +96,7 @@ export const Graph = (props: GraphProps) => {
         )
       }
       </group>
-      <MapControls />
+      <MapControls enableRotate={false} />
     </Canvas>
   )
 }
