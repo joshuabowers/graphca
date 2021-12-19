@@ -38,7 +38,7 @@ const visit = <T extends Base>(type: Constructor<T>) =>
 
 const binaryInfix = (operator: string) => 
   (e: Binary) =>
-    `${stringify(e.left)}${operator}${stringify(e.right)}`
+    `(${stringify(e.left)}${operator}${stringify(e.right)})`
 
 const binary = (name: string) =>
   (e: Binary) =>

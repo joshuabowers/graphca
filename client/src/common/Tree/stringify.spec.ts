@@ -36,23 +36,23 @@ describe('stringify', () => {
 
   describe('of binary operations and functions', () => {
     it('converts additions to strings', () => {
-      expect(stringify(add(variable('x'), real(1)))).toEqual('x+1')
+      expect(stringify(add(variable('x'), real(1)))).toEqual('(x+1)')
     })
   
     it('converts subtractions to strings', () => {
-      expect(stringify(subtract(variable('x'), real(1)))).toEqual(`x+-1`)
+      expect(stringify(subtract(variable('x'), real(1)))).toEqual(`(x+-1)`)
     })
   
     it('converts multiplications to strings', () => {
-      expect(stringify(multiply(variable('x'), real(2)))).toEqual(`2${Unicode.multiplication}x`)
+      expect(stringify(multiply(variable('x'), real(2)))).toEqual(`(2${Unicode.multiplication}x)`)
     })
   
     it('converts divisions to strings', () => {
-      expect(stringify(divide(real(2), variable('x')))).toEqual(`2${Unicode.multiplication}x^-1`)
+      expect(stringify(divide(real(2), variable('x')))).toEqual(`(2${Unicode.multiplication}(x^-1))`)
     })
   
     it('converts exponentiations to strings', () => {
-      expect(stringify(raise(variable('x'), real(2)))).toEqual('x^2')
+      expect(stringify(raise(variable('x'), real(2)))).toEqual('(x^2)')
     })
   
     it('converts logarithms to strings', () => {
