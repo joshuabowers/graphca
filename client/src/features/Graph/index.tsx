@@ -46,6 +46,22 @@ const boundary = (camera: THREE.Camera, width: number): Range => ({
   width
 })
 
+const segmentize = (points: Vector3[]): Vector3[][] => {
+  const r: Vector3[][] = [[]]
+  let c = 0
+  for(let p of points){
+    if(Number.isNaN(p.y)) {
+      if(r[c].length > 0){ 
+        r.push([]) 
+        c++
+      }
+    } else {
+      r[c].push(p)
+    }
+  }
+  return r;
+}
+
 const Curve = (props: CurveProps) => {
   const { camera, viewport } = useThree();
   const [range, setRange] = useState<Range>(boundary(camera, viewport.width))
@@ -66,11 +82,23 @@ const Curve = (props: CurveProps) => {
     ),
     [props.expression, range]
   )
-  return range.width > 0 && points.length > 0 ? <Line 
-    points={points}
-    color={props.color}
-    lineWidth={1}
-  /> : <></>
+  const segments = useMemo(
+    () => segmentize(points),
+    [points]
+  )
+  segments.forEach((points, i) => {
+    if(points.length < 2) {
+      console.error({points, i})
+    }
+  })
+  return <group>
+    {segments.map((points, i) => <Line 
+      points={points}
+      color={props.color}
+      lineWidth={1}
+      key={i}
+    />)}
+  </group>
 }
 
 export const Graph = (props: GraphProps) => {
