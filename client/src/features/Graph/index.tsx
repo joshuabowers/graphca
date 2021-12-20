@@ -9,6 +9,7 @@ import { parser } from '../../common/parser';
 import { useAppSelector } from '../../app/hooks';
 import { Color, Vector3 } from 'three';
 import { Line, MapControls } from '@react-three/drei';
+import { Grid2 } from '../Geometry/Grid2';
 
 export interface GraphProps {
 
@@ -73,6 +74,8 @@ const Curve = (props: CurveProps) => {
     }
   })
 
+  // console.info({width: range.width, lgWidth: Math.log10(range.width)})
+
   const points = useMemo(
     () => valuesBetween(
       props.expression, 
@@ -109,10 +112,11 @@ export const Graph = (props: GraphProps) => {
     <Canvas orthographic camera={{position: [0, 0, 1], zoom: 30, up: [0, 0, 1]}} ref={canvasRef}>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <gridHelper 
+      {/* <gridHelper 
         args={[1000, 1000]}
         rotation={[Math.PI / 2, 0, 0]}
-      />
+      /> */}
+      <Grid2 />
       <group>
       {
         parsings.map((v,i) => 
