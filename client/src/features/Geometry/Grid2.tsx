@@ -29,6 +29,11 @@ type GridLine = {
   key: string
 }
 
+type Label = {
+  content: string,
+  value: number
+}
+
 export const Grid2 = (props: Grid2Props) => {
   const { camera, viewport } = useThree()
   const [boundary, setBoundary] = useState<Boundary>(
@@ -88,6 +93,8 @@ export const Grid2 = (props: Grid2Props) => {
       key: `y:${y}`
     })
   }
+
+  // TODO: calculate axes number labels and project via Drei's Html
 
   console.log(segments)
 
