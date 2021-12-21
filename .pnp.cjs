@@ -6921,7 +6921,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["stats.js", "npm:0.17.0"],
             ["three", "npm:0.135.0"],
             ["three-mesh-bvh", "virtual:3745c07b7d1fdd713aa46ba78f6f80b76e92528a3415fbe469ee70f06b984d46d771498a8d48d897579802aa8af248d502ffbe76b09bde291f5da662dc5e83b3#npm:0.5.2"],
-            ["three-stdlib", "virtual:3745c07b7d1fdd713aa46ba78f6f80b76e92528a3415fbe469ee70f06b984d46d771498a8d48d897579802aa8af248d502ffbe76b09bde291f5da662dc5e83b3#npm:2.6.1"],
+            ["three-stdlib", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:2.6.1"],
             ["troika-three-text", "virtual:3745c07b7d1fdd713aa46ba78f6f80b76e92528a3415fbe469ee70f06b984d46d771498a8d48d897579802aa8af248d502ffbe76b09bde291f5da662dc5e83b3#npm:0.44.0"],
             ["use-asset", "virtual:3745c07b7d1fdd713aa46ba78f6f80b76e92528a3415fbe469ee70f06b984d46d771498a8d48d897579802aa8af248d502ffbe76b09bde291f5da662dc5e83b3#npm:1.0.4"],
             ["utility-types", "npm:3.10.0"],
@@ -13173,6 +13173,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["reselect", "npm:4.0.0"],
             ["reselect-map", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:1.0.6"],
             ["three", "npm:0.135.0"],
+            ["three-stdlib", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:2.6.1"],
             ["ts-pattern", "npm:3.3.3"],
             ["typescript", "patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=32657b"],
             ["web-vitals", "npm:1.1.2"],
@@ -28662,10 +28663,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
-        ["virtual:3745c07b7d1fdd713aa46ba78f6f80b76e92528a3415fbe469ee70f06b984d46d771498a8d48d897579802aa8af248d502ffbe76b09bde291f5da662dc5e83b3#npm:2.6.1", {
-          "packageLocation": "./.yarn/__virtual__/three-stdlib-virtual-7b07d7f33a/0/cache/three-stdlib-npm-2.6.1-f9f3f5da21-c08113feb2.zip/node_modules/three-stdlib/",
+        ["virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:2.6.1", {
+          "packageLocation": "./.yarn/__virtual__/three-stdlib-virtual-999a100960/0/cache/three-stdlib-npm-2.6.1-f9f3f5da21-c08113feb2.zip/node_modules/three-stdlib/",
           "packageDependencies": [
-            ["three-stdlib", "virtual:3745c07b7d1fdd713aa46ba78f6f80b76e92528a3415fbe469ee70f06b984d46d771498a8d48d897579802aa8af248d502ffbe76b09bde291f5da662dc5e83b3#npm:2.6.1"],
+            ["three-stdlib", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:2.6.1"],
             ["@babel/runtime", "npm:7.16.5"],
             ["@types/three", "npm:0.135.0"],
             ["@webgpu/glslang", "npm:0.0.15"],

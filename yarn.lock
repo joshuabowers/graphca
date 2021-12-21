@@ -7268,6 +7268,7 @@ __metadata:
     reselect: ^4.0.0
     reselect-map: ^1.0.6
     three: ^0.135.0
+    three-stdlib: ^2.6.1
     ts-pattern: ^3.3.3
     typescript: ^4.1.2
     web-vitals: ^1.0.1
