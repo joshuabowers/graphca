@@ -22,20 +22,24 @@ function valuesBetween(expression: Base, min: number, max: number, slices: numbe
   return r
 }
 
-type Range = {from: number, to: number, width: number, center: number}
+type Range = {from: number, to: number, top: number, bottom: number, width: number, height: number, center: number}
 
-const boundary = (camera: THREE.Camera, width: number): Range => ({
+const boundary = (camera: THREE.Camera, width: number, height: number): Range => ({
   center: camera.position.x,
   from: camera.position.x - width/2,
   to: camera.position.x + width/2,
-  width
+  top: camera.position.y + height/2,
+  bottom: camera.position.y - height/2,
+  width,
+  height
 })
 
-const segmentize = (points: Vector3[], magnitude: number): Vector3[][] => {
+const inViewport = (point: Vector3|undefined, topEdge: number, bottomEdge: number) =>
+  point !== undefined && point.y <= topEdge && point.y >= bottomEdge
+
+const segmentize = (points: Vector3[], topEdge: number, bottomEdge: number): Vector3[][] => {
   const r: Vector3[][] = [[]]
-  const scale = 10**Math.floor(magnitude), extrema = 10**Math.ceil(magnitude)
-  console.log(magnitude, scale, extrema)
-  let c = 0, d = -1
+  let c = 0, d = -1, previous: Vector3|undefined
   for(let p of points){
     if(Number.isNaN(p.y)) {
       if(r[c].length > 0){ 
@@ -44,17 +48,22 @@ const segmentize = (points: Vector3[], magnitude: number): Vector3[][] => {
         d = -1
       }
     } else {
-      // TODO: Needs work
-      if(d >= 0 && r[c][d] && Math.abs(r[c][d].y - p.y) > scale){
-        const lerpX = (r[c][d].x + p.x)/2
-        r[c].push(new Vector3(lerpX, Math.sign(r[c][d].y)*extrema, 0))
-        r.push([new Vector3(lerpX, Math.sign(p.y)*extrema, 0)])
+      const previousVisible = inViewport(previous, topEdge, bottomEdge)
+      const currentVisible = inViewport(p, topEdge, bottomEdge)
+      r[c].push(p)
+
+      if(
+        (previousVisible && !currentVisible)
+        || (!previousVisible && !currentVisible)
+      ) {
+        r.push([])
         c++
-        d = 1
+        d = -1
       } else {
+        if(!previousVisible && previous) { r[c].unshift(previous) }
         d++
       }
-      r[c].push(p)
+      previous = p
     }
   }
   return r.filter(s => s.length > 1);
@@ -63,12 +72,12 @@ const segmentize = (points: Vector3[], magnitude: number): Vector3[][] => {
 export const Curve = (props: CurveProps) => {
 
   const { camera, viewport } = useThree();
-  const [range, setRange] = useState<Range>(boundary(camera, viewport.width))
+  const [range, setRange] = useState<Range>(boundary(camera, viewport.width, viewport.height))
 
   useFrame(({camera, viewport}, d) => {
     const vp = viewport.getCurrentViewport(camera)
     if(range.width !== vp.width || range.center !== camera.position.x){ 
-      setRange(boundary(camera, vp.width)) 
+      setRange(boundary(camera, vp.width, vp.height)) 
     }
   })
 
@@ -83,8 +92,8 @@ export const Curve = (props: CurveProps) => {
   )
 
   const segments = useMemo(
-    () => segmentize(points, Math.log10(viewport.getCurrentViewport(camera).height)),
-    [points]
+    () => segmentize(points, range.top, range.bottom),
+    [points, range]
   )
 
   return <group>
