@@ -26,7 +26,8 @@ type GridLine = {
   start: Vector3,
   end: Vector3,
   color: Color,
-  key: string
+  key: string,
+  attachLabel: boolean
 }
 
 type Label = {
@@ -77,12 +78,16 @@ export const Grid2 = (props: Grid2Props) => {
   const segments: GridLine[] = []
   const black = new Color(0,0,0), gray = new Color(0.45, 0.45, 0.45)
 
+  const labelAttachX = Math.min(xEnd, Math.max(0, xStart)),
+    labelAttachY = Math.min(yEnd, Math.max(0, yStart))
+
   for(let x = xStart; x <= xEnd; x += step){
     segments.push({
       start: new Vector3(x, yStart, 0),
       end: new Vector3(x, yEnd, 0),
       color: nearly(x, 0) ? black : gray,
-      key: `x:${x}`
+      key: `x:${x}`,
+      attachLabel: nearly(x, labelAttachX)
     })
   }
   for(let y = yStart; y <= yEnd; y += step){
@@ -90,11 +95,14 @@ export const Grid2 = (props: Grid2Props) => {
       start: new Vector3(xStart, y, 0),
       end: new Vector3(xEnd, y, 0),
       color: nearly(y, 0) ? black : gray,
-      key: `y:${y}`
+      key: `y:${y}`,
+      attachLabel: nearly(y, labelAttachY)
     })
   }
 
   // TODO: calculate axes number labels and project via Drei's Html
+
+  console.info({labelAttachX, labelAttachY})
 
   console.log(segments)
 
@@ -104,7 +112,7 @@ export const Grid2 = (props: Grid2Props) => {
 
   return <Segments limit={segments.length+1} lineWidth={1.0}>
     {
-      segments.map(({start, end, color, key}, i) => (
+      segments.map(({start, end, color, key, attachLabel}, i) => (
         <Segment start={start} end={end} color={color} key={key} />
       ))
     }
