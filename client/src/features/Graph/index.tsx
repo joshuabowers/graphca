@@ -1,14 +1,13 @@
 import * as THREE from 'three'
-import React, { useRef, useMemo, useState } from 'react'
-// import styles from './Graph.module.css';
-import { Canvas, useThree, useFrame } from '@react-three/fiber';
-import { Base, Real, real, invoke } from '../../common/Tree'
+import React, { useRef } from 'react'
+import styles from './Graph.module.css';
+import { Canvas } from '@react-three/fiber';
+import { Base } from '../../common/Tree'
 import { RootState } from '../../app/store';
 import { createArraySelector } from 'reselect-map';
 import { parser } from '../../common/parser';
 import { useAppSelector } from '../../app/hooks';
-import { Color, Vector3 } from 'three';
-import { Line, MapControls } from '@react-three/drei';
+import { MapControls } from '@react-three/drei';
 import { Grid2 } from '../Geometry/Grid2';
 import { Curve } from '../Geometry/Curve';
 
@@ -26,7 +25,12 @@ export const Graph = (props: GraphProps) => {
   const parsings = useAppSelector(getParsings)
 
   return (
-    <Canvas orthographic camera={{position: [0, 0, 1], zoom: 30, up: [0, 0, 1]}} ref={canvasRef}>
+    <Canvas 
+      orthographic 
+      camera={{position: [0, 0, 1], zoom: 30, up: [0, 0, 1]}} 
+      ref={canvasRef}
+      className={styles.default}
+    >
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
       {/* <gridHelper 

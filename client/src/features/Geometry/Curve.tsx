@@ -10,6 +10,7 @@ interface CurveProps {
 }
 
 function valuesBetween(expression: Base, min: number, max: number, slices: number = 100) {
+  console.log('slices:', slices)
   const increment = (max - min) / slices
   const r = new Array<Vector3>(slices);
   const valueAt = invoke()(expression)
@@ -37,31 +38,27 @@ const boundary = (camera: THREE.Camera, width: number, height: number): Range =>
 const inViewport = (point: Vector3|undefined, topEdge: number, bottomEdge: number) =>
   point !== undefined && point.y <= topEdge && point.y >= bottomEdge
 
+
+// NOTE: Some of this could be cleaned up (c. TS/ES-2022) with Array.prototype.at
 const segmentize = (points: Vector3[], topEdge: number, bottomEdge: number): Vector3[][] => {
   const r: Vector3[][] = [[]]
-  let c = 0, d = -1, previous: Vector3|undefined
+  let c = 0, previous: Vector3|undefined
   for(let p of points){
     if(Number.isNaN(p.y)) {
       if(r[c].length > 0){ 
         r.push([]) 
         c++
-        d = -1
       }
     } else {
       const previousVisible = inViewport(previous, topEdge, bottomEdge)
       const currentVisible = inViewport(p, topEdge, bottomEdge)
       r[c].push(p)
 
-      if(
-        (previousVisible && !currentVisible)
-        || (!previousVisible && !currentVisible)
-      ) {
+      if(!currentVisible) {
         r.push([])
         c++
-        d = -1
-      } else {
-        if(!previousVisible && previous) { r[c].unshift(previous) }
-        d++
+      } else if(!previousVisible && previous) { 
+        r[c].unshift(previous) 
       }
       previous = p
     }
@@ -86,7 +83,7 @@ export const Curve = (props: CurveProps) => {
       props.expression, 
       range.from, 
       range.to,
-      250
+      Math.ceil(250 * Math.log10(range.width))
     ),
     [props.expression, range]
   )
