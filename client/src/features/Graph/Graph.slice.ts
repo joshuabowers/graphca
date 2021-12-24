@@ -12,9 +12,13 @@ export const graphSlice = createSlice({
   reducers: {
     graph: (state, action: PayloadAction<string>) => {
       state.expressions.push(action.payload)
+    },
+
+    clear: (state) => {
+      state.expressions = []
     }
   }
 })
 
-export const { graph } = graphSlice.actions
+export const { graph, clear } = graphSlice.actions
 export default graphSlice.reducer

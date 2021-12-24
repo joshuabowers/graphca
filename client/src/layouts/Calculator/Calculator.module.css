@@ -39,6 +39,11 @@
 @media(orientation: portrait) {
   .calculator {
     grid: auto 2fr minmax(4em, 1fr) fit-content(40%) auto / 1fr;
+    grid-template-areas: "header"
+                         "graph"
+                         "terminal"
+                         "keypad"
+                         "footer";
   }
 
   .calculator > header {
@@ -57,6 +62,10 @@
 @media(orientation: landscape) {
   .calculator {
     grid: auto 2fr minmax(4em, 2fr) auto / 1fr auto;
+    grid-template-areas: "header header"
+                         "graph keypad"
+                         "terminal keypad"
+                         "footer footer";
   }
 
   .calculator > header {

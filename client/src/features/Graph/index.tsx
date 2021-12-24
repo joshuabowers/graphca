@@ -33,10 +33,6 @@ export const Graph = (props: GraphProps) => {
     >
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      {/* <gridHelper 
-        args={[1000, 1000]}
-        rotation={[Math.PI / 2, 0, 0]}
-      /> */}
       <Grid2 />
       <group>
       {
