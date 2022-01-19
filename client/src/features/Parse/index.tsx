@@ -11,6 +11,8 @@ export type ParseProps = {
   scope: Scope,
 }
 
+// TODO: Ensure that Expression is wrapped in some sort of flexed container,
+// allowing the graph button to be placed to the right.
 export const Parse = (props: ParseProps) => {
   console.log('parsing expression:', props.input)
   try {
