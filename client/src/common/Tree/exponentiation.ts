@@ -11,9 +11,9 @@ export class Exponentiation extends Binary {
   readonly $kind = 'Exponentiation'
 }
 
-const isE_A = (left: Base, _right: Base) =>
+const isExponentiation = (left: Base, _right: Base) =>
   left instanceof Exponentiation
-const isM_A = (left: Base, _right: Base) =>
+const isMultiplication = (left: Base, _right: Base) =>
   left instanceof Multiplication
 
 const rawRaise = binary(Exponentiation)(
@@ -39,8 +39,8 @@ export const raise: RaiseFn = fromMulti(
   method([real(1), _], real(1)),
   method([_, real(1)], (l: Base, _r: Real) => l),
   visit(Base, Logarithm)(identity, leftChild)((_l, r) => r.right),
-  method(isE_A, (l: Exponentiation, r: Base) => raise(l.left, multiply(l.right, r))),
-  method(isM_A, (l: Multiplication, r: Base) => multiply(raise(l.left, r), raise(l.right, r))),
+  method(isExponentiation, (l: Exponentiation, r: Base) => raise(l.left, multiply(l.right, r))),
+  method(isMultiplication, (l: Multiplication, r: Base) => multiply(raise(l.left, r), raise(l.right, r))),
 )(rawRaise)
 
 const fromRaise = unaryFrom(raise, bindRight)
