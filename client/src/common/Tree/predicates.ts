@@ -1,9 +1,16 @@
-import { method } from '@arrows/multimethod'
+import { Multi, method } from '@arrows/multimethod'
 import { Base } from './Expression'
-import { real } from './real'
+import { real, Real } from './real'
+import { Complex } from './complex'
 import { Binary } from './binary'
 import { is, Constructor } from './is'
 import { equals } from './equality'
+
+export type Predicate<T extends Base> = (t: T) => boolean
+
+export type ConstantPredicate = Multi 
+  & Predicate<Real>
+  & Predicate<Complex>
 
 export const not = <T>(type: new(...args: any[]) => T) => 
   (value: unknown) => !(value instanceof type)
