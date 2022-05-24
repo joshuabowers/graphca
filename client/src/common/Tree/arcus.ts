@@ -35,25 +35,23 @@ export class ArcusCotangent extends Arcus {
 const i = complex(0, 1)
 const halfPi = real(Math.PI/2)
 
-export const acos = unary(
+export const acos = unary(ArcusCosine)(
   r => real(Math.acos(r.value)),
-  c => subtract(halfPi, asin(c)),
-  e => new ArcusCosine(e)
+  c => subtract(halfPi, asin(c))
 )
-export const AcosFn = typeof acos
+export type AcosFn = typeof acos
 
-export const asin = unary(
+export const asin = unary(ArcusSine)(
   r => real(Math.asin(r.value)),
   c => {
     const iz = multiply(i, c)
     const distance = sqrt(subtract(real(1), square(c)))
     return multiply(i, ln(subtract(distance, iz)))
-  },
-  e => new ArcusSine(e)
+  }
 )
-export const AsinFn = typeof asin
+export type AsinFn = typeof asin
 
-export const atan = unary(
+export const atan = unary(ArcusTangent)(
   r => real(Math.atan(r.value)),
   c => {
     const nHalfI = complex(0, -0.5)
@@ -61,28 +59,24 @@ export const atan = unary(
     const ipz = add(i, c)
     const ratio = divide(inz, ipz)
     return multiply(nHalfI, ln(ratio))
-  },
-  e => new ArcusTangent(e)
+  }
 )
-export const AtanFn = typeof atan
+export type AtanFn = typeof atan
 
-export const asec = unary(
+export const asec = unary(ArcusSecant)(
   r => acos(reciprocal(r)),
-  c => acos(reciprocal(c)),
-  e => new ArcusSecant(e)
+  c => acos(reciprocal(c))
 )
-export const AsecFn = typeof asec
+export type AsecFn = typeof asec
 
-export const acsc = unary(
+export const acsc = unary(ArcusCosecant)(
   r => asin(reciprocal(r)),
-  c => asin(reciprocal(c)),
-  e => new ArcusCosecant(e)
+  c => asin(reciprocal(c))
 )
-export const AcscFn = typeof acsc
+export type AcscFn = typeof acsc
 
-export const acot = unary(
+export const acot = unary(ArcusCotangent)(
   r => subtract(halfPi, atan(r)),
-  c => atan(reciprocal(c)),
-  e => new ArcusCotangent(e)
+  c => atan(reciprocal(c))
 )
-export const AcotFn = typeof acot
+export type AcotFn = typeof acot

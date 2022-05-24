@@ -57,10 +57,11 @@ export class Gamma extends Unary {
   readonly $kind = 'Gamma'
 }
 
-const rawGamma = unary(
+// TODO: Calve the comparisons into edge cases on gamma, rather than here,
+// similar to how polygamma works.
+const rawGamma = unary(Gamma)(
   r => calculateGamma(r, r.value < 0.5, real) as Real,
-  c => calculateGamma(c, c.a < 0.5, n => complex(n, 0)) as Complex,
-  e => new Gamma(e)
+  c => calculateGamma(c, c.a < 0.5, n => complex(n, 0)) as Complex
 )
 export type GammaFn = typeof rawGamma
 

@@ -1,6 +1,6 @@
 import { method, multi, Multi } from '@arrows/multimethod'
 import { is } from './is'
-import { Base } from './Expression'
+import { Base, Constructor } from './Expression'
 import { Real } from './real'
 import { Complex, complex } from './complex'
 
@@ -18,8 +18,6 @@ type BinaryFn<T> = Multi
   & when<Complex>
   & when<Base, T>
 
-type Constructor<T> = new(...args: any[]) => T
-
 export const binary = <T extends Binary>(type: Constructor<T>) =>
   (
     whenRxR: when<Real>,
@@ -36,7 +34,7 @@ export const binary = <T extends Binary>(type: Constructor<T>) =>
     return fn  
   }
 
-type BindTo = (unbound: Base, bound: Base) => [Base, Base]
+export type BindTo = (unbound: Base, bound: Base) => [Base, Base]
 
 export const bindLeft: BindTo = (unbound, bound) => [bound, unbound]
 export const bindRight: BindTo = (unbound, bound) => [unbound, bound]

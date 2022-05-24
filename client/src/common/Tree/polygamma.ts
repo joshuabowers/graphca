@@ -2,7 +2,7 @@ import { fromMulti, multi, Multi, method } from '@arrows/multimethod'
 import { is } from './is'
 import { Base } from './Expression'
 import { Binary, binary } from './binary'
-import { unary } from './unary'
+import { unaryVia, bindLeft } from './unary'
 import { Real, real } from './real'
 import { Complex } from './complex'
 import { variable } from './variable'
@@ -144,10 +144,9 @@ const digammaRecurrence = (e: Base) => {
   )
 }
 
-const rawDigamma = unary(
+const rawDigamma = unaryVia(Polygamma, bindLeft)(real(0))(
   r => calculateDigamma(r) as Real,
-  c => calculateDigamma(c) as Complex,
-  e => new Polygamma(real(0), e)
+  c => calculateDigamma(c) as Complex
 )
 export type DigammaFn = typeof rawDigamma
 

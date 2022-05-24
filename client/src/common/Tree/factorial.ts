@@ -20,10 +20,10 @@ export class Factorial extends Unary {
   readonly $kind = 'Factorial'
 }  
 
-export const baseFactorial = unary(
+export const baseFactorial = unary(Factorial)(
   r => multiply(r, factorial(subtract(r, real(1)))),
   c => multiply(c, factorial(subtract(c, real(1)))),
-  e => new Factorial(e)
+  // e => new Factorial(e)
 )
 export type FactorialFn = typeof baseFactorial
 export const factorial: FactorialFn = fromMulti(

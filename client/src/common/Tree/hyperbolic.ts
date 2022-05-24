@@ -29,27 +29,25 @@ export class HyperbolicCotangent extends Hyperbolic {
   readonly $kind = 'HyperbolicCotangent'
 }
 
-export const cosh = unary(
+export const cosh = unary(HyperbolicCosine)(
   r => real(Math.cosh(r.value)),
   c => complex(
     Math.cosh(c.a) * Math.cos(c.b),
     Math.sinh(c.a) * Math.sin(c.b)
-  ),
-  e => new HyperbolicCosine(e)
+  )
 )
 export type CoshFn = typeof cosh
 
-export const sinh = unary(
+export const sinh = unary(HyperbolicSine)(
   r => real(Math.sinh(r.value)),
   c => complex(
     Math.sinh(c.a) * Math.cos(c.b),
     Math.cosh(c.a) * Math.sin(c.b)
-  ),
-  e => new HyperbolicSine(e)
+  )
 )
 export type SinhFn = typeof sinh
 
-export const tanh = unary(
+export const tanh = unary(HyperbolicTangent)(
   r => real(Math.tanh(r.value)),
   c => {
     const divisor = Math.cosh(2 * c.a) + Math.cos(2 * c.b)
@@ -57,28 +55,24 @@ export const tanh = unary(
       Math.sinh(2 * c.a) / divisor,
       Math.sin(2 * c.b) / divisor
     )
-  },
-  e => new HyperbolicTangent(e)
+  }
 )
 export type TanhFn = typeof sinh
 
-export const sech = unary(
+export const sech = unary(HyperbolicSecant)(
   r => reciprocal(cosh(r)),
-  c => reciprocal(cosh(c)),
-  e => new HyperbolicSecant(e)
+  c => reciprocal(cosh(c))
 )
 export type SechFn = typeof sinh
 
-export const csch = unary(
+export const csch = unary(HyperbolicCosecant)(
   r => reciprocal(sinh(r)),
-  c => reciprocal(sinh(c)),
-  e => new HyperbolicCosecant(e)
+  c => reciprocal(sinh(c))
 )
 export type CschFn = typeof sinh
 
-export const coth = unary(
+export const coth = unary(HyperbolicCotangent)(
   r => reciprocal(tanh(r)),
-  c => reciprocal(tanh(c)),
-  e => new HyperbolicCotangent(e)
+  c => reciprocal(tanh(c))
 )
 export type CothFn = typeof sinh

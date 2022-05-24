@@ -29,27 +29,25 @@ export class Cotangent extends Trigonometric {
   readonly $kind = 'Cotangent'
 }
 
-export const cos = unary(
+export const cos = unary(Cosine)(
   r => real(Math.cos(r.value)),
   c => complex(
     Math.cos(c.a) * Math.cosh(c.b),
     -Math.sin(c.a) * Math.sinh(c.b)
-  ),
-  e => new Cosine(e)
+  )
 )
 export type Cos = typeof cos
 
-export const sin = unary(
+export const sin = unary(Sine)(
   r => real(Math.sin(r.value)),
   c => complex(
     Math.sin(c.a) * Math.cosh(c.b),
     Math.cos(c.a) * Math.sinh(c.b)
-  ),
-  e => new Sine(e)
+  )
 )
 export type Sin = typeof sin
 
-export const tan = unary(
+export const tan = unary(Tangent)(
   r => real(Math.tan(r.value)),
   c => {
     const divisor = Math.cos(2 * c.a) + Math.cosh(2 * c.b)
@@ -57,28 +55,24 @@ export const tan = unary(
       Math.sin(2 * c.a) / divisor,
       Math.sinh(2 * c.b) / divisor    
     )
-  },
-  e => new Tangent(e)
+  }
 )
 export type Tan = typeof tan
 
-export const sec = unary(
+export const sec = unary(Secant)(
   r => reciprocal(cos(r)),
-  c => reciprocal(cos(c)),
-  e => new Secant(e)
+  c => reciprocal(cos(c))
 )
 export type Sec = typeof sec
 
-export const csc = unary(
+export const csc = unary(Cosecant)(
   r => reciprocal(sin(r)),
-  c => reciprocal(sin(c)),
-  e => new Cosecant(e)
+  c => reciprocal(sin(c))
 )
 export type Csc = typeof csc
 
-export const cot = unary(
+export const cot = unary(Cotangent)(
   r => reciprocal(tan(r)),
-  c => reciprocal(tan(c)),
-  e => new Cotangent(e)
+  c => reciprocal(tan(c))
 )
 export type Cot = typeof cot
