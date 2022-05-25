@@ -6,6 +6,24 @@
 }
 
 .default > button {
+  --hover-color: var(--key-hover-color);
+  background: var(--key-background-color);
+  color: var(--key-color);
+  border: none;
+
   box-shadow: 0 0 0.25em black;
   cursor: pointer;
+  transition: all 0.5s var(--ease-out-back);
+}
+
+.default > button:hover {
+  color: var(--hover-color);
+  box-shadow: 0 0 0.4em var(--hover-color);
+}
+
+.default > button:disabled {
+  --hover-color: --key-color;
+  cursor: default;
+  box-shadow: 0 0 0.4em;
+  opacity: 25%;
 }
