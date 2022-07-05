@@ -3,7 +3,7 @@
     <h3>{{ item.title }}</h3>
     <ul>
     {% for entry in item.entries %}
-      <li><a href="{{ entry.url }}">{{ entry.page }}</a></li>
+      <li><a href="/graphca{{ entry.url }}">{{ entry.page }}</a></li>
     {% endfor %}
     </ul>
   {% endfor %}
