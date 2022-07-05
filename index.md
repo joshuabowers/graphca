@@ -1,37 +1,11 @@
-## Welcome to GitHub Pages
+## About
 
-You can use the [editor on GitHub](https://github.com/joshuabowers/graphca/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+GraphCa is a graphing calculator: it allows you input mathematical expressions and graph them. Responsively designed to work in most modern browser environments---including modern smartphones---GraphCa lets you answer the age-old question, "What does a sine wave look like", from anywhere you have a browser and an internet connection. Best of all, it's free! You can resolve mathematical expressions and graph results without ever having to throw large sums of money at another bit of clunky hardware.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+But GraphCa isn't limited to just graphing of expressions: it's capable of performing various mathematical simplifications to user input, yielding results that are semantically equivalent, but syntactically simpler. For expressions which have purely numerical inputs, this results in numerically solving the expression. (For a simplistic example, inputing "2 + 2" input GraphCa will correctly result in "4".) However, for expressions containing variables, GraphCa will semantically analyze the input, prise apart the intended meaning of the expression, and apply various rules to form a result which is more canonical. Such results will either have fewer total operatins, or, for the same number of operations, fewer repeated inputs.
 
-### Markdown
+But wait, there's more! GraphCa is also capable of performing rudimentary calculus! That's right, with the tap of a few buttons on the app's keypad, you can find the derivatives of expressions you've entered.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Caveat
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/joshuabowers/graphca/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+GraphCa is developed by one person; it relies upon fundamental data-types provided by your browser. Taken together, it might be buggy or lossy; for mission-critical applications---such as, but not limited to, launching probes at other planets in the solar system, or calculating tolerances for heavy machinery which might harm folk---please do not rely solely upon GraphCa. Reasonable testing has ensured that supported mathematical functionality is accurate, but only up to about 15 decimal places. 
