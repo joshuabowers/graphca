@@ -1,0 +1,55 @@
+toc:
+  - title: Getting Started
+    entries:
+      - page: About
+        url: /about.html
+      - page: Caveats
+        url: /caveats.html
+  - title: Keypad Modes
+    entries:
+      - page: Modes
+        url: /keypad/modes.html
+      - page: Default
+        url: /keypad/default.html
+      - page: Shift
+        url: /keypad/shift.html
+      - page: Alphabetic
+        url: /keypad/alphabetic.html
+      - page: Trigonometric
+        url: /keypad/trigonometric.html
+  - title: Supported Functions
+    entries:
+      - page: Numeric
+        url: /functions/numeric.html
+      - page: Constants
+        url: /functions/constants.html
+      - page: Variables
+        url: /functions/variables.html
+      - page: Arithmetic
+        url: /functions/arithmetic.html
+      - page: Logarithmic
+        url: /functions/logarithmic.html
+      - page: Trigonometric
+        url: /functions/trigonometric.html
+      - page: Factorialoid
+        url: /functions/factorialoid.html
+      - page: Combinatorial
+        url: /functions/combinatorial.html
+      - page: Differentiation
+        url: /functions/differentiation.html
+      - page: Evaluation
+        url: /functions/evaluation.html
+      - page: Invocation
+        url: /functions/invocation.html
+  - title: Terminal
+    entries:
+      - page: Meet the REPL
+        url: /terminal/repl.html
+  - title: Graphing
+    entries:
+      - page: Creating a Graph
+        url: /graphing/create.html
+      - page: Clearing Graphs
+        url: /graphing/clear.html
+      - page: Zoom and Pan
+        url: /graphing/movement.html
