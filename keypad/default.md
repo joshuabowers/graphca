@@ -19,8 +19,18 @@ Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and
 
 ### Number Pad
 
-- <button class='default'
+- <button class='default'>
       <div className='primary'>
         <span>0</span>
       </div>
-    </button>
+    </button>---
+  <button class='default'>
+      <div className='primary'>
+        <span>9</span>
+      </div>
+    </button>: Enters the digit associated with the button into the terminal.
+- <button class='default'>
+      <div className='primary'>
+        <span>.</span>
+      </div>
+    </button>: Enters a decimal point into the terminal. Note, numbers only support a single decimal point.
