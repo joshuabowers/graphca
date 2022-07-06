@@ -2,6 +2,8 @@
 title: Shift Mode
 ---
 
+![Shift Kaypad Mode](/graphca/assets/img/keypad/shift.png){:class="img-responsive"}
+
 A collection of constants and inverse functions calls shift mode home, as well as more ways to group expressions. The toggle button for shift mode is identified by the `⌥` symbol.
 
 From the top:
