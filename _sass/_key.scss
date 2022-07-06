@@ -1,0 +1,74 @@
+.normal {
+  position: relative;
+  z-index: 0;
+  font-family: 'Fira Code', monospace;
+  font-size: clamp(1rem, 3.25vmin, 1.5rem);
+  border: 0.2em solid var(--key-background-color);
+  border-radius: 0.9em 0.9em 1.15em 1.15em;
+  background-color: var(--key-color);
+  width: 3.4em;
+  padding: 0.2em;
+  cursor: pointer;
+  user-select: none;
+}
+
+@media(orientation: landscape) {
+  .normal {
+    font-size: clamp(0.5rem, 3.25vmin, 1.5rem);
+  }
+}
+
+.normal, .normal > .primary {
+  transition: 200ms ease-in;
+  transition-property: box-shadow, background-color, color;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .normal:hover {
+    z-index: 1;
+    --key-color: var(--key-hover-color);
+    box-shadow: 0 0 2em var(--key-color);
+  }
+    
+  .normal:hover > .primary {
+    box-shadow: inset 0 0 0.25em var(--key-color);
+  }
+}
+
+.primary {
+  padding: 0;
+  margin: 0;
+  height: 1.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--key-background-color);
+  color: var(--key-color);
+  border: none;
+  border-radius: 0.5em 0.5em 0.75em 0.75em;
+}
+
+.shift {
+  --key-color: var(--key-mode-shift-color);
+  --key-background-color: var(--key-mode-shift-background-color);
+}
+
+.alphaMega, .alphaMicron {
+  --key-color: var(--key-mode-alpha-color);
+  --key-background-color: var(--key-mode-alpha-background-color);
+}
+
+.trig {
+  --key-color: var(--key-mode-trig-color);
+  --key-background-color: var(--key-mode-trig-background-color);
+}
+
+.normal.activated, .normal:active {
+  z-index: 1;
+  --key-color: var(--key-activate-color);
+  box-shadow: 0 0 2em var(--key-color);
+}
+
+.normal.activated > .primary, .normal:active > .primary {
+  box-shadow: inset 0 0 0.25em var(--key-color);
+}
