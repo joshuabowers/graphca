@@ -2,35 +2,14 @@
 title: Default Mode
 ---
 
-![Default Kaypad Mode](/graphca/assets/img/keypad/default.png){:class="img-responsive"}
-
-When GraphCa loads, it will initially place the Keypad into its Default mode, from which a selection of commonly accessed functions can be accessed by activating the associated key. 
-
-As shown in the above image, the four oranage keys are toggles which, upon activation, change the keypad to another mode. These will be discussed in further detail in their own sections.
-
-The numeric keys are located in the bottom center of Default, alongisde the decimal key. The left-facing arrow adjacent to decimal is for associating a value with a variable. Along the lower right are the arithmetic keys. Directly above the number pad are the logarithm and exponential keys. Above which are keys for absolute value, grouping, and comma (which is used in functions which can take multiple arguments). Second row from the top contains the context-sensitive variable key, the derivative key, and keys for permutations, factorials and the gamma function.
-
-The top row currently consists of the trigonometric mode toggle and the delete key. The latter allows you to remove the most recently entered key-press from input.
-
-Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and Lower Alphabetic) and the execute button, which is used to finalize input and submit it to the calculator for processing.
-
-
 ### Mode Toggle Keys
 
 ### Number Pad
 
 - <button class='normal'><span class='primary'><span>0</span></span></button>---
   <button class='normal'><span class='primary'><span>9</span></span></button>: Enters the digit associated with the button into the terminal.
-- <button class='normal'>
-    <span class='primary'>
-      <span>.</span>
-    </span>
-  </button>: Enters a decimal point into the terminal. Note, numbers only support a single decimal point.
-- <button class='normal'>
-    <span class='primary'>
-      <span>&lt;-</span>
-    </span>
-  </button>: The assignment operator; used in assigning a value to a [variable](/graphca/functions/variables)
+- <button class='normal'><span class='primary'><span>.</span></span></button>: Enters a decimal point into the terminal. Note, numbers only support a single decimal point.
+- <button class='normal'><span class='primary'><span>&lt;-</span></span></button>: The assignment operator; used in assigning a value to a [variable](/graphca/functions/variables)
   
 ### Arithmetic Keys
 
@@ -56,6 +35,15 @@ Default mode provides easy access to three prevalent logarithm functions; each i
 - <button class='normal'><span class='primary'><span>(</span></span></button>: Open/Left Parenthesis; used to either begin a sub-expression or to denote functional invocation.
 - <button class='normal'><span class='primary'><span>)</span></span></button>: Close/Right Parenthesis: used to either end a sub-expression or to end functional invocation.
 - <button class='normal'><span class='primary'><span>,</span></span></button>: Comma; used to separate arguments to functions which support more than a single input.
+
+### Functional Keys
+
+- <button class='normal'><span class='primary'><span>𝒙𝑡𝜃𝑛</span></span></button>: The context-sensitive variable button; will enter in a variable, `x`, `t`, `𝜃`, or `n`, depending upon the coordinate mode of the calculator. 
+- <button class='normal'><span class='primary'><span>∂</span></span></button>: [Derivative](/graphca/functions/differentiation); will attempt to find the functional derivative of the expression passed as argument.
+- <button class='normal'><span class='primary'><span>nPr</span></span></button>: Permutation; inserts `P(`; expects two arguments, separated by a comma, followed by a right parenthesis. See [Combinatorial](/graphca/functions/combinatorial) for more detail.
+- <button class='normal'><span class='primary'><span>!</span></span></button>: [Factorial](/graphca/functions/factorial): a postfix operator which applies to the sub-expression it is placed after.
+- <button class='normal'><span class='primary'><span>𝚪</span></span></button>: The Gamma function; will insert `𝚪(`. Expects a single argument followed by a closing parenthesis. See [Factorial](/graphca/functions/factorial) for more detail.
+- <button class='normal'><span class='primary'><span>abs</span></span></button>: Absolute value; will insert `abs(`. Expects a single argument followed by a closing parenthesis.
 
 ### Control Keys
 
