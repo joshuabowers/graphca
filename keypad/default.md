@@ -20,17 +20,22 @@ Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and
 ### Number Pad
 
 - <button class='default'>
-      <div className='primary'>
-        <span>0</span>
-      </div>
-    </button>---
+    <div class='primary'>
+      <span>0</span>
+    </div>
+  </button>---
   <button class='default'>
-      <div className='primary'>
-        <span>9</span>
-      </div>
-    </button>: Enters the digit associated with the button into the terminal.
+    <div class='primary'>
+      <span>9</span>
+    </div>
+  </button>: Enters the digit associated with the button into the terminal.
 - <button class='default'>
-      <div className='primary'>
-        <span>.</span>
-      </div>
-    </button>: Enters a decimal point into the terminal. Note, numbers only support a single decimal point.
+    <div class='primary'>
+      <span>.</span>
+    </div>
+  </button>: Enters a decimal point into the terminal. Note, numbers only support a single decimal point.
+- <button class='default'>
+    <div class='primary'>
+      <span>&lt;-</span>
+    </div>
+  </button>: The assignment operator; used in assigning a value to a [variable](/graphca/functions/variables)
