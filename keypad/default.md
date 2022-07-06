@@ -21,10 +21,10 @@ Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and
 
 - <button class='default'>
 
-  <div class='primary'><span>0</span></div>
+  <span class='primary'><span>0</span></span>
 
   </button>---
-  <button class='default'><div class='primary'><span>9</span></div></button>: Enters the digit associated with the button into the terminal.
+  <button class='default'><span class='primary'><span>9</span></span></button>: Enters the digit associated with the button into the terminal.
 - <button class='default'>
     <div class='primary'>
       <span>.</span>
