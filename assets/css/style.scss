@@ -2,6 +2,7 @@
 ---
 
 @import "{{ site.theme }}";
+@import "root";
 
 body {
   display: grid;
@@ -15,3 +16,5 @@ body > header {
 body > aside {
   padding-left: 2em;
 }
+
+@import "key";
