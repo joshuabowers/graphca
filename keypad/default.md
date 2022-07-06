@@ -6,8 +6,7 @@ The Default Mode is the normal tray the keypad presents when not in any other mo
 
 ### Number Pad
 
-- <button class='normal'><span class='primary'><span>0</span></span></button>---\
-  <button class='normal'><span class='primary'><span>9</span></span></button>: Enters the digit associated with the button into the terminal.
+- <button class='normal'><span class='primary'><span>0</span></span></button>---<button class='normal'><span class='primary'><span>9</span></span></button>: Enters the digit associated with the button into the terminal.
 - <button class='normal'><span class='primary'><span>.</span></span></button>: Enters a decimal point into the terminal. Note, numbers only support a single decimal point.
 - <button class='normal'><span class='primary'><span>&lt;-</span></span></button>: The assignment operator; used in assigning a value to a [variable](/graphca/functions/variables)
   
