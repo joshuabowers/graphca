@@ -2,7 +2,7 @@ toc:
   - title: Getting Started
     entries:
       - page: About
-        url: /about.html
+        url: /
       - page: Caveats
         url: /caveats.html
   - title: Keypad Modes
