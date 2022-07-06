@@ -19,7 +19,11 @@ Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and
 
 ### Number Pad
 
-- <button class='default'><div class='primary'><span>0</span></div></button>---
+- <button class='default'>
+
+  <div class='primary'><span>0</span></div>
+
+  </button>---
   <button class='default'><div class='primary'><span>9</span></div></button>: Enters the digit associated with the button into the terminal.
 - <button class='default'>
     <div class='primary'>
