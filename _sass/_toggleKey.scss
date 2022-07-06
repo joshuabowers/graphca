@@ -1,0 +1,88 @@
+.toggle.normal {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 0;
+  font-family: 'Fira Code', monospace;
+  font-size: clamp(1rem, 3.25vmin, 1.5rem);
+  border: 0.2em solid var(--toggle-key-background-color);
+  border-radius: 0.9em 0.9em 1.15em 1.15em;
+  background-color: var(--key-color);
+  padding: 0.2em;
+  cursor: pointer;
+  display: inline-grid;
+  grid-template-areas: 'toggleKey';
+  place-items: center;
+  user-select: none;
+}
+
+@media(orientation: landscape) {
+  .toggle.normal {
+    font-size: clamp(0.5rem, 3.25vmin, 1.5rem);
+  }
+}
+
+.toggle.normal, .toggle.normal > [type=checkbox] ~ * {
+  transition: 200ms ease-in;
+  transition-property: box-shadow, background-color, color;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .toggle.normal:hover, .toggle.normal:focus, .toggle.normal.toggled {
+    z-index: 1;
+    box-shadow: 0 0 2em var(--key-color);
+  }
+
+  .toggle.normal:hover > [type=checkbox] ~ *, .toggle.normal > :checked ~ * {
+    box-shadow: inset 0 0 0.25em var(--key-color);
+  }
+}
+
+.toggle.normal.toggled, .toggle.normal.activated, .toggle.normal:active {
+  z-index: 1;
+  box-shadow: 0 0 2em var(--key-color);
+}
+
+.toggle.normal > :checked ~ *, .toggle.normal.activated > .primary, .toggle.normal:active > .primary {
+  box-shadow: inset 0 0 0.25em var(--key-color);
+}
+
+.toggle.normal > [type=checkbox] {
+  opacity: 0;
+  width: 1em;
+  height: 1em;
+  cursor: pointer;
+}
+
+.toggle.normal > * {
+  grid-area: toggleKey;
+}
+
+.toggle.normal > [type=checkbox] ~ * {
+  padding: 0;
+  margin: 0;
+  width: 2.6em;
+  height: 1.75em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--toggle-key-background-color);
+  color: var(--key-color);
+  border: none;
+  border-radius: 0.5em 0.5em 0.75em 0.75em;
+  box-sizing: border-box;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .toggle.normal:hover, .toggle.normal:focus {
+    --key-color: var(--key-hover-color);
+    --key-background-color: var(--toggle-key-hover-background-color);
+  }  
+}
+
+.toggle.normal.activated, .toggle.normal:active {
+  --key-color: var(--key-activate-color);
+}
+
+.toggle.toggled {
+  --key-color: var(--key-toggled-color);
+}
