@@ -34,6 +34,8 @@ Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and
   
 ### Arithmetic Keys
 
+Basic arithmetic operators. These are all used in an infix manner: that is, the operator is placed between the operands upon which it works. For example, to add two values together, enter the first value, the addition operator, then the second value: `a + b`.
+
 - <button class='normal'><span class='primary'><span>+</span></span></button>: Addition; used infix
 - <button class='normal'><span class='primary'><span>-</span></span></button>: Subtraction; used infix
 - <button class='normal'><span class='primary'><span>*</span></span></button>: Multiplication: used infix
@@ -41,4 +43,17 @@ Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and
 - <button class='normal'><span class='primary'><span>x<sup>2</sup></span></span></button>: Square; will append `^2` to input
 - <button class='normal'><span class='primary'><span>x<sup>y</sup></span></span></button>: Raise: will append `^` to input; following input will be used as exponent.
 
+### Logarithmic Keys
 
+Default mode provides easy access to three prevalent logarithm functions; each input will also append a `(`, and expects to be closed by `)`. 
+
+- <button class='normal'><span class='primary'><span>lb</span></span></button>: Binary log; `lb(x)` is equivalent to `log<sub>2</sub>(x)`
+- <button class='normal'><span class='primary'><span>ln</span></span></button>: Natural log: `ln(x)` is equivalent to `log<sub>e</sub>(x)`
+- <button class='normal'><span class='primary'><span>lg</span></span></button>: Common log: `lg(x)` is equivalent to `log<sub>10</sub>(x)`
+
+### Control Keys
+
+This collection of keys cause the calculator to change state; they are contingent upon input, but do not append to input.
+
+- <button class='normal'><span class='primary'><span>EXE</span></span></button>: Execute; submits the current expression to the calculator for processing
+- <button class='normal'><span class='primary'><span>DEL</span></span></button>: Delete; removes the last entered key of input
