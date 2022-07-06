@@ -2,7 +2,7 @@
 title: Variables
 ---
 
-Math is often abstracted between numerical values: it is often useful or necessary to think about the functions used by a process in an expression, without a context for specific values which might be inserted into those functions. Math typically represents unknown quantities via the notion of a variable: a stand-in for a value, which can take any value at a later time.
+Math is often abstracted beyond numerical values: it is often useful or necessary to think about the functions used by a process in an expression, without a context for specific values which might be inserted into those functions. Math typically represents unknown quantities via the notion of a variable: a stand-in for a value, which can take any value at a later time.
 
 Variables in GraphCa serve three purposes: to represent unknown quantities, to bind to specific quantities, and to faciliate graphing.
 
