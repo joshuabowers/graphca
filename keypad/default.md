@@ -13,3 +13,14 @@ The numeric keys are located in the bottom center of Default, alongisde the deci
 The top row currently consists of the trigonometric mode toggle and the delete key. The latter allows you to remove the most recently entered key-press from input.
 
 Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and Lower Alphabetic) and the execute button, which is used to finalize input and submit it to the calculator for processing.
+
+
+### Mode Toggle Keys
+
+### Number Pad
+
+- <button class='default'
+      <div className='primary'>
+        <span>0</span>
+      </div>
+    </button>
