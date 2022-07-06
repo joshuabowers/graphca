@@ -47,9 +47,15 @@ Basic arithmetic operators. These are all used in an infix manner: that is, the 
 
 Default mode provides easy access to three prevalent logarithm functions; each input will also append a `(`, and expects to be closed by `)`. 
 
-- <button class='normal'><span class='primary'><span>lb</span></span></button>: Binary log; `lb(x)` is equivalent to `log<sub>2</sub>(x)`
-- <button class='normal'><span class='primary'><span>ln</span></span></button>: Natural log: `ln(x)` is equivalent to `log<sub>e</sub>(x)`
-- <button class='normal'><span class='primary'><span>lg</span></span></button>: Common log: `lg(x)` is equivalent to `log<sub>10</sub>(x)`
+- <button class='normal'><span class='primary'><span>lb</span></span></button>: Binary log; `lb(x)` is equivalent to `log`<sub>`2`</sub>`(x)`
+- <button class='normal'><span class='primary'><span>ln</span></span></button>: Natural log: `ln(x)` is equivalent to `log`<sub>`e`</sub>`(x)`
+- <button class='normal'><span class='primary'><span>lg</span></span></button>: Common log: `lg(x)` is equivalent to `log`<sub>`10`</sub>`(x)`
+
+### Grouping Keys
+
+- <button class='normal'><span class='primary'><span>(</span></span></button>: Open/Left Parenthesis; used to either begin a sub-expression or to denote functional invocation.
+- <button class='normal'><span class='primary'><span>)</span></span></button>: Close/Right Parenthesis: used to either end a sub-expression or to end functional invocation.
+- <button class='normal'><span class='primary'><span>,</span></span></button>: Comma; used to separate arguments to functions which support more than a single input.
 
 ### Control Keys
 
