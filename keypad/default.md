@@ -19,15 +19,26 @@ Finally: the lower left has three more mode toggles (shift, Upper Alphabetic and
 
 ### Number Pad
 
-- <button class='default'><span class='primary'><span>0</span></span></button>---
-  <button class='default'><span class='primary'><span>9</span></span></button>: Enters the digit associated with the button into the terminal.
-- <button class='default'>
+- <button class='normal'><span class='primary'><span>0</span></span></button>---
+  <button class='normal'><span class='primary'><span>9</span></span></button>: Enters the digit associated with the button into the terminal.
+- <button class='normal'>
     <span class='primary'>
       <span>.</span>
     </span>
   </button>: Enters a decimal point into the terminal. Note, numbers only support a single decimal point.
-- <button class='default'>
+- <button class='normal'>
     <span class='primary'>
       <span>&lt;-</span>
     </span>
   </button>: The assignment operator; used in assigning a value to a [variable](/graphca/functions/variables)
+  
+### Arithmetic Keys
+
+- <button class='normal'><span class='primary'><span>+</span></span></button>: Addition; used infix
+- <button class='normal'><span class='primary'><span>-</span></span></button>: Subtraction; used infix
+- <button class='normal'><span class='primary'><span>*</span></span></button>: Multiplication: used infix
+- <button class='normal'><span class='primary'><span>/</span></span></button>: Division: used infix
+- <button class='normal'><span class='primary'><span>x<sup>2</sup></span></span></button>: Square; will append `^2` to input
+- <button class='normal'><span class='primary'><span>x<sup>y</sup></span></span></button>: Raise: will append `^` to input; following input will be used as exponent.
+
+
