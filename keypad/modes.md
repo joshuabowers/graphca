@@ -7,10 +7,10 @@ GraphCa's Keypad operates on a concept called "Modes", which designate which key
 To switch to a different mode, you will need to press its associated toggle key: these are presented in orange. Currently, there are 5 different modes available in the app:
 
 1. Default
-2. Shift
-3. Lowercase Alphabetic
-4. Uppercase Alphabetic
-5. Trigonometric
+2. <label class='toggled normal'><input type='checkbox'}/><span>⌥</span></label>: [Shift](/graphca/keypad/shift)
+3. <label class='toggled normal'><input type='checkbox'}/><span>𝛂</span></label>: [Lowercase Alphabetic](/graphca/keypad/alphabetic)
+4. <label class='toggled normal'><input type='checkbox'}/><span>𝚨</span></label>: [Uppercase Alphabetic](/graphca/keypad/alphabetic)
+5. <label class='toggled normal'><input type='checkbox'}/><span>∡</span></label>: [Trigonometric](/graphca/keypad/trigonometric)
 
 When a mode is active, its associated key will glow. All keys relevant to that mode will change their displays to show their new functionality. Finally, all keys which do not have functionality in that mode will be disabled.
 
