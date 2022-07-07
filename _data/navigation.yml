@@ -31,8 +31,8 @@ toc:
         url: /functions/logarithmic.html
       - page: Trigonometric
         url: /functions/trigonometric.html
-      - page: Factorialoid
-        url: /functions/factorialoid.html
+      - page: Factorial
+        url: /functions/factorial.html
       - page: Combinatorial
         url: /functions/combinatorial.html
       - page: Differentiation
