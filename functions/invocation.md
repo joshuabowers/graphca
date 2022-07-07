@@ -103,10 +103,10 @@ When invoking an expression, it is helpful to ensure that you are invoking the e
 {x^2 + 2*x}(5)
 ```
 
-This yields `35`. As can be seen, the way to achieve expression invocation is to group the expression and follow it with an argument list. This process supports both currying and partial application:
+This yields `35`. As can be seen, the way to achieve expression invocation is to group the expression and follow it with an argument list. This process supports composition, currying and partial application:
 
 ```
-{x^2 + 2*y}(5)
+{x^2 + 2*y}(z)
 ```
 
-Would generate: `2*y + 25`.
+Would generate: `z^2 + 2*y`.
