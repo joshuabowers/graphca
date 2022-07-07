@@ -37,8 +37,6 @@ toc:
         url: /functions/combinatorial.html
       - page: Differentiation
         url: /functions/differentiation.html
-      - page: Evaluation
-        url: /functions/evaluation.html
       - page: Invocation
         url: /functions/invocation.html
   - title: Terminal
