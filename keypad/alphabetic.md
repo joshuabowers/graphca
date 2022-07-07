@@ -6,13 +6,14 @@ A pair of keypad modes, whose trays contain alphabetic keys. To access the lower
 
 ### Letter Keys
 
-- <button class="normal alpha"><span class="primary"><span>a</span></span></button>---<button class="normal alpha"><span class="primary"><span>z</span></span></button>: inserts the associated lowercase alphabetic character into the input. Primarily used to name [variables](/graphca/functions/variables).
-- <button class="normal alpha"><span class="primary"><span>A</span></span></button>---<button class="normal alpha"><span class="primary"><span>Z</span></span></button>: inserts the associated uppercase alphabetic character into the input. Primarily used to name [variables](/graphca/functions/variables).
+Inserts the associated alphabetic character into the input. Primarily used to name [variables](/graphca/functions/variables).
+
+- <button class="normal alpha"><span class="primary"><span>a</span></span></button>---<button class="normal alpha"><span class="primary"><span>z</span></span></button>: keys in the lowercase tray
+- <button class="normal alpha"><span class="primary"><span>A</span></span></button>---<button class="normal alpha"><span class="primary"><span>Z</span></span></button>: keys in the uppercase tray
 
 ### Control Keys
 
 These keys exhibit the same behavior seen in [Default](/graphca/keypad/default) mode. They are provided for convenience.
 
 - <button class="normal alpha"><span class="primary"><span>EXE</span></span></button>: Execute
-- <button class="normal alpha"><span class="primary"><span>DEL</span></span></button>: Delete
-- 
+- <button class="normal alpha"><span class="primary"><span>DEL</span></span></button>: Delete 
