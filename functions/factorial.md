@@ -16,7 +16,7 @@ Note that the factorial function is only defined on the natural numbers; any fra
 
 The [Gamma Function](https://en.wikipedia.org/wiki/Gamma_function) exists as an extension of the factorial function to most of the numbers factorial cannot calculate. With the exception of the negative integers, for which the function asymptotically approaches an infinite value, the Gamma function is otherwise defined on all real and complex inputs. 
 
-To find the value of the gamma function for a given input, `n`, activate the <button class="normal"><span class="primary"><span>𝚪</span></span></button>, the value `n`, and a closing parenthesis:
+To find the value of the gamma function for a given input, `n`, activate the {% include key name="𝚪" %} key, the value `n`, and a closing parenthesis:
 
 ```
 𝚪(n)
