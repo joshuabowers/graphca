@@ -47,3 +47,10 @@ The [inverse hyperbolic functions](https://en.wikipedia.org/wiki/Inverse_hyperbo
 - <button class="normal trig"><span class="primary"><span></span>acoth</span></button>: Inverse hyperbolic cotangent
 - <button class="normal trig"><span class="primary"><span></span>asech</span></button>: Inverse hyperbolic secant
 - <button class="normal trig"><span class="primary"><span></span>acsch</span></button>: Inverse hyperbolic cosecant
+
+### Control Keys
+
+These keys exhibit the same behavior seen in [Default](/graphca/keypad/default) mode. They are provided for convenience.
+
+- <button class="normal trig"><span class="primary"><span>EXE</span></span></button>: Execute
+- <button class="normal trig"><span class="primary"><span>DEL</span></span></button>: Delete 
