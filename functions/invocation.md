@@ -48,13 +48,35 @@ c(3, 5)
 
 The value of which would be `19`.
 
+### Composibility
+
+Expressions with unbound variables may be provided as argument to an invocation. Doing so will bind the appropriate variable to the supplied expression. 
+
+```
+y <- 2 * x
+y(x^2)
+```
+
+Which yields `2 * x^2`
+
+This can be used to compose functions to more easily generate complex expressions, or to change the expression variable of the function:
+
+```
+f <- x^2
+g <- cos(x)
+h <- g(f(n))
+```
+
+Which would yield `cos(n^2)`
+
 ### Currying and Partial Application
 
 GraphCa supports both [currying](https://en.wikipedia.org/wiki/Currying) and [partial application](https://en.wikipedia.org/wiki/Partial_application) as invocation strategies for functions of multiple variables. That is, should a bound variable contain multiple unbound variables within its assigned expression, fewer arguments may be supplied to an invocation than would be necessary to provide a value to all unbound variables. Any variables which do not recieve an assignment will be left in the resulting expression.
 
-To curry, chian singular argument lists on invocation (`c` as previously):
+To curry, chian singular argument lists on invocation:
 
 ```
+c <- a^2 + 2*b
 c(3)(5)
 ```
 
@@ -69,6 +91,22 @@ e(2, 3)
 
 The result of which is `10 + cos(d)`
 
-In either case, these invocation strategies will bind expression variables in a left-to-right order
+In either case, these invocation strategies will bind the values supplied as arguments to expression variables in the following fashion: arguments are processed left-to-right, and are assigned to variables in appearance order within the function expression. So, the expressions `x + y` and `y + x` will bind their variables differently!
 
 ### Expression Invocation
+
+As hinted at in the previous section, chained invocation is a possibility to providing arguments to a function. However, one need not even have a bound variable to invoke arguments on an expression! Instead, any expression containing an unbound variable can be directly invoked with arguments. (As should hopefully be obvious, referencing a variable is, in and of itself, an expression.)
+
+When invoking an expression, it is helpful to ensure that you are invoking the entirety of the expression, rather than one of its sub-expressions. This can be most easily achieved by using grouping symbols. To make the input more readable, consider the use of square or curly brackets.
+
+```
+{x^2 + 2*x}(5)
+```
+
+This yields `35`. As can be seen, the way to achieve expression invocation is to group the expression and follow it with an argument list. This process supports both currying and partial application:
+
+```
+{x^2 + 2*y}(5)
+```
+
+Would generate: `2*y + 25`.
