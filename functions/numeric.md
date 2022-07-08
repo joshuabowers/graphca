@@ -8,7 +8,7 @@ Numbers in GraphCa come in two different flavors: real and complex. In either ca
 
 Real numbers are any value which is found in the set of [reals](https://en.wikipedia.org/wiki/Real_number); these include the integers, negative numbers, and, subject to precision, rational and irrational fractional values.
 
-To input a real value, it is sufficient to activate the keys (in default mode) associated with those values. A decimal can be similarly input. To makea a real value negative, input a minus before the number.
+To input a real value, it is sufficient to activate the keys (in default mode) associated with those values. A decimal can be similarly input. To make a real value negative, input a minus before the number.
 
 ### Complex
 
