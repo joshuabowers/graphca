@@ -24,7 +24,7 @@ Unbound variables may be bound to the output of another expression. Doing so wil
 
 Binding, or assignment, is done via the left-arrow, `<-`, key: the unbound variable is placed on the left of the arrow, and the new value to assign to it is placed on the right. For example, `x <- 5` will cause the unbound variable `x` to now be bound to the value `5`. You can check the value of any variable in the current session by entering it into the terminal: if unbound, you will get the variable name back; otherwise, the currently bound value.
 
-Assignment is useful for creating functions which can be later [evaluated](/graphca/functions/evaluation.html): this is done by setting one variable equal to an expression which has an unbound variable within it. For example, `y <- ln(x)` will designate the variable `y` as a function of `x`, the precise value of which is only known when `y` is evaluated with a known value for `x`. Functions can reference other functions as part of their assignment:
+Assignment is useful for creating functions which can be later [invoked](/graphca/functions/invocation.html): this is done by setting one variable equal to an expression which has an unbound variable within it. For example, `y <- ln(x)` will designate the variable `y` as a function of `x`, the precise value of which is only known when `y` is evaluated with a known value for `x`. Functions can reference other functions as part of their assignment:
 
 ```
 a <- ln(x)
