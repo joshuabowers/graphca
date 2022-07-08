@@ -24,7 +24,7 @@ export const Terminal = (props: TerminalProps) => {
   const getParsings = useMemo(
     () => createArraySelector<RootState, TerminalEntryState, JSX.Element>(
       (state: RootState) => state.terminal.history,
-      (entry: TerminalEntryState) => <Parse input={entry.content} scope={scope} />
+      (entry: TerminalEntryState) => <Parse enteredAt={entry.enteredAt} input={entry.content} scope={scope} />
     ) as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>,
     [scope]
   )

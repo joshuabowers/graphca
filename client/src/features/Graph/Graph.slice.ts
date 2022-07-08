@@ -14,11 +14,15 @@ export const graphSlice = createSlice({
       state.expressions.push(action.payload)
     },
 
+    removePlot: (state, action: PayloadAction<string>) => {
+      state.expressions = state.expressions.filter(item => item !== action.payload)
+    },
+
     clear: (state) => {
       state.expressions = []
     }
   }
 })
 
-export const { graph, clear } = graphSlice.actions
+export const { graph, removePlot, clear } = graphSlice.actions
 export default graphSlice.reducer

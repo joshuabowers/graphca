@@ -36,11 +36,15 @@ export const terminalSlice = createSlice({
         enteredAt: Date.now()
       });
       state.currentLine = [];
+    },
+
+    forget: (state, action: PayloadAction<number>) => {
+      state.history = state.history.filter(item => item.enteredAt !== action.payload)
     }
   }
 })
 
-export const { keyPress, deleteLast, calculate } = terminalSlice.actions
+export const { keyPress, deleteLast, calculate, forget } = terminalSlice.actions
 export default terminalSlice.reducer
 
 const rawCurrentLine = (state: TerminalState) => state.currentLine;
