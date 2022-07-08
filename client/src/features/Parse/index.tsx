@@ -19,12 +19,16 @@ export const Parse = (props: ParseProps) => {
     const dispatch = useAppDispatch()
     const output = parser.value(props.input, {context: props.scope})
     return <div className={styles.result}>
-      <span>{'=>'}</span>
-      <Expression node={output} />
-      <button className={styles.control} onClick={() => dispatch(graph(stringify(output)))}>
-        <span className='material-icons'>multiline_chart</span>
-        Graph
-      </button>
+      <div className={styles.output}>
+        <span>{'=>'}</span>
+        <Expression node={output} />
+      </div>
+      <div className={styles.expressionControls}>
+        <button className={styles.control} onClick={() => dispatch(graph(stringify(output)))}>
+          <span className='material-icons'>multiline_chart</span>
+          Graph
+        </button>
+      </div>
     </div>
   } catch(error: any) {
     console.error(error)

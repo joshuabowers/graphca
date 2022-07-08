@@ -8,13 +8,26 @@
   padding: 0.5em;
 }
 
-.result, .result span {
+.result {
   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result > .output, .result > .output > span:last-child {
+  display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
 }
 
-.result > span:first-child {
+.result > .output > span:first-child {
   margin-right: 0.5em;
+  color: gray;
+}
+
+.result > .expressionControls {
+  margin-right: 1em;
 }
 
 .control {
