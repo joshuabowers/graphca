@@ -206,7 +206,7 @@ const whenLogarithm: when<Logarithm> = e => {
   const functionName = logarithm(e.left)
   const base = functionName === 'log' ? componentize(e.left) : <></>
   return <span className={[styles.functional, styles.logarithmic].join(' ')}>
-    {functionName}{base}({componentize(e.right)})
+    {functionName}<span className={styles.sub}>{base}</span>({componentize(e.right)})
   </span>
 }
 

@@ -89,7 +89,7 @@ export const Functional = (args: FunctionalProps) => (
     />
     <Key
       default={{type:'default', display:'ln', activate: createKeyPress('ln(')}}
-      shift={{type:'shift', display:''}}
+      shift={{type:'shift', display:'log', activate: createKeyPress('log(')}}
       alphaMega={{type:'alphaMega', display:'L', activate: createKeyPress('L')}}
       alphaMicron={{type: 'alphaMicron', display: 'l', activate: createKeyPress('l')}}
       trig={{type:'trig', display:'tan', activate: createKeyPress('tan(')}}
