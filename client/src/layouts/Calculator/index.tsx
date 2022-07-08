@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Calculator.module.css';
+import { Header } from '../../features/Header';
 import { Keypad } from '../Keypad';
 import { Graph } from '../../features/Graph';
 import { GraphControls } from '../../features/GraphControls';
@@ -12,9 +13,7 @@ export interface CalculatorProps {
 export const Calculator = (props: CalculatorProps) => {
   return (
     <main className={styles.calculator}>
-      <header>
-        <h1>GraphCa</h1>
-      </header>
+      <Header />
       <footer></footer>
       <Graph />
       <GraphControls />

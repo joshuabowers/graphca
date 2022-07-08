@@ -1,0 +1,27 @@
+.normal {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.normal > nav {
+  margin-right: 1em;
+}
+
+.normal > nav > a {
+  font-size: 3.5vmin;
+  text-decoration: none;
+  color: white;
+  transition: all 0.2s ease-in-out;
+}
+
+.normal > nav > a:hover {
+  transform: scale(1.25);
+  color: var(--key-hover-color);
+}
+
+.normal > nav > a:active {
+  transform: scale(1.15);
+  color: var(--key-activate-color);
+}
