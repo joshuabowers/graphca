@@ -13,5 +13,5 @@ A collection of constants and inverse functions calls shift mode home, as well a
 - <button class="normal shift"><span class="primary"><span>√</span></span></button>: [Square root](https://en.wikipedia.org/wiki/Square_root); note that the expression `√x` is equal to `x^0.5`
 - <button class="normal shift"><span class="primary"><span>x<sup>-1</sup></span></span></button>: [Reciprocal](https://en.wikipedia.org/wiki/Multiplicative_inverse), equivalent to dividing `1` by the argument.
 - <button class="normal shift"><span class="primary"><span>EE</span></span></button>: [Scientific E notation](https://en.wikipedia.org/wiki/Scientific_notation#E_notation) for entering massive or tiny numbers.
-- {% include key.html name='nil' %}: A special value representing the concept of nothingness. Used for unbinding a bound variable.
+- {% include key.html name="nil" mode="shift" %}: A special value representing the concept of nothingness. Used for unbinding a bound variable.
 - The [Constants](/graphca/functions/constants.html)
