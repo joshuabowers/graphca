@@ -1,26 +1,37 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { forget } from "../Terminal/Terminal.slice";
 
-export interface GraphState {
-  expressions: string[]
+export interface Plot {
+  expression: string;
+  enteredAt: number;
 }
 
-const initialState: GraphState = {expressions: []}
+export interface GraphState {
+  plots: Plot[]
+}
+
+const initialState: GraphState = {plots: []}
 
 export const graphSlice = createSlice({
   name: 'graph',
   initialState,
   reducers: {
-    graph: (state, action: PayloadAction<string>) => {
-      state.expressions.push(action.payload)
+    graph: (state, action: PayloadAction<Plot>) => {
+      state.plots.push(action.payload)
     },
 
-    removePlot: (state, action: PayloadAction<string>) => {
-      state.expressions = state.expressions.filter(item => item !== action.payload)
+    removePlot: (state, action: PayloadAction<number>) => {
+      state.plots = state.plots.filter(item => item.enteredAt !== action.payload)
     },
 
     clear: (state) => {
-      state.expressions = []
+      state.plots = []
     }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(forget, (state, action) => {
+      state.plots = state.plots.filter(item => item.enteredAt !== action.payload)
+    })
   }
 })
 

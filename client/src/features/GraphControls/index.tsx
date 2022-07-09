@@ -12,7 +12,7 @@ export const GraphControls = (props: GraphControlProps) => {
 
   return <div className={styles.default}>
     <button 
-      disabled={graph.expressions.length === 0}
+      disabled={graph.plots.length === 0}
       className='material-icons'
       onClick={() => dispatch(clear())}>
       clear

@@ -26,14 +26,10 @@
   color: gray;
 }
 
-.result > .expressionControls {
+.result > .entryControls {
   margin-right: 1em;
 }
 
-.control {
+.result > .entryControls > button {
   cursor: pointer;
-}
-
-.control > span {
-  display: inline;
 }

@@ -4,6 +4,7 @@ import styles from './Graph.module.css';
 import { Canvas } from '@react-three/fiber';
 import { Base } from '../../common/Tree'
 import { RootState } from '../../app/store';
+import { Plot } from './Graph.slice';
 import { createArraySelector } from 'reselect-map';
 import { parser } from '../../common/parser';
 import { useAppSelector } from '../../app/hooks';
@@ -15,9 +16,9 @@ export interface GraphProps {
 
 }
 
-const getParsings = createArraySelector<RootState, string, Base>(
-  (state) => state.graph.expressions,
-  (input) => parser.value(input)
+const getParsings = createArraySelector<RootState, Plot, Base>(
+  (state) => state.graph.plots,
+  (plot) => parser.value(plot.expression)
 )
 
 export const Graph = (props: GraphProps) => {
