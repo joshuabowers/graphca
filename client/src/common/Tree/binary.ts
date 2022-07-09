@@ -1,8 +1,9 @@
 import { method, multi, Multi } from '@arrows/multimethod'
 import { is } from './is'
 import { Base, Constructor } from './Expression'
-import { Real } from './real'
+import { Real, real } from './real'
 import { Complex, complex } from './complex'
+import { Nil } from './nil'
 
 export abstract class Binary extends Base {
   constructor(readonly left: Base, readonly right: Base) { super() }
@@ -16,6 +17,8 @@ type BinaryFn<T> = Multi
   & cast<Real, Complex, Complex>
   & cast<Complex, Real, Complex>
   & when<Complex>
+  & cast<Nil, Base, Real>
+  & cast<Base, Nil, Real>
   & when<Base, T>
 
 export const binary = <T extends Binary>(type: Constructor<T>) =>
@@ -29,6 +32,8 @@ export const binary = <T extends Binary>(type: Constructor<T>) =>
       method([is(Complex), is(Complex)], whenCxC),
       method([is(Real), is(Complex)], (l: Real, r: Complex) => fn(complex(l.value, 0), r)),
       method([is(Complex), is(Real)], (l: Complex, r: Real) => fn(l, complex(r.value, 0))),
+      method([is(Nil), is(Base)], real(NaN)),
+      method([is(Base), is(Nil)], real(NaN)),
       method([is(Base), is(Base)], whenBxB)
     )
     return fn  
