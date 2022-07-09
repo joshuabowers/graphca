@@ -20,7 +20,7 @@ const numberKeys = [
   ['3', Unicode.pi, 'Z', 'z', 'acot'],
   ['0', Unicode.infinity, Unicode.space, Unicode.space, ''],
   ['.', Unicode.euler, ':', ':', ''],
-  ['<-', '', '<-', '<-', '']
+  ['<-', 'nil', '<-', '<-', '']
 ]
 
 const unicodeToASCII = new Map([[Unicode.space as string, ' ']])

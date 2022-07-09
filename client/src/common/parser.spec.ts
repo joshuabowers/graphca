@@ -10,7 +10,7 @@ import {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   factorial, gamma, polygamma, digamma, permute, combine,
-  differentiate
+  differentiate, nil
 } from './Tree'
 import { parser, Scope, scope } from "./parser";
 import { EulerMascheroni } from './Tree/real';
@@ -78,6 +78,10 @@ describe('parser', () => {
     it(`matches ${Unicode.pi}${Unicode.i}`, () => {
       expectObject(`${Unicode.pi}${Unicode.i}`, complex(0, Math.PI))
     })
+
+    it('matches nil', () => {
+      expectObject('nil', nil())
+    })
   })
 
   describe('of variables', () => {
@@ -93,6 +97,12 @@ describe('parser', () => {
       const s = scope()
       s.set('x', variable('x', real(5)))
       expectInScope(s, 'x', variable('x', real(5)))
+    })
+
+    it('returns an unbound variable if set to nil', () => {
+      const s = scope()
+      s.set('x', variable('x', nil()))
+      expectObject('x', variable('x'), s)
     })
   })
 
@@ -457,6 +467,10 @@ describe('parser', () => {
         variable('y', variable('x')),
         variable('x')        
       )
+    })
+
+    it('matches assignments of nil by unsetting variable', () => {
+      expectInScope(scope(), 'x <- nil', variable('x', nil()))
     })
   })
 

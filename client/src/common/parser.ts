@@ -1,7 +1,7 @@
 import { Unicode } from './MathSymbols'
 import {
   Base,
-  real, complex, variable, assign,
+  real, complex, nil, variable, assign,
   raise, negate, factorial, polygamma, digamma, log,
   differentiate, invoke,
   operators, additive, multiplicative, functions, permute, combine
@@ -58,6 +58,8 @@ const builtInFunction = (name: string, expression: Base): Base | undefined => {
   }
   return f(expression)
 }
+
+const unbox = (value: Base | undefined) => value?.$kind !== 'Nil' ? value : undefined
 
 export const parser = peg<Base>`
 expression: assignment
@@ -128,6 +130,7 @@ derivative:
 }
 
 primitive:
+| $nil ${() => nil()}
 | variable
 | constant
 
@@ -136,7 +139,7 @@ constant:
 | real
 
 variable:
-| <name>$variable ${({name}) => $context()?.get(name)?.value ?? variable(name)}
+| <name>$variable ${({name}) => unbox($context()?.get(name)?.value) ?? variable(name)}
 
 complex:
 | <n>${subtractionOperators}? <a>real ${additionOperators} <b>real? $i ${({n, a, b}) => {
@@ -161,4 +164,5 @@ $e @raw: ${RegExp(Unicode.e, 'u')}
 $euler @raw: ${RegExp(Unicode.euler, 'u')}
 $pi @raw: ${RegExp(Unicode.pi, 'u')}
 $infinity @raw: ${RegExp(Unicode.infinity, 'u')}
+$nil @raw: /nil/
 `
