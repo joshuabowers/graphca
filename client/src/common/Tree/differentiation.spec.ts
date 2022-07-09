@@ -1,5 +1,6 @@
 import { real } from './real';
 import { complex } from './complex';
+import { nil } from './nil';
 import { variable } from './variable';
 import { add, subtract } from './addition';
 import { multiply, divide, negate } from './multiplication';
@@ -26,6 +27,12 @@ describe('differentiate', () => {
   describe('of complex numbers', () => {
     it('is 0', () => {
       expect(differentiate(complex(1, 1))).toEqual(complex(0, 0))
+    })
+  })
+
+  describe('of nil', () => {
+    it('is NaN', () => {
+      expect(differentiate(nil())).toEqual(real(NaN))
     })
   })
 

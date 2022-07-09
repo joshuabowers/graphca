@@ -3,6 +3,7 @@ import { is } from './is'
 import { Base } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
+import { Nil } from './nil'
 import { Variable } from './variable'
 import { Addition, add, subtract } from './addition'
 import { Multiplication, multiply, divide, negate } from './multiplication'
@@ -50,6 +51,7 @@ const whenNthDerivative = (order: Real, expression: Base) => {
 
 const whenReal: when<Real> = _ => real(0)
 const whenComplex: when<Complex> = _ => complex(0, 0)
+const whenNil: when<Nil> = _ => real(NaN)
 const whenVariable: when<Variable> = _ => real(1)
 
 const whenAddition: when<Addition> = e =>
@@ -208,7 +210,7 @@ const whenBase = (expression: Base) => expression
 
 export type DifferentiateFn = Multi
   & typeof whenNthDerivative
-  & typeof whenReal & typeof whenComplex & typeof whenVariable
+  & typeof whenReal & typeof whenComplex &typeof whenNil & typeof whenVariable
   & typeof whenAddition & typeof whenMultiplication 
   & typeof whenExponentiation & typeof whenLogarithm & typeof whenAbsolute
   & typeof whenCosine & typeof whenSine & typeof whenTangent
@@ -228,6 +230,7 @@ export const differentiate: DifferentiateFn = multi(
   method([is(Real), is(Base)], whenNthDerivative), // omg
   method(is(Real), whenReal),
   method(is(Complex), whenComplex),
+  method(is(Nil), whenNil),
   method(is(Variable), whenVariable),
 
   method(is(Addition), whenAddition),
