@@ -34,6 +34,16 @@ c <- 1 + b
 
 Inspecting `c` would yield a value of `sin(ln(x)) + 1`, as one might correctly assume.
 
+A bound variable can be made unbound by assigning it the special value `nil`: doing so will cause the variable to behave as though it had never been bound. `nil` is located in the [shift](/graphca/keypad/shift) mode tray.
+
+```
+x <- 5
+x <- nil
+x
+```
+
+The output of the third line of that example will be `x`, as in the unbound use.
+
 ### Use in Graphing
 
 GraphCa currently supports generating graphs for two-dimensional functions, e.g. for a variable which has been assigned an expression in another variable. These functions are evaluated at multiple points over a domain of values by supplying a value for the expression variable. So, for an expression like `y <- ln(x)`, GraphCa will determine values for `y` by giving a set of values to `x`. Variable names need not be `x` or `y` to be valid for graphing, though those are canonical defaults.
