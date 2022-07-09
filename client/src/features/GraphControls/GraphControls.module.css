@@ -13,7 +13,7 @@
 
   box-shadow: 0 0 0.25em black;
   cursor: pointer;
-  transition: all 0.5s var(--ease-out-back);
+  transition: all 0.2s var(--ease-out-back);
 }
 
 .default > button:hover {
@@ -22,7 +22,7 @@
 }
 
 .default > button:disabled {
-  --hover-color: --key-color;
+  --hover-color: var(--key-color);
   cursor: default;
   box-shadow: 0 0 0.4em;
   opacity: 25%;

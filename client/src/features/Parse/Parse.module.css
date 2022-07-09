@@ -32,4 +32,27 @@
 
 .result > .entryControls > button {
   cursor: pointer;
+  background: #AAAE;
+  color: black;
+  border: 0;
+  padding: 0.1em;
+  transition: all 0.2s ease-in-out;
+}
+
+.result > .entryControls > button:first-child {
+  border-top-left-radius: 0.3em;
+  border-bottom-left-radius: 0.3em;
+}
+
+.result > .entryControls > button:last-child {
+  border-top-right-radius: 0.3em;
+  border-bottom-right-radius: 0.3em;
+}
+
+.result > .entryControls > button:hover {
+  background: var(--key-hover-color);
+}
+
+.result > .entryControls > button:active {
+  background: var(--key-activate-color);
 }
