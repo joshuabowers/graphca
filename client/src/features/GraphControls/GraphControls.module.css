@@ -25,5 +25,5 @@
   --hover-color: var(--key-color);
   cursor: default;
   box-shadow: 0 0 0.4em;
-  opacity: 25%;
+  opacity: 0.25;
 }
