@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import THREE, { Color, Vector3 } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Segment, Segments, Html } from '@react-three/drei'
+import { Line, Html } from '@react-three/drei'
 
 export interface Grid2Props {
 
@@ -45,6 +45,21 @@ const originClamp = (lower: number, upper: number): number => (
   Math.min(upper, Math.max(0, lower))
 )
 
+const prefersDark = () => window.matchMedia?.('(prefers-color-scheme:dark)').matches
+
+interface GridColor {
+  origin: THREE.Color
+  normal: THREE.Color
+}
+
+const black = new Color(0,0,0), gray = new Color(0.45, 0.45, 0.45),
+  sandybrown = new Color(0xFFFFFF), tan = new Color(0x222222)
+
+const gridColors = (isDark: boolean): GridColor =>
+  isDark 
+    ? {origin: sandybrown, normal: tan} 
+    : {origin: black, normal: gray}
+
 export const Grid2 = (props: Grid2Props) => {
   const { camera, viewport } = useThree()
   const [boundary, setBoundary] = useState<Boundary>(
@@ -86,16 +101,17 @@ export const Grid2 = (props: Grid2Props) => {
   console.info({xSubdivisions, ySubdivisions})
 
   const segments: GridLine[] = []
-  const black = new Color(0,0,0), gray = new Color(0.45, 0.45, 0.45)
 
   const labelAttachX = originClamp(leftEdge+0.5*step, leftEdge + boundary.width - 1.5*step),
     labelAttachY = originClamp(bottomEdge+step, bottomEdge + boundary.height - 0.5*step)
+  
+  const colors = gridColors(prefersDark())
 
   for(let x = xStart; x <= xEnd; x += step){
     segments.push({
       start: new Vector3(x, yStart, 0),
       end: new Vector3(x, yEnd, 0),
-      color: nearly(x, 0) ? black : gray,
+      color: nearly(x, 0) ? colors.origin : colors.normal,
       key: `x:${x}`
     })
   }
@@ -103,7 +119,7 @@ export const Grid2 = (props: Grid2Props) => {
     segments.push({
       start: new Vector3(xStart, y, 0),
       end: new Vector3(xEnd, y, 0),
-      color: nearly(y, 0) ? black : gray,
+      color: nearly(y, 0) ? colors.origin : colors.normal,
       key: `y:${y}`
     })
   }
@@ -127,13 +143,18 @@ export const Grid2 = (props: Grid2Props) => {
   }
 
   return <group>
-    <Segments limit={segments.length+1} lineWidth={1.0}>
+    <group>
       {
         segments.map(({start, end, color, key}, i) => (
-          <Segment start={start} end={end} color={color} key={key} />
+          <Line 
+            key={key} 
+            points={[start, end]}
+            color={color}
+            lineWidth={1}
+          />
         ))
       }
-    </Segments>
+    </group>
     <group>
       {
         labels.map(({position, content, key}) => (
