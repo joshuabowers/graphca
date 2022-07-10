@@ -16,9 +16,17 @@ export interface GraphProps {
 
 }
 
-const getParsings = createArraySelector<RootState, Plot, Base>(
+interface Parsing {
+  expression: Base,
+  color: THREE.Color
+}
+
+const getParsings = createArraySelector<RootState, Plot, Parsing>(
   (state) => state.graph.plots,
-  (plot) => parser.value(plot.expression)
+  (plot) => ({
+    expression: parser.value(plot.expression), 
+    color: new THREE.Color(plot.color ?? 'green')
+  })
 )
 
 export const Graph = (props: GraphProps) => {
@@ -39,8 +47,8 @@ export const Graph = (props: GraphProps) => {
       {
         parsings.map((v,i) => 
           <Curve 
-            expression={v} 
-            color={new THREE.Color('green')} 
+            expression={v.expression} 
+            color={v.color} 
             key={i} 
           />
         )

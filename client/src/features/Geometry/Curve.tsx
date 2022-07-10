@@ -97,7 +97,7 @@ export const Curve = (props: CurveProps) => {
     {segments.map((points, i) => <Line 
       points={points}
       color={props.color}
-      lineWidth={1}
+      lineWidth={1.75}
       key={i}
     />)}
   </group>
