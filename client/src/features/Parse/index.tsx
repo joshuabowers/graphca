@@ -41,6 +41,13 @@ export const Parse = (props: ParseProps) => {
         <button className='material-icons' onClick={() => dispatch(removePlot(props.enteredAt))}>
           visibility_off
         </button>}
+        {canPlot &&
+        <button 
+          className={['material-icons', styles.plotColor].join(' ')}
+          style={{'--plotColor': isPlotted?.color ?? 'gray'} as React.CSSProperties}
+          disabled>
+            circle
+        </button>}
         <button className='material-icons' onClick={() => dispatch(forget(props.enteredAt))}>
           remove
         </button>

@@ -40,6 +40,11 @@
   transition: all 0.2s ease-in-out;
 }
 
+.result > .entryControls > .plotColor {
+  cursor: default;
+  color: var(--plotColor);
+}
+
 .result > .entryControls > button:first-child {
   border-top-left-radius: 0.3em;
   border-bottom-left-radius: 0.3em;
@@ -56,4 +61,8 @@
 
 .result > .entryControls > button:active {
   background: var(--key-activate-color);
+}
+
+.result > .entryControls > button:disabled:hover {
+  background: #AAAE;
 }
