@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import THREE, { Color, Vector3 } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Line, Html } from '@react-three/drei'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 export interface Grid2Props {
 
@@ -45,19 +46,17 @@ const originClamp = (lower: number, upper: number): number => (
   Math.min(upper, Math.max(0, lower))
 )
 
-const prefersDark = () => window.matchMedia?.('(prefers-color-scheme:dark)').matches
-
 interface GridColor {
   origin: THREE.Color
   normal: THREE.Color
 }
 
 const black = new Color(0,0,0), gray = new Color(0.45, 0.45, 0.45),
-  sandybrown = new Color(0xFFFFFF), tan = new Color(0x222222)
+  white = new Color(0xFFFFFF), darkgray = new Color(0x222222)
 
 const gridColors = (isDark: boolean): GridColor =>
   isDark 
-    ? {origin: sandybrown, normal: tan} 
+    ? {origin: white, normal: darkgray} 
     : {origin: black, normal: gray}
 
 export const Grid2 = (props: Grid2Props) => {
@@ -104,8 +103,10 @@ export const Grid2 = (props: Grid2Props) => {
 
   const labelAttachX = originClamp(leftEdge+0.5*step, leftEdge + boundary.width - 1.5*step),
     labelAttachY = originClamp(bottomEdge+step, bottomEdge + boundary.height - 0.5*step)
+
+  const isDark = useMediaQuery('(prefers-color-scheme: dark)')
   
-  const colors = gridColors(prefersDark())
+  const colors = gridColors(isDark)
 
   for(let x = xStart; x <= xEnd; x += step){
     segments.push({
