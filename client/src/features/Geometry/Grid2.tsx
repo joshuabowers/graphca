@@ -96,8 +96,6 @@ export const Grid2 = (props: Grid2Props) => {
     yStart = Math.trunc((bottomEdge - step) / step) * step,
     xEnd = Math.trunc((leftEdge + boundary.width + step) / step) * step,
     yEnd = Math.trunc((bottomEdge + boundary.height + step) / step) * step
-  const xSubdivisions = Math.ceil(Math.abs(xEnd - xStart) / step),
-    ySubdivisions = Math.ceil(Math.abs(yEnd - yStart) / step)
 
   // This might need throttling/debouncing to cull out a lot
   // of unnecessary calculations. E.g., see:
@@ -115,13 +113,6 @@ export const Grid2 = (props: Grid2Props) => {
     }
   })
 
-  console.info(boundary)
-  console.info({magnitude, scale, lowerScale})
-  console.info({leftEdge, bottomEdge})
-  console.info({step, xStart, yStart, xEnd, yEnd})
-  console.info({xSubdivisions, ySubdivisions})
-
-  // const segments: GridLine[] = []
   const segments = new Map<string, GridLine>()
 
   const labelAttachX = originClamp(leftEdge+0.5*step, leftEdge + boundary.width - 1.5*step),
@@ -133,9 +124,12 @@ export const Grid2 = (props: Grid2Props) => {
   addSegments(segments, xStart, xEnd, yStart, yEnd, step, 'x', colors)
   addSegments(segments, yStart, yEnd, xStart, xEnd, step, 'y', colors)
 
-  if(lowerScale < 0.25){
-    const lowerStep = 10**(scale-2), opacity = 0.25 - lowerScale
-    console.log({lowerStep, opacity})
+  // Will range from about -0.5 to 0; might want to constrain to >-0.75 to
+  // lessen performance impact. If so, opacity calc changes to:
+  // opacity = (lowerScale / -0.25)
+  // or whatever the distance is for the lowerScale thresholds.
+  if(lowerScale < 0){
+    const lowerStep = 10**(scale-2), opacity = (lowerScale / -0.5)
     addSegments(segments, xStart, xEnd, yStart, yEnd, lowerStep, 'x', colors, true, opacity)
     addSegments(segments, yStart, yEnd, xStart, xEnd, lowerStep, 'y', colors, true, opacity)
   }
@@ -148,14 +142,6 @@ export const Grid2 = (props: Grid2Props) => {
   }
   for(let y = Math.ceil(yStart / labelStep) * labelStep; y <= yEnd; y += labelStep){
     labels.push(label(labelAttachX, y, y, 'y'))
-  }
-
-  console.info({labelAttachX, labelAttachY, labelStep})
-
-  console.log(segments)
-
-  if(lowerScale < 0.25){
-    console.log('RENDER THE LOWER SCALE!')
   }
 
   return <group>
