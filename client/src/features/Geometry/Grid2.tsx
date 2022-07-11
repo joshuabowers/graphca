@@ -27,6 +27,8 @@ type GridLine = {
   start: Vector3,
   end: Vector3,
   color: Color,
+  transparent: boolean,
+  opacity: number,
   key: string
 }
 
@@ -58,6 +60,26 @@ const gridColors = (isDark: boolean): GridColor =>
   isDark 
     ? {origin: white, normal: darkgray} 
     : {origin: black, normal: gray}
+
+const axisOrient = (axis: 'x' | 'y', i: number, cap: number) =>
+  axis === 'x' ? new Vector3(i, cap, 0) : new Vector3(cap, i, 0)
+
+const addSegments = (segments: Map<string, GridLine>, start: number, end: number, 
+  pStart: number, pEnd: number, step: number, axis: 'x' | 'y', 
+  colors: GridColor, transparent: boolean = false, opacity: number = 1.0) => {
+  for(let i = start; i <= end; i += step){
+    const key = `${axis}:${i}`
+    if(!segments.has(key)){
+      segments.set(key, {
+        start: axisOrient(axis, i, pStart),
+        end: axisOrient(axis, i, pEnd),
+        color: nearly(i, 0) ? colors.origin : colors.normal,
+        transparent, opacity,
+        key: `${axis}:${i}`
+      })
+    }
+  }
+}
 
 export const Grid2 = (props: Grid2Props) => {
   const { camera, viewport } = useThree()
@@ -99,30 +121,23 @@ export const Grid2 = (props: Grid2Props) => {
   console.info({step, xStart, yStart, xEnd, yEnd})
   console.info({xSubdivisions, ySubdivisions})
 
-  const segments: GridLine[] = []
+  // const segments: GridLine[] = []
+  const segments = new Map<string, GridLine>()
 
   const labelAttachX = originClamp(leftEdge+0.5*step, leftEdge + boundary.width - 1.5*step),
     labelAttachY = originClamp(bottomEdge+step, bottomEdge + boundary.height - 0.5*step)
 
   const isDark = useMediaQuery('(prefers-color-scheme: dark)')
-  
   const colors = gridColors(isDark)
 
-  for(let x = xStart; x <= xEnd; x += step){
-    segments.push({
-      start: new Vector3(x, yStart, 0),
-      end: new Vector3(x, yEnd, 0),
-      color: nearly(x, 0) ? colors.origin : colors.normal,
-      key: `x:${x}`
-    })
-  }
-  for(let y = yStart; y <= yEnd; y += step){
-    segments.push({
-      start: new Vector3(xStart, y, 0),
-      end: new Vector3(xEnd, y, 0),
-      color: nearly(y, 0) ? colors.origin : colors.normal,
-      key: `y:${y}`
-    })
+  addSegments(segments, xStart, xEnd, yStart, yEnd, step, 'x', colors)
+  addSegments(segments, yStart, yEnd, xStart, xEnd, step, 'y', colors)
+
+  if(lowerScale < 0.25){
+    const lowerStep = 10**(scale-2), opacity = 0.25 - lowerScale
+    console.log({lowerStep, opacity})
+    addSegments(segments, xStart, xEnd, yStart, yEnd, lowerStep, 'x', colors, true, opacity)
+    addSegments(segments, yStart, yEnd, xStart, xEnd, lowerStep, 'y', colors, true, opacity)
   }
 
   const labelStep = 10**(Math.floor(magnitude)-1) * 5
@@ -146,11 +161,13 @@ export const Grid2 = (props: Grid2Props) => {
   return <group>
     <group>
       {
-        segments.map(({start, end, color, key}, i) => (
+        Array.from(segments.values(), ({start, end, color, transparent, opacity, key}) => (
           <Line 
             key={key} 
             points={[start, end]}
             color={color}
+            transparent={transparent}
+            opacity={opacity}
             lineWidth={1}
           />
         ))

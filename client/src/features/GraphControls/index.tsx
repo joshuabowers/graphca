@@ -11,6 +11,11 @@ export const GraphControls = (props: GraphControlProps) => {
   const graph = useAppSelector(state => state.graph)
 
   return <div className={styles.default}>
+    <button
+      disabled
+      className='material-icons'>
+      near_me
+    </button>
     <button 
       disabled={graph.plots.length === 0}
       className='material-icons'
