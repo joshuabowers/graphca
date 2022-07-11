@@ -14,7 +14,7 @@ export const Header = (props: HeaderProps) => {
           rel="noopener"
           target="_blank"
           className="material-icons">help</a>
-      </nav>
+      </nav>      
     </header>
   )
 }
