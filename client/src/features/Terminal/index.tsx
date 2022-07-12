@@ -20,7 +20,7 @@ const getCurrentLine = createSelector(
 const getHistory = createSelector(getTerminal, (terminal) => terminal.history)
 
 export const Terminal = (props: TerminalProps) => {
-  const [scope, setScope] = useState(createScope())
+  const [scope] = useState(createScope()) // note: setScope could be provided here.
   const getParsings = useMemo(
     () => createArraySelector<RootState, TerminalEntryState, JSX.Element>(
       (state: RootState) => state.terminal.history,

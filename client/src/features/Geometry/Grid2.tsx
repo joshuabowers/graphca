@@ -3,6 +3,7 @@ import THREE, { Color, Vector3 } from 'three'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Line, Html } from '@react-three/drei'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
+import styles from './Grid2.module.css'
 
 export interface Grid2Props {
 
@@ -162,7 +163,7 @@ export const Grid2 = (props: Grid2Props) => {
     <group>
       {
         labels.map(({position, content, key}) => (
-          <Html position={position} key={key}>{content}</Html>
+          <Html position={position} className={styles.axisLabel} key={key}>{content}</Html>
         ))
       }
     </group>

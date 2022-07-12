@@ -11,7 +11,7 @@ export const Header = (props: HeaderProps) => {
       <h1>GraphCa</h1>
       <nav>
         <a href="http://joshuabowers.github.io/graphca" 
-          rel="noopener"
+          rel="noreferrer"
           target="_blank"
           className="material-icons">help</a>
       </nav>      

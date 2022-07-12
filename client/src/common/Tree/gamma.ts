@@ -2,7 +2,7 @@ import { multi, fromMulti, method } from "@arrows/multimethod";
 import { is } from './is';
 import { Base } from "./Expression";
 import { Real, real } from './real'
-import { Complex, complex } from "./complex";
+import { Complex } from "./complex";
 import { add, subtract } from "./addition";
 import { multiply, divide, negate } from "./multiplication";
 import { raise, sqrt } from "./exponentiation";
