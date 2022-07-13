@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, AppDispatch, useAppSelector } from '../../app/hooks';
 import { keyPress } from '../Terminal/Terminal.slice';
 import { Mode, ModeProps, ModeType } from '../Mode';
+import { MathSymbols } from '../../common/MathSymbols';
 import styles from './Key.module.css';
 
 export interface KeyProps {
@@ -51,3 +52,42 @@ export const Key = (props: KeyProps) => {
     </button>
   )
 }
+
+const indexByType = (modes: ModeProps[]) =>
+  new Map(modes.map(m => [m.type, m]))
+
+export type ModeMap = ReturnType<typeof indexByType>;
+
+const propsOrDisabled = (indexed: ModeMap, key: ModeType) =>
+  indexed.get(key) ?? {type: key, display: ''}
+
+export const createKey = (...modes: ModeProps[]) => {
+  const indexed = indexByType(modes)
+  return <Key 
+    default={propsOrDisabled(indexed, 'default')} 
+    shift={propsOrDisabled(indexed, 'shift')}
+    alphaMega={propsOrDisabled(indexed, 'alphaMega')}
+    alphaMicron={propsOrDisabled(indexed, 'alphaMicron')}
+    trig={propsOrDisabled(indexed, 'trig')}
+  />
+}
+
+const detectDisplayHint = (display: MathSymbols) =>
+  React.isValidElement(display) ? 'functional' : (
+    display.toString().length > 4 ? 'verbose' : undefined
+  )
+
+const createMode = (type: ModeType) =>
+  (display: MathSymbols, isFunctional: boolean = false, outputOverride?: MathSymbols): ModeProps =>
+    ({
+      type, 
+      display, 
+      displayHint: detectDisplayHint(display), 
+      activate: createKeyPress((outputOverride ?? display) + (isFunctional ? '(' : ''))
+    })
+
+export const main = createMode('default'),
+  shift = createMode('shift'),
+  alphaMega = createMode('alphaMega'),
+  alphaMicron = createMode('alphaMicron'),
+  trig = createMode('trig');
