@@ -158,7 +158,7 @@ real:
 keywords: builtInFunction
 
 $real @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
-$variable @raw: !(keywords) [a-zA-Z][a-zA-Z0-9]*
+$variable @raw: !(keywords) [_a-zA-Z][_a-zA-Z0-9]*
 $i @raw: ${RegExp(Unicode.i, 'u')}
 $e @raw: ${RegExp(Unicode.e, 'u')}
 $euler @raw: ${RegExp(Unicode.euler, 'u')}

@@ -27,6 +27,8 @@ export const Arithmetic = (props: ArithmeticProps) => (
     )}
     {createKey(
       main('-'),
+      alphaMega('_'),
+      alphaMicron('_'),
       trig('acoth', true)
     )}
     {createKey(
