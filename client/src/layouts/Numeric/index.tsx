@@ -1,45 +1,92 @@
 import React from 'react';
 import { KeyGroup } from '../../features/KeyGroup';
-import { Key, createKeyPress } from '../../features/Key';
+import { 
+  createKey, main, shift, alphaMega, alphaMicron, trig
+} from '../../features/Key';
 import { Unicode } from '../../common/MathSymbols';
 
 export interface NumericProps {
 
 }
 
-// Tuple structure: ['default', 'shift', 'alphaMega', 'alphaMicron', 'trig']
-const numberKeys = [
-  ['7', '', 'P', 'p', 'csc'],
-  ['8', '', 'Q', 'q', 'csch'],
-  ['9', '', 'R', 'r', 'acsc'],
-  ['4', '', 'T', 't', 'sec'],
-  ['5', '', 'U', 'u', 'sech'],
-  ['6', '', 'V', 'v', 'asec'],
-  ['1', Unicode.i, 'X', 'x', 'cot'],
-  ['2', Unicode.e, 'Y', 'y', 'coth'],
-  ['3', Unicode.pi, 'Z', 'z', 'acot'],
-  ['0', Unicode.infinity, Unicode.space, Unicode.space, ''],
-  ['.', Unicode.euler, ':', ':', ''],
-  ['<-', 'nil', '<-', '<-', '']
-]
-
-const unicodeToASCII = new Map([[Unicode.space as string, ' ']])
-
 export const Numeric = (props: NumericProps) => {
   return (
     <KeyGroup layout='rectangular' columns={3}>
-      {
-        numberKeys.map((info) => (
-          <Key 
-            key={info[0]}
-            default={{type: 'default', display: info[0], activate: createKeyPress(info[0])}}
-            shift={{type: 'shift', display: info[1], activate: info[1] ? createKeyPress(info[1]) : undefined}}
-            alphaMega={{type: 'alphaMega', display: info[2], activate: createKeyPress(unicodeToASCII.get(info[2]) ?? info[2])}}
-            alphaMicron={{type: 'alphaMicron', display: info[3], activate: createKeyPress(unicodeToASCII.get(info[3]) ?? info[3])}}
-            trig={{type: 'trig', display: info[4], activate: info[4] ? createKeyPress(info[4]+'(') : undefined}}
-          />  
-        ))
-      }
+      {createKey(
+        main('7'),
+        alphaMega('P'),
+        alphaMicron('p'),
+        trig('csc', true)
+      )}
+      {createKey(
+        main('8'),
+        alphaMega('Q'),
+        alphaMicron('q'),
+        trig('csch', true)
+      )}
+      {createKey(
+        main('9'),
+        alphaMega('R'),
+        alphaMicron('r'),
+        trig('acsc', true)
+      )}
+      {createKey(
+        main('4'),
+        alphaMega('T'),
+        alphaMicron('t'),
+        trig('sec', true)
+      )}
+      {createKey(
+        main('5'),
+        alphaMega('U'),
+        alphaMicron('u'),
+        trig('sech', true)
+      )}
+      {createKey(
+        main('6'),
+        alphaMega('V'),
+        alphaMicron('v'),
+        trig('asec', true)
+      )}
+      {createKey(
+        main('1'),
+        shift(Unicode.i),
+        alphaMega('X'),
+        alphaMicron('x'),
+        trig('cot', true)
+      )}
+      {createKey(
+        main('2'),
+        shift(Unicode.e),
+        alphaMega('Y'),
+        alphaMicron('y'),
+        trig('coth', true)
+      )}
+      {createKey(
+        main('3'),
+        shift(Unicode.pi),
+        alphaMega('Z'),
+        alphaMicron('z'),
+        trig('acot', true)
+      )}
+      {createKey(
+        main('0'),
+        shift(Unicode.infinity),
+        alphaMega(Unicode.space, false, ' '),
+        alphaMicron(Unicode.space, false, ' ')
+      )}
+      {createKey(
+        main('.'),
+        shift(Unicode.euler),
+        alphaMega(':'),
+        alphaMicron(':')
+      )}
+      {createKey(
+        main('<-'),
+        shift('nil'),
+        alphaMega('<-'),
+        alphaMicron('<-')
+      )}
     </KeyGroup>
   )
 }
