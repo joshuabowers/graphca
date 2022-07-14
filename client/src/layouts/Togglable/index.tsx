@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Unicode } from '../../common/MathSymbols';
-import { Key } from '../../features/Key'
+import { Key, commandKey } from '../../features/Key'
 import { ToggleKey } from '../../features/ToggleKey';
 import { KeyGroup } from '../../features/KeyGroup';
 import { useAppSelector } from '../../app/hooks';
@@ -14,6 +14,7 @@ export interface TogglableProps {
 
 export const Togglable = (props: TogglableProps) => {
   const currentMode = useAppSelector(state => state.keypad.currentMode);
+  const currentLine = useAppSelector(state => state.terminal.currentLine);
   return (
     <KeyGroup layout='horizontal' fullWidth>
       <ToggleKey 
@@ -33,13 +34,7 @@ export const Togglable = (props: TogglableProps) => {
       <Key 
         default={{type: 'default', display: ''}}
       />
-      <Key 
-        default={{type: 'default', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
-        shift={{type: 'shift', display: 'Ins'}}
-        alphaMega={{type: 'alphaMega', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
-        alphaMicron={{type: 'alphaMicron', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
-        trig={{type: 'trig', display: 'DEL', activate: (dispatch) => dispatch(deleteLast())}}
-      />
+      {commandKey('DEL', currentLine.length === 0, (dispatch) => dispatch(deleteLast()))}
     </KeyGroup>
   )
 }
