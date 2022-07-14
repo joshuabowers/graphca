@@ -2,11 +2,10 @@ import React from 'react';
 
 import { Unicode } from '../../common/MathSymbols';
 import { Key, commandKey } from '../../features/Key'
-import { ToggleKey } from '../../features/ToggleKey';
+import { createToggleKey } from '../../features/ToggleKey';
 import { KeyGroup } from '../../features/KeyGroup';
 import { useAppSelector } from '../../app/hooks';
 import { deleteLast } from '../../features/Terminal/Terminal.slice';
-import { changeMode } from '../Keypad/Keypad.slice';
 
 export interface TogglableProps {
 
@@ -17,14 +16,7 @@ export const Togglable = (props: TogglableProps) => {
   const currentLine = useAppSelector(state => state.terminal.currentLine);
   return (
     <KeyGroup layout='horizontal' fullWidth>
-      <ToggleKey 
-        default={{
-          type: 'default', 
-          display: Unicode.angle, 
-          activate: (dispatch) => dispatch(changeMode(currentMode === 'trig' ? 'default' : 'trig'))
-        }}
-        toggled={currentMode === 'trig'}
-      />
+      {createToggleKey(Unicode.angle, 'trig', currentMode)}
       <Key 
         default={{type: 'default', display: ''}}
       />

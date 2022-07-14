@@ -4,6 +4,8 @@ import styles from './ToggleKey.module.css'
 import { KeyProps } from '../Key';
 import { Mode, ModeType } from '../Mode';
 import { useAppDispatch } from '../../app/hooks';
+import { MathSymbols } from '../../common/MathSymbols';
+import { changeMode } from '../../layouts/Keypad/Keypad.slice';
 
 export interface ToggleKeyProps extends KeyProps {
   toggled?: boolean
@@ -40,4 +42,16 @@ export const ToggleKey = (props: ToggleKeyProps) => {
       <Mode {...props.default} />
     </label>
   )
+}
+
+export const createToggleKey = (display: MathSymbols, mode: ModeType, currentMode: ModeType) => {
+  const toggled = currentMode === mode
+  return <ToggleKey
+    default={{
+      type: 'default',
+      display,
+      activate: (dispatch) => dispatch(changeMode(toggled ? 'default' : mode))
+    }}
+    toggled={toggled}
+  />
 }
