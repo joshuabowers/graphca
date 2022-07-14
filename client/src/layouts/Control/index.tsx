@@ -1,6 +1,6 @@
 import React from 'react';
 import { KeyGroup } from '../../features/KeyGroup';
-import { Key } from '../../features/Key';
+import { Key, commandKey } from '../../features/Key';
 import { ToggleKey } from '../../features/ToggleKey';
 import { Unicode } from '../../common/MathSymbols';
 import { calculate } from '../../features/Terminal/Terminal.slice';
@@ -13,6 +13,7 @@ export interface ControlProps {
 
 export const Control = (props: ControlProps) => {
   const currentMode = useAppSelector(state => state.keypad.currentMode)
+  const currentLine = useAppSelector(state => state.terminal.currentLine)
   return (
     <KeyGroup layout='vertical'>
       <ToggleKey 
@@ -39,13 +40,7 @@ export const Control = (props: ControlProps) => {
         }}
         toggled={currentMode === 'alphaMicron'}
       />
-      <Key 
-        default={{type: 'default', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
-        shift={{type: 'shift', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
-        alphaMega={{type: 'alphaMega', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
-        alphaMicron={{type: 'alphaMicron', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
-        trig={{type: 'trig', display: 'EXE', activate: (dispatch) => dispatch(calculate())}}
-      />
+      {commandKey('EXE', currentLine.length === 0, (dispatch) => dispatch(calculate()))}
     </KeyGroup>
   )
 }

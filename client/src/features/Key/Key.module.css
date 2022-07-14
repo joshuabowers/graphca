@@ -20,7 +20,7 @@
 
 .normal, .normal > .primary {
   transition: 200ms ease-in;
-  transition-property: box-shadow, background-color, color;
+  transition-property: opacity, box-shadow, background-color, color;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -71,4 +71,26 @@
 
 .normal.activated > .primary, .normal:active > .primary {
   box-shadow: inset 0 0 0.25em var(--key-color);
+}
+
+.normal:disabled {
+  opacity: 0.75;
+  cursor: default;
+}
+
+@media((prefers-color-scheme:dark)) {
+  .normal:disabled {
+    opacity: 0.40;
+  }
+}
+
+@media((hover: hover) and (pointer: fine)) {
+  .normal:disabled:hover {
+    --key-color: inherit;
+    box-shadow: none;
+  }
+
+  .normal:disabled:hover > .primary {
+    box-shadow: none;
+  }
 }

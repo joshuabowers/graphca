@@ -11,7 +11,8 @@ export interface KeyProps {
   alphaMicron?: ModeProps,
   shift?: ModeProps,
   trig?: ModeProps,
-  modeOverride?: 'shift' | 'alphaMega' | 'alphaMicron' | 'trig'
+  modeOverride?: 'shift' | 'alphaMega' | 'alphaMicron' | 'trig',
+  disabled?: boolean
 }
 
 export const createKeyPress = (value: string) =>
@@ -44,6 +45,7 @@ export const Key = (props: KeyProps) => {
 
   return (
     <button 
+      disabled={props.disabled}
       onClick={handler}
       className={appliedStyles.join(' ')}>
       <div className={styles.primary}>
@@ -69,6 +71,18 @@ export const createKey = (...modes: ModeProps[]) => {
     alphaMega={propsOrDisabled(indexed, 'alphaMega')}
     alphaMicron={propsOrDisabled(indexed, 'alphaMicron')}
     trig={propsOrDisabled(indexed, 'trig')}
+  />
+}
+
+export const commandKey = (display: MathSymbols, disabled: boolean, activate: (dispatch: AppDispatch) => void) => {
+  const props = {display, activate}
+  return <Key 
+    default={props}
+    shift={props}
+    alphaMega={props}
+    alphaMicron={props}
+    trig={props}
+    disabled={disabled}
   />
 }
 
