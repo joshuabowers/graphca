@@ -43,13 +43,15 @@ export const Key = (props: KeyProps) => {
 
   if(activated){ appliedStyles.push(styles.activated) }
 
+  const modeProps = currentMode ?? props.default
+
   return (
     <button 
-      disabled={props.disabled}
+      disabled={props.disabled ?? modeProps.display === ''}
       onClick={handler}
       className={appliedStyles.join(' ')}>
       <div className={styles.primary}>
-        <Mode {...(currentMode ?? props.default)} />
+        <Mode {...(modeProps)} />
       </div>
     </button>
   )
