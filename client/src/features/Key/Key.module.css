@@ -64,6 +64,21 @@
   --key-background-color: var(--key-mode-trig-background-color);
 }
 
+.alt {
+  --key-color: var(--key-mode-alt-color);
+  --key-background-color: var(--key-mode-alt-background-color);
+}
+
+.logic {
+  --key-color: var(--key-mode-logic-color);
+  --key-background-color: var(--key-mode-logic-background-color);
+}
+
+.constant {
+  --key-color: var(--key-mode-constant-color);
+  --key-background-color: var(--key-mode-constant-background-color);
+}
+
 .normal.activated, .normal:active {
   z-index: 1;
   --key-color: var(--key-activate-color);

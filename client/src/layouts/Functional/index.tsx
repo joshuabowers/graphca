@@ -2,7 +2,8 @@ import React from 'react';
 import { KeyGroup } from '../../features/KeyGroup';
 import { 
   Key, commandKey,
-  createKey, main, shift, alphaMega, alphaMicron, trig 
+  createKey, main, shift, alphaMega, alphaMicron, trig,
+  alt, logic, constant
 } from '../../features/Key';
 import { Unicode, functional } from '../../common/MathSymbols';
 import { useAppSelector } from '../../app/hooks';
@@ -43,6 +44,8 @@ export const Functional = (args: FunctionalProps) => {
       {createKey(
         'fact',
         main('!'),
+        shift(Unicode.gamma, true),
+        alt(Unicode.digamma, true),
         alphaMega('D'),
         alphaMicron('d'),
         trig('asin', true)
@@ -55,7 +58,6 @@ export const Functional = (args: FunctionalProps) => {
       )}
       {createKey(
         '',
-        shift('['),
         alphaMega('G'),
         alphaMicron('g'),
         trig('cos', true)
@@ -63,7 +65,6 @@ export const Functional = (args: FunctionalProps) => {
       {createKey(
         'comma',
         main(','),
-        shift(']'),
         alphaMega('H'),
         alphaMicron('h'),
         trig('cosh', true)
@@ -72,6 +73,7 @@ export const Functional = (args: FunctionalProps) => {
         'open',
         main('('),
         shift('{'),
+        alt('['),
         alphaMega('I'),
         alphaMicron('i'),
         trig('acos', true)
@@ -80,6 +82,7 @@ export const Functional = (args: FunctionalProps) => {
         'close',
         main(')'),
         shift('}'),
+        alt(']'),
         alphaMega('J'),
         alphaMicron('j'),
         trig('acosh', true)
@@ -93,7 +96,7 @@ export const Functional = (args: FunctionalProps) => {
       {createKey(
         'ln',
         main('ln', true),
-        shift('log'),
+        shift('log', true),
         alphaMega('L'),
         alphaMicron('l'),
         trig('tan', true)

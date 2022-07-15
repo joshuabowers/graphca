@@ -17,10 +17,10 @@ export const Control = (props: ControlProps) => {
     // <KeyGroup layout='vertical'>
     <>
       {createToggleKey('trig', Unicode.angle, 'trig', currentMode)}
-      {createToggleKey('logic', '', 'default', currentMode)}
-      {createToggleKey('alt', '', 'default', currentMode)}
+      {createToggleKey('logic', '', 'logic', currentMode)}
+      {createToggleKey('alt', Unicode.alt, 'alt', currentMode)}
       {createToggleKey('shift', Unicode.shift, 'shift', currentMode)}
-      {createToggleKey('constant', '', 'default', currentMode)}
+      {createToggleKey('constant', '', 'constant', currentMode)}
       {createToggleKey('alphaMega', Unicode.alphaMega, 'alphaMega', currentMode)}
       {createToggleKey('alphaMinor', Unicode.alphaMicron, 'alphaMicron', currentMode)}
       {commandKey('execute', 'EXE', currentLine.length === 0, (dispatch) => dispatch(calculate()))}

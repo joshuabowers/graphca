@@ -30,10 +30,13 @@ export const Key = (props: KeyProps) => {
   const appliedStyles = [styles.normal, styles[keyMode]];
   const [activated, setActivate] = useState(false)
 
+  const modeProps = currentMode 
+    ?? (props.isCommand ? props.modes.get('default') : undefined) 
+    ?? main('')
+
   const handler: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     setActivate(true)
-    if( currentMode?.activate )
-      currentMode.activate(dispatch)
+    modeProps.activate?.(dispatch)
   };
 
   useEffect(() => {
@@ -44,10 +47,6 @@ export const Key = (props: KeyProps) => {
   }, [activated])
 
   if(activated){ appliedStyles.push(styles.activated) }
-
-  const modeProps = currentMode 
-    ?? (props.isCommand ? props.modes.get('default') : undefined) 
-    ?? main('')
 
   return (
     <button 
@@ -105,6 +104,9 @@ const createMode = (type: ModeType) =>
 
 export const main = createMode('default'),
   shift = createMode('shift'),
+  alt = createMode('alt'),
+  logic = createMode('logic'),
+  constant = createMode('constant'),
   alphaMega = createMode('alphaMega'),
   alphaMicron = createMode('alphaMicron'),
   trig = createMode('trig');

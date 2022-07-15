@@ -46,6 +46,12 @@ code {
     --key-mode-alpha-background-color: hsl(135, 23%, 43%);
     --key-mode-trig-color: var(--key-color);
     --key-mode-trig-background-color: hsl(0, 23%, 43%);
+    --key-mode-alt-color: var(--key-color);
+    --key-mode-alt-background-color: hsl(20, 23%, 43%);
+    --key-mode-logic-color: var(--key-color);
+    --key-mode-logic-background-color: hsl(75, 23%, 43%);
+    --key-mode-constant-color: var(--key-color);
+    --key-mode-constant-background-color: hsl(300, 23%, 43%);
     --toggle-key-background-color: hsl(35, 23%, 43%);
     --terminal-background-color: hsla(0, 0%, 0%, 20%);
     --terminal-color: inherit;
@@ -71,6 +77,12 @@ code {
     --key-mode-alpha-background-color: hsl(135, 14%, 53%);
     --key-mode-trig-color: var(--key-color);
     --key-mode-trig-background-color: hsl(0, 14%, 53%);
+    --key-mode-alt-color: var(--key-color);
+    --key-mode-alt-background-color: hsl(20, 14%, 53%);
+    --key-mode-logic-color: var(--key-color);
+    --key-mode-logic-background-color: hsl(75, 14%, 53%);
+    --key-mode-constant-color: var(--key-color);
+    --key-mode-constant-background-color: hsl(300, 14%, 53%);
     --toggle-key-background-color: hsl(35, 14%, 53%);
     --terminal-background-color: hsla(0, 0%, 75%, 45%);
     --terminal-color: black;

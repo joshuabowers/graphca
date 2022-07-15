@@ -1,7 +1,8 @@
 import React from 'react';
 import { KeyGroup } from '../../features/KeyGroup';
 import { 
-  createKey, main, shift, alphaMega, alphaMicron, trig
+  createKey, main, shift, alphaMega, alphaMicron, trig,
+  constant, alt, logic
 } from '../../features/Key';
 import { Unicode } from '../../common/MathSymbols';
 
@@ -58,7 +59,7 @@ export const Numeric = (props: NumericProps) => {
       {createKey(
         'one',
         main('1'),
-        shift(Unicode.i),
+        constant(Unicode.i),
         alphaMega('X'),
         alphaMicron('x'),
         trig('cot', true)
@@ -66,7 +67,7 @@ export const Numeric = (props: NumericProps) => {
       {createKey(
         'two',
         main('2'),
-        shift(Unicode.e),
+        constant(Unicode.e),
         alphaMega('Y'),
         alphaMicron('y'),
         trig('coth', true)
@@ -74,7 +75,7 @@ export const Numeric = (props: NumericProps) => {
       {createKey(
         'three',
         main('3'),
-        shift(Unicode.pi),
+        constant(Unicode.pi),
         alphaMega('Z'),
         alphaMicron('z'),
         trig('acot', true)
@@ -82,21 +83,21 @@ export const Numeric = (props: NumericProps) => {
       {createKey(
         'zero',
         main('0'),
-        shift(Unicode.infinity),
+        constant(Unicode.infinity),
         alphaMega(Unicode.space, false, ' '),
         alphaMicron(Unicode.space, false, ' ')
       )}
       {createKey(
         'decimal',
         main('.'),
-        shift(Unicode.euler),
+        constant(Unicode.euler),
         alphaMega(':'),
         alphaMicron(':')
       )}
       {createKey(
         'assign',
         main('<-'),
-        shift('nil'),
+        constant('nil'),
         alphaMega('<-'),
         alphaMicron('<-')
       )}
