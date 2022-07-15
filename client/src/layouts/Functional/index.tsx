@@ -19,11 +19,13 @@ export const Functional = (args: FunctionalProps) => {
     // <KeyGroup layout='rectangular' columns={3}>
     <>
       {createKey(
+        'var',
         main(functional.variables, false, 'x'),
         alphaMega('A'),
         alphaMicron('a')
       )}
       {createKey(
+        'diff',
         main(Unicode.derivative, true),
         shift(Unicode.integral, true),
         alphaMega('B'),
@@ -31,6 +33,7 @@ export const Functional = (args: FunctionalProps) => {
         trig('sin', true)
       )}
       {createKey(
+        'comb',
         main('nPr', true, 'P'),
         shift('nCr', true, 'C'),
         alphaMega('C'),
@@ -38,23 +41,27 @@ export const Functional = (args: FunctionalProps) => {
         trig('sinh', true)
       )}
       {createKey(
+        'fact',
         main('!'),
         alphaMega('D'),
         alphaMicron('d'),
         trig('asin', true)
       )}
       {createKey(
+        'abs',
         main('abs', true),
         alphaMega('F'),
         alphaMicron('f')
       )}
       {createKey(
+        '',
         shift('['),
         alphaMega('G'),
         alphaMicron('g'),
         trig('cos', true)
       )}
       {createKey(
+        'comma',
         main(','),
         shift(']'),
         alphaMega('H'),
@@ -62,6 +69,7 @@ export const Functional = (args: FunctionalProps) => {
         trig('cosh', true)
       )}
       {createKey(
+        'open',
         main('('),
         shift('{'),
         alphaMega('I'),
@@ -69,6 +77,7 @@ export const Functional = (args: FunctionalProps) => {
         trig('acos', true)
       )}
       {createKey(
+        'close',
         main(')'),
         shift('}'),
         alphaMega('J'),
@@ -76,11 +85,13 @@ export const Functional = (args: FunctionalProps) => {
         trig('acosh', true)
       )}
       {createKey(
+        'lb',
         main('lb', true),
         alphaMega('K'),
         alphaMicron('k')
       )}
       {createKey(
+        'ln',
         main('ln', true),
         shift('log'),
         alphaMega('L'),
@@ -88,6 +99,7 @@ export const Functional = (args: FunctionalProps) => {
         trig('tan', true)
       )}
       {createKey(
+        'lg',
         main('lg', true),
         alphaMega('M'),
         alphaMicron('m'),

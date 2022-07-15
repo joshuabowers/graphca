@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './ToggleKey.module.css'
 
-import { KeyProps, main, indexByType } from '../Key';
+import { KeyProps, KeyCSSProperties, main, indexByType } from '../Key';
 import { Mode, ModeType } from '../Mode';
 import { useAppDispatch } from '../../app/hooks';
 import { MathSymbols } from '../../common/MathSymbols';
@@ -34,7 +34,9 @@ export const ToggleKey = (props: ToggleKeyProps) => {
   if(props.toggled){ appliedStyles.push(styles.toggled) }
 
   return (
-    <label className={appliedStyles.join(' ')}>
+    <label 
+      style={{'--cell': props.cellName} as KeyCSSProperties}
+      className={appliedStyles.join(' ')}>
       <input 
         type='checkbox' 
         checked={props.toggled}
@@ -45,9 +47,10 @@ export const ToggleKey = (props: ToggleKeyProps) => {
   )
 }
 
-export const createToggleKey = (display: MathSymbols, mode: ModeType, currentMode: ModeType) => {
+export const createToggleKey = (cellName: string, display: MathSymbols, mode: ModeType, currentMode: ModeType) => {
   const toggled = currentMode === mode
   return <ToggleKey
+    cellName={cellName}
     modes={indexByType([{
       type: 'default', 
       display, 

@@ -18,8 +18,9 @@ export const Arithmetic = (props: ArithmeticProps) => {
   return (
     // <KeyGroup layout='vertical'>
     <>
-      {commandKey('DEL', currentLine.length === 0, (dispatch) => dispatch(deleteLast()))}
+      {commandKey('delete', 'DEL', currentLine.length === 0, (dispatch) => dispatch(deleteLast()))}
       {createKey(
+        '',
         main(Unicode.gamma, true),
         shift(Unicode.digamma, true),
         alphaMega('E'),
@@ -27,6 +28,7 @@ export const Arithmetic = (props: ArithmeticProps) => {
         trig('asinh', true)
       )}
       {createKey(
+        'square',
         main(functional.squared, false, '^2'),
         shift(Unicode.squareRoot, true),
         alphaMega('N'),
@@ -34,12 +36,14 @@ export const Arithmetic = (props: ArithmeticProps) => {
         trig('atan', true)
       )}
       {createKey(
+        'raise',
         main(functional.xY, false, '^'),
         alphaMega('O'),
         alphaMicron('o'),
         trig('atanh', true)
       )}
       {createKey(
+        'divide',
         main('/'),
         shift(functional.invert, false, '^-1'),
         alphaMega('S'),
@@ -47,6 +51,7 @@ export const Arithmetic = (props: ArithmeticProps) => {
         trig('acsch', true)
       )}
       {createKey(
+        'multiply',
         main('*'), // Possibly change back to Unicode.multiplication
         shift('EE', false, 'E'),
         alphaMega('W'),
@@ -54,12 +59,14 @@ export const Arithmetic = (props: ArithmeticProps) => {
         trig('asech', true)
       )}
       {createKey(
+        'subtract',
         main('-'),
         alphaMega('_'),
         alphaMicron('_'),
         trig('acoth', true)
       )}
       {createKey(
+        'add',
         main('+'),
         alphaMega('#'),
         alphaMicron('#')

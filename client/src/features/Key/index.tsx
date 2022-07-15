@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { CSSProperties, useEffect, useState } from 'react';
 import { useAppDispatch, AppDispatch, useAppSelector } from '../../app/hooks';
 import { keyPress } from '../Terminal/Terminal.slice';
 import { Mode, ModeProps, ModeType } from '../Mode';
@@ -6,10 +6,15 @@ import { MathSymbols } from '../../common/MathSymbols';
 import styles from './Key.module.css';
 
 export interface KeyProps {
+  cellName: string,
   modes: Map<ModeType, ModeProps>,
   modeOverride?: Exclude<ModeType, 'default'>,
   isCommand?: boolean
   disabled?: boolean
+}
+
+export interface KeyCSSProperties extends CSSProperties {
+  '--cell': string
 }
 
 export const createKeyPress = (value: string) =>
@@ -48,6 +53,7 @@ export const Key = (props: KeyProps) => {
     <button 
       disabled={props.disabled ?? modeProps.display === ''}
       onClick={handler}
+      style={{'--cell': props.cellName} as KeyCSSProperties}
       className={appliedStyles.join(' ')}>
       <div className={styles.primary}>
         <Mode {...(modeProps)} />
@@ -64,17 +70,19 @@ export type ModeMap = ReturnType<typeof indexByType>;
 const propsOrDisabled = (indexed: ModeMap, key: ModeType) =>
   indexed.get(key) ?? {type: key, display: ''}
 
-export const createKey = (...modes: ModeProps[]) => {
+export const createKey = (cellName: string, ...modes: ModeProps[]) => {
   const indexed = indexByType(modes)
   return <Key 
+    cellName={cellName}
     modes={indexed}
   />
 }
 
-export const commandKey = (display: MathSymbols, disabled: boolean, activate: (dispatch: AppDispatch) => void) => {
+export const commandKey = (cellName: string, display: MathSymbols, disabled: boolean, activate: (dispatch: AppDispatch) => void) => {
   const props: ModeProps = {type: 'default', display, activate}
   const modes = indexByType([props])
   return <Key 
+    cellName={cellName}
     modes={modes}
     isCommand
     disabled={disabled}

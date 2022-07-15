@@ -16,14 +16,14 @@ export const Control = (props: ControlProps) => {
   return (
     // <KeyGroup layout='vertical'>
     <>
-      {createToggleKey(Unicode.angle, 'trig', currentMode)}
-      {createToggleKey('', 'default', currentMode)}
-      {createToggleKey('', 'default', currentMode)}
-      {createToggleKey('', 'default', currentMode)}
-      {createToggleKey(Unicode.shift, 'shift', currentMode)}
-      {createToggleKey(Unicode.alphaMega, 'alphaMega', currentMode)}
-      {createToggleKey(Unicode.alphaMicron, 'alphaMicron', currentMode)}
-      {commandKey('EXE', currentLine.length === 0, (dispatch) => dispatch(calculate()))}
+      {createToggleKey('trig', Unicode.angle, 'trig', currentMode)}
+      {createToggleKey('logic', '', 'default', currentMode)}
+      {createToggleKey('alt', '', 'default', currentMode)}
+      {createToggleKey('shift', Unicode.shift, 'shift', currentMode)}
+      {createToggleKey('constant', '', 'default', currentMode)}
+      {createToggleKey('alphaMega', Unicode.alphaMega, 'alphaMega', currentMode)}
+      {createToggleKey('alphaMinor', Unicode.alphaMicron, 'alphaMicron', currentMode)}
+      {commandKey('execute', 'EXE', currentLine.length === 0, (dispatch) => dispatch(calculate()))}
     </>
     // </KeyGroup>
   )

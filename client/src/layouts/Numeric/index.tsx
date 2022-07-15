@@ -14,42 +14,49 @@ export const Numeric = (props: NumericProps) => {
     // <KeyGroup layout='rectangular' columns={3}>
     <>
       {createKey(
+        'seven',
         main('7'),
         alphaMega('P'),
         alphaMicron('p'),
         trig('csc', true)
       )}
       {createKey(
+        'eight',
         main('8'),
         alphaMega('Q'),
         alphaMicron('q'),
         trig('csch', true)
       )}
       {createKey(
+        'nine',
         main('9'),
         alphaMega('R'),
         alphaMicron('r'),
         trig('acsc', true)
       )}
       {createKey(
+        'four',
         main('4'),
         alphaMega('T'),
         alphaMicron('t'),
         trig('sec', true)
       )}
       {createKey(
+        'five',
         main('5'),
         alphaMega('U'),
         alphaMicron('u'),
         trig('sech', true)
       )}
       {createKey(
+        'six',
         main('6'),
         alphaMega('V'),
         alphaMicron('v'),
         trig('asec', true)
       )}
       {createKey(
+        'one',
         main('1'),
         shift(Unicode.i),
         alphaMega('X'),
@@ -57,6 +64,7 @@ export const Numeric = (props: NumericProps) => {
         trig('cot', true)
       )}
       {createKey(
+        'two',
         main('2'),
         shift(Unicode.e),
         alphaMega('Y'),
@@ -64,6 +72,7 @@ export const Numeric = (props: NumericProps) => {
         trig('coth', true)
       )}
       {createKey(
+        'three',
         main('3'),
         shift(Unicode.pi),
         alphaMega('Z'),
@@ -71,18 +80,21 @@ export const Numeric = (props: NumericProps) => {
         trig('acot', true)
       )}
       {createKey(
+        'zero',
         main('0'),
         shift(Unicode.infinity),
         alphaMega(Unicode.space, false, ' '),
         alphaMicron(Unicode.space, false, ' ')
       )}
       {createKey(
+        'decimal',
         main('.'),
         shift(Unicode.euler),
         alphaMega(':'),
         alphaMicron(':')
       )}
       {createKey(
+        'assign',
         main('<-'),
         shift('nil'),
         alphaMega('<-'),
