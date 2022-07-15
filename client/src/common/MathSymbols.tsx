@@ -12,6 +12,7 @@ export enum Unicode {
   division = "\u00f7",
   shift = "/=",
   alt = "\u2325",
+  logic = "\u2234",
   space = "\u23d8",
   exponent = "\u2303",
   i = "\ud835\udc8a",

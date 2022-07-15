@@ -1,29 +1,23 @@
 import React from 'react';
-import { KeyGroup } from '../../features/KeyGroup';
-import { 
-  Key, commandKey,
+import {
   createKey, main, shift, alphaMega, alphaMicron, trig,
   alt, logic, constant
 } from '../../features/Key';
 import { Unicode, functional } from '../../common/MathSymbols';
-import { useAppSelector } from '../../app/hooks';
-import { deleteLast } from '../../features/Terminal/Terminal.slice';
 
 export interface FunctionalProps {
 
 }
 
 export const Functional = (args: FunctionalProps) => {
-  const currentLine = useAppSelector(state => state.terminal.currentLine);
-
   return (
-    // <KeyGroup layout='rectangular' columns={3}>
     <>
       {createKey(
         'var',
         main(functional.variables, false, 'x'),
         alphaMega('A'),
-        alphaMicron('a')
+        alphaMicron('a'),
+        trig(Unicode.theta)
       )}
       {createKey(
         'diff',
@@ -34,12 +28,11 @@ export const Functional = (args: FunctionalProps) => {
         trig('sin', true)
       )}
       {createKey(
-        'comb',
-        main('nPr', true, 'P'),
-        shift('nCr', true, 'C'),
-        alphaMega('C'),
-        alphaMicron('c'),
-        trig('sinh', true)
+        'ans',
+        main('ANS'),
+        alphaMega('G'),
+        alphaMicron('g'),
+        trig('cos', true)
       )}
       {createKey(
         'fact',
@@ -58,9 +51,17 @@ export const Functional = (args: FunctionalProps) => {
       )}
       {createKey(
         '',
-        alphaMega('G'),
-        alphaMicron('g'),
-        trig('cos', true)
+        alphaMega('E'),
+        alphaMicron('e'),
+        trig('asinh', true)
+      )}
+      {createKey(
+        'comb',
+        main('nPr', true, 'P'),
+        shift('nCr', true, 'C'),
+        alphaMega('C'),
+        alphaMicron('c'),
+        trig('sinh', true)
       )}
       {createKey(
         'comma',
@@ -109,6 +110,5 @@ export const Functional = (args: FunctionalProps) => {
         trig('tanh', true)
       )}
     </>
-    // </KeyGroup>
   )
 }
