@@ -16,17 +16,6 @@ export const Togglable = (props: TogglableProps) => {
   const currentLine = useAppSelector(state => state.terminal.currentLine);
   return (
     <KeyGroup layout='horizontal' fullWidth>
-      {createToggleKey(Unicode.angle, 'trig', currentMode)}
-      <Key 
-        default={{type: 'default', display: ''}}
-      />
-      <Key 
-        default={{type: 'default', display: ''}}
-      />
-      <Key 
-        default={{type: 'default', display: ''}}
-      />
-      {commandKey('DEL', currentLine.length === 0, (dispatch) => dispatch(deleteLast()))}
     </KeyGroup>
   )
 }

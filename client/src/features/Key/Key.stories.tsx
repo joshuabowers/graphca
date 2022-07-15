@@ -2,7 +2,7 @@ import React from 'react';
 import { Story } from '@storybook/react';
 
 import { Key, KeyProps } from './index';
-import { ModeProps } from '../Mode';
+import { ModeProps, ModeType } from '../Mode';
 import { PI, H, Exponent, Shift, Alpha, AlphaLock, Multiply, R } from '../Mode/Mode.stories'
 
 export default {
@@ -14,24 +14,30 @@ const Template: Story<KeyProps> = (args) => <Key {...args} />;
 
 export const Singleton = Template.bind({});
 Singleton.args = {
-  default: Shift.args as ModeProps
+  modes: new Map<ModeType, ModeProps>([['default', Shift.args as ModeProps]])
 }
 
 export const TwoStateShift = Template.bind({});
 TwoStateShift.args = {
-  default: Alpha.args as ModeProps,
-  shift: AlphaLock.args as ModeProps
+  modes: new Map<ModeType, ModeProps>([
+    ['default', Alpha.args as ModeProps],
+    ['shift', AlphaLock.args as ModeProps]
+  ])
 }
 
 export const TwoStateAlpha = Template.bind({});
 TwoStateAlpha.args = {
-  default: Multiply.args as ModeProps,
-  alphaMega: R.args as ModeProps
+  modes: new Map<ModeType, ModeProps>([
+    ['default', Multiply.args as ModeProps],
+    ['alphaMega', R.args as ModeProps]
+  ])
 }
 
 export const ThreeState = Template.bind({});
 ThreeState.args = {
-  default: Exponent.args as ModeProps, 
-  shift: PI.args as ModeProps, 
-  alphaMega: H.args as ModeProps
+  modes: new Map<ModeType, ModeProps>([
+    ['default', Exponent.args as ModeProps],
+    ['shift', PI.args as ModeProps],
+    ['alphaMega', H.args as ModeProps]
+  ])
 }

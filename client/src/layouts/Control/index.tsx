@@ -15,6 +15,10 @@ export const Control = (props: ControlProps) => {
   const currentLine = useAppSelector(state => state.terminal.currentLine)
   return (
     <KeyGroup layout='vertical'>
+      {createToggleKey(Unicode.angle, 'trig', currentMode)}
+      {createToggleKey('', 'default', currentMode)}
+      {createToggleKey('', 'default', currentMode)}
+      {createToggleKey('', 'default', currentMode)}
       {createToggleKey(Unicode.shift, 'shift', currentMode)}
       {createToggleKey(Unicode.alphaMega, 'alphaMega', currentMode)}
       {createToggleKey(Unicode.alphaMicron, 'alphaMicron', currentMode)}

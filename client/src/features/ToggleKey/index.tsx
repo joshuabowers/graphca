@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './ToggleKey.module.css'
 
-import { KeyProps } from '../Key';
+import { KeyProps, main, indexByType } from '../Key';
 import { Mode, ModeType } from '../Mode';
 import { useAppDispatch } from '../../app/hooks';
 import { MathSymbols } from '../../common/MathSymbols';
@@ -19,7 +19,8 @@ export const ToggleKey = (props: ToggleKeyProps) => {
 
   const handler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setActivate(true)
-    props[keyMode]?.activate?.(dispatch)
+    props.modes.get(keyMode)?.activate?.(dispatch)
+    // props[keyMode]?.activate?.(dispatch)
   }
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export const ToggleKey = (props: ToggleKeyProps) => {
         checked={props.toggled}
         onChange={handler}
       />
-      <Mode {...props.default} />
+      <Mode {...props.modes.get('default') ?? main('')} />
     </label>
   )
 }
@@ -47,11 +48,11 @@ export const ToggleKey = (props: ToggleKeyProps) => {
 export const createToggleKey = (display: MathSymbols, mode: ModeType, currentMode: ModeType) => {
   const toggled = currentMode === mode
   return <ToggleKey
-    default={{
-      type: 'default',
-      display,
+    modes={indexByType([{
+      type: 'default', 
+      display, 
       activate: (dispatch) => dispatch(changeMode(toggled ? 'default' : mode))
-    }}
+    }])}
     toggled={toggled}
   />
 }

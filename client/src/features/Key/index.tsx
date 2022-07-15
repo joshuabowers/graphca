@@ -6,12 +6,9 @@ import { MathSymbols } from '../../common/MathSymbols';
 import styles from './Key.module.css';
 
 export interface KeyProps {
-  default: ModeProps,
-  alphaMega?: ModeProps,
-  alphaMicron?: ModeProps,
-  shift?: ModeProps,
-  trig?: ModeProps,
-  modeOverride?: 'shift' | 'alphaMega' | 'alphaMicron' | 'trig',
+  modes: Map<ModeType, ModeProps>,
+  modeOverride?: Exclude<ModeType, 'default'>,
+  isCommand?: boolean
   disabled?: boolean
 }
 
@@ -24,7 +21,7 @@ export const Key = (props: KeyProps) => {
     useAppSelector(state => state.keypad.currentMode) 
     ?? props.modeOverride 
     ?? 'default'
-  const currentMode = props[keyMode];
+  const currentMode = props.modes.get(keyMode);
   const appliedStyles = [styles.normal, styles[keyMode]];
   const [activated, setActivate] = useState(false)
 
@@ -43,7 +40,9 @@ export const Key = (props: KeyProps) => {
 
   if(activated){ appliedStyles.push(styles.activated) }
 
-  const modeProps = currentMode ?? props.default
+  const modeProps = currentMode 
+    ?? (props.isCommand ? props.modes.get('default') : undefined) 
+    ?? main('')
 
   return (
     <button 
@@ -57,8 +56,8 @@ export const Key = (props: KeyProps) => {
   )
 }
 
-const indexByType = (modes: ModeProps[]) =>
-  new Map(modes.map(m => [m.type, m]))
+export const indexByType = (modes: ModeProps[]) =>
+  new Map(modes.map(m => [m.type ?? 'default', m]))
 
 export type ModeMap = ReturnType<typeof indexByType>;
 
@@ -68,22 +67,16 @@ const propsOrDisabled = (indexed: ModeMap, key: ModeType) =>
 export const createKey = (...modes: ModeProps[]) => {
   const indexed = indexByType(modes)
   return <Key 
-    default={propsOrDisabled(indexed, 'default')} 
-    shift={propsOrDisabled(indexed, 'shift')}
-    alphaMega={propsOrDisabled(indexed, 'alphaMega')}
-    alphaMicron={propsOrDisabled(indexed, 'alphaMicron')}
-    trig={propsOrDisabled(indexed, 'trig')}
+    modes={indexed}
   />
 }
 
 export const commandKey = (display: MathSymbols, disabled: boolean, activate: (dispatch: AppDispatch) => void) => {
-  const props = {display, activate}
+  const props: ModeProps = {type: 'default', display, activate}
+  const modes = indexByType([props])
   return <Key 
-    default={props}
-    shift={props}
-    alphaMega={props}
-    alphaMicron={props}
-    trig={props}
+    modes={modes}
+    isCommand
     disabled={disabled}
   />
 }

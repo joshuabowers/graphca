@@ -3,6 +3,7 @@ import { Story } from '@storybook/react';
 
 import { ToggleKey, ToggleKeyProps } from '.';
 import { Unicode } from '../../common/MathSymbols';
+import { ModeType, ModeProps } from '../Mode';
 
 export default {
   title: 'Features/ToggleKey',
@@ -13,17 +14,23 @@ const Template: Story<ToggleKeyProps> = (args) => <ToggleKey {...args} />
 
 export const Default = Template.bind({})
 Default.args = {
-  default: {type: 'default', display: 'ALT'}
+  modes: new Map<ModeType, ModeProps>([
+    ['default', {type: 'default', display: 'ALT'}]
+  ])
 }
 
 export const Toggled = Template.bind({})
 Toggled.args = {
   toggled: true,
-  default: {type: 'default', display: Unicode.shift, displayHint: 'unicode'}
+  modes: new Map<ModeType, ModeProps>([
+    ['default', {type: 'default', display: Unicode.shift, displayHint: 'unicode'}]
+  ])
 }
 
 export const NotToggled = Template.bind({})
 NotToggled.args = {
   toggled: false,
-  default: {type: 'default', display: Unicode.alphaMega, displayHint: 'unicode'}
+  modes: new Map<ModeType, ModeProps>([
+    ['default', {type: 'default', display: Unicode.alphaMega, displayHint: 'unicode'}]
+  ])
 }

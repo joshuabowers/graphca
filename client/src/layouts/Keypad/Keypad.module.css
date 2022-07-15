@@ -1,6 +1,9 @@
 .keypad {
   display: grid;
-  grid: auto-flow auto / repeat(3, auto);
+  /* grid: auto-flow auto / repeat(3, auto); */
+  grid-template-areas:
+    "control functional arithmetic"
+    "control numeric    arithmetic";
   place-content: center;
   place-self: center;
   gap: 0.5em;

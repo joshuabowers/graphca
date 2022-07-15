@@ -14,11 +14,11 @@ export interface KeypadProps {
 export const Keypad = (props: KeypadProps) => {
   return (
     <div className={styles.keypad}>
-      <Togglable />
-      <Functional />
+      {/* <Togglable /> */}
       <Control />
-      <Numeric />
+      <Functional />
       <Arithmetic />
+      <Numeric />
     </div>
   );
 }
