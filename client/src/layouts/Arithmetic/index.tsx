@@ -16,7 +16,8 @@ export const Arithmetic = (props: ArithmeticProps) => {
   const currentLine = useAppSelector(state => state.terminal.currentLine);
 
   return (
-    <KeyGroup layout='vertical'>
+    // <KeyGroup layout='vertical'>
+    <>
       {commandKey('DEL', currentLine.length === 0, (dispatch) => dispatch(deleteLast()))}
       {createKey(
         main(Unicode.gamma, true),
@@ -63,6 +64,7 @@ export const Arithmetic = (props: ArithmeticProps) => {
         alphaMega('#'),
         alphaMicron('#')
       )}
-    </KeyGroup>
+    </>
+    // </KeyGroup>
   );
 } 

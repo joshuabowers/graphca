@@ -16,7 +16,8 @@ export const Functional = (args: FunctionalProps) => {
   const currentLine = useAppSelector(state => state.terminal.currentLine);
 
   return (
-    <KeyGroup layout='rectangular' columns={3}>
+    // <KeyGroup layout='rectangular' columns={3}>
+    <>
       {createKey(
         main(functional.variables, false, 'x'),
         alphaMega('A'),
@@ -92,6 +93,7 @@ export const Functional = (args: FunctionalProps) => {
         alphaMicron('m'),
         trig('tanh', true)
       )}
-    </KeyGroup>
+    </>
+    // </KeyGroup>
   )
 }

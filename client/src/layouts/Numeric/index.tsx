@@ -11,7 +11,8 @@ export interface NumericProps {
 
 export const Numeric = (props: NumericProps) => {
   return (
-    <KeyGroup layout='rectangular' columns={3}>
+    // <KeyGroup layout='rectangular' columns={3}>
+    <>
       {createKey(
         main('7'),
         alphaMega('P'),
@@ -87,6 +88,7 @@ export const Numeric = (props: NumericProps) => {
         alphaMega('<-'),
         alphaMicron('<-')
       )}
-    </KeyGroup>
+    </>
+    // </KeyGroup>
   )
 }

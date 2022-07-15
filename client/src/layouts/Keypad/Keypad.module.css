@@ -1,9 +1,18 @@
 .keypad {
   display: grid;
-  /* grid: auto-flow auto / repeat(3, auto); */
-  grid-template-areas:
+  /* grid: auto-flow auto / repeat(5, auto); */
+  /* grid-template-areas:
     "control functional arithmetic"
-    "control numeric    arithmetic";
+    "control numeric    arithmetic"; */
+  grid-template-areas:
+    "trig       var   diff    comb   delete"
+    "logic      abs   .       .      fact"
+    "alt        comma open    close  square"
+    "shift      lb    ln      lg     raise"
+    "constant   seven eight   nine   divide"
+    "alphaMega  four  five    six    multiply"
+    "alphaMinor one   two     three  subtract"
+    "execute    zero  decimal assign add";
   place-content: center;
   place-self: center;
   gap: 0.5em;

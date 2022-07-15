@@ -14,7 +14,8 @@ export const Control = (props: ControlProps) => {
   const currentMode = useAppSelector(state => state.keypad.currentMode)
   const currentLine = useAppSelector(state => state.terminal.currentLine)
   return (
-    <KeyGroup layout='vertical'>
+    // <KeyGroup layout='vertical'>
+    <>
       {createToggleKey(Unicode.angle, 'trig', currentMode)}
       {createToggleKey('', 'default', currentMode)}
       {createToggleKey('', 'default', currentMode)}
@@ -23,6 +24,7 @@ export const Control = (props: ControlProps) => {
       {createToggleKey(Unicode.alphaMega, 'alphaMega', currentMode)}
       {createToggleKey(Unicode.alphaMicron, 'alphaMicron', currentMode)}
       {commandKey('EXE', currentLine.length === 0, (dispatch) => dispatch(calculate()))}
-    </KeyGroup>
+    </>
+    // </KeyGroup>
   )
 }
