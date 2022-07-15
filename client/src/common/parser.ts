@@ -21,6 +21,9 @@ const functional = peg([...functions.keys()].map(capture).join('|'))
 const factorialOPerator = peg(capture('!'))
 const assignmentOperators = peg(['<-'].map(capture).join('|'))
 
+const letterRange = `_a-zA-Z${Unicode.theta}`
+const validIdentifier = new RegExp(`[${letterRange}][${letterRange}0-9]*`, 'u')
+
 type Tail = {
   op: string,
   a: Base,
@@ -158,7 +161,7 @@ real:
 keywords: builtInFunction
 
 $real @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
-$variable @raw: !(keywords) [_a-zA-Z][_a-zA-Z0-9]*
+$variable @raw: !(keywords) ${validIdentifier}
 $i @raw: ${RegExp(Unicode.i, 'u')}
 $e @raw: ${RegExp(Unicode.e, 'u')}
 $euler @raw: ${RegExp(Unicode.euler, 'u')}

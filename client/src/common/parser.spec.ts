@@ -89,6 +89,46 @@ describe('parser', () => {
       expectObject('x', variable('x'))
     })
 
+    it('matches lowercase strings', () => {
+      expectObject('xyz', variable('xyz'))
+    })
+
+    it('matches uppercase strings', () => {
+      expectObject('XYZ', variable('XYZ'))
+    })
+
+    it('matches mixed case strings', () => {
+      expectObject('xYz', variable('xYz'))
+    })
+
+    it('matches intermixed digits', () => {
+      expectObject('x0', variable('x0'))
+    })
+
+    it('does not match leading digits', () => {
+      expect(() => parser.value('0y')).toThrow()
+    })
+
+    it('matches leading underscores', () => {
+      expectObject('_x', variable('_x'))
+    })
+
+    it('matches intermixed underscores', () => {
+      expectObject('x_', variable('x_'))
+    })
+
+    it('matches theta', () => {
+      expectObject(Unicode.theta, variable(Unicode.theta))
+    })
+
+    it('matches leading theta', () => {
+      expectObject(`${Unicode.theta}x`, variable(`${Unicode.theta}x`))
+    })
+
+    it('matches intermixed theta', () => {
+      expectObject(`x${Unicode.theta}`, variable(`x${Unicode.theta}`))
+    })
+
     it('does not match reserved words', () => {
       expect(() => parser.value('cos')).toThrow()
     })
