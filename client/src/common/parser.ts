@@ -65,7 +65,7 @@ const builtInFunction = (name: string, expression: Base): Base | undefined => {
 const unbox = (value: Base | undefined) => value?.$kind !== 'Nil' ? value : undefined
 
 export const parser = peg<Base>`
-expression: assignment
+expression: <a>assignment ${({a}) => assign('Ans', a, $context()).value}
 
 assignment:
 | <a>$variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b, $context()).value}

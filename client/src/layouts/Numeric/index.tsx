@@ -26,14 +26,14 @@ export const Numeric = (props: NumericProps) => {
         main('8'),
         alphaMega('Q'),
         alphaMicron('q'),
-        trig('csch', true)
+        trig('acsc', true)
       )}
       {createKey(
         'nine',
         main('9'),
         alphaMega('R'),
         alphaMicron('r'),
-        trig('acsc', true)
+        trig('csch', true)
       )}
       {createKey(
         'four',
@@ -47,14 +47,14 @@ export const Numeric = (props: NumericProps) => {
         main('5'),
         alphaMega('U'),
         alphaMicron('u'),
-        trig('sech', true)
+        trig('asec', true)
       )}
       {createKey(
         'six',
         main('6'),
         alphaMega('V'),
         alphaMicron('v'),
-        trig('asec', true)
+        trig('sech', true)
       )}
       {createKey(
         'one',
@@ -70,7 +70,7 @@ export const Numeric = (props: NumericProps) => {
         constant(Unicode.e),
         alphaMega('Y'),
         alphaMicron('y'),
-        trig('coth', true)
+        trig('acot', true)
       )}
       {createKey(
         'three',
@@ -78,7 +78,7 @@ export const Numeric = (props: NumericProps) => {
         constant(Unicode.pi),
         alphaMega('Z'),
         alphaMicron('z'),
-        trig('acot', true)
+        trig('coth', true)
       )}
       {createKey(
         'zero',

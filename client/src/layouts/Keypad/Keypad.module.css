@@ -25,8 +25,8 @@
     grid-template-areas:
       "trig       var   diff    ans    delete"
       "logic      abs   .       comb   fact"
-      "alt        comma open    close  square"
-      "shift      lb    ln      lg     raise"
+      "shift      comma open    close  square"
+      "alt        lb    ln      lg     raise"
       "constant   seven eight   nine   divide"
       "alphaMega  four  five    six    multiply"
       "alphaMinor one   two     three  subtract"

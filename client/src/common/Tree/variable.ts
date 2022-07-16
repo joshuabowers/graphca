@@ -10,8 +10,8 @@ export function variable(name: string, value?: Base) {
   return new Variable(name, value)
 }
 
-export function assign(name: string, value: Base, scope: Scope) {
+export function assign(name: string, value: Base, scope?: Scope) {
   const v = variable(name, value)
-  scope.set(name, v)
+  scope?.set(name, v)
   return v
 }

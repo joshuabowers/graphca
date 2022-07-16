@@ -15,9 +15,9 @@ export const Arithmetic = (props: ArithmeticProps) => {
         'square',
         main(functional.squared, false, '^2'),
         shift(Unicode.squareRoot, true),
-        alphaMega('N'),
-        alphaMicron('n'),
-        trig('atan', true)
+        alphaMega('K'),
+        alphaMicron('k'),
+        trig('acosh', true)
       )}
       {createKey(
         'raise',

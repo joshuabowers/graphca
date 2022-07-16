@@ -512,6 +512,10 @@ describe('parser', () => {
     it('matches assignments of nil by unsetting variable', () => {
       expectInScope(scope(), 'x <- nil', variable('x', nil()))
     })
+
+    it('assigns the value of the expression automatically to Ans', () => {
+      expectInScope(scope(), '2 * 5', variable('Ans', real(10)))
+    })
   })
 
   describe('of invocations', () => {

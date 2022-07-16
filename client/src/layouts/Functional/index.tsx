@@ -25,42 +25,41 @@ export const Functional = (args: FunctionalProps) => {
         shift(Unicode.integral, true),
         alphaMega('B'),
         alphaMicron('b'),
-        trig('sin', true)
       )}
       {createKey(
         'ans',
-        main('ANS'),
-        alphaMega('G'),
-        alphaMicron('g'),
-        trig('cos', true)
+        main('Ans'),
+        alphaMega('C'),
+        alphaMicron('c')
       )}
       {createKey(
         'fact',
         main('!'),
         shift(Unicode.gamma, true),
         alt(Unicode.digamma, true),
-        alphaMega('D'),
-        alphaMicron('d'),
-        trig('asin', true)
+        alphaMega('G'),
+        alphaMicron('g'),
+        trig('asinh', true)
       )}
       {createKey(
         'abs',
         main('abs', true),
-        alphaMega('F'),
-        alphaMicron('f')
+        alphaMega('D'),
+        alphaMicron('d'),
+        trig('sin', true)
       )}
       {createKey(
         '',
         alphaMega('E'),
         alphaMicron('e'),
-        trig('asinh', true)
+        trig('asin', true)
       )}
       {createKey(
         'comb',
         main('nPr', true, 'P'),
         shift('nCr', true, 'C'),
-        alphaMega('C'),
-        alphaMicron('c'),
+        alphaMega('F'),
+        alphaMicron('f'),
         trig('sinh', true)
       )}
       {createKey(
@@ -68,7 +67,7 @@ export const Functional = (args: FunctionalProps) => {
         main(','),
         alphaMega('H'),
         alphaMicron('h'),
-        trig('cosh', true)
+        trig('cos', true)
       )}
       {createKey(
         'open',
@@ -86,27 +85,28 @@ export const Functional = (args: FunctionalProps) => {
         alt(']'),
         alphaMega('J'),
         alphaMicron('j'),
-        trig('acosh', true)
+        trig('cosh', true)
       )}
       {createKey(
         'lb',
         main('lb', true),
-        alphaMega('K'),
-        alphaMicron('k')
-      )}
-      {createKey(
-        'ln',
-        main('ln', true),
-        shift('log', true),
         alphaMega('L'),
         alphaMicron('l'),
         trig('tan', true)
       )}
       {createKey(
-        'lg',
-        main('lg', true),
+        'ln',
+        main('ln', true),
+        shift('log', true),
         alphaMega('M'),
         alphaMicron('m'),
+        trig('atan', true)
+      )}
+      {createKey(
+        'lg',
+        main('lg', true),
+        alphaMega('N'),
+        alphaMicron('n'),
         trig('tanh', true)
       )}
     </>
