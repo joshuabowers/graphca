@@ -18,7 +18,7 @@ export const Control = (props: ControlProps) => {
       {createToggleKey('logic', Unicode.logic, 'logic', currentMode)}
       {createToggleKey('alt', Unicode.alt, 'alt', currentMode)}
       {createToggleKey('shift', Unicode.shift, 'shift', currentMode)}
-      {createToggleKey('constant', '', 'constant', currentMode)}
+      {createToggleKey('constant', Unicode.constant, 'constant', currentMode)}
       {createToggleKey('alphaMega', Unicode.alphaMega, 'alphaMega', currentMode)}
       {createToggleKey('alphaMinor', Unicode.alphaMicron, 'alphaMicron', currentMode)}
       {commandKey('execute', 'EXE', currentLine.length === 0, (dispatch) => dispatch(calculate()))}

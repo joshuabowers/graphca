@@ -17,7 +17,8 @@ export const Functional = (args: FunctionalProps) => {
         main(functional.variables, false, 'x'),
         alphaMega('A'),
         alphaMicron('a'),
-        trig(Unicode.theta)
+        trig(Unicode.theta),
+        logic('==')
       )}
       {createKey(
         'diff',
@@ -25,12 +26,14 @@ export const Functional = (args: FunctionalProps) => {
         shift(Unicode.integral, true),
         alphaMega('B'),
         alphaMicron('b'),
+        logic('!=')
       )}
       {createKey(
         'ans',
         main('Ans'),
         alphaMega('C'),
-        alphaMicron('c')
+        alphaMicron('c'),
+        logic(Unicode.not)
       )}
       {createKey(
         'fact',
@@ -39,20 +42,23 @@ export const Functional = (args: FunctionalProps) => {
         alt(Unicode.digamma, true),
         alphaMega('G'),
         alphaMicron('g'),
-        trig('asinh', true)
+        trig('asinh', true),
+        logic('>')
       )}
       {createKey(
         'abs',
         main('abs', true),
         alphaMega('D'),
         alphaMicron('d'),
-        trig('sin', true)
+        trig('sin', true),
+        logic('<')
       )}
       {createKey(
         '',
         alphaMega('E'),
         alphaMicron('e'),
-        trig('asin', true)
+        trig('asin', true),
+        logic('<=')
       )}
       {createKey(
         'comb',
@@ -60,7 +66,8 @@ export const Functional = (args: FunctionalProps) => {
         shift('nCr', true, 'C'),
         alphaMega('F'),
         alphaMicron('f'),
-        trig('sinh', true)
+        trig('sinh', true),
+        logic('>=')
       )}
       {createKey(
         'comma',

@@ -1,5 +1,4 @@
 import React from 'react';
-import { KeyGroup } from '../../features/KeyGroup';
 import { 
   createKey, main, shift, alphaMega, alphaMicron, trig,
   constant, alt, logic
@@ -12,7 +11,6 @@ export interface NumericProps {
 
 export const Numeric = (props: NumericProps) => {
   return (
-    // <KeyGroup layout='rectangular' columns={3}>
     <>
       {createKey(
         'seven',
@@ -85,23 +83,25 @@ export const Numeric = (props: NumericProps) => {
         main('0'),
         constant(Unicode.infinity),
         alphaMega(Unicode.space, false, ' '),
-        alphaMicron(Unicode.space, false, ' ')
+        alphaMicron(Unicode.space, false, ' '),
+        logic('false')
       )}
       {createKey(
         'decimal',
         main('.'),
         constant(Unicode.euler),
         alphaMega(':'),
-        alphaMicron(':')
+        alphaMicron(':'),
+        logic('true')
       )}
       {createKey(
         'assign',
         main('<-'),
         constant('nil'),
         alphaMega('<-'),
-        alphaMicron('<-')
+        alphaMicron('<-'),
+        logic(Unicode.empty)
       )}
     </>
-    // </KeyGroup>
   )
 }

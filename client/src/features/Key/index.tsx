@@ -66,9 +66,6 @@ export const indexByType = (modes: ModeProps[]) =>
 
 export type ModeMap = ReturnType<typeof indexByType>;
 
-const propsOrDisabled = (indexed: ModeMap, key: ModeType) =>
-  indexed.get(key) ?? {type: key, display: ''}
-
 export const createKey = (cellName: string, ...modes: ModeProps[]) => {
   const indexed = indexByType(modes)
   return <Key 
