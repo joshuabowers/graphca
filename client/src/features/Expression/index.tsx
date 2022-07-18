@@ -4,7 +4,7 @@ import { is } from '../../common/Tree/is'
 import styles from './Expression.module.css'
 import {
   Base, Unary, Binary,
-  Real, Complex, Nil, Variable, Addition, Multiplication, Exponentiation,
+  Real, Complex, Boolean, Nil, Variable, Addition, Multiplication, Exponentiation,
   Logarithm, AbsoluteValue, Gamma, Factorial,
   Trigonometric, Arcus, Hyperbolic, AreaHyperbolic,
   Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
@@ -151,6 +151,9 @@ const whenComplex: when<Complex> = e =>
 const whenNil: when<Nil> = e =>
   <span className={styles.nothing}>nil</span>
 
+const whenBoolean: when<Boolean> = e =>
+  <span className={styles.boolean}>{e.value.toString()}</span>
+
 const whenVariable: when<Variable> = e => (
   e.value
     ? componentize(e.value)
@@ -268,6 +271,7 @@ export const componentize: ComponentizeFn = multi(
   method(is(Real), whenReal),
   method(is(Complex), whenComplex),
   method(is(Nil), whenNil),
+  method(is(Boolean), whenBoolean),
   method(is(Variable), whenVariable),
 
   method(is(Addition), whenAddition),

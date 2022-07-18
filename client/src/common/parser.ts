@@ -1,7 +1,7 @@
 import { Unicode } from './MathSymbols'
 import {
   Base,
-  real, complex, nil, variable, assign,
+  real, complex, bool, nil, variable, assign,
   raise, negate, factorial, polygamma, digamma, log,
   differentiate, invoke,
   operators, additive, multiplicative, functions, permute, combine
@@ -140,6 +140,7 @@ primitive:
 constant:
 | complex
 | real
+| boolean
 
 variable:
 | <name>$variable ${({name}) => unbox($context()?.get(name)?.value) ?? variable(name)}
@@ -158,7 +159,15 @@ real:
 | $pi ${() => real(Math.PI)}
 | $infinity ${() => real(Infinity)}
 
-keywords: builtInFunction
+boolean:
+| $true ${() => bool(true)}
+| $false ${() => bool(false)}
+
+keywords: 
+| builtInFunction
+| $nil
+| $true
+| $false
 
 $real @raw: /(?:0|[1-9][0-9]*|(?=\.))(?:\.[0-9]+)?(?:E\-?(?:[1-9][0-9]*)+)?/
 $variable @raw: !(keywords) ${validIdentifier}
@@ -168,4 +177,6 @@ $euler @raw: ${RegExp(Unicode.euler, 'u')}
 $pi @raw: ${RegExp(Unicode.pi, 'u')}
 $infinity @raw: ${RegExp(Unicode.infinity, 'u')}
 $nil @raw: /nil/
+$true @raw: /true/
+$false @raw: /false/
 `

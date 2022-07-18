@@ -4,7 +4,7 @@ import { parser, Scope } from "../../common/parser";
 import { Expression } from "../Expression";
 import { graph, removePlot } from '../Graph/Graph.slice';
 import { forget } from '../Terminal/Terminal.slice';
-import { stringify, Nil, Real, Complex } from '../../common/Tree';
+import { stringify, Nil, Real, Complex, Boolean } from '../../common/Tree';
 import { is } from '../../common/Tree/is';
 import styles from './Parse.module.css'
 
@@ -23,6 +23,7 @@ export const Parse = (props: ParseProps) => {
     const asString = stringify(output)
     const isPlotted = plotted.find(item => item.enteredAt === props.enteredAt)
     const canPlot = !(is(Nil)(output)
+      || is(Boolean)(output)
       || (is(Real)(output) && !Number.isFinite(output.value))
       || (is(Complex)(output) && (!Number.isFinite(output.a) || !Number.isFinite(output.b))))
 

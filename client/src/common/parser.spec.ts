@@ -2,7 +2,7 @@ import { Unicode } from './MathSymbols';
 import {
   Base, Variable,
   add, subtract, multiply, divide, raise, double, square, sqrt,
-  real, complex, variable, 
+  real, complex, bool, variable, 
   negate, abs,
   lb, ln, lg, log,
   cos, sin, tan, sec, csc, cot,
@@ -81,6 +81,14 @@ describe('parser', () => {
 
     it('matches nil', () => {
       expectObject('nil', nil())
+    })
+
+    it('matches true', () => {
+      expectObject('true', bool(true))
+    })
+
+    it('matches false', () => {
+      expectObject('false', bool(false))
     })
   })
 

@@ -1,7 +1,7 @@
 import { Unicode } from '../../common/MathSymbols'
 import {
   Base,
-  real, complex, nil, variable, add, subtract, multiply, divide, negate,
+  real, complex, bool, nil, variable, add, subtract, multiply, divide, negate,
   raise, reciprocal, square, log, lb, ln, lg,
   cos, sin, tan, sec, csc, cot,
   acos, asin, atan, asec, acsc, acot,
@@ -63,6 +63,16 @@ describe(Expression, () => {
   describe('of nil', () => {
     it('renders nil as nil', () => {
       expectMarkup(nil(), '.nothing', 'nil')
+    })
+  })
+
+  describe('of booleans', () => {
+    it('renders true as true', () => {
+      expectMarkup(bool(true), '.boolean', 'true')
+    })
+
+    it('renders false as false', () => {
+      expectMarkup(bool(false), '.boolean', 'false')
     })
   })
 

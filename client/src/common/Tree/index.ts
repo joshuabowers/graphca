@@ -4,6 +4,7 @@ import { Unary } from './unary'
 import { Binary } from './binary'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
+import { Boolean, bool } from './boolean'
 import { Nil, nil } from './nil'
 import { Variable, variable, assign } from './variable'
 import { Addition, add, subtract } from './addition'
@@ -43,7 +44,7 @@ import { invoke } from './invocation'
 import { stringify } from './stringify'
 
 export { 
-  Base, Unary, Binary, Real, Complex, Nil, Variable,
+  Base, Unary, Binary, Real, Complex, Boolean, Nil, Variable,
   Addition, Multiplication, Exponentiation, AbsoluteValue,
   Trigonometric, Arcus, Hyperbolic, AreaHyperbolic,
   Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
@@ -57,7 +58,7 @@ export {
   Derivative
 }
 export {
-  real, complex, nil, variable, assign,
+  real, complex, bool, nil, variable, assign,
   add, subtract, multiply, divide, raise, abs,
   double, negate, square, sqrt, reciprocal,
   cos, sin, tan, sec, csc, cot,
