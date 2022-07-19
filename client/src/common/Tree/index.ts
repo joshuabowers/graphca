@@ -42,6 +42,7 @@ import { Permutation, Combination, permute, combine } from './combinatorics'
 import { Derivative, differentiate } from './differentiation'
 import { invoke } from './invocation'
 import { stringify } from './stringify'
+import { LogicalComplement, not } from './logicalComplement'
 
 export { 
   Base, Unary, Binary, Real, Complex, Boolean, Nil, Variable,
@@ -55,7 +56,7 @@ export {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Logarithm, Factorial, Gamma, Polygamma, Permutation, Combination,
-  Derivative
+  Derivative, LogicalComplement
 }
 export {
   real, complex, bool, nil, variable, assign,
@@ -66,7 +67,8 @@ export {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   log, lb, ln, lg, factorial, gamma, polygamma, digamma,
-  permute, combine, differentiate, invoke, stringify
+  permute, combine, differentiate, invoke, stringify,
+  not
 }
 
 type Additive = typeof add | typeof subtract

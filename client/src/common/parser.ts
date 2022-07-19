@@ -1,7 +1,7 @@
 import { Unicode } from './MathSymbols'
 import {
   Base,
-  real, complex, bool, nil, variable, assign,
+  real, complex, bool, not, nil, variable, assign,
   raise, negate, factorial, polygamma, digamma, log,
   differentiate, invoke,
   operators, additive, multiplicative, functions, permute, combine
@@ -101,6 +101,7 @@ invocation: (
 
 group:
 | negationOperator !complex <>group ${({group}) => negate(group)}
+| $logicalComplement <>group ${({group}) => not(group)}
 | functional
 | derivative
 | '(' expression ')'
@@ -179,4 +180,5 @@ $infinity @raw: ${RegExp(Unicode.infinity, 'u')}
 $nil @raw: /nil/
 $true @raw: /true/
 $false @raw: /false/
+$logicalComplement @raw: ${RegExp(Unicode.not, 'u')}
 `

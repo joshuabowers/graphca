@@ -551,4 +551,14 @@ describe('parser', () => {
       expectObject('(x*2)(y+3)(1)', real(8), scope())
     })
   })
+
+  describe('of logical operations', () => {
+    it('matches the logical complement of false', () => {
+      expectObject(`${Unicode.not}false`, bool(true))
+    })
+
+    it('matches the logical complement of true', () => {
+      expectObject(`${Unicode.not}true`, bool(false))
+    })
+  })
 })

@@ -15,7 +15,7 @@ import {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Permutation, Combination,
-  real, multiply, negate, reciprocal, Polygamma
+  real, multiply, negate, reciprocal, Polygamma, LogicalComplement
 } from '../../common/Tree'
 import { Unicode } from '../../common/MathSymbols'
 
@@ -228,6 +228,14 @@ const whenHyperbolic = createUnary('hyperbolic', hyperbolic)
 const whenAreaHyperbolic = createUnary('areaHyperbolic', areaHyperbolic)
 const whenUnary = createUnary('unary', unary)
 
+const whenLogicalComplement: when<LogicalComplement> = e => {
+  const child = componentize(e.expression)
+  const shouldWrap = e.expression instanceof Binary
+  return <span className={[styles.functional, styles.unary].join(' ')}>
+    {Unicode.not}{shouldWrap ? <>({child})</> : child}
+  </span>
+}
+
 const whenFactorial: when<Factorial> = e => {
   const child = componentize(e.expression)
   const shouldWrap = e.expression instanceof Binary
@@ -265,6 +273,7 @@ export type ComponentizeFn = Multi
   & typeof whenHyperbolic & typeof whenAreaHyperbolic
   & typeof whenUnary & typeof whenFactorial & typeof whenPolygamma
   & typeof whenPermutation & typeof whenCombination
+  & typeof whenLogicalComplement
   & typeof whenBase
 
 export const componentize: ComponentizeFn = multi(
@@ -284,11 +293,13 @@ export const componentize: ComponentizeFn = multi(
   method(is(Hyperbolic), whenHyperbolic),
   method(is(AreaHyperbolic), whenAreaHyperbolic),
   method(is(Factorial), whenFactorial),
+  method(is(LogicalComplement), whenLogicalComplement),
   method(is(Unary), whenUnary),
   method(is(Polygamma), whenPolygamma),
 
   method(is(Permutation), whenPermutation),
   method(is(Combination), whenCombination),
+
 
   method(is(Base), whenBase)
 )

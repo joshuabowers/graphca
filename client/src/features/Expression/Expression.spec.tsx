@@ -7,7 +7,7 @@ import {
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  abs, factorial, gamma, polygamma, permute, combine
+  abs, factorial, gamma, polygamma, permute, combine, not
 } from '../../common/Tree'
 import { Expression } from '.'
 import { shallow } from 'enzyme'
@@ -236,7 +236,11 @@ describe(Expression, () => {
   
     it('renders absolute values', () => {
       expectMarkup(abs(variable('x')), '.functional.unary', 'abs(x)')
-    })  
+    })
+
+    it('renders logical complements', () => {
+      expectMarkup(not(variable('x')), '.functional.unary', `${Unicode.not}x`)
+    })
   })
 
   describe('of mixed operations', () => {
