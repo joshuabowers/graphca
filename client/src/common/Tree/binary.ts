@@ -3,38 +3,48 @@ import { is } from './is'
 import { Base, Constructor } from './Expression'
 import { Real, real } from './real'
 import { Complex, complex } from './complex'
+import { Boolean } from './boolean'
 import { Nil } from './nil'
 
 export abstract class Binary extends Base {
   constructor(readonly left: Base, readonly right: Base) { super() }
 }
 
+const coerce = (b: Boolean) => real(b.value ? 1 : 0)
+
 type when<P, R = P> = (left: P, right: P) => R
 type cast<L, R, V> = (left: L, right: R) => V
 
 type BinaryFn<T> = Multi
-  & when<Real>
-  & cast<Real, Complex, Complex>
-  & cast<Complex, Real, Complex>
-  & when<Complex>
-  & cast<Nil, Base, Real>
-  & cast<Base, Nil, Real>
-  & when<Base, T>
+& when<Real>
+& cast<Real, Complex, Complex>
+& cast<Complex, Real, Complex>
+& when<Complex>
+& when<Boolean>
+& cast<Boolean, Base, Real>
+& cast<Base, Boolean, Real>
+& cast<Nil, Base, Real>
+& cast<Base, Nil, Real>
+& when<Base, T>
 
 export const binary = <T extends Binary>(type: Constructor<T>) =>
   (
     whenRxR: when<Real>,
-    whenCxC: when<Complex>
+    whenCxC: when<Complex>,
+    whenBxB?: when<Boolean>
   ) => {
-    const whenBxB: when<Base, T> = (l, r) => new type(l, r)
+    const whenBaseXBase: when<Base, T> = (l, r) => new type(l, r)
     const fn: BinaryFn<T> = multi(
       method([is(Real), is(Real)], whenRxR),
       method([is(Complex), is(Complex)], whenCxC),
+      method([is(Boolean), is(Boolean)], (whenBxB ?? ((l: Boolean, r: Boolean) => fn(coerce(l), coerce(r))))),
+      method([is(Boolean), is(Base)], (l: Boolean, r: Base) => fn(coerce(l), r)),
+      method([is(Base), is(Boolean)], (l: Base, r: Boolean) => fn(l, coerce(r))),
       method([is(Real), is(Complex)], (l: Real, r: Complex) => fn(complex(l.value, 0), r)),
       method([is(Complex), is(Real)], (l: Complex, r: Real) => fn(l, complex(r.value, 0))),
       method([is(Nil), is(Base)], real(NaN)),
       method([is(Base), is(Nil)], real(NaN)),
-      method([is(Base), is(Base)], whenBxB)
+      method([is(Base), is(Base)], whenBaseXBase)
     )
     return fn  
   }
