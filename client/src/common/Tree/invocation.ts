@@ -35,6 +35,11 @@ import { Factorial, factorial } from './factorial'
 import { Gamma, gamma } from './gamma'
 import { Polygamma, polygamma } from './polygamma'
 import { Permutation, Combination, permute, combine } from './combinatorics'
+import { LogicalComplement, not } from './logicalComplement'
+import { 
+  LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  lessThan, greaterThan, lessThanEquals, greaterThanEquals
+} from './inequality'
 
 type EvaluateFn = Multi & ((expression: Base) => Base)
 
@@ -54,6 +59,12 @@ const createEvaluate = (scope: Scope) => {
     method(is(Multiplication), binary(multiply)),
     method(is(Exponentiation), binary(raise)),
     method(is(Logarithm), binary(log)),
+
+    method(is(LessThan), binary(lessThan)),
+    method(is(GreaterThan), binary(greaterThan)),
+    method(is(LessThanEquals), binary(lessThanEquals)),
+    method(is(GreaterThanEquals), binary(greaterThanEquals)),
+    method(is(LogicalComplement), unary(not)),
 
     method(is(Permutation), binary(permute)),
     method(is(Combination), binary(combine)),
