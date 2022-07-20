@@ -7,7 +7,8 @@ import {
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
-  abs, factorial, gamma, polygamma, permute, combine, not
+  abs, factorial, gamma, polygamma, permute, combine, not,
+  lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from '../../common/Tree'
 import { Expression } from '.'
 import { shallow } from 'enzyme'
@@ -178,6 +179,24 @@ describe(Expression, () => {
         '.functional.combinatorial',
         'C(x, y)'
       )
+    })
+  })
+
+  describe('of inequalities', () => {
+    it('renders less than', () => {
+      expectMarkup(lessThan(variable('x'), variable('y')), '.binary.inequality', 'x<y')
+    })
+
+    it('renders greater than', () => {
+      expectMarkup(greaterThan(variable('x'), variable('y')), '.binary.inequality', 'x>y')
+    })
+
+    it('renders less than equals', () => {
+      expectMarkup(lessThanEquals(variable('x'), variable('y')), '.binary.inequality', 'x<=y')
+    })
+
+    it('renders greater than equals', () => {
+      expectMarkup(greaterThanEquals(variable('x'), variable('y')), '.binary.inequality', 'x>=y')
     })
   })
 

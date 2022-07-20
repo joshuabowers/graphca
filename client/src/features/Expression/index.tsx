@@ -15,7 +15,8 @@ import {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Permutation, Combination,
-  real, multiply, negate, reciprocal, Polygamma, LogicalComplement
+  real, multiply, negate, reciprocal, Polygamma, LogicalComplement,
+  LessThan, GreaterThan, LessThanEquals, GreaterThanEquals
 } from '../../common/Tree'
 import { Unicode } from '../../common/MathSymbols'
 
@@ -216,6 +217,17 @@ const whenLogarithm: when<Logarithm> = e => {
   </span>
 }
 
+const whenInequality = <T extends Binary>(operator: string) => 
+  (expression: T) => {
+    const l = componentize(expression.left), r = componentize(expression.right)
+    return binary('inequality', operator, l, r)
+  }
+
+const whenLessThan = whenInequality<LessThan>('<')
+const whenGreaterThan = whenInequality<GreaterThan>('>')
+const whenLessThanEquals = whenInequality<LessThanEquals>('<=')
+const whenGreaterThanEquals = whenInequality<GreaterThanEquals>('>=')
+
 const createUnary = <T extends Unary>(metaClass: string, fnNames: FnNameFn<T>): when<T> =>
   (node: T) =>
     <span className={[styles.functional, styles[metaClass]].join(' ')}>
@@ -287,6 +299,11 @@ export const componentize: ComponentizeFn = multi(
   method(is(Multiplication), whenMultiplication),
   method(is(Exponentiation), whenExponentiation),
   method(is(Logarithm), whenLogarithm),
+
+  method(is(LessThan), whenLessThan),
+  method(is(GreaterThan), whenGreaterThan),
+  method(is(LessThanEquals), whenLessThanEquals),
+  method(is(GreaterThanEquals), whenGreaterThanEquals),
 
   method(is(Trigonometric), whenTrigonometric),
   method(is(Arcus), whenArcus),
