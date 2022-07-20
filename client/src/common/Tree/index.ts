@@ -43,6 +43,10 @@ import { Derivative, differentiate } from './differentiation'
 import { invoke } from './invocation'
 import { stringify } from './stringify'
 import { LogicalComplement, not } from './logicalComplement'
+import {
+  LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  lessThan, greaterThan, lessThanEquals, greaterThanEquals
+} from './inequality'
 
 export { 
   Base, Unary, Binary, Real, Complex, Boolean, Nil, Variable,
@@ -56,7 +60,8 @@ export {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Logarithm, Factorial, Gamma, Polygamma, Permutation, Combination,
-  Derivative, LogicalComplement
+  Derivative, LogicalComplement,
+  LessThan, GreaterThan, LessThanEquals, GreaterThanEquals
 }
 export {
   real, complex, bool, nil, variable, assign,
@@ -68,12 +73,15 @@ export {
   acosh, asinh, atanh, asech, acsch, acoth,
   log, lb, ln, lg, factorial, gamma, polygamma, digamma,
   permute, combine, differentiate, invoke, stringify,
-  not
+  not, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 }
 
+type Inequality = 
+| typeof lessThan | typeof greaterThan 
+| typeof lessThanEquals | typeof greaterThanEquals
 type Additive = typeof add | typeof subtract
 type Multiplicative = typeof multiply | typeof divide
-type Operator = Additive | Multiplicative
+type Operator = Inequality | Additive | Multiplicative
 
 type Functions = 
 | typeof lb | typeof ln | typeof lg
@@ -88,6 +96,15 @@ type Functions =
 | typeof gamma | typeof abs | typeof sqrt
 
 const coalesce = <T>(...ops: [string, T][][]) => ops.flat()
+
+export const inequality = new Map<string, Inequality>(
+  [
+    ['<=', lessThanEquals],
+    ['>=', greaterThanEquals],
+    ['<', lessThan],
+    ['>', greaterThan]
+  ]
+)
 
 export const additive = new Map<string, Additive>(
   coalesce(
@@ -104,6 +121,9 @@ export const multiplicative = new Map<string, Multiplicative>(
 )
 
 export const operators = new Map<string, Operator>()
+for(const [op, func] of inequality){
+  operators.set(op, func)
+}
 for(const [op, func] of additive){
   operators.set(op, func)
 }

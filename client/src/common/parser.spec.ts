@@ -560,5 +560,21 @@ describe('parser', () => {
     it('matches the logical complement of true', () => {
       expectObject(`${Unicode.not}true`, bool(false))
     })
+
+    it('matches less than inequalities', () => {
+      expectObject('1 < 2', bool(true))
+    })
+
+    it('matches greater than inequalities', () => {
+      expectObject('1 > 2', bool(false))
+    })
+
+    it('matches less than equals inequalities', () => {
+      expectObject('1 <= 2', bool(true))
+    })
+
+    it('matches greater than equals inequalities', () => {
+      expectObject('1 >= 2', bool(false))
+    })
   })
 })
