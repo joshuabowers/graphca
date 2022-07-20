@@ -15,26 +15,29 @@ const coerce = (b: Boolean) => real(b.value ? 1 : 0)
 type when<P, R = P> = (left: P, right: P) => R
 type cast<L, R, V> = (left: L, right: R) => V
 
-type BinaryFn<T> = Multi
-& when<Real>
-& cast<Real, Complex, Complex>
-& cast<Complex, Real, Complex>
-& when<Complex>
-& when<Boolean>
-& cast<Boolean, Base, Real>
-& cast<Base, Boolean, Real>
-& cast<Nil, Base, Real>
-& cast<Base, Nil, Real>
-& when<Base, T>
+type Choose<D, F> = F extends void ? D : F
 
-export const binary = <T extends Binary>(type: Constructor<T>) =>
-  (
-    whenRxR: when<Real>,
-    whenCxC: when<Complex>,
-    whenBxB?: when<Boolean>
+type BinaryFn<T, R = void> = Multi
+  & when<Real, Choose<Real, R>>
+  & cast<Real, Complex, Choose<Complex, R>>
+  & cast<Complex, Real, Choose<Complex, R>>
+  & when<Complex, Choose<Complex, R>>
+  & when<Boolean, Choose<Boolean, R>>
+  & cast<Boolean, Base, Choose<Real, R>>
+  & cast<Base, Boolean, Choose<Real, R>>
+  & cast<Nil, Base, Choose<Real, R>>
+  & cast<Base, Nil, Choose<Real, R>>
+  & when<Base, T>
+
+export const binary = <T extends Binary, R = void>(type: Constructor<T>, resultType?: Constructor<R>) => {
+  type Result<U extends Base> = R extends void ? U : R
+  return (
+    whenRxR: when<Real, Result<Real>>,
+    whenCxC: when<Complex, Result<Complex>>,
+    whenBxB?: when<Boolean, Result<Boolean>>
   ) => {
     const whenBaseXBase: when<Base, T> = (l, r) => new type(l, r)
-    const fn: BinaryFn<T> = multi(
+    const fn: BinaryFn<T, R> = multi(
       method([is(Real), is(Real)], whenRxR),
       method([is(Complex), is(Complex)], whenCxC),
       method([is(Boolean), is(Boolean)], (whenBxB ?? ((l: Boolean, r: Boolean) => fn(coerce(l), coerce(r))))),
@@ -48,6 +51,7 @@ export const binary = <T extends Binary>(type: Constructor<T>) =>
     )
     return fn  
   }
+}
 
 export type BindTo = (unbound: Base, bound: Base) => [Base, Base]
 

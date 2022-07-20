@@ -3,7 +3,7 @@ import { method, multi, Multi } from '@arrows/multimethod'
 
 export class Boolean extends Base {
   readonly $kind = 'Boolean'
-  protected constructor(readonly value: boolean) { super() }
+  constructor(readonly value: boolean) { super() }
 
   static readonly true = new Boolean(true);
   static readonly false = new Boolean(false);
