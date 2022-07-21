@@ -65,6 +65,11 @@ const builtInFunction = (name: string, expression: Base): Base | undefined => {
 
 const unbox = (value: Base | undefined) => value?.$kind !== 'Nil' ? value : undefined
 
+// NOTE on Factorial: '!' is used in both factorial and not equals (!=);
+// this can confuse peg (think 5! == x, 5 != x); so factorial deliberately
+// fails if it encounters a '=' afterward. Might need to revisit once
+// equals is integrated.
+
 export const parser = peg<Base>`
 expression: <a>assignment ${({a}) => assign('Ans', a, $context()).value}
 
@@ -91,7 +96,7 @@ exponentiation:
 | factorial
 | invocation
 
-factorial: <a>invocation <...b>(${factorialOPerator}+) ${
+factorial: <a>invocation <...b>(${factorialOPerator}+) !'=' ${
   ({a, b}) => b.reduce((e: any) => factorial(e), a)
 }
 

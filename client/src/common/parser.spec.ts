@@ -561,6 +561,10 @@ describe('parser', () => {
       expectObject(`${Unicode.not}true`, bool(false))
     })
 
+    it('matches strict inequalities', () => {
+      expectObject('1 != 2', bool(true))
+    })
+
     it('matches less than inequalities', () => {
       expectObject('1 < 2', bool(true))
     })

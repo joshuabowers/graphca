@@ -44,8 +44,8 @@ import { invoke } from './invocation'
 import { stringify } from './stringify'
 import { LogicalComplement, not } from './logicalComplement'
 import {
-  LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
-  lessThan, greaterThan, lessThanEquals, greaterThanEquals
+  NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from './inequality'
 
 export { 
@@ -61,7 +61,7 @@ export {
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Logarithm, Factorial, Gamma, Polygamma, Permutation, Combination,
   Derivative, LogicalComplement,
-  LessThan, GreaterThan, LessThanEquals, GreaterThanEquals
+  NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals
 }
 export {
   real, complex, bool, nil, variable, assign,
@@ -73,10 +73,11 @@ export {
   acosh, asinh, atanh, asech, acsch, acoth,
   log, lb, ln, lg, factorial, gamma, polygamma, digamma,
   permute, combine, differentiate, invoke, stringify,
-  not, lessThan, greaterThan, lessThanEquals, greaterThanEquals
+  not, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 }
 
 type Inequality = 
+| typeof notEquals
 | typeof lessThan | typeof greaterThan 
 | typeof lessThanEquals | typeof greaterThanEquals
 type Additive = typeof add | typeof subtract
@@ -99,6 +100,7 @@ const coalesce = <T>(...ops: [string, T][][]) => ops.flat()
 
 export const inequality = new Map<string, Inequality>(
   [
+    ['!=', notEquals],
     ['<=', lessThanEquals],
     ['>=', greaterThanEquals],
     ['<', lessThan],
