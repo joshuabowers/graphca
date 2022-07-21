@@ -74,7 +74,8 @@ export const Functional = (args: FunctionalProps) => {
         main(','),
         alphaMega('H'),
         alphaMicron('h'),
-        trig('cos', true)
+        trig('cos', true),
+        logic('/\\')
       )}
       {createKey(
         'open',
@@ -83,7 +84,8 @@ export const Functional = (args: FunctionalProps) => {
         alt('['),
         alphaMega('I'),
         alphaMicron('i'),
-        trig('acos', true)
+        trig('acos', true),
+        logic('\\/')
       )}
       {createKey(
         'close',
