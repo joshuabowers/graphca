@@ -3,9 +3,33 @@ import { complex } from './complex'
 import { variable } from './variable'
 import { bool } from './boolean'
 import { 
-  LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
-  lessThan, greaterThan, lessThanEquals, greaterThanEquals
+  NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from "./inequality";
+
+describe('notEquals', () => {
+  it('returns false for two equal reals', () => {
+    expect(notEquals(real(1), real(1))).toEqual(bool(false))
+  })
+
+  it('returns false for two equal complexes', () => {
+    expect(notEquals(complex(1,1), complex(1,1))).toEqual(bool(false))
+  })
+
+  it('returns false for two equal booleans', () => {
+    expect(notEquals(bool(false), bool(false))).toEqual(bool(false))
+  })
+
+  it('returns true for unequal things', () => {
+    expect(notEquals(real(1), real(2))).toEqual(bool(true))
+  })
+
+  it('returns a NotEquals for variable input', () => {
+    expect(notEquals(variable('x'), real(1))).toEqual(
+      new NotEquals(variable('x'), real(1))
+    )
+  })
+})
 
 describe('lessThan', () => {
   it('returns true for two ordered reals', () => {

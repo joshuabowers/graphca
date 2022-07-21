@@ -3,6 +3,10 @@ import { Binary, binary } from './binary'
 import { Boolean, bool } from './boolean'
 import { abs } from './absolute'
 
+export class NotEquals extends Binary {
+  readonly $kind = 'NotEquals'
+}
+
 export class LessThan extends Binary {
   readonly $kind = 'LessThan'
 }
@@ -18,6 +22,11 @@ export class LessThanEquals extends Binary {
 export class GreaterThanEquals extends Binary {
   readonly $kind = 'GreaterThanEquals'
 }
+
+export const notEquals = binary(NotEquals, Boolean)(
+  (l, r) => bool(l.value != r.value),
+  (l, r) => bool(l.a != r.a || l.b != r.b)
+)
 
 export const lessThan = binary(LessThan, Boolean)(
   (l, r) => bool(l.value < r.value),
