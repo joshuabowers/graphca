@@ -37,8 +37,8 @@ import { Polygamma, polygamma } from './polygamma'
 import { Permutation, Combination, permute, combine } from './combinatorics'
 import { LogicalComplement, not } from './logicalComplement'
 import { 
-  LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
-  lessThan, greaterThan, lessThanEquals, greaterThanEquals
+  NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from './inequality'
 
 type EvaluateFn = Multi & ((expression: Base) => Base)
@@ -60,6 +60,7 @@ const createEvaluate = (scope: Scope) => {
     method(is(Exponentiation), binary(raise)),
     method(is(Logarithm), binary(log)),
 
+    method(is(NotEquals), binary(notEquals)),
     method(is(LessThan), binary(lessThan)),
     method(is(GreaterThan), binary(greaterThan)),
     method(is(LessThanEquals), binary(lessThanEquals)),
