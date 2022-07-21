@@ -10,7 +10,7 @@ import {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   factorial, gamma, polygamma, digamma, permute, combine,
-  differentiate, nil
+  differentiate, nil, greaterThan, lessThan
 } from './Tree'
 import { parser, Scope, scope } from "./parser";
 import { EulerMascheroni } from './Tree/real';
@@ -575,6 +575,22 @@ describe('parser', () => {
 
     it('matches greater than equals inequalities', () => {
       expectObject('1 >= 2', bool(false))
+    })
+
+    it('matches inequalities with lower precedence than arithmetic', () => {
+      expectObject('1 + 2 > x + 4', greaterThan(real(3), add(variable('x'), real(4))))
+    })
+
+    it('matches inequalities with higher precedence than assignments', () => {
+      expectInScope(scope(), 'y <- x < 10', variable('y', 
+        lessThan(variable('x'), real(10))
+      ))
+    })
+
+    it('matches inequalities with left associativity', () => {
+      expectObject('1 < x < 5', lessThan(
+        lessThan(real(1), variable('x')), real(5)
+      ))
     })
   })
 })
