@@ -96,7 +96,7 @@ exponentiation:
 | factorial
 | invocation
 
-factorial: <a>invocation <...b>(${factorialOPerator}+) &('=='|'!='|!('='{1})) ${
+factorial: <a>invocation <...b>(${factorialOPerator}+) &('=='|!('='{1})) ${
   ({a, b}) => b.reduce((e: any) => factorial(e), a)
 }
 
