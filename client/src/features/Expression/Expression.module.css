@@ -19,3 +19,7 @@
 .operator:first-child {
   margin-right: 0;
 }
+
+.factorial {
+  font-variant-ligatures: none;
+}

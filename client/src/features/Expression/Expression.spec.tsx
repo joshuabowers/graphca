@@ -8,7 +8,7 @@ import {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   abs, factorial, gamma, polygamma, permute, combine, not,
-  notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
+  equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from '../../common/Tree'
 import { Expression } from '.'
 import { shallow } from 'enzyme'
@@ -183,6 +183,10 @@ describe(Expression, () => {
   })
 
   describe('of inequalities', () => {
+    it('renders equals', () => {
+      expectMarkup(equals(variable('x'), variable('y')), '.binary.inequality', 'x==y')
+    })
+
     it('renders not equals', () => {
       expectMarkup(notEquals(variable('x'), variable('y')), '.binary.inequality', 'x!=y')
     })

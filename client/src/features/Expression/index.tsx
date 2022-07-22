@@ -16,7 +16,7 @@ import {
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Permutation, Combination,
   real, multiply, negate, reciprocal, Polygamma, LogicalComplement,
-  NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals
+  Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals
 } from '../../common/Tree'
 import { Unicode } from '../../common/MathSymbols'
 
@@ -223,6 +223,7 @@ const whenInequality = <T extends Binary>(operator: string) =>
     return binary('inequality', operator, l, r)
   }
 
+const whenEquals = whenInequality<Equals>('==')
 const whenNotEquals = whenInequality<NotEquals>('!=')
 const whenLessThan = whenInequality<LessThan>('<')
 const whenGreaterThan = whenInequality<GreaterThan>('>')
@@ -287,7 +288,8 @@ export type ComponentizeFn = Multi
   & typeof whenUnary & typeof whenFactorial & typeof whenPolygamma
   & typeof whenPermutation & typeof whenCombination
   & typeof whenLogicalComplement
-  & typeof whenNotEquals & typeof whenLessThan & typeof whenGreaterThan
+  & typeof whenEquals & typeof whenNotEquals 
+  & typeof whenLessThan & typeof whenGreaterThan
   & typeof whenLessThanEquals & typeof whenGreaterThanEquals
   & typeof whenBase
 
@@ -303,6 +305,7 @@ export const componentize: ComponentizeFn = multi(
   method(is(Exponentiation), whenExponentiation),
   method(is(Logarithm), whenLogarithm),
 
+  method(is(Equals), whenEquals),
   method(is(NotEquals), whenNotEquals),
   method(is(LessThan), whenLessThan),
   method(is(GreaterThan), whenGreaterThan),
