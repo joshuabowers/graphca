@@ -14,13 +14,16 @@
     "acsch",
     "asec",
     "asech",
+    "Biconditional",
     "Componentization",
     "componentize",
     "Graphable",
     "lanczos",
     "Mascheroni",
     "multimethod",
+    "nand",
     "Polygamma",
-    "significand"
+    "significand",
+    "xnor"
   ]
 }
