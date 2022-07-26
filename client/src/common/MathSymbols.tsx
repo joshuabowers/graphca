@@ -34,6 +34,11 @@ export enum Unicode {
   n = "\ud835\udc5b",
   infinity = "\u{221E}",
   complexInfinity = "\u{221E}\u{0304}",
+  converse = "<-",
+  nand = "\u{2191}",
+  implies = "->",
+  nor = "\u{2193}",
+  xnor = "<->"
 }
 
 export const functional = {

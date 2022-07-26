@@ -94,14 +94,16 @@ export const Functional = (args: FunctionalProps) => {
         alt(']'),
         alphaMega('J'),
         alphaMicron('j'),
-        trig('cosh', true)
+        trig('cosh', true),
+        logic('</>')
       )}
       {createKey(
         'lb',
         main('lb', true),
         alphaMega('L'),
         alphaMicron('l'),
-        trig('tan', true)
+        trig('tan', true),
+        logic(Unicode.nand)
       )}
       {createKey(
         'ln',
@@ -109,14 +111,16 @@ export const Functional = (args: FunctionalProps) => {
         shift('log', true),
         alphaMega('M'),
         alphaMicron('m'),
-        trig('atan', true)
+        trig('atan', true),
+        logic(Unicode.nor)
       )}
       {createKey(
         'lg',
         main('lg', true),
         alphaMega('N'),
         alphaMicron('n'),
-        trig('tanh', true)
+        trig('tanh', true),
+        logic(Unicode.xnor)
       )}
     </>
   )

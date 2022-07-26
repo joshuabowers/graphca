@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  createKey, main, shift, alphaMega, alphaMicron, trig 
+  createKey, main, shift, alphaMega, alphaMicron, trig, logic
 } from '../../features/Key';
 import { functional, Unicode } from '../../common/MathSymbols';
 
@@ -17,14 +17,16 @@ export const Arithmetic = (props: ArithmeticProps) => {
         shift(Unicode.squareRoot, true),
         alphaMega('K'),
         alphaMicron('k'),
-        trig('acosh', true)
+        trig('acosh', true),
+        logic(Unicode.implies)
       )}
       {createKey(
         'raise',
         main(functional.xY, false, '^'),
         alphaMega('O'),
         alphaMicron('o'),
-        trig('atanh', true)
+        trig('atanh', true),
+        logic(Unicode.converse)
       )}
       {createKey(
         'divide',
