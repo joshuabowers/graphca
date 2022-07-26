@@ -95,7 +95,7 @@ export const Functional = (args: FunctionalProps) => {
         alphaMega('J'),
         alphaMicron('j'),
         trig('cosh', true),
-        logic('</>')
+        logic(Unicode.xor, false, undefined, true)
       )}
       {createKey(
         'lb',

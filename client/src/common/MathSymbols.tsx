@@ -38,6 +38,7 @@ export enum Unicode {
   nand = "\u{2191}",
   implies = "->",
   nor = "\u{2193}",
+  xor = "\u{2295}",
   xnor = "<->"
 }
 

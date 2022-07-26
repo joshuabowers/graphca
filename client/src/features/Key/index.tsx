@@ -85,17 +85,24 @@ export const commandKey = (cellName: string, display: MathSymbols, disabled: boo
   />
 }
 
-const detectDisplayHint = (display: MathSymbols) =>
+const detectDisplayHint = (display: MathSymbols, isIcon: boolean) =>
   React.isValidElement(display) ? 'functional' : (
-    display.toString().length > 4 ? 'verbose' : undefined
+    display.toString().length > 4 ? 'verbose' : (
+      isIcon ? 'icon' : undefined
+    )
   )
 
 const createMode = (type: ModeType) =>
-  (display: MathSymbols, isFunctional: boolean = false, outputOverride?: MathSymbols): ModeProps =>
+  (
+    display: MathSymbols, 
+    isFunctional: boolean = false, 
+    outputOverride?: MathSymbols,
+    isIcon: boolean = false
+  ): ModeProps =>
     ({
       type, 
       display, 
-      displayHint: detectDisplayHint(display), 
+      displayHint: detectDisplayHint(display, isIcon), 
       activate: createKeyPress((outputOverride ?? display) + (isFunctional ? '(' : ''))
     })
 

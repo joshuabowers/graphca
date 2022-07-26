@@ -96,11 +96,11 @@ export const Numeric = (props: NumericProps) => {
       )}
       {createKey(
         'assign',
-        main('<-'),
+        main(':='),
         constant('nil'),
-        alphaMega('<-'),
-        alphaMicron('<-'),
-        logic(Unicode.empty)
+        alphaMega(':='),
+        alphaMicron(':='),
+        logic(Unicode.empty, false, undefined, true)
       )}
     </>
   )
