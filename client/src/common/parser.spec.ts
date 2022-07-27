@@ -499,18 +499,18 @@ describe('parser', () => {
 
   describe('of assignments', () => {
     it('matches a basic assignment', () => {
-      expectInScope(scope(), 'x <- 2', variable('x', real(2)))
+      expectInScope(scope(), 'x := 2', variable('x', real(2)))
     })
 
     it('matches the assignment of a variable expression', () => {
-      expectInScope(scope(), 'y <- 2 * x^2', 
+      expectInScope(scope(), 'y := 2 * x^2', 
         variable('y', double(square(variable('x')))),
         variable('x')
       )
     })
 
     it('matches assignments right-associatively', () => {
-      expectInScope(scope(), 'z <- y <- x', 
+      expectInScope(scope(), 'z := y := x', 
         variable('z', variable('x')),
         variable('y', variable('x')),
         variable('x')        
@@ -518,7 +518,7 @@ describe('parser', () => {
     })
 
     it('matches assignments of nil by unsetting variable', () => {
-      expectInScope(scope(), 'x <- nil', variable('x', nil()))
+      expectInScope(scope(), 'x := nil', variable('x', nil()))
     })
 
     it('assigns the value of the expression automatically to Ans', () => {
@@ -590,7 +590,7 @@ describe('parser', () => {
     })
 
     it('matches inequalities with higher precedence than assignments', () => {
-      expectInScope(scope(), 'y <- x < 10', variable('y', 
+      expectInScope(scope(), 'y := x < 10', variable('y', 
         lessThan(variable('x'), real(10))
       ))
     })

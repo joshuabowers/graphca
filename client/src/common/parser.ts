@@ -20,7 +20,7 @@ const additionOperators = peg(['+'].map(capture).join('|'))
 const subtractionOperators = peg([Unicode.minus, '-'].map(capture).join('|'))
 const functional = peg([...functions.keys()].map(capture).join('|'))
 const factorialOPerator = peg(capture('!'))
-const assignmentOperators = peg(['<-'].map(capture).join('|'))
+const assignmentOperators = peg([':='].map(capture).join('|'))
 
 const letterRange = `_a-zA-Z${Unicode.theta}`
 const validIdentifier = new RegExp(`[${letterRange}][${letterRange}0-9]*`, 'u')
