@@ -36,12 +36,12 @@ export enum Unicode {
   complexInfinity = "\u{221E}\u{0304}",
   and = "\u{2227}", //"/\\",
   or = "\u{2228}", // "\\/",
-  converse = "<-",
+  converse = "\u{2190}",
   nand = "\u{2191}",
-  implies = "->",
+  implies = "\u{2192}",
   nor = "\u{2193}",
   xor = "\u{2295}",
-  xnor = "<->"
+  xnor = "\u{2194}"
 }
 
 export const functional = {

@@ -629,7 +629,7 @@ describe('parser', () => {
     })
 
     it('matches biconditionals', () => {
-      expectObject('true <-> false', bool(false))
+      expectObject(`true ${Unicode.xnor} false`, bool(false))
     })
 
     it('matches converse implications', () => {
