@@ -47,6 +47,12 @@ import {
   Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
   equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from './inequality'
+import {
+  Conjunction, Disjunction, ExclusiveDisjunction, Implication,
+  AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
+  and, or, xor, implies,
+  nand, nor, xnor, converse
+} from './connective'
 
 export { 
   Base, Unary, Binary, Real, Complex, Boolean, Nil, Variable,
@@ -61,7 +67,9 @@ export {
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Logarithm, Factorial, Gamma, Polygamma, Permutation, Combination,
   Derivative, LogicalComplement,
-  Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals
+  Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  Conjunction, Disjunction, ExclusiveDisjunction, Implication,
+  AlternativeDenial, JointDenial, Biconditional, ConverseImplication
 }
 export {
   real, complex, bool, nil, variable, assign,
@@ -73,16 +81,21 @@ export {
   acosh, asinh, atanh, asech, acsch, acoth,
   log, lb, ln, lg, factorial, gamma, polygamma, digamma,
   permute, combine, differentiate, invoke, stringify,
-  not, equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
+  not, equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals,
+  and, or, xor, implies,
+  nand, nor, xnor, converse
 }
 
+type Connective =
+| typeof and | typeof or | typeof xor | typeof implies
+| typeof nand | typeof nor | typeof xnor | typeof converse
 type Inequality = 
 | typeof equals | typeof notEquals
 | typeof lessThan | typeof greaterThan 
 | typeof lessThanEquals | typeof greaterThanEquals
 type Additive = typeof add | typeof subtract
 type Multiplicative = typeof multiply | typeof divide
-type Operator = Inequality | Additive | Multiplicative
+type Operator = Connective | Inequality | Additive | Multiplicative
 
 type Functions = 
 | typeof lb | typeof ln | typeof lg
@@ -97,6 +110,19 @@ type Functions =
 | typeof gamma | typeof abs | typeof sqrt
 
 const coalesce = <T>(...ops: [string, T][][]) => ops.flat()
+
+export const connectives = new Map<string, Connective>(
+  [
+    [Unicode.xnor, xnor],
+    [Unicode.and, and],
+    [Unicode.or, or],
+    [Unicode.xor, xor],
+    [Unicode.implies, implies],
+    [Unicode.nand, nand],
+    [Unicode.nor, nor],
+    [Unicode.converse, converse],
+  ]
+)
 
 export const inequality = new Map<string, Inequality>(
   [
@@ -124,6 +150,9 @@ export const multiplicative = new Map<string, Multiplicative>(
 )
 
 export const operators = new Map<string, Operator>()
+for(const [op, func] of connectives){
+  operators.set(op, func)
+}
 for(const [op, func] of inequality){
   operators.set(op, func)
 }

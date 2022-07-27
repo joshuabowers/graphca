@@ -10,7 +10,8 @@ import {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   factorial, gamma, polygamma, digamma, permute, combine,
-  differentiate, nil, greaterThan, lessThan
+  differentiate, nil, greaterThan, lessThan, lessThanEquals,
+  and
 } from './Tree'
 import { parser, Scope, scope } from "./parser";
 import { EulerMascheroni } from './Tree/real';
@@ -598,6 +599,51 @@ describe('parser', () => {
     it('matches inequalities with left associativity', () => {
       expectObject('1 < x < 5', lessThan(
         lessThan(real(1), variable('x')), real(5)
+      ))
+    })
+  })
+
+  describe('of logical connectives', () => {
+    it('matches conjunctions', () => {
+      expectObject(`true ${Unicode.and} false`, bool(false))
+    })
+
+    it('matches disjunctions', () => {
+      expectObject(`true ${Unicode.or} false`, bool(true))
+    })
+
+    it('matches exclusive disjunctions', () => {
+      expectObject(`true ${Unicode.xor} false`, bool(true))
+    })
+
+    it('matches implications', () => {
+      expectObject(`true ${Unicode.implies} false`, bool(false))
+    })
+
+    it('matches alternative denials', () => {
+      expectObject(`true ${Unicode.nand} false`, bool(true))
+    })
+
+    it('matches joint denials', () => {
+      expectObject(`true ${Unicode.nor} false`, bool(false))
+    })
+
+    it('matches biconditionals', () => {
+      expectObject('true <-> false', bool(false))
+    })
+
+    it('matches converse implications', () => {
+      expectObject(`true ${Unicode.converse} false`, bool(true))
+    })
+
+    it('matches connectives with greater precedence than assignment', () => {
+      expectInScope(scope(), `y := false ${Unicode.or} true`, variable('y', bool(true)))
+    })
+
+    it('matches connectives with lower precedence than inequalities', () => {
+      expectObject(`x <= 5 ${Unicode.and} x > -5`, and(
+        lessThanEquals(variable('x'), real(5)),
+        greaterThan(variable('x'), real(-5))
       ))
     })
   })

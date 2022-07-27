@@ -34,6 +34,8 @@ export enum Unicode {
   n = "\ud835\udc5b",
   infinity = "\u{221E}",
   complexInfinity = "\u{221E}\u{0304}",
+  and = "\u{2227}", //"/\\",
+  or = "\u{2228}", // "\\/",
   converse = "<-",
   nand = "\u{2191}",
   implies = "->",

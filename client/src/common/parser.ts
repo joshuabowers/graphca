@@ -4,7 +4,8 @@ import {
   real, complex, bool, not, nil, variable, assign,
   raise, negate, factorial, polygamma, digamma, log,
   differentiate, invoke,
-  operators, inequality, additive, multiplicative, functions, permute, combine
+  operators, connectives, inequality, additive, multiplicative, 
+  functions, permute, combine
 } from './Tree'
 import { peg, $fail, $context } from 'pegase'
 import { EulerMascheroni } from './Tree/real'
@@ -12,6 +13,7 @@ export { scope } from './Tree/scope'
 export type { Scope } from './Tree/scope'
 
 const capture = (s: string) => `"${s}"`
+const connectiveOperators = peg([...connectives.keys()].map(capture).join('|'))
 const inequalityOperators = peg([...inequality.keys()].map(capture).join('|'))
 const additiveOperators = peg([...additive.keys()].map(capture).join('|'))
 const multiplicativeOperators = peg([...multiplicative.keys()].map(capture).join('|'))
@@ -75,10 +77,11 @@ expression: <a>assignment ${({a}) => assign('Ans', a, $context()).value}
 
 assignment:
 | <a>$variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b, $context()).value}
-| inequality
+| connectives
 
-inequality:
-| leftAssociative(addition, ${inequalityOperators})
+connectives: leftAssociative(inequality, ${connectiveOperators})
+
+inequality: leftAssociative(addition, ${inequalityOperators})
 
 addition: leftAssociative(multiplication, ${additiveOperators})
 
