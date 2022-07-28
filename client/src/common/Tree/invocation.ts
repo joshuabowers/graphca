@@ -40,6 +40,12 @@ import {
   Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
   equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from './inequality'
+import {
+  Conjunction, Disjunction, ExclusiveDisjunction, Implication,
+  AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
+  and, or, xor, implies,
+  nand, nor, xnor, converse
+} from './connective'
 
 type EvaluateFn = Multi & ((expression: Base) => Base)
 
@@ -67,6 +73,15 @@ const createEvaluate = (scope: Scope) => {
     method(is(LessThanEquals), binary(lessThanEquals)),
     method(is(GreaterThanEquals), binary(greaterThanEquals)),
     method(is(LogicalComplement), unary(not)),
+
+    method(is(Conjunction), binary(and)),
+    method(is(Disjunction), binary(or)),
+    method(is(ExclusiveDisjunction), binary(xor)),
+    method(is(Implication), binary(implies)),
+    method(is(AlternativeDenial), binary(nand)),
+    method(is(JointDenial), binary(nor)),
+    method(is(Biconditional), binary(xnor)),
+    method(is(ConverseImplication), binary(converse)),
 
     method(is(Permutation), binary(permute)),
     method(is(Combination), binary(combine)),
