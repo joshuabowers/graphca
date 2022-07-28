@@ -1,7 +1,8 @@
 import { real } from './real'
 import { complex } from './complex'
 import { bool } from './boolean'
-import { not } from './logicalComplement'
+import { variable } from './variable'
+import { not, LogicalComplement } from './logicalComplement'
 
 describe('not', () => {
   it('yields 0 for non-zero real inputs', () => {
@@ -26,5 +27,13 @@ describe('not', () => {
 
   it('yields true for a false input', () => {
     expect(not(bool(false))).toEqual(bool(true))
+  })
+
+  it('yields a logical complement for variable input', () => {
+    expect(not(variable('x'))).toEqual(new LogicalComplement(variable('x')))
+  })
+
+  it('rewrites double negations as the inner expression', () => {
+    expect(not(not(variable('x')))).toEqual(variable('x'))
   })
 })
