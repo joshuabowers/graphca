@@ -1,4 +1,3 @@
-import { Base, Constructor } from './Expression'
 import { Binary, binary } from './binary'
 import { Boolean, bool } from './boolean'
 import { abs } from './absolute'

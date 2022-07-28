@@ -48,6 +48,7 @@ import {
   equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from './inequality'
 import {
+  Connective as ConnectiveBase,
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
   AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
   and, or, xor, implies,
@@ -68,6 +69,7 @@ export {
   Logarithm, Factorial, Gamma, Polygamma, Permutation, Combination,
   Derivative, LogicalComplement,
   Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  ConnectiveBase as Connective,
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
   AlternativeDenial, JointDenial, Biconditional, ConverseImplication
 }

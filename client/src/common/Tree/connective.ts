@@ -1,4 +1,3 @@
-import { Base } from './Expression'
 import { Boolean, bool } from './boolean'
 import { Binary, binary } from './binary'
 import { not } from './logicalComplement'

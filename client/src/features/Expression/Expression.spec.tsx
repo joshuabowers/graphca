@@ -8,7 +8,9 @@ import {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   abs, factorial, gamma, polygamma, permute, combine, not,
-  equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
+  equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals,
+  and, or, xor, implies,
+  nand, nor, xnor, converse
 } from '../../common/Tree'
 import { Expression } from '.'
 import { shallow } from 'enzyme'
@@ -205,6 +207,40 @@ describe(Expression, () => {
 
     it('renders greater than equals', () => {
       expectMarkup(greaterThanEquals(variable('x'), variable('y')), '.binary.inequality', 'x>=y')
+    })
+  })
+
+  describe('of connectives', () => {
+    it('renders conjunctions', () => {
+      expectMarkup(and(variable('x'), variable('y')), '.binary.connective', 'x/\\y')
+    })
+
+    it('renders disjunctions', () => {
+      expectMarkup(or(variable('x'), variable('y')), '.binary.connective', 'x\\/y')
+    })
+
+    it('renders exclusive disjunctions', () => {
+      expectMarkup(xor(variable('x'), variable('y')), '.binary.connective', `x${Unicode.xor}y`)
+    })
+
+    it('renders implications', () => {
+      expectMarkup(implies(variable('x'), variable('y')), '.binary.connective', 'x->y')
+    })
+
+    it('renders alternative denials', () => {
+      expectMarkup(nand(variable('x'), variable('y')), '.binary.connective', `x${Unicode.nand}y`)
+    })
+
+    it('renders joint denials', () => {
+      expectMarkup(nor(variable('x'), variable('y')), '.binary.connective', `x${Unicode.nor}y`)
+    })
+
+    it('renders biconditionals', () => {
+      expectMarkup(xnor(variable('x'), variable('y')), '.binary.connective', 'x<->y')
+    })
+
+    it('renders converse implications', () => {
+      expectMarkup(converse(variable('x'), variable('y')), '.binary.connective', 'x<-y')
     })
   })
 

@@ -16,7 +16,9 @@ import {
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Permutation, Combination,
   real, multiply, negate, reciprocal, Polygamma, LogicalComplement,
-  Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals
+  Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  Conjunction, Disjunction, ExclusiveDisjunction, Implication,
+  AlternativeDenial, JointDenial, Biconditional, ConverseImplication
 } from '../../common/Tree'
 import { Unicode } from '../../common/MathSymbols'
 
@@ -217,11 +219,14 @@ const whenLogarithm: when<Logarithm> = e => {
   </span>
 }
 
-const whenInequality = <T extends Binary>(operator: string) => 
-  (expression: T) => {
-    const l = componentize(expression.left), r = componentize(expression.right)
-    return binary('inequality', operator, l, r)
-  }
+const createLogicalBinary = (className: string) =>
+  <T extends Binary>(operator: string) =>
+    (expression: T) => {
+      const l = componentize(expression.left), r = componentize(expression.right)
+      return binary(className, operator, l, r)  
+    }
+
+const whenInequality = createLogicalBinary('inequality')
 
 const whenEquals = whenInequality<Equals>('==')
 const whenNotEquals = whenInequality<NotEquals>('!=')
@@ -229,6 +234,17 @@ const whenLessThan = whenInequality<LessThan>('<')
 const whenGreaterThan = whenInequality<GreaterThan>('>')
 const whenLessThanEquals = whenInequality<LessThanEquals>('<=')
 const whenGreaterThanEquals = whenInequality<GreaterThanEquals>('>=')
+
+const whenConnective = createLogicalBinary('connective')
+
+const whenConjunction = whenConnective<Conjunction>('/\\')
+const whenDisjunction = whenConnective<Disjunction>('\\/')
+const whenExclusiveDisjunction = whenConnective<ExclusiveDisjunction>(Unicode.xor)
+const whenImplication = whenConnective<Implication>('->')
+const whenAlternativeDenial = whenConnective<AlternativeDenial>(Unicode.nand)
+const whenJointDenial = whenConnective<JointDenial>(Unicode.nor)
+const whenBiconditional = whenConnective<Biconditional>('<->')
+const whenConverseImplication = whenConnective<ConverseImplication>('<-')
 
 const createUnary = <T extends Unary>(metaClass: string, fnNames: FnNameFn<T>): when<T> =>
   (node: T) =>
@@ -291,6 +307,10 @@ export type ComponentizeFn = Multi
   & typeof whenEquals & typeof whenNotEquals 
   & typeof whenLessThan & typeof whenGreaterThan
   & typeof whenLessThanEquals & typeof whenGreaterThanEquals
+  & typeof whenConjunction & typeof whenDisjunction
+  & typeof whenExclusiveDisjunction & typeof whenImplication
+  & typeof whenAlternativeDenial & typeof whenJointDenial
+  & typeof whenBiconditional & typeof whenConverseImplication
   & typeof whenBase
 
 export const componentize: ComponentizeFn = multi(
@@ -311,6 +331,15 @@ export const componentize: ComponentizeFn = multi(
   method(is(GreaterThan), whenGreaterThan),
   method(is(LessThanEquals), whenLessThanEquals),
   method(is(GreaterThanEquals), whenGreaterThanEquals),
+
+  method(is(Conjunction), whenConjunction),
+  method(is(Disjunction), whenDisjunction),
+  method(is(ExclusiveDisjunction), whenExclusiveDisjunction),
+  method(is(Implication), whenImplication),
+  method(is(AlternativeDenial), whenAlternativeDenial),
+  method(is(JointDenial), whenJointDenial),
+  method(is(Biconditional), whenBiconditional),
+  method(is(ConverseImplication), whenConverseImplication),
 
   method(is(Trigonometric), whenTrigonometric),
   method(is(Arcus), whenArcus),
