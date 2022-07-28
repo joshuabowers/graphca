@@ -60,19 +60,16 @@ export const implies = binary(Implication, Boolean)(
   (l, r) => or(not(l), r)
 )
 
-// NOTE: nand/nor implemented directly rather than as connective 
-// relationships due to 'not' having Boolean|Real return types.
-
 export const nand = binary(AlternativeDenial, Boolean)(
-  (l, r) => bool(!(l.value !== 0 && r.value !== 0)),
-  (l, r) => bool(!((l.a !== 0 || l.b !== 0) && (r.a !== 0 || r.b !== 0))),
-  (l, r) => bool(!(l.value && r.value))
+  (l, r) => not(and(l, r)),
+  (l, r) => not(and(l, r)),
+  (l, r) => not(and(l, r))
 )
 
 export const nor = binary(JointDenial, Boolean)(
-  (l, r) => bool(!(l.value !== 0 || r.value !== 0)),
-  (l, r) => bool(!(l.a !== 0 || l.b !== 0 || r.a !== 0 || r.b !== 0)),
-  (l, r) => bool(!(l.value || r.value))
+  (l, r) => not(or(l, r)),
+  (l, r) => not(or(l, r)),
+  (l, r) => not(or(l, r))
 )
 
 export const xnor = binary(Biconditional, Boolean)(
