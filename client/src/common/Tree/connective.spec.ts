@@ -34,6 +34,22 @@ describe('and', () => {
     expect(and(complex(5,0), complex(0,0))).toEqual(bool(false))
   })
 
+  it('returns the left operand if the right is true', () => {
+    expect(and(variable('x'), bool(true))).toEqual(variable('x'))
+  })
+
+  it('returns the right operand if the left is true', () => {
+    expect(and(bool(true), variable('x'))).toEqual(variable('x'))
+  })
+
+  it('returns the false if the right operand is false', () => {
+    expect(and(variable('x'), bool(false))).toEqual(bool(false))
+  })
+
+  it('returns false if the left operand is false', () => {
+    expect(and(bool(false), variable('x'))).toEqual(bool(false))
+  })
+
   it('returns a Conjunction on variable input', () => {
     expect(and(variable('x'), variable('y'))).toEqual(
       new Conjunction(variable('x'), variable('y'))
@@ -64,6 +80,22 @@ describe('or', () => {
 
   it('casts complexes to booleans, 0 => false, non-zero => true', () => {
     expect(or(complex(5,0), complex(0,0))).toEqual(bool(true))
+  })
+
+  it('returns the left operand if the right is false', () => {
+    expect(or(variable('x'), bool(false))).toEqual(variable('x'))
+  })
+
+  it('returns the right operand if the left is false', () => {
+    expect(or(bool(false), variable('x'))).toEqual(variable('x'))
+  })
+
+  it('returns true if the right operand is true', () => {
+    expect(or(variable('x'), bool(true))).toEqual(bool(true))
+  })
+
+  it('returns true if the left operand is true', () => {
+    expect(or(bool(true), variable('x'))).toEqual(bool(true))
   })
 
   it('returns a Disjunction on variable input', () => {

@@ -1,4 +1,6 @@
+import { Base } from './Expression'
 import { Boolean, bool } from './boolean'
+import { fromMulti, method, _ } from '@arrows/multimethod'
 import { Binary, binary } from './binary'
 import { not } from './logicalComplement'
 
@@ -36,17 +38,35 @@ export class ConverseImplication extends Connective {
   readonly $kind = 'ConverseImplication'
 }
 
-export const and = binary(Conjunction, Boolean)(
+const rawAnd = binary(Conjunction, Boolean)(
   (l, r) => bool(l.value !== 0 && r.value !== 0),
   (l, r) => bool((l.a !== 0 || l.b !== 0) && (r.a !== 0 || r.b !== 0)),
   (l, r) => bool(l.value && r.value)
 )
 
-export const or = binary(Disjunction, Boolean)(
+export type AndFn = typeof rawAnd
+
+export const and: AndFn = fromMulti(
+  method([_, bool(true)], (l: Base, _r: Boolean) => l),
+  method([bool(true), _], (_l: Boolean, r: Base) => r),
+  method([_, bool(false)], bool(false)),
+  method([bool(false), _], bool(false))
+)(rawAnd)
+
+const rawOr = binary(Disjunction, Boolean)(
   (l, r) => bool(l.value !== 0 || r.value !== 0),
   (l, r) => bool(l.a !== 0 || l.b !== 0 || r.a !== 0 || r.b !== 0),
   (l, r) => bool(l.value || r.value)
 )
+
+export type OrFn = typeof rawOr
+
+export const or: OrFn = fromMulti(
+  method([_, bool(false)], (l: Base, _r: Boolean) => l),
+  method([bool(false), _], (_r: Boolean, l: Base) => l),
+  method([_, bool(true)], bool(true)),
+  method([bool(true), _], bool(true))
+)(rawOr)
 
 export const xor = binary(ExclusiveDisjunction, Boolean)(
   (l, r) => and(or(l, r), not(and(l, r))),
