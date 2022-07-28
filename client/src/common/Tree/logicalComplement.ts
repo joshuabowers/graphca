@@ -1,4 +1,4 @@
-import { bool } from './boolean'
+import { bool, Boolean } from './boolean'
 import { real } from './real'
 import { complex } from './complex'
 import { fromMulti, method } from '@arrows/multimethod'
@@ -9,9 +9,9 @@ export class LogicalComplement extends Unary {
   readonly $kind = 'LogicalComplement'
 }
 
-const rawNot = unary(LogicalComplement)(
-  r => real((r.value === 0) ? 1 : 0),
-  c => complex((c.a === 0 && c.b === 0) ? 1 : 0, 0),
+const rawNot = unary(LogicalComplement, Boolean)(
+  r => bool(r.value === 0),
+  c => bool(c.a === 0 && c.b === 0),
   b => bool(!b.value)
 )
 
