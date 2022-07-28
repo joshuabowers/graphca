@@ -75,7 +75,7 @@ export const Functional = (args: FunctionalProps) => {
         alphaMega('H'),
         alphaMicron('h'),
         trig('cos', true),
-        logic(Unicode.and)
+        logic('/\\', false, Unicode.and)
       )}
       {createKey(
         'open',
@@ -85,7 +85,7 @@ export const Functional = (args: FunctionalProps) => {
         alphaMega('I'),
         alphaMicron('i'),
         trig('acos', true),
-        logic(Unicode.or)
+        logic('\\/', false, Unicode.or)
       )}
       {createKey(
         'close',
@@ -120,7 +120,7 @@ export const Functional = (args: FunctionalProps) => {
         alphaMega('N'),
         alphaMicron('n'),
         trig('tanh', true),
-        logic(Unicode.xnor)
+        logic('<->', false, Unicode.xnor)
       )}
     </>
   )

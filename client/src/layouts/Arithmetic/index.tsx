@@ -18,7 +18,7 @@ export const Arithmetic = (props: ArithmeticProps) => {
         alphaMega('K'),
         alphaMicron('k'),
         trig('acosh', true),
-        logic(Unicode.implies)
+        logic('->', false, Unicode.implies)
       )}
       {createKey(
         'raise',
@@ -26,7 +26,7 @@ export const Arithmetic = (props: ArithmeticProps) => {
         alphaMega('O'),
         alphaMicron('o'),
         trig('atanh', true),
-        logic(Unicode.converse)
+        logic('<-', false, Unicode.converse)
       )}
       {createKey(
         'divide',
