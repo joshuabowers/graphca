@@ -1,10 +1,10 @@
 import { Base } from './Expression'
 import { Boolean, bool } from './boolean'
 import { equals } from './equality'
-import { visit, identity, leftChild, rightChild } from './predicates'
+import { visit, identity, leftChild, rightChild, child } from './predicates'
 import { fromMulti, method, _ } from '@arrows/multimethod'
 import { Binary, binary } from './binary'
-import { not } from './logicalComplement'
+import { not, LogicalComplement } from './logicalComplement'
 
 export abstract class Connective extends Binary {}
 
@@ -57,7 +57,9 @@ export const and: AndFn = fromMulti(
   visit(Base, Disjunction)(identity, leftChild)((l, _r) => l),
   visit(Base, Disjunction)(identity, rightChild)((l, _r) => l),
   visit(Disjunction, Base)(leftChild, identity)((_l, r) => r),
-  visit(Disjunction, Base)(rightChild, identity)((_l, r) => r)
+  visit(Disjunction, Base)(rightChild, identity)((_l, r) => r),
+  visit(Base, LogicalComplement)(identity, child)((_l, _r) => bool(false)),
+  visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(false))
 )(rawAnd)
 
 const rawOr = binary(Disjunction, Boolean)(
@@ -77,7 +79,9 @@ export const or: OrFn = fromMulti(
   visit(Base, Conjunction)(identity, leftChild)((l, _r) => l),
   visit(Base, Conjunction)(identity, rightChild)((l, _r) => l),
   visit(Conjunction, Base)(leftChild, identity)((_l, r) => r),
-  visit(Conjunction, Base)(rightChild, identity)((_l, r) => r)
+  visit(Conjunction, Base)(rightChild, identity)((_l, r) => r),
+  visit(Base, LogicalComplement)(identity, child)((_l, _r) => bool(true)),
+  visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(true))
 )(rawOr)
 
 export const xor = binary(ExclusiveDisjunction, Boolean)(

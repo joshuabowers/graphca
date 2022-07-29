@@ -2,6 +2,7 @@ import { real } from './real'
 import { complex } from './complex'
 import { bool } from './boolean'
 import { variable } from './variable'
+import { not } from './logicalComplement'
 import {
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
   AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
@@ -64,6 +65,14 @@ describe('and', () => {
     expect(and(or(variable('y'), variable('x')), variable('x'))).toEqual(variable('x'))
   })
 
+  it('returns false if the right operand is the negation of the left', () => {
+    expect(and(variable('x'), not(variable('x')))).toEqual(bool(false))
+  })
+
+  it('returns false if the left operand is the negation of the right', () => {
+    expect(and(not(variable('x')), variable('x'))).toEqual(bool(false))
+  })
+
   it('returns a Conjunction on variable input', () => {
     expect(and(variable('x'), variable('y'))).toEqual(
       new Conjunction(variable('x'), variable('y'))
@@ -124,6 +133,14 @@ describe('or', () => {
   it('returns the right operand if the left is a Conjunction of the right', () => {
     expect(or(and(variable('x'), variable('y')), variable('x'))).toEqual(variable('x'))
     expect(or(and(variable('y'), variable('x')), variable('x'))).toEqual(variable('x'))
+  })
+
+  it('returns true if the right operand is the negation of the left', () => {
+    expect(or(variable('x'), not(variable('x')))).toEqual(bool(true))
+  })
+
+  it('returns true if the left operand is the negation of the right', () => {
+    expect(or(not(variable('x')), variable('x'))).toEqual(bool(true))
   })
 
   it('returns a Disjunction on variable input', () => {

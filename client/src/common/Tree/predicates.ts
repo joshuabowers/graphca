@@ -3,6 +3,7 @@ import { Base } from './Expression'
 import { real, Real } from './real'
 import { Complex } from './complex'
 import { Binary } from './binary'
+import { Unary } from './unary'
 import { is, Constructor } from './is'
 import { equals } from './equality'
 
@@ -28,6 +29,7 @@ export const areEqual = <L extends Base, R extends Base>(leftType: Constructor<L
       && equals(leftSelect(left), rightSelect(right))
 
 export const identity = <T extends Base>(t: T) => t
+export const child = <T extends Unary>(t: T) => t.expression
 export const leftChild = <T extends Binary>(t: T) => t.left
 export const rightChild = <T extends Binary>(t: T) => t.right
 export const negated = <T extends Binary, U extends Binary>(sub: Which<U>) =>
