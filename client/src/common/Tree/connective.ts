@@ -1,10 +1,12 @@
 import { Base } from './Expression'
 import { Boolean, bool } from './boolean'
+import { is } from './is'
 import { equals } from './equality'
 import { visit, identity, leftChild, rightChild, child } from './predicates'
 import { fromMulti, method, _ } from '@arrows/multimethod'
+import { Unary, unary } from './unary'
 import { Binary, binary } from './binary'
-import { not, LogicalComplement } from './logicalComplement'
+// import { not, LogicalComplement } from './logicalComplement'
 
 export abstract class Connective extends Binary {}
 
@@ -39,6 +41,26 @@ export class Biconditional extends Connective {
 export class ConverseImplication extends Connective {
   readonly $kind = 'ConverseImplication'
 }
+
+export class LogicalComplement extends Unary {
+  readonly $kind = 'LogicalComplement'
+}
+
+const rawNot = unary(LogicalComplement, Boolean)(
+  r => bool(r.value === 0),
+  c => bool(c.a === 0 && c.b === 0),
+  b => bool(!b.value)
+)
+
+export type NotFn = typeof rawNot
+
+export const not: NotFn = fromMulti(
+  method(is(LogicalComplement), (e: LogicalComplement) => e.expression),
+  method(is(Conjunction), (e: Conjunction) => nand(e.left, e.right)),
+  method(is(Disjunction), (e: Disjunction) => nor(e.left, e.right)),
+  method(is(AlternativeDenial), (e: AlternativeDenial) => and(e.left, e.right)),
+  method(is(JointDenial), (e: JointDenial) => or(e.left, e.right))
+)(rawNot)
 
 const rawAnd = binary(Conjunction, Boolean)(
   (l, r) => bool(l.value !== 0 && r.value !== 0),

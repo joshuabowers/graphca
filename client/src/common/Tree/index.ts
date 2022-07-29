@@ -42,16 +42,15 @@ import { Permutation, Combination, permute, combine } from './combinatorics'
 import { Derivative, differentiate } from './differentiation'
 import { invoke } from './invocation'
 import { stringify } from './stringify'
-import { LogicalComplement, not } from './logicalComplement'
 import {
   Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
   equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from './inequality'
 import {
-  Connective as ConnectiveBase,
+  Connective as ConnectiveBase, LogicalComplement,
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
   AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
-  and, or, xor, implies,
+  not, and, or, xor, implies,
   nand, nor, xnor, converse
 } from './connective'
 

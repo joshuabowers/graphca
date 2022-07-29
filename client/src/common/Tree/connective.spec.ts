@@ -2,13 +2,72 @@ import { real } from './real'
 import { complex } from './complex'
 import { bool } from './boolean'
 import { variable } from './variable'
-import { not } from './logicalComplement'
 import {
+  LogicalComplement,
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
   AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
+  not,
   and, or, xor, implies,
   nand, nor, xnor, converse
 } from './connective'
+
+describe('not', () => {
+  it('yields false for non-zero real inputs', () => {
+    expect(not(real(5))).toEqual(bool(false))
+  })
+
+  it('yields true for a real value of zero', () => {
+    expect(not(real(0))).toEqual(bool(true))
+  })
+
+  it('yields false for non-zero complex inputs', () => {
+    expect(not(complex(1, 0))).toEqual(bool(false))
+  })
+
+  it('yields true for complex 0', () => {
+    expect(not(complex(0, 0))).toEqual(bool(true))
+  })
+
+  it('yields false for a true input', () => {
+    expect(not(bool(true))).toEqual(bool(false))
+  })
+
+  it('yields true for a false input', () => {
+    expect(not(bool(false))).toEqual(bool(true))
+  })
+
+  it('yields a logical complement for variable input', () => {
+    expect(not(variable('x'))).toEqual(new LogicalComplement(variable('x')))
+  })
+
+  it('rewrites double negations as the inner expression', () => {
+    expect(not(not(variable('x')))).toEqual(variable('x'))
+  })
+
+  it('returns an alternative denial when given a conjunction', () => {
+    expect(
+      not(and(variable('x'), variable('y')))
+    ).toEqual(nand(variable('x'), variable('y')))
+  })
+
+  it('returns a conjunction if given an alternative denial', () => {
+    expect(
+      not(nand(variable('x'), variable('y')))
+    ).toEqual(and(variable('x'), variable('y')))
+  })
+
+  it('returns a joint denial if given a disjunction', () => {
+    expect(
+      not(or(variable('x'), variable('y')))
+    ).toEqual(nor(variable('x'), variable('y')))
+  })
+
+  it('returns a disjunction if given a joint denial', () => {
+    expect(
+      not(nor(variable('x'), variable('y')))
+    ).toEqual(or(variable('x'), variable('y')))
+  })
+})
 
 describe('and', () => {
   it('returns true when given two true things', () => {

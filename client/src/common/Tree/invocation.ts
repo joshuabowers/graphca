@@ -35,14 +35,15 @@ import { Factorial, factorial } from './factorial'
 import { Gamma, gamma } from './gamma'
 import { Polygamma, polygamma } from './polygamma'
 import { Permutation, Combination, permute, combine } from './combinatorics'
-import { LogicalComplement, not } from './logicalComplement'
 import { 
   Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
   equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
 } from './inequality'
 import {
+  LogicalComplement,
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
   AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
+  not,
   and, or, xor, implies,
   nand, nor, xnor, converse
 } from './connective'
