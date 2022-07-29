@@ -54,6 +54,16 @@ describe('and', () => {
     expect(and(variable('x'), variable('x'))).toEqual(variable('x'))
   })
 
+  it('returns the left operand if the right is a Disjunction of the left', () => {
+    expect(and(variable('x'), or(variable('x'), variable('y')))).toEqual(variable('x'))
+    expect(and(variable('x'), or(variable('y'), variable('x')))).toEqual(variable('x'))
+  })
+
+  it('returns the right operand if the left is a Disjunction of the right', () => {
+    expect(and(or(variable('x'), variable('y')), variable('x'))).toEqual(variable('x'))
+    expect(and(or(variable('y'), variable('x')), variable('x'))).toEqual(variable('x'))
+  })
+
   it('returns a Conjunction on variable input', () => {
     expect(and(variable('x'), variable('y'))).toEqual(
       new Conjunction(variable('x'), variable('y'))
@@ -104,6 +114,16 @@ describe('or', () => {
 
   it('returns the left operand if left is equivalent to right', () => {
     expect(or(variable('x'), variable('x'))).toEqual(variable('x'))
+  })
+
+  it('returns the left operand if the right is a Conjunction of the left', () => {
+    expect(or(variable('x'), and(variable('x'), variable('y')))).toEqual(variable('x'))
+    expect(or(variable('x'), and(variable('y'), variable('x')))).toEqual(variable('x'))
+  })
+
+  it('returns the right operand if the left is a Conjunction of the right', () => {
+    expect(or(and(variable('x'), variable('y')), variable('x'))).toEqual(variable('x'))
+    expect(or(and(variable('y'), variable('x')), variable('x'))).toEqual(variable('x'))
   })
 
   it('returns a Disjunction on variable input', () => {
