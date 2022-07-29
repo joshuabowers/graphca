@@ -1,5 +1,6 @@
 import { Base } from './Expression'
 import { Boolean, bool } from './boolean'
+import { equals } from './equality'
 import { fromMulti, method, _ } from '@arrows/multimethod'
 import { Binary, binary } from './binary'
 import { not } from './logicalComplement'
@@ -50,7 +51,8 @@ export const and: AndFn = fromMulti(
   method([_, bool(true)], (l: Base, _r: Boolean) => l),
   method([bool(true), _], (_l: Boolean, r: Base) => r),
   method([_, bool(false)], bool(false)),
-  method([bool(false), _], bool(false))
+  method([bool(false), _], bool(false)),
+  method(equals, (l: Base, _r: Base) => l)
 )(rawAnd)
 
 const rawOr = binary(Disjunction, Boolean)(
@@ -65,7 +67,8 @@ export const or: OrFn = fromMulti(
   method([_, bool(false)], (l: Base, _r: Boolean) => l),
   method([bool(false), _], (_r: Boolean, l: Base) => l),
   method([_, bool(true)], bool(true)),
-  method([bool(true), _], bool(true))
+  method([bool(true), _], bool(true)),
+  method(equals, (l: Base, _r: Base) => l)
 )(rawOr)
 
 export const xor = binary(ExclusiveDisjunction, Boolean)(

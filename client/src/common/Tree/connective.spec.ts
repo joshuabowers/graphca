@@ -50,6 +50,10 @@ describe('and', () => {
     expect(and(bool(false), variable('x'))).toEqual(bool(false))
   })
 
+  it('returns the left operand if left equivalent to right', () => {
+    expect(and(variable('x'), variable('x'))).toEqual(variable('x'))
+  })
+
   it('returns a Conjunction on variable input', () => {
     expect(and(variable('x'), variable('y'))).toEqual(
       new Conjunction(variable('x'), variable('y'))
@@ -96,6 +100,10 @@ describe('or', () => {
 
   it('returns true if the left operand is true', () => {
     expect(or(bool(true), variable('x'))).toEqual(bool(true))
+  })
+
+  it('returns the left operand if left is equivalent to right', () => {
+    expect(or(variable('x'), variable('x'))).toEqual(variable('x'))
   })
 
   it('returns a Disjunction on variable input', () => {
