@@ -202,6 +202,18 @@ describe('or', () => {
     expect(or(not(variable('x')), variable('x'))).toEqual(bool(true))
   })
 
+  it('returns an implication if the left operand is a complement', () => {
+    expect(
+      or(not(variable('x')), variable('y'))
+    ).toEqual(implies(variable('x'), variable('y')))
+  })
+
+  it('returns a converse if the right operand is a complement', () => {
+    expect(
+      or(variable('x'), not(variable('y')))
+    ).toEqual(converse(variable('x'), variable('y')))
+  })
+
   it('returns a Disjunction on variable input', () => {
     expect(or(variable('x'), variable('y'))).toEqual(
       new Disjunction(variable('x'), variable('y'))
@@ -274,6 +286,49 @@ describe('nand', () => {
     expect(nand(bool(false), bool(false))).toEqual(bool(true))
   })
 
+  it('returns the complement of left operand if the right is true', () => {
+    expect(nand(variable('x'), bool(true))).toEqual(not(variable('x')))
+  })
+
+  it('returns the right operand if the left is true', () => {
+    expect(nand(bool(true), variable('x'))).toEqual(not(variable('x')))
+  })
+
+  it('returns the true if the right operand is false', () => {
+    expect(nand(variable('x'), bool(false))).toEqual(bool(true))
+  })
+
+  it('returns true if the left operand is false', () => {
+    expect(nand(bool(false), variable('x'))).toEqual(bool(true))
+  })
+
+  it('returns the complement of the left operand if left equivalent to right', () => {
+    expect(nand(variable('x'), variable('x'))).toEqual(not(variable('x')))
+  })
+
+  it('returns an implication if the right operand is a nand of the left', () => {
+    expect(
+      nand(variable('x'), nand(variable('x'), variable('y')))
+    ).toEqual(implies(variable('x'), variable('y')))
+    expect(
+      nand(variable('x'), nand(variable('y'), variable('x')))
+    ).toEqual(implies(variable('x'), variable('y')))
+  })
+
+  it('returns a disjunction of mutually complemented operands', () => {
+    expect(
+      nand(not(variable('x')), not(variable('y')))
+    ).toEqual(or(variable('x'), variable('y')))
+  })
+
+  it('returns true if the right operand is the complement of the left', () => {
+    expect(nand(variable('x'), not(variable('x')))).toEqual(bool(true))
+  })
+
+  it('returns true if the left operand is the complement of the right', () => {
+    expect(nand(not(variable('x')), variable('x'))).toEqual(bool(true))
+  })
+
   it('returns a AlternativeDenial on variable input', () => {
     expect(nand(variable('x'), variable('y'))).toEqual(
       new AlternativeDenial(variable('x'), variable('y'))
@@ -296,6 +351,42 @@ describe('nor', () => {
 
   it('returns true if both arguments are false', () => {
     expect(nor(bool(false), bool(false))).toEqual(bool(true))
+  })
+
+  it('returns the complement of the left operand if the right is false', () => {
+    expect(nor(variable('x'), bool(false))).toEqual(not(variable('x')))
+  })
+
+  it('returns the complement of the right operand if the left is false', () => {
+    expect(nor(bool(false), variable('x'))).toEqual(not(variable('x')))
+  })
+
+  it('returns false if the right operand is true', () => {
+    expect(nor(variable('x'), bool(true))).toEqual(bool(false))
+  })
+
+  it('returns false if the left operand is true', () => {
+    expect(nor(bool(true), variable('x'))).toEqual(bool(false))
+  })
+
+  it('returns the complement of the left operand if left is equivalent to right', () => {
+    expect(nor(variable('x'), variable('x'))).toEqual(not(variable('x')))
+  })
+
+  // \/
+
+  it('returns a conjunction of mutually complemented operands', () => {
+    expect(
+      nor(not(variable('x')), not(variable('y')))
+    ).toEqual(and(variable('x'), variable('y')))
+  })
+
+  it('returns false if the right operand is the complement of the left', () => {
+    expect(nor(variable('x'), not(variable('x')))).toEqual(bool(false))
+  })
+
+  it('returns false if the left operand is the complement of the right', () => {
+    expect(nor(not(variable('x')), variable('x'))).toEqual(bool(false))
   })
 
   it('returns a JointDenial on variable input', () => {

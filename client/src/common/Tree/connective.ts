@@ -6,7 +6,6 @@ import { visit, identity, leftChild, rightChild, child } from './predicates'
 import { fromMulti, method, _ } from '@arrows/multimethod'
 import { Unary, unary } from './unary'
 import { Binary, binary } from './binary'
-// import { not, LogicalComplement } from './logicalComplement'
 
 export abstract class Connective extends Binary {}
 
@@ -103,7 +102,9 @@ export const or: OrFn = fromMulti(
   visit(Conjunction, Base)(leftChild, identity)((_l, r) => r),
   visit(Conjunction, Base)(rightChild, identity)((_l, r) => r),
   visit(Base, LogicalComplement)(identity, child)((_l, _r) => bool(true)),
-  visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(true))
+  visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(true)),
+  method([is(LogicalComplement), _], (l: LogicalComplement, r: Base) => implies(l.expression, r)),
+  method([_, is(LogicalComplement)], (l: Base, r: LogicalComplement) => converse(l, r.expression))
 )(rawOr)
 
 export const xor = binary(ExclusiveDisjunction, Boolean)(
@@ -118,17 +119,51 @@ export const implies = binary(Implication, Boolean)(
   (l, r) => or(not(l), r)
 )
 
-export const nand = binary(AlternativeDenial, Boolean)(
+const rawNand = binary(AlternativeDenial, Boolean)(
   (l, r) => not(and(l, r)),
   (l, r) => not(and(l, r)),
   (l, r) => not(and(l, r))
 )
 
-export const nor = binary(JointDenial, Boolean)(
+export type NandFn = typeof rawNand
+
+export const nand: NandFn = fromMulti(
+  method([_, bool(true)], (l: Base, _r: Boolean) => not(l)),
+  method([bool(true), _], (_l: Boolean, r: Base) => not(r)),
+  method([_, bool(false)], bool(true)),
+  method([bool(false), _], bool(true)),
+  method(equals, (l: Base, _r: Base) => not(l)),
+  visit(Base, AlternativeDenial)(identity, leftChild)((l, r) => implies(l, r.right)),
+  visit(Base, AlternativeDenial)(identity, rightChild)((l, r) => implies(l, r.left)),
+  method(
+    [is(LogicalComplement), is(LogicalComplement)], 
+    (l: LogicalComplement, r: LogicalComplement) => or(l.expression, r.expression)
+  ),
+  visit(Base, LogicalComplement)(identity, child)((_l, _r) => bool(true)),
+  visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(true))
+)(rawNand)
+
+const rawNor = binary(JointDenial, Boolean)(
   (l, r) => not(or(l, r)),
   (l, r) => not(or(l, r)),
   (l, r) => not(or(l, r))
 )
+
+export type NorFn = typeof rawNor
+
+export const nor: NorFn = fromMulti(
+  method([_, bool(true)], bool(false)),
+  method([bool(true), _], bool(false)),
+  method([_, bool(false)], (l: Base, _r: Boolean) => not(l)),
+  method([bool(false), _], (_l: Boolean, r: Base) => not(r)),
+  method(equals, (l: Base, _r: Base) => not(l)),
+  method(
+    [is(LogicalComplement), is(LogicalComplement)],
+    (l: LogicalComplement, r: LogicalComplement) => and(l.expression, r.expression)
+  ),
+  visit(Base, LogicalComplement)(identity, child)((_l, _r) => bool(false)),
+  visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(false))
+)(rawNor)
 
 export const xnor = binary(Biconditional, Boolean)(
   (l, r) => and(implies(l, r), implies(r, l)),
