@@ -108,17 +108,14 @@ const polygammaRecurrence = (m: Base, z: Base) => {
   )
 }
 
-const rawPolygamma = binary(Polygamma)(
+export const polygamma = binary(Polygamma)(
   (l, r) => calculatePolygamma(l, r) as Real,
   (l, r) => calculatePolygamma(l, r) as Complex,
-)
-export type PolygammaFn = typeof rawPolygamma
-
-export const polygamma: PolygammaFn = fromMulti(
+)(
   method([real(0), is(Base)], (_l: Base, r: Base) => digamma(r)),
   method([is(Real), isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),
   method([is(Real), isSmall], (l: Base, r: Base) => polygammaRecurrence(l, r))
-)(rawPolygamma)
+)
 
 const calculateDigamma = (z: Real|Complex): Base => {
   return subtract(

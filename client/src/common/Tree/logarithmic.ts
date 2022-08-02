@@ -1,4 +1,4 @@
-import { method, fromMulti } from '@arrows/multimethod'
+import { method } from '@arrows/multimethod'
 import { Base } from './Expression'
 import { real } from './real'
 import { Complex, complex } from './complex'
@@ -19,19 +19,17 @@ const lnComplex = (c: Complex) => complex(
 const isMatchingBases = (left: Base, right: Base) =>
   right instanceof Exponentiation && equals(left, right.left)
 
-const rawLog = binary(Logarithm)(
+
+export const log = binary(Logarithm)(
   (l, r) => real(Math.log(r.value) / Math.log(l.value)),
   (l, r) => {
     const n = lnComplex(r)
     if(l.a === Math.E && l.b === 0){ return n }
     return divide(lnComplex(r), lnComplex(l))
   }
-)
-export type LogFn = typeof rawLog
-
-export const log: LogFn = fromMulti(
+)(
   method(isMatchingBases, (_l: Base, r: Exponentiation) => r.right)
-)(rawLog)
+)
 
 const fromLog = unaryFrom(log, bindLeft)
 export const lb = fromLog(real(2))

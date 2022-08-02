@@ -1,4 +1,4 @@
-import { method, fromMulti, _ } from '@arrows/multimethod';
+import { method, _ } from '@arrows/multimethod';
 import { Base } from './Expression';
 import { Real, real } from './real';
 import { complex } from './complex';
@@ -16,7 +16,7 @@ const isExponentiation = (left: Base, _right: Base) =>
 const isMultiplication = (left: Base, _right: Base) =>
   left instanceof Multiplication
 
-const rawRaise = binary(Exponentiation)(
+export const raise = binary(Exponentiation)(
   (l, r) => real(l.value ** r.value),
   (l, r) => {
     const p = Math.hypot(l.a, l.b), arg = Math.atan2(l.b, l.a)
@@ -27,10 +27,7 @@ const rawRaise = binary(Exponentiation)(
       multiplicand * Math.sin(dLnP + cArg)
     )
   }
-)
-export type RaiseFn = typeof rawRaise
-
-export const raise: RaiseFn = fromMulti(
+)(
   method([complex(0, 0), real(-1)], complex(Infinity, 0)),
   method([real(0), real(-1)], real(Infinity)),
   method([real(-0), real(-1)], real(-Infinity)),
@@ -41,7 +38,7 @@ export const raise: RaiseFn = fromMulti(
   visit(Base, Logarithm)(identity, leftChild)((_l, r) => r.right),
   method(isExponentiation, (l: Exponentiation, r: Base) => raise(l.left, multiply(l.right, r))),
   method(isMultiplication, (l: Multiplication, r: Base) => multiply(raise(l.left, r), raise(l.right, r))),
-)(rawRaise)
+)
 
 const fromRaise = unaryFrom(raise, bindRight)
 export const reciprocal = fromRaise(real(-1))

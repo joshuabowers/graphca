@@ -1,4 +1,4 @@
-import { method, fromMulti } from '@arrows/multimethod'
+import { method } from '@arrows/multimethod'
 import { is } from './is'
 import { notAny, visit, leftChild, rightChild, identity, negated } from './predicates'
 import { Base } from './Expression'
@@ -17,19 +17,16 @@ const isXpR_R = (l: Base, r: Base) =>
   && (l.right instanceof Real || l.right instanceof Complex)
   && (r instanceof Real || r instanceof Complex)
 
-const rawAdd = binary(Addition)(
-  (l, r) => real(l.value + r.value),
-  (l, r) => complex(l.a + r.a, l.b + r.b)
-)
-export type AddFn = typeof rawAdd
-
 const ApB = visit(Addition, Base)
 const BpA = visit(Base, Addition)
 const MpM = visit(Multiplication, Multiplication)
 const MpB = visit(Multiplication, Base)
 const BpM = visit(Base, Multiplication)
 
-export const add: AddFn = fromMulti(
+export const add = binary(Addition)(
+  (l, r) => real(l.value + r.value),
+  (l, r) => complex(l.a + r.a, l.b + r.b)
+)(
   method([real(0), is(Base)], (_l: Real, r: Base) => r),
   method([is(Base), real(0)], (l: Base, _r: Real) => l),
   method([is(Complex), notAny<Base>(Complex, Real)], (l: Complex, r: Base) => add(r, l)),
@@ -56,6 +53,6 @@ export const add: AddFn = fromMulti(
   MpB(rightChild, identity)((l, r) => multiply(add(real(1), l.left), r)),
   BpM(identity, leftChild)((l, r) => multiply(add(real(1), r.right), l)),
   BpM(identity, rightChild)((l, r) => multiply(add(real(1), r.left), l))
-)(rawAdd)
+)
 
 export const subtract = binaryFrom(add, (l, r) => [l, negate(r)])

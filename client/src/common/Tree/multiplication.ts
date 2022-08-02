@@ -1,4 +1,4 @@
-import { method, fromMulti, multi, Multi } from '@arrows/multimethod';
+import { method, multi, Multi } from '@arrows/multimethod';
 import { is } from './is';
 import { Base } from "./Expression";
 import { Real, real } from "./real";
@@ -143,16 +143,13 @@ export const exponentialCollect: ExponentialCollectFn = multi(
   method([is(Base), is(Base)], (l: Base, _r: Base) => square(l))
 )
 
-const rawMultiply = binary(Multiplication)(
+export const multiply = binary(Multiplication)(
   (l, r) => real(l.value * r.value),
   (l, r) => complex(
     (l.a * r.a) - (l.b * r.b),
     (l.a * r.b) + (l.b * r.a)
   )
-)
-export type MultiplyFn = typeof rawMultiply
-
-export const multiply: MultiplyFn = fromMulti(
+)(
   method([not(Real), is(Real)], (l: Base, r: Real) => multiply(r, l)),
   method([notAny<Base>(Real, Complex), is(Complex)], (l: Base, r: Complex) => multiply(r, l)),
   method([isCasR, isCasR], (l: Complex, r: Complex) => complex(l.a * r.a, 0)),
@@ -167,7 +164,7 @@ export const multiply: MultiplyFn = fromMulti(
   method([real(-Infinity), is(Base)], real(-Infinity)),
   method(isN1_N2A, (l: Base, r: Multiplication) => multiply(multiply(l, r.left), r.right)),
   method(canFormExponential, exponentialCollect)
-)(rawMultiply)
+)
 
 const fromMultiply = unaryFrom(multiply, bindLeft)
 export const negate = fromMultiply(real(-1))

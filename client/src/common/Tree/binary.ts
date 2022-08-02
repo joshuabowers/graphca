@@ -1,4 +1,4 @@
-import { method, multi, Multi } from '@arrows/multimethod'
+import { method, multi, Multi, fromMulti } from '@arrows/multimethod'
 import { is } from './is'
 import { Base, Constructor } from './Expression'
 import { Real, real } from './real'
@@ -29,7 +29,11 @@ type BinaryFn<T, R = void> = Multi
   & cast<Base, Nil, Choose<Real, R>>
   & when<Base, T>
 
-export const binary = <T extends Binary, R = void>(type: Constructor<T>, resultType?: Constructor<R>) => {
+type MethodFn = typeof method
+
+export const binary = <T extends Binary, R = void>(
+  type: Constructor<T>, resultType?: Constructor<R>
+) => {
   type Result<U extends Base> = R extends void ? U : R
   return (
     whenRxR: when<Real, Result<Real>>,
@@ -49,7 +53,9 @@ export const binary = <T extends Binary, R = void>(type: Constructor<T>, resultT
       method([is(Base), is(Nil)], real(NaN)),
       method([is(Base), is(Base)], whenBaseXBase)
     )
-    return fn  
+    return (
+      ...methods: MethodFn[]
+    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
   }
 }
 

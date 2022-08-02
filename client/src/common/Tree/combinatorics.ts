@@ -21,7 +21,7 @@ const calculatePermutation = <T extends Base>(l: T, r: T): T =>
 export const permute = binary(Permutation)(
   (l, r) => calculatePermutation(l, r),
   (l, r) => calculatePermutation(l, r)
-)
+)()
 
 const calculateCombination = <T extends Base>(l: T, r: T): T =>
   divide(
@@ -32,4 +32,4 @@ const calculateCombination = <T extends Base>(l: T, r: T): T =>
 export const combine = binary(Combination)(
   (l, r) => calculateCombination(l, r),
   (l, r) => calculateCombination(l, r)
-)
+)()

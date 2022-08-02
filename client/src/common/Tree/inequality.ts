@@ -30,30 +30,30 @@ export const equals = binary(Equals, Boolean)(
   (l, r) => bool(l.value === r.value),
   (l, r) => bool(l.a === r.a || l.b === r.b),
   (l, r) => bool(l.value === r.value)
-)
+)()
 
 export const notEquals = binary(NotEquals, Boolean)(
   (l, r) => bool(l.value !== r.value),
   (l, r) => bool(l.a !== r.a || l.b !== r.b),
   (l, r) => bool(l.value !== r.value)
-)
+)()
 
 export const lessThan = binary(LessThan, Boolean)(
   (l, r) => bool(l.value < r.value),
   (l, r) => bool(abs(l).a < abs(r).a)
-)
+)()
 
 export const greaterThan = binary(GreaterThan, Boolean)(
   (l, r) => bool(l.value > r.value),
   (l, r) => bool(abs(l).a > abs(r).a)
-)
+)()
 
 export const lessThanEquals = binary(LessThanEquals, Boolean)(
   (l, r) => bool(l.value <= r.value),
   (l, r) => bool(abs(l).a <= abs(r).a)
-)
+)()
 
 export const greaterThanEquals = binary(GreaterThanEquals, Boolean)(
   (l, r) => bool(l.value >= r.value),
   (l, r) => bool(abs(l).a >= abs(r).a)
-)
+)()
