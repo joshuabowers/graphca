@@ -35,7 +35,7 @@ export const cos = unary(Cosine)(
     Math.cos(c.a) * Math.cosh(c.b),
     -Math.sin(c.a) * Math.sinh(c.b)
   )
-)
+)()
 export type Cos = typeof cos
 
 export const sin = unary(Sine)(
@@ -44,7 +44,7 @@ export const sin = unary(Sine)(
     Math.sin(c.a) * Math.cosh(c.b),
     Math.cos(c.a) * Math.sinh(c.b)
   )
-)
+)()
 export type Sin = typeof sin
 
 export const tan = unary(Tangent)(
@@ -56,23 +56,23 @@ export const tan = unary(Tangent)(
       Math.sinh(2 * c.b) / divisor    
     )
   }
-)
+)()
 export type Tan = typeof tan
 
 export const sec = unary(Secant)(
   r => reciprocal(cos(r)),
   c => reciprocal(cos(c))
-)
+)()
 export type Sec = typeof sec
 
 export const csc = unary(Cosecant)(
   r => reciprocal(sin(r)),
   c => reciprocal(sin(c))
-)
+)()
 export type Csc = typeof csc
 
 export const cot = unary(Cotangent)(
   r => reciprocal(tan(r)),
   c => reciprocal(tan(c))
-)
+)()
 export type Cot = typeof cot

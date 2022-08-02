@@ -40,7 +40,7 @@ export const acosh = unary(AreaHyperbolicCosine)(
       sqrt(subtract(c, real(1)))
     )
   ))
-)
+)()
 export type AcoshFn = typeof acosh
 
 export const asinh = unary(AreaHyperbolicSine)(
@@ -49,7 +49,7 @@ export const asinh = unary(AreaHyperbolicSine)(
     sqrt(add(square(c), real(1))),
     c
   ))
-)
+)()
 export type AsinhFn = typeof asinh
 
 export const atanh = unary(AreaHyperbolicTangent)(
@@ -61,23 +61,23 @@ export const atanh = unary(AreaHyperbolicTangent)(
       subtract(real(1), c)
     ))
   )
-)
+)()
 export type AtanhFn = typeof atanh
 
 export const asech = unary(AreaHyperbolicSecant)(
   r => acosh(reciprocal(r)),
   c => acosh(reciprocal(c))
-)
+)()
 export type AsechFn = typeof asech
 
 export const acsch = unary(AreaHyperbolicCosecant)(
   r => asinh(reciprocal(r)),
   c => asinh(reciprocal(c))
-)
+)()
 export type AcschFn = typeof acsch
 
 export const acoth = unary(AreaHyperbolicCotangent)(
   r => atanh(reciprocal(r)),
   c => atanh(reciprocal(c))
-)
+)()
 export type AcothFn = typeof acoth

@@ -1,4 +1,4 @@
-import { multi, fromMulti, method } from "@arrows/multimethod";
+import { multi, method } from "@arrows/multimethod";
 import { is } from './is';
 import { Base } from "./Expression";
 import { Real, real } from './real'
@@ -64,13 +64,10 @@ export class Gamma extends Unary {
   readonly $kind = 'Gamma'
 }
 
-const rawGamma = unary(Gamma)(
+export const gamma = unary(Gamma)(
   r => calculateGamma(r) as Real,
   c => calculateGamma(c) as Complex
-)
-export type GammaFn = typeof rawGamma
-
-export const gamma: GammaFn = fromMulti(
+)(
   method(isPositiveInteger, (e: Base) => factorial(subtract(e, real(1)))),
   method(isSmall, (e: Base) => gammaReflection(e))
-)(rawGamma)
+)

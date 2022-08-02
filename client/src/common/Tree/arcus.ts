@@ -38,7 +38,7 @@ const halfPi = real(Math.PI/2)
 export const acos = unary(ArcusCosine)(
   r => real(Math.acos(r.value)),
   c => subtract(halfPi, asin(c))
-)
+)()
 export type AcosFn = typeof acos
 
 export const asin = unary(ArcusSine)(
@@ -48,7 +48,7 @@ export const asin = unary(ArcusSine)(
     const distance = sqrt(subtract(real(1), square(c)))
     return multiply(i, ln(subtract(distance, iz)))
   }
-)
+)()
 export type AsinFn = typeof asin
 
 export const atan = unary(ArcusTangent)(
@@ -60,23 +60,23 @@ export const atan = unary(ArcusTangent)(
     const ratio = divide(inz, ipz)
     return multiply(nHalfI, ln(ratio))
   }
-)
+)()
 export type AtanFn = typeof atan
 
 export const asec = unary(ArcusSecant)(
   r => acos(reciprocal(r)),
   c => acos(reciprocal(c))
-)
+)()
 export type AsecFn = typeof asec
 
 export const acsc = unary(ArcusCosecant)(
   r => asin(reciprocal(r)),
   c => asin(reciprocal(c))
-)
+)()
 export type AcscFn = typeof acsc
 
 export const acot = unary(ArcusCotangent)(
   r => subtract(halfPi, atan(r)),
   c => atan(reciprocal(c))
-)
+)()
 export type AcotFn = typeof acot

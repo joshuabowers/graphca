@@ -9,5 +9,5 @@ export class AbsoluteValue extends Unary {
 export const abs = unary(AbsoluteValue)(
   r => real(Math.abs(r.value)),
   c => complex(Math.hypot(c.a, c.b), 0)
-)
+)()
 export type AbsFn = typeof abs

@@ -1,4 +1,4 @@
-import { method, multi, Multi } from '@arrows/multimethod'
+import { method, multi, Multi, fromMulti } from '@arrows/multimethod'
 import { is } from './is'
 import { Base, Constructor } from './Expression'
 import { Binary, BindTo } from './binary'
@@ -17,7 +17,7 @@ type when<T, R = T> = (expression: T) => R
 
 type Choose<D, F> = F extends void ? D : F
 
-type UnaryFn<T, R = void> = Multi 
+export type UnaryFn<T, R = void> = Multi 
   & when<Real, Choose<Real, R>>
   & when<Complex, Choose<Complex, R>>
   & when<Boolean, Choose<Real|Boolean, R>>
@@ -27,6 +27,8 @@ type UnaryFn<T, R = void> = Multi
 const notValue = (v: Nil) => real(NaN)
 const coerce = (b: Boolean) => real(b.value ? 1 : 0)
 
+type MethodFn = typeof method
+
 export const unary = <T extends Unary, R = void>(type: Constructor<T>, resultType?: Constructor<R>) => {
   type Result<U extends Base> = R extends void ? U : R
   return (
@@ -34,7 +36,7 @@ export const unary = <T extends Unary, R = void>(type: Constructor<T>, resultTyp
     whenComplex: when<Complex, Result<Complex>>,
     whenBoolean?: when<Boolean, Result<Real|Boolean>>,
     whenNil?: when<Nil, Result<Real>>
-  ): UnaryFn<T, R> => {
+  ) => {
     const fn: UnaryFn<T, R> = multi(
       method(is(Real), whenReal),
       method(is(Complex), whenComplex),
@@ -42,7 +44,9 @@ export const unary = <T extends Unary, R = void>(type: Constructor<T>, resultTyp
       method(is(Nil), whenNil ?? ((e: Nil) => fn(notValue(e)))),
       method(is(Base), (expression: Base) => new type(expression))
     )
-    return fn
+    return (
+      ...methods: MethodFn[]
+    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
   }
 }
 
