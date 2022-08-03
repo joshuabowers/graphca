@@ -85,6 +85,12 @@ describe('not', () => {
       not(xnor(variable('x'), variable('y')))
     ).toEqual(xor(variable('x'), variable('y')))
   })
+
+  it('returns a conjunction if given a converse implication', () => {
+    expect(
+      not(converse(variable('x'), variable('y')))
+    ).toEqual(and(not(variable('x')), variable('y')))
+  })
 })
 
 describe('and', () => {
@@ -509,6 +515,22 @@ describe('converse', () => {
 
   it('returns true if both arguments are false', () => {
     expect(converse(bool(false), bool(false))).toEqual(bool(true))
+  })
+
+  it('returns true if the left operand is true', () => {
+    expect(converse(bool(true), variable('x'))).toEqual(bool(true))
+  })
+
+  it('returns the left operand if the right is true', () => {
+    expect(converse(variable('x'), bool(true))).toEqual(variable('x'))
+  })
+
+  it('returns the complement of the right if the left is false', () => {
+    expect(converse(bool(false), variable('x'))).toEqual(not(variable('x')))
+  })
+
+  it('returns true if the right operand is false', () => {
+    expect(converse(variable('x'), bool(false))).toEqual(bool(true))
   })
 
   it('returns a ConverseImplication on variable input', () => {
