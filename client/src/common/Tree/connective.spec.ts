@@ -67,6 +67,12 @@ describe('not', () => {
       not(nor(variable('x'), variable('y')))
     ).toEqual(or(variable('x'), variable('y')))
   })
+
+  it('returns an exclusive disjunction if given an exclusive disjunction', () => {
+    expect(
+      not(xor(variable('x'), variable('y')))
+    ).toEqual(xor(variable('x'), not(variable('y'))))
+  })
 })
 
 describe('and', () => {
@@ -236,6 +242,26 @@ describe('xor', () => {
 
   it('returns false if both arguments are false', () => {
     expect(xor(bool(false), bool(false))).toEqual(bool(false))
+  })
+
+  it('returns the right operand if the left is false', () => {
+    expect(xor(bool(false), variable('x'))).toEqual(variable('x'))
+  })
+
+  it('returns the left operand if the right is false', () => {
+    expect(xor(variable('x'), bool(false))).toEqual(variable('x'))
+  })
+
+  it('returns the complement of the right if the left is true', () => {
+    expect(xor(bool(true), variable('x'))).toEqual(not(variable('x')))
+  })
+
+  it('returns the complement of the left if the right is true', () => {
+    expect(xor(variable('x'), bool(true))).toEqual(not(variable('x')))
+  })
+
+  it('returns false if the left and right operands are equal', () => {
+    expect(xor(variable('x'), variable('x'))).toEqual(bool(false))
   })
 
   it('returns a ExclusiveDisjunction on variable input', () => {

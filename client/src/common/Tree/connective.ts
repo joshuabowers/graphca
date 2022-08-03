@@ -54,7 +54,8 @@ export const not = unary(LogicalComplement, Boolean)(
   method(is(Conjunction), (e: Conjunction) => nand(e.left, e.right)),
   method(is(Disjunction), (e: Disjunction) => nor(e.left, e.right)),
   method(is(AlternativeDenial), (e: AlternativeDenial) => and(e.left, e.right)),
-  method(is(JointDenial), (e: JointDenial) => or(e.left, e.right))
+  method(is(JointDenial), (e: JointDenial) => or(e.left, e.right)),
+  method(is(ExclusiveDisjunction), (e: ExclusiveDisjunction) => xor(e.left, not(e.right)))
 )
 
 export const and = binary(Conjunction, Boolean)(
@@ -99,7 +100,13 @@ export const xor = binary(ExclusiveDisjunction, Boolean)(
   (l, r) => and(or(l, r), not(and(l, r))),
   (l, r) => and(or(l, r), not(and(l, r))),
   (l, r) => and(or(l, r), not(and(l, r)))
-)()
+)(
+  method([bool(false), _], (_l: Boolean, r: Base) => r),
+  method([_, bool(false)], (l: Base, _r: Boolean) => l),
+  method([bool(true), _], (_l: Boolean, r: Base) => not(r)),
+  method([_, bool(true)], (l: Base, _r: Boolean) => not(l)),
+  method(equals, (_l: Base, _r: Base) => bool(false))
+)
 
 export const implies = binary(Implication, Boolean)(
   (l, r) => or(not(l), r),
