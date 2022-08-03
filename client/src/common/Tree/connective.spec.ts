@@ -68,16 +68,22 @@ describe('not', () => {
     ).toEqual(or(variable('x'), variable('y')))
   })
 
-  it('returns an exclusive disjunction if given an exclusive disjunction', () => {
+  it('returns a biconditional if given an exclusive disjunction', () => {
     expect(
       not(xor(variable('x'), variable('y')))
-    ).toEqual(xor(variable('x'), not(variable('y'))))
+    ).toEqual(xnor(variable('x'), variable('y')))
   })
 
   it('returns a conjunction if given an implication', () => {
     expect(
       not(implies(variable('x'), variable('y')))
     ).toEqual(and(variable('x'), not(variable('y'))))
+  })
+
+  it('returns an exclusive disjunction if given a biconditional', () => {
+    expect(
+      not(xnor(variable('x'), variable('y')))
+    ).toEqual(xor(variable('x'), variable('y')))
   })
 })
 
@@ -459,6 +465,26 @@ describe('xnor', () => {
 
   it('returns true if both arguments are false', () => {
     expect(xnor(bool(false), bool(false))).toEqual(bool(true))
+  })
+
+  it('returns the right operand if the left is true', () => {
+    expect(xnor(bool(true), variable('x'))).toEqual(variable('x'))
+  })
+
+  it('returns the left operand if the right is true', () => {
+    expect(xnor(variable('x'), bool(true))).toEqual(variable('x'))
+  })
+
+  it('returns the complement of the right if the left is false', () => {
+    expect(xnor(bool(false), variable('x'))).toEqual(not(variable('x')))
+  })
+
+  it('returns the complement of the left if the right is false', () => {
+    expect(xnor(variable('x'), bool(false))).toEqual(not(variable('x')))
+  })
+
+  it('returns true if the operands are equal', () => {
+    expect(xnor(variable('x'), variable('x'))).toEqual(bool(true))
   })
 
   it('returns a Biconditional on variable input', () => {

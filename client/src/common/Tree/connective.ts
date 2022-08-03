@@ -55,8 +55,9 @@ export const not = unary(LogicalComplement, Boolean)(
   method(is(Disjunction), (e: Disjunction) => nor(e.left, e.right)),
   method(is(AlternativeDenial), (e: AlternativeDenial) => and(e.left, e.right)),
   method(is(JointDenial), (e: JointDenial) => or(e.left, e.right)),
-  method(is(ExclusiveDisjunction), (e: ExclusiveDisjunction) => xor(e.left, not(e.right))),
-  method(is(Implication), (e: Implication) => and(e.left, not(e.right)))
+  method(is(ExclusiveDisjunction), (e: ExclusiveDisjunction) => xnor(e.left, e.right)),
+  method(is(Implication), (e: Implication) => and(e.left, not(e.right))),
+  method(is(Biconditional), (e: Biconditional) => xor(e.left, e.right))
 )
 
 export const and = binary(Conjunction, Boolean)(
@@ -162,7 +163,13 @@ export const xnor = binary(Biconditional, Boolean)(
   (l, r) => and(implies(l, r), implies(r, l)),
   (l, r) => and(implies(l, r), implies(r, l)),
   (l, r) => and(implies(l, r), implies(r, l))
-)()
+)(
+  method([bool(true), _], (_l: Boolean, r: Base) => r),
+  method([_, bool(true)], (l: Base, _r: Boolean) => l),
+  method([bool(false), _], (_l: Boolean, r: Base) => not(r)),
+  method([_, bool(false)], (l: Base, _r: Boolean) => not(l)),
+  method(equals, (_l: Base, _r: Base) => bool(true))
+)
 
 export const converse = binary(ConverseImplication, Boolean)(
   (l, r) => or(l, not(r)),
