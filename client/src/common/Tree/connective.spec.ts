@@ -73,6 +73,12 @@ describe('not', () => {
       not(xor(variable('x'), variable('y')))
     ).toEqual(xor(variable('x'), not(variable('y'))))
   })
+
+  it('returns a conjunction if given an implication', () => {
+    expect(
+      not(implies(variable('x'), variable('y')))
+    ).toEqual(and(variable('x'), not(variable('y'))))
+  })
 })
 
 describe('and', () => {
@@ -286,6 +292,22 @@ describe('implies', () => {
 
   it('returns true if both arguments are false', () => {
     expect(implies(bool(false), bool(false))).toEqual(bool(true))
+  })
+
+  it('returns the right operand if the left is true', () => {
+    expect(implies(bool(true), variable('x'))).toEqual(variable('x'))
+  })
+
+  it('returns true if the right operand is true', () => {
+    expect(implies(variable('x'), bool(true))).toEqual(bool(true))
+  })
+
+  it('returns true if the left operand is false', () => {
+    expect(implies(bool(false), variable('x'))).toEqual(bool(true))
+  })
+
+  it('returns the complement of the left if the right is false', () => {
+    expect(implies(variable('x'), bool(false))).toEqual(not(variable('x')))
   })
   
   it('returns an Implication on variable input', () => {
