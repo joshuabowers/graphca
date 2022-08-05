@@ -200,7 +200,7 @@ const primitive = <T extends Primitive, U>(
     whenBoolean: WhenFn<Writer<Boolean>, T, U>,
   ) => {
     const fn: PrimitiveFn<T, U> = multi(
-      (v: Writer<Primitive>) => v?.value?.[$kind],
+      (v: Writer<Node>) => v?.value?.[$kind],
       method(guard, (n: U) => unit(create(n))),
       method('Real', whenReal(create)),
       method('Complex', whenComplex(create)),
@@ -255,19 +255,35 @@ type UnaryFn<T> = Multi
   & CastFn<Writer<Boolean>, Boolean>
   & CastFn<Writer<Node>, T>
 
+type Action<T> = [T|Writer<T>, string]
+type CaseFn<I> = (input: I) => Action<I>
+
+const isWriter = <T>(obj: unknown): obj is Writer<T> =>
+  typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
+
+const map = <T>(fn: CaseFn<T>) =>
+  (writer: Writer<T>) =>
+    bind(writer, input => {
+      const [value, action] = fn(input)
+      return ({
+        value: isWriter(value) ? value.value : value,
+        log: [...(isWriter(value) ? value.log : []), {input, action}]
+      })
+    })
+
 const unary = <T extends Unary>(
   create: CreateFn<Node, T>
 ) => {
   return (
-    whenReal: CastFn<Writer<Real>, Real>,
-    whenComplex: CastFn<Writer<Complex>, Complex>,
-    whenBoolean: CastFn<Writer<Boolean>, Boolean>
+    whenReal: CaseFn<Real>,
+    whenComplex: CaseFn<Complex>,
+    whenBoolean: CaseFn<Boolean>
   )=> {
     const fn: UnaryFn<T> = multi(
-      (v: Writer<Unary>) => v?.value?.[$kind],
-      method('Real', whenReal),
-      method('Complex', whenComplex),
-      method('Boolean', whenBoolean),
+      (v: Writer<Node>) => v?.value?.[$kind],
+      method('Real', map(whenReal)),
+      method('Complex', map(whenComplex)),
+      method('Boolean', map(whenBoolean)),
       method((n: Writer<Node>) => bind(n, x => ({value: create(x), log: [{input: x, action: 'absolute value'}]})))
     )
     return (
@@ -279,7 +295,21 @@ const unary = <T extends Unary>(
 export const absolute = unary<Absolute>(
   expression => ({[$kind]: 'Absolute', expression})
 )(
-  r => bind(r, x => ({value: real(Math.abs(x.value)).value, log: [{input: x, action: 'absolute value'}]})),
-  c => bind(c, x => ({value: complex([Math.hypot(x.a, x.b), 0]).value, log: [{input: x, action: 'absolute value'}]})),
-  b => bind(b, x => ({value: x, log: [{input: x, action: 'absolute value'}]}))
+  r => [real(Math.abs(r.value)), 'absolute value'],
+  c => [complex([Math.hypot(c.a, c.b), 0]), 'absolute value'],
+  b => [b, 'absolute value']
+)()
+
+export const sin = unary<Sine>(
+  expression => ({[$kind]: 'Sine', expression})
+)(
+  r => [real(Math.sin(r.value)), 'computed sine'],
+  c => [
+    complex([
+      Math.sin(c.a) * Math.cosh(c.b),
+      Math.cos(c.a) * Math.sinh(c.b)
+    ]),
+    'computed sine'
+  ],
+  b => [boolean(real(Math.sin(b.value ? 1 : 0))), 'computed sine']
 )()
