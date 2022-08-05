@@ -152,7 +152,7 @@ export const pipe = <T>(writer: Writer<T>, ...transforms: WriterFn<T>[]): Writer
 // //   c => complex(Math.hypot(c.a, c.b), 0)
 // // )()
 
-const $kind = Symbol('$kind')
+export const $kind = Symbol('$kind')
 
 type Real = {[$kind]: 'Real', value: number}
 type Complex = {[$kind]: 'Complex', a: number, b: number}
@@ -198,17 +198,49 @@ const primitive = <T extends Primitive, U>(
     whenBoolean: WhenFn<Writer<Boolean>, T, U>,
   ) => {
     const fn: PrimitiveFn<T, U> = multi(
-      (v: Primitive) => v[$kind],
-      method(guard, create),
+      (v: Writer<Primitive>) => v?.value?.[$kind],
+      method(guard, (n: U) => unit(create(n))),
       method('Real', whenReal(create)),
       method('Complex', whenComplex(create)),
       method('Boolean', whenBoolean(create))
     )
     return (
       ...methods: (typeof method)[]
-    ): typeof fn => fromMulti(...methods)(fn)
+    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
   }  
 }
+
+const isNumber = (v: unknown): v is number => typeof v === 'number'
+const isNumberTuple = (v: unknown): v is [number, number] =>
+  Array.isArray(v) && v.length === 2 && isNumber(v[0]) && isNumber(v[1])
+const isBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
+
+export const real = primitive<Real, number>(
+  isNumber,
+  value => ({[$kind]: 'Real', value})
+)(
+  _create => r => r,
+  create => c => bind(c, x => ({value: create(x.a), log: [{input: x, action: 'cast to real'}]})),
+  create => b => bind(b, x => ({value: create(x.value ? 1 : 0), log: [{input: x, action: 'cast to real'}]}))
+)()
+
+export const complex = primitive<Complex, [number, number]>(
+  isNumberTuple,
+  ([a, b]) => ({[$kind]: 'Complex', a, b})
+)(
+  create => r => bind(r, x => ({value: create([x.value, 0]), log: [{input: x, action: 'cast to complex'}]})),
+  _create => c => c,
+  create => b => bind(b, x => ({value: create([x.value ? 1 : 0, 0]), log: [{input: x, action: 'cast to complex'}]}))
+)()
+
+export const boolean = primitive<Boolean, boolean>(
+  isBoolean,
+  value => ({[$kind]: 'Boolean', value})
+)(
+  create => r => bind(r, x => ({value: create(x.value !== 0), log: [{input: x, action: 'cast to boolean'}]})),
+  create => c => bind(c, x => ({value: create(x.a !== 0 || x.b !== 0), log: [{input: x, action: 'cast to boolean'}]})),
+  _create => b => b
+)()
 
 type UnaryFn<T> = Multi
   & CastFn<Writer<Real>, Real>
@@ -236,41 +268,6 @@ const unary = <T extends Unary>(
     ): typeof fn => fromMulti(...methods)(fn)
   }
 }
-
-const isNumber = (v: unknown): v is number => typeof v === 'number'
-const isNumberTuple = (v: unknown): v is [number, number] =>
-  Array.isArray(v) && v.length === 2 && isNumber(v[0]) && isNumber(v[1])
-const isBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
-
-const real = primitive<Real, number>(
-  isNumber,
-  value => ({[$kind]: 'Real', value})
-)(
-  _create => r => r,
-  create => c => bind(c, x => ({value: create(x.a), log: [{input: x, action: 'cast to real'}]})),
-  create => b => bind(b, x => ({value: create(x.value ? 1 : 0), log: [{input: x, action: 'cast to real'}]}))
-)()
-const r = real(5)
-
-const complex = primitive<Complex, [number, number]>(
-  isNumberTuple,
-  ([a, b]) => ({[$kind]: 'Complex', a, b})
-)(
-  create => r => bind(r, x => ({value: create([x.value, 0]), log: [{input: x, action: 'cast to complex'}]})),
-  _create => c => c,
-  create => b => bind(b, x => ({value: create([x.value ? 1 : 0, 0]), log: [{input: x, action: 'cast to complex'}]}))
-)()
-const c = complex([1, 0])
-
-const boolean = primitive<Boolean, boolean>(
-  isBoolean,
-  value => ({[$kind]: 'Boolean', value})
-)(
-  create => r => bind(r, x => ({value: create(x.value !== 0), log: [{input: x, action: 'cast to boolean'}]})),
-  create => c => bind(c, x => ({value: create(x.a !== 0 || x.b !== 0), log: [{input: x, action: 'cast to boolean'}]})),
-  _create => b => b
-)()
-const b = boolean(false)
 
 // const absolute = unary<Absolute>(
 //   expression => ({[$kind]: 'Absolute', expression})
