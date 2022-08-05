@@ -160,22 +160,24 @@ type Boolean = {[$kind]: 'Boolean', value: boolean}
 type Nil = {[$kind]: 'Nil'}
 type Primitive = Real | Complex | Boolean | Nil
 
+type Variable = {[$kind]: 'Variable', name: string, value: Node}
+
 type BinaryParams = {left: Node, right: Node}
 type Addition = {[$kind]: 'Addition'}
 type Multiplication = {[$kind]: 'Multiplication'}
 type Binary = BinaryParams & (Addition | Multiplication)
 
 type UnaryParams = {expression: Node}
-type Absolute = {[$kind]: 'Absolute'}
-type Factorial = {[$kind]: 'Factorial'}
+type Absolute = {[$kind]: 'Absolute'} & UnaryParams
+type Factorial = {[$kind]: 'Factorial'} & UnaryParams
 
-type Sine = {[$kind]: 'Sine'}
-type Cosine = {[$kind]: 'Cosine'}
+type Sine = {[$kind]: 'Sine'} & UnaryParams
+type Cosine = {[$kind]: 'Cosine'} & UnaryParams
 type Trigonometric = Sine | Cosine
 
-type Unary = UnaryParams & (Absolute | Factorial | Trigonometric)
+type Unary = Absolute | Factorial | Trigonometric
 
-type Node = Primitive | Unary | Binary
+type Node = Primitive | Unary | Binary | Variable | Nil
 
 type GuardFn<T> = (value: unknown) => value is T
 type CreateFn<T, U> = (value: T) => U
@@ -209,6 +211,11 @@ const primitive = <T extends Primitive, U>(
     ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
   }  
 }
+
+export const nil: Nil = ({[$kind]: 'Nil'})
+
+export const variable = (name: string, value: Node = nil): Writer<Variable> => 
+  unit({[$kind]: 'Variable', name, value})
 
 const isNumber = (v: unknown): v is number => typeof v === 'number'
 const isNumberTuple = (v: unknown): v is [number, number] =>
@@ -252,27 +259,27 @@ const unary = <T extends Unary>(
   create: CreateFn<Node, T>
 ) => {
   return (
-    whenReal: WhenFn<Writer<Real>, T, Node>,
-    whenComplex: WhenFn<Writer<Complex>, T, Node>,
-    whenBoolean: WhenFn<Writer<Boolean>, T, Node>
+    whenReal: CastFn<Writer<Real>, Real>,
+    whenComplex: CastFn<Writer<Complex>, Complex>,
+    whenBoolean: CastFn<Writer<Boolean>, Boolean>
   )=> {
     const fn: UnaryFn<T> = multi(
-      (v: Unary) => v[$kind],
-      method('Real', whenReal(create)),
-      method('Complex', whenComplex(create)),
-      method('Boolean', whenBoolean(create)),
-      method(create)
+      (v: Writer<Unary>) => v?.value?.[$kind],
+      method('Real', whenReal),
+      method('Complex', whenComplex),
+      method('Boolean', whenBoolean),
+      method((n: Writer<Node>) => bind(n, x => ({value: create(x), log: [{input: x, action: 'absolute value'}]})))
     )
     return (
       ...methods: (typeof method)[]
-    ): typeof fn => fromMulti(...methods)(fn)
+    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
   }
 }
 
-// const absolute = unary<Absolute>(
-//   expression => ({[$kind]: 'Absolute', expression})
-// )(
-//   _create => r => bind(r, x => ({value: real(Math.abs(x.value)).value, log: [{input: x, action: 'absolute value'}]})),
-//   _create => c => bind(c, x => ({value: complex([1, 1]), log: [{input: x, action: 'absolute value'}]})),
-//   _create => b => bind(b, x => ({value: real(b), log: [{input: x, action: 'absolute value'}]}))
-// )()
+export const absolute = unary<Absolute>(
+  expression => ({[$kind]: 'Absolute', expression})
+)(
+  r => bind(r, x => ({value: real(Math.abs(x.value)).value, log: [{input: x, action: 'absolute value'}]})),
+  c => bind(c, x => ({value: complex([Math.hypot(x.a, x.b), 0]).value, log: [{input: x, action: 'absolute value'}]})),
+  b => bind(b, x => ({value: x, log: [{input: x, action: 'absolute value'}]}))
+)()

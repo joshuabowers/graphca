@@ -1,4 +1,4 @@
-import { $kind, real, complex, boolean } from './writer'
+import { $kind, real, complex, boolean, nil, variable, absolute } from './writer'
 
 describe('real', () => {
   it('returns a Writer<Real> for a number input', () => {
@@ -86,6 +86,38 @@ describe('boolean', () => {
     expect(boolean(boolean(false))).toEqual({
       value: {[$kind]: 'Boolean', value: false},
       log: []
+    })
+  })
+})
+
+describe('absolute', () => {
+  it('returns a Writer<Real> for a real input', () => {
+    expect(absolute(real(-5))).toEqual({
+      value: {[$kind]: 'Real', value: 5},
+      log: [{input: real(-5).value, action: 'absolute value'}]
+    })
+  })
+
+  it('returns a Writer<Complex> for a complex input', () => {
+    expect(absolute(complex([1, 2]))).toEqual({
+      value: {[$kind]: 'Complex', a: 2.23606797749979, b: 0},
+      log: [{input: complex([1,2]).value, action: 'absolute value'}]
+    })
+  })
+
+  it('returns a Writer<Boolean> for a boolean input', () => {
+    expect(absolute(boolean(true))).toEqual({
+      value: {[$kind]: 'Boolean', value: true},
+      log: [{input: boolean(true).value, action: 'absolute value'}]
+    })
+  })
+
+  it('returns a Writer<Absolute> for variable input', () => {
+    expect(absolute(variable('x'))).toEqual({
+      value: {[$kind]: 'Absolute', expression: {
+        [$kind]: 'Variable', name: 'x', value: nil
+      }},
+      log: [{input: variable('x').value, action: 'absolute value'}]
     })
   })
 })
