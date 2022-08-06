@@ -11,7 +11,7 @@ describe('real', () => {
   it('returns a Writer<Real> for a real input', () => {
     expect(real(real(5))).toEqual({
       value: {[$kind]: 'Real', value: 5},
-      log: []
+      log: [{input: real(5).value, action: ''}]
     })
   })
 
@@ -48,7 +48,7 @@ describe('complex', () => {
   it('returns a Writer<Complex> for a complex input', () => {
     expect(complex(complex([1, 2]))).toEqual({
       value: {[$kind]: 'Complex', a: 1, b: 2},
-      log: []
+      log: [{input: complex([1, 2]).value, action: ''}]
     })
   })
 
@@ -85,7 +85,7 @@ describe('boolean', () => {
   it('returns a Writer<Boolean> for a boolean input', () => {
     expect(boolean(boolean(false))).toEqual({
       value: {[$kind]: 'Boolean', value: false},
-      log: []
+      log: [{input: boolean(false).value, action: ''}]
     })
   })
 })

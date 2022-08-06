@@ -184,27 +184,47 @@ type CreateFn<T, U> = (value: T) => U
 type CastFn<T, U> = (value: T) => Writer<U>
 type WhenFn<T, U, V> = (create: CreateFn<V, U>) => CastFn<T, U>
 
+type Action<T> = [T|Writer<T>, string]
+type CaseFn<I> = (input: I) => Action<I>
+
+type CreateCase<T, U, I> = (create: CreateFn<U, T>) => (input: I) => Action<T>
+
 type PrimitiveFn<T, U> = Multi
   & CastFn<U, T>
   & CastFn<Writer<Real>, T>
   & CastFn<Writer<Complex>, T>
   & CastFn<Writer<Boolean>, T>
 
+const isWriter = <T>(obj: unknown): obj is Writer<T> =>
+  typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
+
+const primitiveMap = <T, U>(create: CreateFn<U, T>) =>
+  <I>(fn: CreateCase<T, U, I>) =>
+    (writer: Writer<I>) =>
+      bind(writer, input => {
+        const [value, action] = fn(create)(input)
+        return ({
+          value: isWriter(value) ? value.value : value,
+          log: [...(isWriter(value) ? value.log : []), {input, action}]
+        })
+      })
+
 const primitive = <T extends Primitive, U>(
   guard: GuardFn<U>,
   create: CreateFn<U, T>
 ) => {
+  const pMap = primitiveMap(create)
   return (
-    whenReal: WhenFn<Writer<Real>, T, U>,
-    whenComplex: WhenFn<Writer<Complex>, T, U>,
-    whenBoolean: WhenFn<Writer<Boolean>, T, U>,
+    whenReal: CreateCase<T, U, Real>,
+    whenComplex: CreateCase<T, U, Complex>,
+    whenBoolean: CreateCase<T, U, Boolean>
   ) => {
     const fn: PrimitiveFn<T, U> = multi(
       (v: Writer<Node>) => v?.value?.[$kind],
       method(guard, (n: U) => unit(create(n))),
-      method('Real', whenReal(create)),
-      method('Complex', whenComplex(create)),
-      method('Boolean', whenBoolean(create))
+      method('Real', pMap(whenReal)),
+      method('Complex', pMap(whenComplex)),
+      method('Boolean', pMap(whenBoolean))
     )
     return (
       ...methods: (typeof method)[]
@@ -226,27 +246,27 @@ export const real = primitive<Real, number>(
   isNumber,
   value => ({[$kind]: 'Real', value})
 )(
-  _create => r => r,
-  create => c => bind(c, x => ({value: create(x.a), log: [{input: x, action: 'cast to real'}]})),
-  create => b => bind(b, x => ({value: create(x.value ? 1 : 0), log: [{input: x, action: 'cast to real'}]}))
+  _create => r => [r, ''],
+  create => c => [create(c.a), 'cast to real'],
+  create => b => [create(b.value ? 1 : 0), 'cast to real']
 )()
 
 export const complex = primitive<Complex, [number, number]>(
   isNumberTuple,
   ([a, b]) => ({[$kind]: 'Complex', a, b})
 )(
-  create => r => bind(r, x => ({value: create([x.value, 0]), log: [{input: x, action: 'cast to complex'}]})),
-  _create => c => c,
-  create => b => bind(b, x => ({value: create([x.value ? 1 : 0, 0]), log: [{input: x, action: 'cast to complex'}]}))
+  create => r => [create([r.value, 0]), 'cast to complex'],
+  _create => c => [c, ''],
+  create => b => [create([b.value ? 1 : 0, 0]), 'cast to complex']
 )()
 
 export const boolean = primitive<Boolean, boolean>(
   isBoolean,
   value => ({[$kind]: 'Boolean', value})
 )(
-  create => r => bind(r, x => ({value: create(x.value !== 0), log: [{input: x, action: 'cast to boolean'}]})),
-  create => c => bind(c, x => ({value: create(x.a !== 0 || x.b !== 0), log: [{input: x, action: 'cast to boolean'}]})),
-  _create => b => b
+  create => r => [create(r.value !== 0), 'cast to boolean'],
+  create => c => [create(c.a !== 0 || c.b !== 0), 'cast to boolean'],
+  _create => b => [b, '']
 )()
 
 type UnaryFn<T> = Multi
@@ -255,13 +275,7 @@ type UnaryFn<T> = Multi
   & CastFn<Writer<Boolean>, Boolean>
   & CastFn<Writer<Node>, T>
 
-type Action<T> = [T|Writer<T>, string]
-type CaseFn<I> = (input: I) => Action<I>
-
-const isWriter = <T>(obj: unknown): obj is Writer<T> =>
-  typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
-
-const map = <T>(fn: CaseFn<T>) =>
+const unaryMap = <T>(fn: CaseFn<T>) =>
   (writer: Writer<T>) =>
     bind(writer, input => {
       const [value, action] = fn(input)
@@ -281,9 +295,9 @@ const unary = <T extends Unary>(
   )=> {
     const fn: UnaryFn<T> = multi(
       (v: Writer<Node>) => v?.value?.[$kind],
-      method('Real', map(whenReal)),
-      method('Complex', map(whenComplex)),
-      method('Boolean', map(whenBoolean)),
+      method('Real', unaryMap(whenReal)),
+      method('Complex', unaryMap(whenComplex)),
+      method('Boolean', unaryMap(whenBoolean)),
       method((n: Writer<Node>) => bind(n, x => ({value: create(x), log: [{input: x, action: 'absolute value'}]})))
     )
     return (
