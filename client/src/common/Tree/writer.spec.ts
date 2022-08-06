@@ -159,4 +159,36 @@ describe('add', () => {
       }]
     })
   })
+
+  it('returns a complex for a [real, complex] pair', () => {
+    expect(add(real(5), complex([0, 5]))).toEqual({
+      value: {[$kind]: 'Complex', a: 5, b: 5},
+      log: [
+        {
+          input: real(5).value,
+          action: 'cast to complex'
+        },
+        {
+          input: [complex([5, 0]).value, complex([0, 5]).value],
+          action: 'complex addition'
+        }
+      ]
+    })
+  })
+
+  it('returns a real for a [real, boolean] pair', () => {
+    expect(add(real(9), boolean(true))).toEqual({
+      value: {[$kind]: 'Real', value: 10},
+      log: [
+        {
+          input: boolean(true).value,
+          action: 'cast to real'
+        },
+        {
+          input: [real(9).value, real(1).value],
+          action: 'real addition'
+        }
+      ]
+    })
+  })
 })

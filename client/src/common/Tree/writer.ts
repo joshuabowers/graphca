@@ -356,6 +356,16 @@ const binaryMap = <L, R, T>(fn: BinaryCaseFn<L, R, T>) =>
       })
     })
 
+const apply = <T>(fn: BinaryFn<T>) =>
+  <L extends Node, R extends Node>(
+    changeLeft: CastFn<Writer<L>, L|R>, 
+    changeRight: CastFn<Writer<R>, L|R>
+  ) =>
+    (l: Writer<L>, r: Writer<R>) =>
+      fn(changeLeft(l), changeRight(r))
+
+const identity = <T>(t: T) => t
+
 const binary = <T extends Binary>(
   create: BinaryCreateFn<Node, Node, T>
 ) => (
@@ -363,19 +373,21 @@ const binary = <T extends Binary>(
   whenComplex: BinaryCaseFn<Complex>,
   whenBoolean: BinaryCaseFn<Boolean>
 ) => {
-  const fn: BinaryFn<T> = multi(
+  let fn: BinaryFn<T> = multi(
     (l: Writer<Node>, r: Writer<Node>) => [l?.value?.[$kind], r?.value?.[$kind]],
     method(['Real', 'Real'], binaryMap(whenReal)),
     method(['Complex', 'Complex'], binaryMap(whenComplex)),
     method(['Boolean', 'Boolean'], binaryMap(whenBoolean)),
-    method(['Real', 'Complex'], (l: Writer<Real>, r: Writer<Complex>) => fn(complex(l), r)),
-    method(['Complex', 'Real'], (l: Writer<Complex>, r: Writer<Real>) => fn(l, complex(r))),
-    method(['Real', 'Boolean'], (l: Writer<Real>, r: Writer<Boolean>) => fn(l, real(r))),
-    method(['Boolean', 'Real'], (l: Writer<Boolean>, r: Writer<Real>) => fn(real(l), r)),
-    method(['Complex', 'Boolean'], (l: Writer<Complex>, r: Writer<Boolean>) => fn(l, complex(r))),
-    method(['BOolean', 'Complex'], (l: Writer<Boolean>, r: Writer<Complex>) => fn(complex(l), r)),
     method(binaryMap<Node, Node, T>((l, r) => [create(l, r), '']))
   )
+  fn = fromMulti(
+    method(['Real', 'Complex'], apply(fn)(complex, identity)),
+    method(['Complex', 'Real'], apply(fn)(identity, complex)),
+    method(['Real', 'Boolean'], apply(fn)(identity, real)),
+    method(['Boolean', 'Real'], apply(fn)(real, identity)),
+    method(['Complex', 'Boolean'], apply(fn)(identity, complex)),
+    method(['Boolean', 'Complex'], apply(fn)(complex, identity))
+  )(fn) as typeof fn
   return (
     ...methods: (typeof method)[]
   ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
@@ -388,3 +400,106 @@ export const add = binary<Addition>(
   (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
   (l, r) => [boolean((l.value || r.value) && !(l.value && r.value)), 'boolean addition']
 )()
+
+namespace BasicOOP {
+  abstract class Base {
+    abstract readonly $kind: string
+
+    abstract add(right: Base): Base
+  }
+
+  abstract class Binary extends Base {
+    constructor(readonly left: Base, readonly right: Base) {super()}
+
+    add: Multi & ((right: Base) => Base) = multi(
+      method(Base, (r: Base) => new Addition(this, r))
+    )
+  }
+
+  class Addition extends Binary {
+    readonly $kind = 'Addition'
+
+    // add: Multi & ((right: Base) => Base) = fromMulti(
+    //   method(Real.Zero, this)
+    // )(super.add)
+  }
+
+  abstract class Unary extends Base {
+    constructor(readonly expression: Base) {super()}
+
+    add: Multi & ((right: Base) => Base) = multi(
+      method(Base, (r: Base) => new Addition(this, r))
+    )
+  }
+
+  class Absolute extends Unary {
+    readonly $kind = 'Absolute'
+  }
+
+  abstract class Primitive<T> extends Base {
+    constructor(readonly value: T) {super()}
+  }
+
+  class Real extends Primitive<number> {
+    static readonly Zero = new Real(0)
+
+    readonly $kind = 'Real'
+
+    add: Multi & ((right: Base) => Base) = multi(
+      (right: Base) => right.$kind,
+      method('Real', (r: Real) => new Real(this.value + r.value)),
+      method('Complex', (c: Complex) => new Complex({a: this.value + c.value.a, b: c.value.b})),
+    )
+  }
+
+  class Complex extends Primitive<{a: number, b: number}> {
+    readonly $kind = 'Complex'
+
+    add: Multi & ((right: Base) => Base) = multi(
+      (right: Base) => right.$kind,
+      method('Real', (r: Real) => new Complex({a: this.value.a + r.value, b: this.value.b})),
+      method('Complex', (c: Complex) => new Complex({a: this.value.a + c.value.a, b: this.value.b + c.value.b}))
+    )
+  }
+
+  const r = new Real(5), c = new Complex({a: 1, b: 2})
+  const a = r.add(c)
+  const a2 = new Addition(r, c).add(new Real(10))
+}
+
+// Ideally: this would have specific visitors for every mathematical operation:
+// e.g. there would be an AdditionVisitor, a multimethod, which would bundle all
+// addition logic together. ???
+namespace OOPWithVisitors {
+  abstract class Base {
+    abstract readonly $kind: string
+  }
+
+  abstract class Binary extends Base {
+    constructor(readonly left: Base, readonly right: Base) {super()}
+  }
+
+  class Addition extends Binary {
+    readonly $kind = 'Addition'
+  }
+
+  abstract class Unary extends Base {
+    constructor(readonly expression: Base) {super()}
+  }
+
+  class Absolute extends Unary {
+    readonly $kind = 'Absolute'
+  }
+
+  abstract class Primitive<T> extends Base {
+    constructor(readonly value: T) {super()}
+  }
+
+  class Real extends Primitive<number> {
+    readonly $kind = 'Real'
+  }
+
+  class Complex extends Primitive<{a: number, b: number}> {
+    readonly $kind = 'Complex'
+  }
+}
