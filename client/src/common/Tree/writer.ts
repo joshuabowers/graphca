@@ -163,9 +163,9 @@ type Primitive = Real | Complex | Boolean | Nil
 type Variable = {[$kind]: 'Variable', name: string, value: Node}
 
 type BinaryParams = {left: Node, right: Node}
-type Addition = {[$kind]: 'Addition'}
-type Multiplication = {[$kind]: 'Multiplication'}
-type Binary = BinaryParams & (Addition | Multiplication)
+type Addition = {[$kind]: 'Addition'} & BinaryParams
+type Multiplication = {[$kind]: 'Multiplication'} & BinaryParams
+type Binary = Addition | Multiplication
 
 type UnaryParams = {expression: Node}
 type Absolute = {[$kind]: 'Absolute'} & UnaryParams
@@ -292,7 +292,7 @@ const unary = <T extends Unary>(
     whenReal: CaseFn<Real>,
     whenComplex: CaseFn<Complex>,
     whenBoolean: CaseFn<Boolean>
-  )=> {
+  ) => {
     const fn: UnaryFn<T> = multi(
       (v: Writer<Node>) => v?.value?.[$kind],
       method('Real', unaryMap(whenReal)),
@@ -326,4 +326,65 @@ export const sin = unary<Sine>(
     'computed sine'
   ],
   b => [boolean(real(Math.sin(b.value ? 1 : 0))), 'computed sine']
+)()
+
+type BinaryCreateFn<L, R, T> = (l: L, r: R) => T
+type BinaryCaseFn<L, R = L, T = L> = (l: L, r: R) => Action<T>
+type BinaryCastFn<L, R = L, T = L> = (l: Writer<L>, r: Writer<R>) => Writer<T>
+
+type BinaryFn<T> = Multi
+  & BinaryCastFn<Real>
+  & BinaryCastFn<Complex>
+  & BinaryCastFn<Boolean>
+  & BinaryCastFn<Real, Complex, Complex>
+  & BinaryCastFn<Complex, Real, Complex>
+  & BinaryCastFn<Real, Boolean, Real>
+  & BinaryCastFn<Boolean, Real, Real>
+  & BinaryCastFn<Complex, Boolean, Complex>
+  & BinaryCastFn<Boolean, Complex, Complex>
+  & BinaryCastFn<Node, Node, T>
+
+const binaryMap = <L, R, T>(fn: BinaryCaseFn<L, R, T>) =>
+  (l: Writer<L>, r: Writer<R>) => 
+    bind(l, x => {
+      return bind(r, y => {
+        const [value, action] = fn(x, y)
+        return ({
+          value: isWriter(value) ? value.value : value,
+          log: [...(isWriter(value) ? value.log : []), {input: [x, y], action}]
+        })
+      })
+    })
+
+const binary = <T extends Binary>(
+  create: BinaryCreateFn<Node, Node, T>
+) => (
+  whenReal: BinaryCaseFn<Real>,
+  whenComplex: BinaryCaseFn<Complex>,
+  whenBoolean: BinaryCaseFn<Boolean>
+) => {
+  const fn: BinaryFn<T> = multi(
+    (l: Writer<Node>, r: Writer<Node>) => [l?.value?.[$kind], r?.value?.[$kind]],
+    method(['Real', 'Real'], binaryMap(whenReal)),
+    method(['Complex', 'Complex'], binaryMap(whenComplex)),
+    method(['Boolean', 'Boolean'], binaryMap(whenBoolean)),
+    method(['Real', 'Complex'], (l: Writer<Real>, r: Writer<Complex>) => fn(complex(l), r)),
+    method(['Complex', 'Real'], (l: Writer<Complex>, r: Writer<Real>) => fn(l, complex(r))),
+    method(['Real', 'Boolean'], (l: Writer<Real>, r: Writer<Boolean>) => fn(l, real(r))),
+    method(['Boolean', 'Real'], (l: Writer<Boolean>, r: Writer<Real>) => fn(real(l), r)),
+    method(['Complex', 'Boolean'], (l: Writer<Complex>, r: Writer<Boolean>) => fn(l, complex(r))),
+    method(['BOolean', 'Complex'], (l: Writer<Boolean>, r: Writer<Complex>) => fn(complex(l), r)),
+    method(binaryMap<Node, Node, T>((l, r) => [create(l, r), '']))
+  )
+  return (
+    ...methods: (typeof method)[]
+  ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
+}
+
+export const add = binary<Addition>(
+  (left, right) => ({[$kind]: 'Addition', left, right})
+)(
+  (l, r) => [real(l.value + r.value), 'real addition'],
+  (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
+  (l, r) => [boolean((l.value || r.value) && !(l.value && r.value)), 'boolean addition']
 )()

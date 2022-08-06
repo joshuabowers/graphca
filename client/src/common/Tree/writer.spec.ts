@@ -1,4 +1,4 @@
-import { $kind, real, complex, boolean, nil, variable, absolute } from './writer'
+import { $kind, real, complex, boolean, nil, variable, absolute, add } from './writer'
 
 describe('real', () => {
   it('returns a Writer<Real> for a number input', () => {
@@ -118,6 +118,45 @@ describe('absolute', () => {
         [$kind]: 'Variable', name: 'x', value: nil
       }},
       log: [{input: variable('x').value, action: 'absolute value'}]
+    })
+  })
+})
+
+describe('add', () => {
+  it('returns a Writer<Real> for two real inputs', () => {
+    expect(add(real(1), real(2))).toEqual({
+      value: {[$kind]: 'Real', value: 3},
+      log: [{input: [real(1).value, real(2).value], action: 'real addition'}]
+    })
+  })
+
+  it('returns a Writer<Complex> for two complex inputs', () => {
+    expect(add(complex([1, 2]), complex([3, 4]))).toEqual({
+      value: {[$kind]: 'Complex', a: 4, b: 6},
+      log: [{
+        input: [complex([1, 2]).value, complex([3, 4]).value],
+        action: 'complex addition'
+      }]
+    })
+  })
+
+  it('returns a Writer<Boolean> for two boolean inputs', () => {
+    expect(add(boolean(true), boolean(false))).toEqual({
+      value: {[$kind]: 'Boolean', value: true},
+      log: [{
+        input: [boolean(true).value, boolean(false).value], 
+        action: 'boolean addition'
+      }]
+    })
+  })
+
+  it('returns a Writer<Addition> for variable input', () => {
+    expect(add(variable('x'), variable('y'))).toEqual({
+      value: {[$kind]: 'Addition', left: variable('x').value, right: variable('y').value},
+      log: [{
+        input: [variable('x').value, variable('y').value],
+        action: ''
+      }]
     })
   })
 })
