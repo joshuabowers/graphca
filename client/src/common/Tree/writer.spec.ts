@@ -235,4 +235,24 @@ describe('add', () => {
       ]
     })
   })
+
+  it('combines reals across nesting levels', () => {
+    expect(add(add(variable('x'), real(5)), real(10))).toEqual({
+      value: {[$kind]: 'Addition', left: variable('x').value, right: real(15).value},
+      log: [
+        {
+          input: [add(variable('x'), real(5)).value, real(10).value],
+          action: 'combine primitives across nesting levels'
+        },
+        {
+          input: [real(5).value, real(10).value],
+          action: 'real addition'
+        },
+        {
+          input: [variable('x').value, real(15).value],
+          action: ''
+        }
+      ]
+    })
+  })
 })

@@ -371,16 +371,17 @@ type Kinds = Node[typeof $kind]
 const notAny = (...args: Kinds[]) => <T extends Node>(t: Writer<T>) => t.value && !args.includes(t.value[$kind])
 const any = (...args: Kinds[]) => <T extends Node>(t: Writer<T>) => t.value && args.includes(t.value[$kind])
 
-type Predicate<T> = (t: Writer<T>) => boolean
+type UnaryPredicate<L> = (t: Writer<L>) => boolean 
+type BinaryPredicate<L, R> = (l: Writer<L>, r: Writer<R>) => boolean
 type toKind<T> = T extends {[$kind]: Kinds} ? T[typeof $kind] : never
-type Test<T> = Predicate<T> | toKind<T> | Writer<T> | typeof _
+type Test<T> = UnaryPredicate<T> | toKind<T> | Writer<T> | typeof _
 type CorrespondingFn<L, R> = (l: Writer<L>, r: Writer<R>) => Action<Node>
 
 const when = <L extends Node, R extends Node>(
-  leftTest: Test<L>,
-  rightTest: Test<R>
-) => (fn: CorrespondingFn<L, R>) =>
-  method([leftTest, rightTest], (l: Writer<L>, r: Writer<R>) => {
+  predicate: Test<L> | [Test<L>, Test<R>] | BinaryPredicate<L, R>, 
+  fn: CorrespondingFn<L, R>
+) =>
+  method(predicate, (l: Writer<L>, r: Writer<R>) => {
     const [result, action] = fn(l, r)
     return ({
       value: isWriter(result) ? result.value : result,
@@ -416,6 +417,10 @@ const binary = <T extends Binary>(
   ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
 }
 
+type AdditionWithPrimitive = Addition & {right: Primitive}
+
+const isPrimitive = any('Real', 'Complex', 'Boolean')
+
 export const add = binary<Addition>(
   (left, right) => ({[$kind]: 'Addition', left, right})
 )(
@@ -426,13 +431,18 @@ export const add = binary<Addition>(
     'boolean addition'
   ]
 )(
-  when<Primitive, Node>(
-    any('Real', 'Complex', 'Boolean'), 
-    notAny('Real', 'Complex', 'Boolean')
-  )(
-    (l, r) => [add(r, l), 're-order operands']
-  ),
-  when<Node, Real>(_, real(0))((l, _r) => [l, 'additive identity'])
+  when([
+    any('Real', 'Complex', 'Boolean'), notAny('Real', 'Complex', 'Boolean')
+  ], (l, r) => [add(r, l), 're-order operands']),
+  when<Node, Real>([_, real(0)], (l, _r) => [l, 'additive identity']),
+  when<AdditionWithPrimitive, Primitive>(
+    (l, r) => is('Addition')(l) 
+      && isPrimitive(unit(l.value.right)) 
+      && isPrimitive(r), 
+    (l, r) => [
+      add(unit(l.value.left), add(unit(l.value.right), r)), 
+      'combine primitives across nesting levels'
+    ])
 )
 
 namespace BasicOOP {
