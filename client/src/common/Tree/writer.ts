@@ -1,5 +1,5 @@
-import { method, multi, Multi, fromMulti, _ } from '@arrows/multimethod'
-import { is } from './is'
+import { method, multi, Multi, fromMulti, _, inspect } from '@arrows/multimethod'
+// import { is } from './is'
 
 export interface Operation {
   input: unknown,
@@ -366,6 +366,30 @@ const apply = <T>(fn: BinaryFn<T>) =>
 
 const identity = <T>(t: T) => t
 
+type Kinds = Node[typeof $kind]
+
+const notAny = (...args: Kinds[]) => <T extends Node>(t: Writer<T>) => t.value && !args.includes(t.value[$kind])
+const any = (...args: Kinds[]) => <T extends Node>(t: Writer<T>) => t.value && args.includes(t.value[$kind])
+
+type Predicate<T> = (t: Writer<T>) => boolean
+type toKind<T> = T extends {[$kind]: Kinds} ? T[typeof $kind] : never
+type Test<T> = Predicate<T> | toKind<T> | Writer<T> | typeof _
+type CorrespondingFn<L, R> = (l: Writer<L>, r: Writer<R>) => Action<Node>
+
+const when = <L extends Node, R extends Node>(
+  leftTest: Test<L>,
+  rightTest: Test<R>
+) => (fn: CorrespondingFn<L, R>) =>
+  method([leftTest, rightTest], (l: Writer<L>, r: Writer<R>) => {
+    const [result, action] = fn(l, r)
+    return ({
+      value: isWriter(result) ? result.value : result,
+      log: [{input: [l.value, r.value], action}, ...(isWriter(result) ? result.log : [])]
+    })
+  })
+
+const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t.value[$kind] === kind
+
 const binary = <T extends Binary>(
   create: BinaryCreateFn<Node, Node, T>
 ) => (
@@ -374,19 +398,18 @@ const binary = <T extends Binary>(
   whenBoolean: BinaryCaseFn<Boolean>
 ) => {
   let fn: BinaryFn<T> = multi(
-    (l: Writer<Node>, r: Writer<Node>) => [l?.value?.[$kind], r?.value?.[$kind]],
-    method(['Real', 'Real'], binaryMap(whenReal)),
-    method(['Complex', 'Complex'], binaryMap(whenComplex)),
-    method(['Boolean', 'Boolean'], binaryMap(whenBoolean)),
+    method([is('Real'), is('Real')], binaryMap(whenReal)),
+    method([is('Complex'), is('Complex')], binaryMap(whenComplex)),
+    method([is('Boolean'), is('Boolean')], binaryMap(whenBoolean)),
     method(binaryMap<Node, Node, T>((l, r) => [create(l, r), '']))
   )
   fn = fromMulti(
-    method(['Real', 'Complex'], apply(fn)(complex, identity)),
-    method(['Complex', 'Real'], apply(fn)(identity, complex)),
-    method(['Real', 'Boolean'], apply(fn)(identity, real)),
-    method(['Boolean', 'Real'], apply(fn)(real, identity)),
-    method(['Complex', 'Boolean'], apply(fn)(identity, complex)),
-    method(['Boolean', 'Complex'], apply(fn)(complex, identity))
+    method([is('Real'), is('Complex')], apply(fn)(complex, identity)),
+    method([is('Complex'), is('Real')], apply(fn)(identity, complex)),
+    method([is('Real'), is('Boolean')], apply(fn)(identity, real)),
+    method([is('Boolean'), is('Real')], apply(fn)(real, identity)),
+    method([is('Complex'), is('Boolean')], apply(fn)(identity, complex)),
+    method([is('Boolean'), is('Complex')], apply(fn)(complex, identity))
   )(fn) as typeof fn
   return (
     ...methods: (typeof method)[]
@@ -398,8 +421,19 @@ export const add = binary<Addition>(
 )(
   (l, r) => [real(l.value + r.value), 'real addition'],
   (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
-  (l, r) => [boolean((l.value || r.value) && !(l.value && r.value)), 'boolean addition']
-)()
+  (l, r) => [
+    boolean((l.value || r.value) && !(l.value && r.value)), 
+    'boolean addition'
+  ]
+)(
+  when<Primitive, Node>(
+    any('Real', 'Complex', 'Boolean'), 
+    notAny('Real', 'Complex', 'Boolean')
+  )(
+    (l, r) => [add(r, l), 're-order operands']
+  ),
+  when<Node, Real>(_, real(0))((l, _r) => [l, 'additive identity'])
+)
 
 namespace BasicOOP {
   abstract class Base {

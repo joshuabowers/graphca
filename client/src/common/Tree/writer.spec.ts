@@ -191,4 +191,48 @@ describe('add', () => {
       ]
     })
   })
+
+  it('returns the right operand if the left is zero', () => {
+    expect(add(real(0), variable('x'))).toEqual({
+      value: variable('x').value,
+      log: [
+        {
+          input: [real(0).value, variable('x').value],
+          action: 're-order operands'
+        },
+        {
+          input: [variable('x').value, real(0).value],
+          action: 'additive identity'
+        }
+      ]
+    })
+  })
+
+  it('returns the left operand if the right is zero', () => {
+    expect(add(variable('x'), real(0))).toEqual({
+      value: variable('x').value,
+      log: [
+        {
+          input: [variable('x').value, real(0).value],
+          action: 'additive identity'
+        }
+      ]
+    })
+  })
+
+  it('reorders primitives to the right', () => {
+    expect(add(real(5), variable('x'))).toEqual({
+      value: {[$kind]: 'Addition', left: variable('x').value, right: real(5).value},
+      log: [
+        {
+          input: [real(5).value, variable('x').value],
+          action: 're-order operands'
+        },
+        {
+          input: [variable('x').value, real(5).value],
+          action: ''
+        }
+      ]
+    })
+  })
 })
