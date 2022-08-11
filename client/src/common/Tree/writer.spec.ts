@@ -1,4 +1,4 @@
-import { $kind, real, complex, boolean, nil, variable, absolute, add } from './writer'
+import { $kind, real, complex, boolean, nil, nan, variable, absolute, add } from './writer'
 
 describe('real', () => {
   it('returns a Writer<Real> for a number input', () => {
@@ -120,6 +120,13 @@ describe('absolute', () => {
       log: [{input: variable('x').value, action: 'absolute value'}]
     })
   })
+
+  it('returns a NaN for Nil input', () => {
+    expect(absolute(nil)).toEqual({
+      value: {[$kind]: 'NaN', value: NaN},
+      log: [{input: nil.value, action: 'not a number'}]
+    })
+  })
 })
 
 describe('add', () => {
@@ -155,7 +162,7 @@ describe('add', () => {
       value: {[$kind]: 'Addition', left: variable('x').value, right: variable('y').value},
       log: [{
         input: [variable('x').value, variable('y').value],
-        action: ''
+        action: 'addition'
       }]
     })
   })
@@ -189,6 +196,26 @@ describe('add', () => {
           action: 'real addition'
         }
       ]
+    })
+  })
+
+  it('returns NaN if the left operand is nil', () => {
+    expect(add(nil, real(5))).toEqual({
+      value: nan.value,
+      log: [{
+        input: [nil.value, real(5).value],
+        action: 'not a number'
+      }]
+    })
+  })
+
+  it('returns NaN if the right operand is nil', () => {
+    expect(add(variable('x'), nil)).toEqual({
+      value: nan.value,
+      log: [{
+        input: [variable('x').value, nil.value],
+        action: 'not a number'
+      }]
     })
   })
 
@@ -230,7 +257,7 @@ describe('add', () => {
         },
         {
           input: [variable('x').value, real(5).value],
-          action: ''
+          action: 'addition'
         }
       ]
     })
@@ -250,7 +277,7 @@ describe('add', () => {
         },
         {
           input: [variable('x').value, real(15).value],
-          action: ''
+          action: 'addition'
         }
       ]
     })

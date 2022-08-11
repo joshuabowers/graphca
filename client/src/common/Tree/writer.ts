@@ -158,9 +158,10 @@ type Real = {[$kind]: 'Real', value: number}
 type Complex = {[$kind]: 'Complex', a: number, b: number}
 type Boolean = {[$kind]: 'Boolean', value: boolean}
 type Nil = {[$kind]: 'Nil'}
-type Primitive = Real | Complex | Boolean | Nil
+type NaN = {[$kind]: 'NaN', value: number}
+type Primitive = Real | Complex | Boolean | Nil | NaN
 
-type Variable = {[$kind]: 'Variable', name: string, value: Node}
+type Variable = {[$kind]: 'Variable', name: string, value: Writer<Node>}
 
 type BinaryParams = {left: Node, right: Node}
 type Addition = {[$kind]: 'Addition'} & BinaryParams
@@ -232,9 +233,10 @@ const primitive = <T extends Primitive, U>(
   }  
 }
 
-export const nil: Nil = ({[$kind]: 'Nil'})
+export const nil: Writer<Nil> = unit({[$kind]: 'Nil'})
+export const nan: Writer<NaN> = unit({[$kind]: 'NaN', value: NaN})
 
-export const variable = (name: string, value: Node = nil): Writer<Variable> => 
+export const variable = (name: string, value: Writer<Node> = nil): Writer<Variable> => 
   unit({[$kind]: 'Variable', name, value})
 
 const isNumber = (v: unknown): v is number => typeof v === 'number'
@@ -273,6 +275,7 @@ type UnaryFn<T> = Multi
   & CastFn<Writer<Real>, Real>
   & CastFn<Writer<Complex>, Complex>
   & CastFn<Writer<Boolean>, Boolean>
+  & CastFn<Writer<Nil|NaN>, NaN>
   & CastFn<Writer<Node>, T>
 
 const unaryMap = <T>(fn: CaseFn<T>) =>
@@ -285,20 +288,26 @@ const unaryMap = <T>(fn: CaseFn<T>) =>
       })
     })
 
+const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, 'not a number']
+
 const unary = <T extends Unary>(
-  create: CreateFn<Node, T>
+  create: CreateFn<Node, T>,
+  action: string
 ) => {
   return (
     whenReal: CaseFn<Real>,
     whenComplex: CaseFn<Complex>,
     whenBoolean: CaseFn<Boolean>
   ) => {
+    const whenNode: CaseFn<Node> = input => [create(input), action]
     const fn: UnaryFn<T> = multi(
       (v: Writer<Node>) => v?.value?.[$kind],
       method('Real', unaryMap(whenReal)),
       method('Complex', unaryMap(whenComplex)),
       method('Boolean', unaryMap(whenBoolean)),
-      method((n: Writer<Node>) => bind(n, x => ({value: create(x), log: [{input: x, action: 'absolute value'}]})))
+      method('Nil', unaryMap(whenNilOrNaN)),
+      method('NaN', unaryMap(whenNilOrNaN)),
+      method(unaryMap(whenNode))
     )
     return (
       ...methods: (typeof method)[]
@@ -307,7 +316,8 @@ const unary = <T extends Unary>(
 }
 
 export const absolute = unary<Absolute>(
-  expression => ({[$kind]: 'Absolute', expression})
+  expression => ({[$kind]: 'Absolute', expression}),
+  'absolute value'
 )(
   r => [real(Math.abs(r.value)), 'absolute value'],
   c => [complex([Math.hypot(c.a, c.b), 0]), 'absolute value'],
@@ -315,7 +325,8 @@ export const absolute = unary<Absolute>(
 )()
 
 export const sin = unary<Sine>(
-  expression => ({[$kind]: 'Sine', expression})
+  expression => ({[$kind]: 'Sine', expression}),
+  'sine'
 )(
   r => [real(Math.sin(r.value)), 'computed sine'],
   c => [
@@ -342,6 +353,8 @@ type BinaryFn<T> = Multi
   & BinaryCastFn<Boolean, Real, Real>
   & BinaryCastFn<Complex, Boolean, Complex>
   & BinaryCastFn<Boolean, Complex, Complex>
+  & BinaryCastFn<Nil|NaN, Node, NaN>
+  & BinaryCastFn<Node, Nil|NaN, NaN>
   & BinaryCastFn<Node, Node, T>
 
 const binaryMap = <L, R, T>(fn: BinaryCaseFn<L, R, T>) =>
@@ -392,7 +405,8 @@ const when = <L extends Node, R extends Node>(
 const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t.value[$kind] === kind
 
 const binary = <T extends Binary>(
-  create: BinaryCreateFn<Node, Node, T>
+  create: BinaryCreateFn<Node, Node, T>,
+  action: string
 ) => (
   whenReal: BinaryCaseFn<Real>,
   whenComplex: BinaryCaseFn<Complex>,
@@ -402,7 +416,9 @@ const binary = <T extends Binary>(
     method([is('Real'), is('Real')], binaryMap(whenReal)),
     method([is('Complex'), is('Complex')], binaryMap(whenComplex)),
     method([is('Boolean'), is('Boolean')], binaryMap(whenBoolean)),
-    method(binaryMap<Node, Node, T>((l, r) => [create(l, r), '']))
+    when<Nil|NaN, Node>([any('Nil', 'NaN'), _], (_l, _r) => [nan, 'not a number']),
+    when<Node, Nil|NaN>([_, any('Nil', 'NaN')], (_l, _r) => [nan, 'not a number']),
+    method(binaryMap<Node, Node, T>((l, r) => [create(l, r), action]))
   )
   fn = fromMulti(
     method([is('Real'), is('Complex')], apply(fn)(complex, identity)),
@@ -422,7 +438,8 @@ type AdditionWithPrimitive = Addition & {right: Primitive}
 const isPrimitive = any('Real', 'Complex', 'Boolean')
 
 export const add = binary<Addition>(
-  (left, right) => ({[$kind]: 'Addition', left, right})
+  (left, right) => ({[$kind]: 'Addition', left, right}),
+  'addition'
 )(
   (l, r) => [real(l.value + r.value), 'real addition'],
   (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
