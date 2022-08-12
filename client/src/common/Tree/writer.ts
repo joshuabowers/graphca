@@ -481,6 +481,12 @@ export const add = binary<Addition>(
     ])
 )
 
+const isUnary = (v: unknown): v is Unary => 
+  typeof v === 'object' && 'expression' in v!
+
+const isBinary = (v: unknown): v is Binary =>
+  typeof v === 'object' && ('left' in v! && 'right' in v!)
+
 export const equals = binary<Equality, Boolean>(
   (left, right) => [{[$kind]: 'Equality', left, right}, 'equality']
 )(
@@ -488,7 +494,7 @@ export const equals = binary<Equality, Boolean>(
   (l, r) => [boolean(l.a === r.a && l.b === r.b), 'complex equality'],
   (l, r) => [boolean(l.value === r.value), 'boolean equality']
 )(
-  // when(any())
+  // when([isUnary, isUnary], )
 )
 
 namespace BasicOOP {
