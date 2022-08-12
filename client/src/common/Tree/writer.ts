@@ -359,16 +359,18 @@ type BinaryCreateFn<L, R, T> = (l: L, r: R) => Action<T>
 type BinaryCaseFn<L, R = L, T = L> = (l: L, r: R) => Action<T>
 type BinaryCastFn<L, R = L, T = L> = (l: Writer<L>, r: Writer<R>) => Writer<T>
 
-type BinaryFn<T> = Multi
-  & BinaryCastFn<Real>
-  & BinaryCastFn<Complex>
-  & BinaryCastFn<Boolean>
-  & BinaryCastFn<Real, Complex, Complex>
-  & BinaryCastFn<Complex, Real, Complex>
-  & BinaryCastFn<Real, Boolean, Real>
-  & BinaryCastFn<Boolean, Real, Real>
-  & BinaryCastFn<Complex, Boolean, Complex>
-  & BinaryCastFn<Boolean, Complex, Complex>
+type Choose<D, F> = F extends void ? D : F
+
+type BinaryFn<T, R = void> = Multi
+  & BinaryCastFn<Real, Real, Choose<Real, R>>
+  & BinaryCastFn<Complex, Complex, Choose<Complex, R>>
+  & BinaryCastFn<Boolean, Boolean, Choose<Boolean, R>>
+  & BinaryCastFn<Real, Complex, Choose<Complex, R>>
+  & BinaryCastFn<Complex, Real, Choose<Complex, R>>
+  & BinaryCastFn<Real, Boolean, Choose<Real, R>>
+  & BinaryCastFn<Boolean, Real, Choose<Real, R>>
+  & BinaryCastFn<Complex, Boolean, Choose<Complex, R>>
+  & BinaryCastFn<Boolean, Complex, Choose<Complex, R>>
   & BinaryCastFn<Nil|NaN, Node, NaN>
   & BinaryCastFn<Node, Nil|NaN, NaN>
   & BinaryCastFn<Node, Node, T>
@@ -385,7 +387,7 @@ const binaryMap = <L, R, T>(fn: BinaryCaseFn<L, R, T>) =>
       })
     })
 
-const apply = <T>(fn: BinaryFn<T>) =>
+const apply = <T, U>(fn: BinaryFn<T, U>) =>
   <L extends Node, R extends Node>(
     changeLeft: CastFn<Writer<L>, L|R>, 
     changeRight: CastFn<Writer<R>, L|R>
@@ -420,32 +422,35 @@ const when = <L extends Node, R extends Node>(
 
 const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t.value[$kind] === kind
 
-const binary = <T extends Binary>(
+const binary = <T extends Binary, R = void>(
   create: BinaryCreateFn<Node, Node, T>
-) => (
-  whenReal: BinaryCaseFn<Real>,
-  whenComplex: BinaryCaseFn<Complex>,
-  whenBoolean: BinaryCaseFn<Boolean>
 ) => {
-  let fn: BinaryFn<T> = multi(
-    method([is('Real'), is('Real')], binaryMap(whenReal)),
-    method([is('Complex'), is('Complex')], binaryMap(whenComplex)),
-    method([is('Boolean'), is('Boolean')], binaryMap(whenBoolean)),
-    when<Nil|NaN, Node>([any('Nil', 'NaN'), _], (_l, _r) => [nan, 'not a number']),
-    when<Node, Nil|NaN>([_, any('Nil', 'NaN')], (_l, _r) => [nan, 'not a number']),
-    method(binaryMap<Node, Node, T>((l, r) => create(l, r)))
-  )
-  fn = fromMulti(
-    method([is('Real'), is('Complex')], apply(fn)(complex, identity)),
-    method([is('Complex'), is('Real')], apply(fn)(identity, complex)),
-    method([is('Real'), is('Boolean')], apply(fn)(identity, real)),
-    method([is('Boolean'), is('Real')], apply(fn)(real, identity)),
-    method([is('Complex'), is('Boolean')], apply(fn)(identity, complex)),
-    method([is('Boolean'), is('Complex')], apply(fn)(complex, identity))
-  )(fn) as typeof fn
+  type Result<U extends Node> = R extends void ? U : R
   return (
-    ...methods: (typeof method)[]
-  ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
+    whenReal: BinaryCaseFn<Real, Real, Result<Real>>,
+    whenComplex: BinaryCaseFn<Complex, Complex, Result<Complex>>,
+    whenBoolean: BinaryCaseFn<Boolean, Boolean, Result<Boolean>>
+  ) => {
+    let fn: BinaryFn<T, R> = multi(
+      method([is('Real'), is('Real')], binaryMap(whenReal)),
+      method([is('Complex'), is('Complex')], binaryMap(whenComplex)),
+      method([is('Boolean'), is('Boolean')], binaryMap(whenBoolean)),
+      when<Nil|NaN, Node>([any('Nil', 'NaN'), _], (_l, _r) => [nan, 'not a number']),
+      when<Node, Nil|NaN>([_, any('Nil', 'NaN')], (_l, _r) => [nan, 'not a number']),
+      method(binaryMap<Node, Node, T>((l, r) => create(l, r)))
+    )
+    fn = fromMulti(
+      method([is('Real'), is('Complex')], apply(fn)(complex, identity)),
+      method([is('Complex'), is('Real')], apply(fn)(identity, complex)),
+      method([is('Real'), is('Boolean')], apply(fn)(identity, real)),
+      method([is('Boolean'), is('Real')], apply(fn)(real, identity)),
+      method([is('Complex'), is('Boolean')], apply(fn)(identity, complex)),
+      method([is('Boolean'), is('Complex')], apply(fn)(complex, identity))
+    )(fn) as typeof fn
+    return (
+      ...methods: (typeof method)[]
+    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
+  }
 }
 
 type AdditionWithPrimitive = Addition & {right: Primitive}
@@ -474,6 +479,16 @@ export const add = binary<Addition>(
       add(unit(l.value.left), add(unit(l.value.right), r)), 
       'combine primitives across nesting levels'
     ])
+)
+
+export const equals = binary<Equality, Boolean>(
+  (left, right) => [{[$kind]: 'Equality', left, right}, 'equality']
+)(
+  (l, r) => [boolean(l.value === r.value), 'real equality'],
+  (l, r) => [boolean(l.a === r.a && l.b === r.b), 'complex equality'],
+  (l, r) => [boolean(l.value === r.value), 'boolean equality']
+)(
+  // when(any())
 )
 
 namespace BasicOOP {
