@@ -185,11 +185,11 @@ type Binary = BinaryOperators | Inequalities | Connectives
 type UnaryParams = {expression: Node}
 type UnaryForm<T extends string> = Form<T, UnaryParams>
 
-type Absolute = UnaryForm<'Absolute'> //{[$kind]: 'Absolute'} & UnaryParams
-type Factorial = UnaryForm<'Factorial'> //{[$kind]: 'Factorial'} & UnaryParams
+type Absolute = UnaryForm<'Absolute'> 
+type Factorial = UnaryForm<'Factorial'>
 
-type Sine = UnaryForm<'Sine'> // {[$kind]: 'Sine'} & UnaryParams
-type Cosine = UnaryForm<'Cosine'> // {[$kind]: 'Cosine'} & UnaryParams
+type Sine = UnaryForm<'Sine'> 
+type Cosine = UnaryForm<'Cosine'>
 type Trigonometric = Sine | Cosine
 
 type Unary = Absolute | Factorial | Trigonometric
