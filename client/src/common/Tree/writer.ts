@@ -154,26 +154,42 @@ export const pipe = <T>(writer: Writer<T>, ...transforms: WriterFn<T>[]): Writer
 
 export const $kind = Symbol('$kind')
 
-type Real = {[$kind]: 'Real', value: number}
-type Complex = {[$kind]: 'Complex', a: number, b: number}
-type Boolean = {[$kind]: 'Boolean', value: boolean}
-type Nil = {[$kind]: 'Nil'}
-type NaN = {[$kind]: 'NaN', value: number}
+type Kind<T extends string> = {[$kind]: T}
+type Form<K extends string, R extends {}> = Kind<K> & R
+
+type Real = Form<'Real', {value: number}> 
+type Complex = Form<'Complex', {a: number, b: number}> 
+type Boolean = Form<'Boolean', {value: boolean}> 
+type Nil = Kind<'Nil'>
+type NaN = Form<'NaN', {value: number}>
 type Primitive = Real | Complex | Boolean | Nil | NaN
 
 type Variable = {[$kind]: 'Variable', name: string, value: Writer<Node>}
 
 type BinaryParams = {left: Node, right: Node}
-type Addition = {[$kind]: 'Addition'} & BinaryParams
-type Multiplication = {[$kind]: 'Multiplication'} & BinaryParams
-type Binary = Addition | Multiplication
+type BinaryForm<T extends string> = Form<T, BinaryParams>
+
+type Addition = BinaryForm<'Addition'>
+type Multiplication = BinaryForm<'Multiplication'>
+type BinaryOperators = Addition | Multiplication
+
+type Equality = BinaryForm<'Equality'>
+type Inequality = BinaryForm<'Inequality'>
+type Inequalities = Equality | Inequality
+
+type Conjunction = BinaryForm<'Conjunction'>
+type Connectives = Conjunction
+
+type Binary = BinaryOperators | Inequalities | Connectives
 
 type UnaryParams = {expression: Node}
-type Absolute = {[$kind]: 'Absolute'} & UnaryParams
-type Factorial = {[$kind]: 'Factorial'} & UnaryParams
+type UnaryForm<T extends string> = Form<T, UnaryParams>
 
-type Sine = {[$kind]: 'Sine'} & UnaryParams
-type Cosine = {[$kind]: 'Cosine'} & UnaryParams
+type Absolute = UnaryForm<'Absolute'> //{[$kind]: 'Absolute'} & UnaryParams
+type Factorial = UnaryForm<'Factorial'> //{[$kind]: 'Factorial'} & UnaryParams
+
+type Sine = UnaryForm<'Sine'> // {[$kind]: 'Sine'} & UnaryParams
+type Cosine = UnaryForm<'Cosine'> // {[$kind]: 'Cosine'} & UnaryParams
 type Trigonometric = Sine | Cosine
 
 type Unary = Absolute | Factorial | Trigonometric
@@ -339,7 +355,7 @@ export const sin = unary<Sine>(
   b => [boolean(real(Math.sin(b.value ? 1 : 0))), 'computed sine']
 )()
 
-type BinaryCreateFn<L, R, T> = (l: L, r: R) => T
+type BinaryCreateFn<L, R, T> = (l: L, r: R) => Action<T>
 type BinaryCaseFn<L, R = L, T = L> = (l: L, r: R) => Action<T>
 type BinaryCastFn<L, R = L, T = L> = (l: Writer<L>, r: Writer<R>) => Writer<T>
 
@@ -405,8 +421,7 @@ const when = <L extends Node, R extends Node>(
 const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t.value[$kind] === kind
 
 const binary = <T extends Binary>(
-  create: BinaryCreateFn<Node, Node, T>,
-  action: string
+  create: BinaryCreateFn<Node, Node, T>
 ) => (
   whenReal: BinaryCaseFn<Real>,
   whenComplex: BinaryCaseFn<Complex>,
@@ -418,7 +433,7 @@ const binary = <T extends Binary>(
     method([is('Boolean'), is('Boolean')], binaryMap(whenBoolean)),
     when<Nil|NaN, Node>([any('Nil', 'NaN'), _], (_l, _r) => [nan, 'not a number']),
     when<Node, Nil|NaN>([_, any('Nil', 'NaN')], (_l, _r) => [nan, 'not a number']),
-    method(binaryMap<Node, Node, T>((l, r) => [create(l, r), action]))
+    method(binaryMap<Node, Node, T>((l, r) => create(l, r)))
   )
   fn = fromMulti(
     method([is('Real'), is('Complex')], apply(fn)(complex, identity)),
@@ -438,8 +453,7 @@ type AdditionWithPrimitive = Addition & {right: Primitive}
 const isPrimitive = any('Real', 'Complex', 'Boolean')
 
 export const add = binary<Addition>(
-  (left, right) => ({[$kind]: 'Addition', left, right}),
-  'addition'
+  (left, right) => [({[$kind]: 'Addition', left, right}), 'addition']
 )(
   (l, r) => [real(l.value + r.value), 'real addition'],
   (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
@@ -542,6 +556,10 @@ namespace OOPWithVisitors {
 
   class Addition extends Binary {
     readonly $kind = 'Addition'
+  }
+
+  class AdditionWithPrimitive extends Addition {
+    constructor(readonly left: Base, readonly right: Real|Complex) {super(left, right)}
   }
 
   abstract class Unary extends Base {
