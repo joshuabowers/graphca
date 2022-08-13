@@ -206,14 +206,66 @@ type CaseFn<I> = (input: I) => Action<I>
 
 type CreateCase<T, U, I> = (create: CreateFn<U, T>) => (input: I) => Action<T>
 
+const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t.value[$kind] === kind
+
+const isWriter = <T>(obj: unknown): obj is Writer<T> =>
+  typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
+
+const isUnary = (v: unknown): v is Writer<Unary> => 
+  typeof v === 'object' && v! && isWriter(v) 
+  && typeof v.value === 'object' && v.value! && 'expression' in v.value
+
+const isBinary = (v: unknown): v is Writer<Binary> =>
+  isWriter(v) && typeof v.value === 'object' && v.value! 
+  && 'left' in v.value && 'right' in v.value
+
+const areKindEqual = <T extends Node, U extends Node>(
+  t: Writer<T>, u: Writer<U>
+) => t.value[$kind] === u.value[$kind]
+
+type KindPredicate<T extends Node> = (v: unknown) => v is Writer<T>
+type CaseOfPredicate<T extends Node> = (left: T, right: T) => boolean
+const caseOf = <T extends Node>(kind: Kinds | KindPredicate<T>) => 
+  (fn: CaseOfPredicate<T> | boolean) =>
+    method(
+      typeof kind === 'string' ? [is(kind), is(kind)] : [kind, kind], 
+      (l: Writer<T>, r: Writer<T>) => 
+        areKindEqual(l, r) && (typeof fn === 'boolean' ? fn : fn(l.value, r.value)
+      )
+    )
+
+type EqualsFn<T extends Node> = (left: Writer<T>, right: Writer<T>) => boolean
+type DeepEqualsFn = Multi
+  & EqualsFn<Real>
+  & EqualsFn<Complex>
+  & EqualsFn<Boolean>
+  & EqualsFn<Nil>
+  & EqualsFn<NaN>
+  & EqualsFn<Variable>
+  & EqualsFn<Unary>
+  & EqualsFn<Binary>
+  & EqualsFn<Node>
+
+export const deepEquals: DeepEqualsFn = multi(
+  caseOf<Real>('Real')((l, r) => l.value === r.value),
+  caseOf<Complex>('Complex')((l, r) => l.a === r.a && l.b === r.b),
+  caseOf<Boolean>('Boolean')((l, r) => l.value === r.value),
+  caseOf<Nil>('Nil')(true),
+  caseOf<NaN>('NaN')(false),
+  caseOf<Variable>('Variable')((l, r) => l.name === r.name && deepEquals(l.value, r.value)),
+  caseOf<Unary>(isUnary)((l, r) => deepEquals(unit(l.expression), unit(r.expression))),
+  caseOf<Binary>(isBinary)(
+    (l, r) => deepEquals(unit(l.left), unit(r.left)) 
+      && deepEquals(unit(l.right), unit(r.right))
+  ),
+  method(false)
+)
+
 type PrimitiveFn<T, U> = Multi
   & CastFn<U, T>
   & CastFn<Writer<Real>, T>
   & CastFn<Writer<Complex>, T>
   & CastFn<Writer<Boolean>, T>
-
-const isWriter = <T>(obj: unknown): obj is Writer<T> =>
-  typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
 
 const primitiveMap = <T, U>(create: CreateFn<U, T>) =>
   <I>(fn: CreateCase<T, U, I>) =>
@@ -420,8 +472,6 @@ const when = <L extends Node, R extends Node>(
     })
   })
 
-const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t.value[$kind] === kind
-
 const binary = <T extends Binary, R = void>(
   create: BinaryCreateFn<Node, Node, T>
 ) => {
@@ -478,14 +528,19 @@ export const add = binary<Addition>(
     (l, r) => [
       add(unit(l.value.left), add(unit(l.value.right), r)), 
       'combine primitives across nesting levels'
-    ])
+    ]),
+  when<Node, Node>(deepEquals, (l, _r) => [
+    multiply(real(2), l), 'equivalence: replaced with double'
+  ])
 )
 
-const isUnary = (v: unknown): v is Unary => 
-  typeof v === 'object' && 'expression' in v!
-
-const isBinary = (v: unknown): v is Binary =>
-  typeof v === 'object' && ('left' in v! && 'right' in v!)
+export const multiply = binary<Multiplication>(
+  (left, right) => [({[$kind]: 'Multiplication', left, right}), 'multiplication']
+)(
+  (l, r) => [real(l.value * r.value), 'real multiplication'],
+  (l, r) => [complex([0, 0]), 'complex multiplication'],
+  (l, r) => [boolean(false), 'boolean multiplication']
+)()
 
 export const equals = binary<Equality, Boolean>(
   (left, right) => [{[$kind]: 'Equality', left, right}, 'equality']
@@ -494,7 +549,13 @@ export const equals = binary<Equality, Boolean>(
   (l, r) => [boolean(l.a === r.a && l.b === r.b), 'complex equality'],
   (l, r) => [boolean(l.value === r.value), 'boolean equality']
 )(
-  // when([isUnary, isUnary], )
+  when<Unary, Unary>(
+    [isUnary, isUnary], 
+    (l, r) => [
+      equals(unit(l.value.expression), unit(r.value.expression)), 
+      'unary equality'
+    ]
+  )
 )
 
 namespace BasicOOP {
