@@ -377,4 +377,25 @@ describe('add', () => {
       ]
     })
   })
+
+  it('doubles a right operand if equivalent to a left-nested-add left operand', () => {
+    expect(add(add(variable('x'), variable('y')), variable('x'))).toEqual({
+      value: add(multiply(real(2), variable('x')), variable('y')).value,
+      log: [
+        // Missing steps: tossed out addition of 'x' and 'y'?
+        {
+          input: [add(variable('x'), variable('y')).value, variable('x').value],
+          action: 'combined like terms'
+        },
+        {
+          input: [real(2).value, variable('x').value],
+          action: 'multiplication'
+        },
+        {
+          input: [multiply(real(2), variable('x')).value, variable('y').value],
+          action: 'addition'
+        }
+      ]
+    })
+  })
 })

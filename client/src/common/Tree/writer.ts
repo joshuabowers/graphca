@@ -206,7 +206,7 @@ type CaseFn<I> = (input: I) => Action<I>
 
 type CreateCase<T, U, I> = (create: CreateFn<U, T>) => (input: I) => Action<T>
 
-const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t.value[$kind] === kind
+const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t?.value?.[$kind] === kind
 
 const isWriter = <T>(obj: unknown): obj is Writer<T> =>
   typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
@@ -260,6 +260,12 @@ export const deepEquals: DeepEqualsFn = multi(
   ),
   method(false)
 )
+
+type WalkFn<T extends Node, R extends Node = T> = (t: Writer<T>) => Writer<R>
+const deepEqualsAt = <L extends Node, R extends Node>(
+  leftWalk: WalkFn<L, Node>,
+  rightWalk: WalkFn<R, Node>
+) => (l: Writer<L>, r: Writer<R>) => deepEquals(leftWalk(l), rightWalk(r))
 
 type PrimitiveFn<T, U> = Multi
   & CastFn<U, T>
@@ -448,6 +454,8 @@ const apply = <T, U>(fn: BinaryFn<T, U>) =>
       fn(changeLeft(l), changeRight(r))
 
 const identity = <T>(t: T) => t
+const leftChild = <T extends Binary>(t: Writer<T>) => unit(t.value.left)
+const rightChild = <T extends Binary>(t: Writer<T>) => unit(t.value.right)
 
 type Kinds = Node[typeof $kind]
 
@@ -529,8 +537,12 @@ export const add = binary<Addition>(
       add(unit(l.value.left), add(unit(l.value.right), r)), 
       'combine primitives across nesting levels'
     ]),
-  when<Node, Node>(deepEquals, (l, _r) => [
+  when(deepEquals, (l, _r) => [
     multiply(real(2), l), 'equivalence: replaced with double'
+  ]),
+  when<Addition, Node>(deepEqualsAt(leftChild, identity), (l, _r) => [
+    add(multiply(real(2), unit(l.value.left)), unit(l.value.right)),
+    'combined like terms'
   ])
 )
 
