@@ -261,6 +261,10 @@ export const deepEquals: DeepEqualsFn = multi(
   method(false)
 )
 
+const isValue = <T extends Node>(expected: Writer<T>) =>
+  <U extends Node>(actual: Writer<U>) =>
+    deepEquals(expected, actual)
+
 type WalkFn<T extends Node, R extends Node = T> = (t: Writer<T>) => Writer<R>
 const deepEqualsAt = <L extends Node, R extends Node>(
   leftWalk: WalkFn<L, Node>,
@@ -497,17 +501,18 @@ const binary = <T extends Binary, R = void>(
       when<Node, Nil|NaN>([_, any('Nil', 'NaN')], (_l, _r) => [nan, 'not a number']),
       method(binaryMap<Node, Node, T>((l, r) => create(l, r)))
     )
-    fn = fromMulti(
-      method([is('Real'), is('Complex')], apply(fn)(complex, identity)),
-      method([is('Complex'), is('Real')], apply(fn)(identity, complex)),
-      method([is('Real'), is('Boolean')], apply(fn)(identity, real)),
-      method([is('Boolean'), is('Real')], apply(fn)(real, identity)),
-      method([is('Complex'), is('Boolean')], apply(fn)(identity, complex)),
-      method([is('Boolean'), is('Complex')], apply(fn)(complex, identity))
-    )(fn) as typeof fn
-    return (
-      ...methods: (typeof method)[]
-    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
+    return (...methods: (typeof method)[]) => {
+      fn = fromMulti(
+        ...methods,
+        method([is('Real'), is('Complex')], apply(fn)(complex, identity)),
+        method([is('Complex'), is('Real')], apply(fn)(identity, complex)),
+        method([is('Real'), is('Boolean')], apply(fn)(identity, real)),
+        method([is('Boolean'), is('Real')], apply(fn)(real, identity)),
+        method([is('Complex'), is('Boolean')], apply(fn)(identity, complex)),
+        method([is('Boolean'), is('Complex')], apply(fn)(complex, identity))
+      )(fn) as typeof fn
+      return fn
+    }
   }
 }
 
@@ -528,7 +533,7 @@ export const add = binary<Addition>(
   when([
     any('Real', 'Complex', 'Boolean'), notAny('Real', 'Complex', 'Boolean')
   ], (l, r) => [add(r, l), 're-order operands']),
-  when<Node, Real>([_, real(0)], (l, _r) => [l, 'additive identity']),
+  when<Node, Real>([_, isValue(real(0))], (l, _r) => [l, 'additive identity']),
   when<AdditionWithPrimitive, Primitive>(
     (l, r) => is('Addition')(l) 
       && isPrimitive(unit(l.value.right)) 

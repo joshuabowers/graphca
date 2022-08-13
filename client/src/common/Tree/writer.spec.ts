@@ -398,4 +398,24 @@ describe('add', () => {
       ]
     })
   })
+
+  it('logs all layers of an operation without loss', () => {
+    expect(add(variable('x'), add(variable('y'), add(real(5), real(-5))))).toEqual({
+      value: add(variable('x'), variable('y')).value,
+      log: [
+        // {
+        //   input: [real(5).value, real(-5).value],
+        //   action: 'real addition'
+        // },
+        {
+          input: [variable('y').value, real(0).value],
+          action: 'additive identity'
+        },
+        {
+          input: [variable('x').value, variable('y').value],
+          action: 'addition'
+        }
+      ]
+    })
+  })
 })
