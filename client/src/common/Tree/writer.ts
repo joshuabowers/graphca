@@ -24,133 +24,7 @@ export const bind = <T, U = T>(writer: Writer<T>, transform: WriterFn<T, U>): Wr
 export const pipe = <T>(writer: Writer<T>, ...transforms: WriterFn<T>[]): Writer<T> =>
   transforms.reduce(bind, writer)
 
-// const squared = (x: number): Writer<number> => ({value: x * x, log: [{input: x, action: 'squared'}]})
-// const doubled = (x: number): Writer<number> => ({value: 2 * x, log: [{input: x, action: 'doubled'}]})
 
-// const result = pipe(unit(5), squared, doubled)
-
-// result.log.map(op => `${op.input} was ${op.action}`)
-
-// abstract class Base {
-//   abstract readonly $kind: string
-// }
-
-// abstract class Binary extends Base {
-//   constructor(readonly left: Base, readonly right: Base) {super()}
-// }
-
-// class Addition extends Binary {
-//   readonly $kind = 'Addition'
-// }
-
-// abstract class Unary extends Base {
-//   constructor(readonly expression: Base) {super()}
-// }
-
-// class Absolute extends Unary {
-//   readonly $kind = 'Absolute'
-// }
-
-// abstract class Primitive<T> extends Base {
-//   constructor(readonly value: T) {super()}
-// }
-
-// class Real extends Primitive<number> {
-//   readonly $kind = 'Real'
-// }
-
-// class Complex extends Primitive<{a: number, b: number}> {
-//   readonly $kind = 'Complex'
-// }
-
-// const isFunction = (value: unknown): value is Function => {
-//   return typeof value === 'function'
-// }
-
-// const when = <L, R = L, P = L>(
-//   predicate: L|R|[L, R]|((l: L, r: R) => boolean), 
-//   result: P|((l: L, r: R) => P)
-// ) =>
-//   method(predicate, (l: L, r: R) => unit(isFunction(result) ? result.call(this, l, r) : result))
-
-// type Constructor<T> = new (...args: any[]) => T
-
-// type UnaryWhen<T, R = T> = (value: T) => Writer<R>
-
-// type UnaryFn<T> = Multi & UnaryWhen<Real> & UnaryWhen<Complex> & UnaryWhen<T>
-
-// const forward = <T>(fn: WriterFn<T>) => (value: T) => bind(unit(value), fn)
-
-// type PrimitiveWhen<T, R = T> = (value: T) => R
-
-// const wrap = <T, R>(fn: PrimitiveWhen<T, R>) => (value: T) => unit(fn(value))
-
-// type PrimitiveFn<T, U extends Primitive<T>> = Multi 
-//   & PrimitiveWhen<T, Writer<U>> 
-//   & PrimitiveWhen<Real, Writer<U>> 
-//   & PrimitiveWhen<Complex, Writer<U>>
-//   & PrimitiveWhen<U, Writer<U>>
-
-// const primitive = <T, U extends Primitive<T>>(rawType: Constructor<T>, type: Constructor<U>) => {
-//   return (
-//     whenT: PrimitiveWhen<T, U>,
-//     whenReal: PrimitiveWhen<Real, U>,
-//     whenComplex: PrimitiveWhen<Complex, U>
-//   ) => {
-//     const fn: PrimitiveFn<T, U> = multi(
-//       when([real(5), real(2)], (l, r) => new Real(l.value.value + r.value.value)),
-//       method(is(rawType), wrap(whenT)),
-//       method(is(Real), wrap(whenReal)),
-//       method(is(Complex), wrap(whenComplex)),
-//       // method(is(Base), )
-//     )
-//     return (
-//       ...methods: (typeof method)[]
-//     ): typeof fn => fromMulti(...methods)(fn)
-//   }
-// }
-
-// const real = primitive(Number, Real)(
-//   n => new Real(n.valueOf()),
-//   r => r,
-//   c => new Real(c.value.a)
-// )()
-
-// class ComplexPair {
-//   constructor(readonly a: number, readonly b: number) {}
-// }
-
-// const complex = primitive(ComplexPair, Complex)(
-//   cp => new Complex(cp),
-//   r => new Complex({a: r.value, b: 0}),
-//   c => c
-// )()
-
-// const r = real(5)
-// const c = complex({a: 1, b: 2})
-
-// // Functionally incomplete: needs to handle return type overrides,
-// // but also needs to properly box whenReal (, etc) as Writer<T>
-// const unary = <T extends Unary>(type: Constructor<T>) => {
-//   return (
-//     whenReal: UnaryWhen<Real>,
-//     whenComplex: UnaryWhen<Complex>
-//   ) => {
-//     const fn: UnaryFn<T> = multi(
-//       method(is(Real), forward(whenReal)),
-//       method(is(Complex), forward(whenComplex)),
-//       method(is(Base), (value: Base) => new type(value))
-//     )
-//     return (
-//       ...methods: (typeof method)[]
-//     ): typeof fn => fromMulti(...methods)(fn)
-//   }
-// }
-
-// // const abs = unary(Absolute)(
-// //   r => Math.abs(r.value),
-// //   c => complex(Math.hypot(c.a, c.b), 0)
-// // )()
 
 export const $kind = Symbol('$kind')
 
@@ -166,8 +40,8 @@ type Primitive = Real | Complex | Boolean | Nil | NaN
 
 type Variable = {[$kind]: 'Variable', name: string, value: Writer<Node>}
 
-type BinaryParams = {left: Node, right: Node}
-type BinaryForm<T extends string> = Form<T, BinaryParams>
+type BinaryFields = {left: Writer<Node>, right: Writer<Node>}
+type BinaryForm<T extends string> = Form<T, BinaryFields>
 
 type Addition = BinaryForm<'Addition'>
 type Multiplication = BinaryForm<'Multiplication'>
@@ -182,8 +56,8 @@ type Connectives = Conjunction
 
 type Binary = BinaryOperators | Inequalities | Connectives
 
-type UnaryParams = {expression: Node}
-type UnaryForm<T extends string> = Form<T, UnaryParams>
+type UnaryFields = {expression: Writer<Node>}
+type UnaryForm<T extends string> = Form<T, UnaryFields>
 
 type Absolute = UnaryForm<'Absolute'> 
 type Factorial = UnaryForm<'Factorial'>
@@ -253,10 +127,9 @@ export const deepEquals: DeepEqualsFn = multi(
   caseOf<Nil>('Nil')(true),
   caseOf<NaN>('NaN')(false),
   caseOf<Variable>('Variable')((l, r) => l.name === r.name && deepEquals(l.value, r.value)),
-  caseOf<Unary>(isUnary)((l, r) => deepEquals(unit(l.expression), unit(r.expression))),
+  caseOf<Unary>(isUnary)((l, r) => deepEquals(l.expression, r.expression)),
   caseOf<Binary>(isBinary)(
-    (l, r) => deepEquals(unit(l.left), unit(r.left)) 
-      && deepEquals(unit(l.right), unit(r.right))
+    (l, r) => deepEquals(l.left, r.left) && deepEquals(l.right, r.right)
   ),
   method(false)
 )
@@ -369,15 +242,17 @@ const unaryMap = <T>(fn: CaseFn<T>) =>
 const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, 'not a number']
 
 const unary = <T extends Unary>(
-  create: CreateFn<Node, T>,
-  action: string
+  kind: Kinds
 ) => {
+  const create = (expression: Writer<Node>): Action<T> => [
+    ({[$kind]: kind, expression}) as T,
+    kind.toLocaleLowerCase()
+  ]
   return (
     whenReal: CaseFn<Real>,
     whenComplex: CaseFn<Complex>,
     whenBoolean: CaseFn<Boolean>
   ) => {
-    const whenNode: CaseFn<Node> = input => [create(input), action]
     const fn: UnaryFn<T> = multi(
       (v: Writer<Node>) => v?.value?.[$kind],
       method('Real', unaryMap(whenReal)),
@@ -385,7 +260,7 @@ const unary = <T extends Unary>(
       method('Boolean', unaryMap(whenBoolean)),
       method('Nil', unaryMap(whenNilOrNaN)),
       method('NaN', unaryMap(whenNilOrNaN)),
-      method(unaryMap(whenNode))
+      method(unaryMap<Node>(input => create(unit(input))))
     )
     return (
       ...methods: (typeof method)[]
@@ -393,19 +268,13 @@ const unary = <T extends Unary>(
   }
 }
 
-export const absolute = unary<Absolute>(
-  expression => ({[$kind]: 'Absolute', expression}),
-  'absolute value'
-)(
+export const absolute = unary<Absolute>('Absolute')(
   r => [real(Math.abs(r.value)), 'absolute value'],
   c => [complex([Math.hypot(c.a, c.b), 0]), 'absolute value'],
   b => [b, 'absolute value']
 )()
 
-export const sin = unary<Sine>(
-  expression => ({[$kind]: 'Sine', expression}),
-  'sine'
-)(
+export const sin = unary<Sine>('Sine')(
   r => [real(Math.sin(r.value)), 'computed sine'],
   c => [
     complex([
@@ -417,7 +286,6 @@ export const sin = unary<Sine>(
   b => [boolean(real(Math.sin(b.value ? 1 : 0))), 'computed sine']
 )()
 
-type BinaryCreateFn<L, R, T> = (l: L, r: R) => Action<T>
 type BinaryCaseFn<L, R = L, T = L> = (l: L, r: R) => Action<T>
 type BinaryCastFn<L, R = L, T = L> = (l: Writer<L>, r: Writer<R>) => Writer<T>
 
@@ -444,7 +312,10 @@ const binaryMap = <L, R, T>(fn: BinaryCaseFn<L, R, T>) =>
         const [value, action] = fn(x, y)
         return ({
           value: isWriter(value) ? value.value : value,
-          log: [...(isWriter(value) ? value.log : []), {input: [x, y], action}]
+          log: [
+            ...(isWriter(value) ? value.log : []), 
+            {input: [x, y], action}
+          ]
         })
       })
     })
@@ -458,8 +329,8 @@ const apply = <T, U>(fn: BinaryFn<T, U>) =>
       fn(changeLeft(l), changeRight(r))
 
 const identity = <T>(t: T) => t
-const leftChild = <T extends Binary>(t: Writer<T>) => unit(t.value.left)
-const rightChild = <T extends Binary>(t: Writer<T>) => unit(t.value.right)
+const leftChild = <T extends Binary>(t: Writer<T>) => t.value.left
+const rightChild = <T extends Binary>(t: Writer<T>) => t.value.right
 
 type Kinds = Node[typeof $kind]
 
@@ -480,14 +351,21 @@ const when = <L extends Node, R extends Node>(
     const [result, action] = fn(l, r)
     return ({
       value: isWriter(result) ? result.value : result,
-      log: [{input: [l.value, r.value], action}, ...(isWriter(result) ? result.log : [])]
+      log: [
+        ...l.log, ...r.log,
+        {input: [l.value, r.value], action}, 
+        ...(isWriter(result) ? result.log : [])
+      ]
     })
   })
 
 const binary = <T extends Binary, R = void>(
-  create: BinaryCreateFn<Node, Node, T>
+  kind: Kinds
 ) => {
   type Result<U extends Node> = R extends void ? U : R
+  const create = (left: Writer<Node>, right: Writer<Node>): Action<T> => [({
+    [$kind]: kind, left, right
+  }) as T, kind.toLocaleLowerCase()]
   return (
     whenReal: BinaryCaseFn<Real, Real, Result<Real>>,
     whenComplex: BinaryCaseFn<Complex, Complex, Result<Complex>>,
@@ -499,7 +377,7 @@ const binary = <T extends Binary, R = void>(
       method([is('Boolean'), is('Boolean')], binaryMap(whenBoolean)),
       when<Nil|NaN, Node>([any('Nil', 'NaN'), _], (_l, _r) => [nan, 'not a number']),
       when<Node, Nil|NaN>([_, any('Nil', 'NaN')], (_l, _r) => [nan, 'not a number']),
-      method(binaryMap<Node, Node, T>((l, r) => create(l, r)))
+      method(binaryMap<Node, Node, T>((l, r) => create(unit(l), unit(r))))
     )
     return (...methods: (typeof method)[]) => {
       fn = fromMulti(
@@ -520,9 +398,7 @@ type AdditionWithPrimitive = Addition & {right: Primitive}
 
 const isPrimitive = any('Real', 'Complex', 'Boolean')
 
-export const add = binary<Addition>(
-  (left, right) => [({[$kind]: 'Addition', left, right}), 'addition']
-)(
+export const add = binary<Addition>('Addition')(
   (l, r) => [real(l.value + r.value), 'real addition'],
   (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
   (l, r) => [
@@ -536,32 +412,28 @@ export const add = binary<Addition>(
   when<Node, Real>([_, isValue(real(0))], (l, _r) => [l, 'additive identity']),
   when<AdditionWithPrimitive, Primitive>(
     (l, r) => is('Addition')(l) 
-      && isPrimitive(unit(l.value.right)) 
+      && isPrimitive(l.value.right) 
       && isPrimitive(r), 
     (l, r) => [
-      add(unit(l.value.left), add(unit(l.value.right), r)), 
+      add(l.value.left, add(l.value.right, r)), 
       'combine primitives across nesting levels'
     ]),
   when(deepEquals, (l, _r) => [
     multiply(real(2), l), 'equivalence: replaced with double'
   ]),
   when<Addition, Node>(deepEqualsAt(leftChild, identity), (l, _r) => [
-    add(multiply(real(2), unit(l.value.left)), unit(l.value.right)),
+    add(multiply(real(2), l.value.left), l.value.right),
     'combined like terms'
   ])
 )
 
-export const multiply = binary<Multiplication>(
-  (left, right) => [({[$kind]: 'Multiplication', left, right}), 'multiplication']
-)(
+export const multiply = binary<Multiplication>('Multiplication')(
   (l, r) => [real(l.value * r.value), 'real multiplication'],
   (l, r) => [complex([0, 0]), 'complex multiplication'],
   (l, r) => [boolean(false), 'boolean multiplication']
 )()
 
-export const equals = binary<Equality, Boolean>(
-  (left, right) => [{[$kind]: 'Equality', left, right}, 'equality']
-)(
+export const equals = binary<Equality, Boolean>('Equality')(
   (l, r) => [boolean(l.value === r.value), 'real equality'],
   (l, r) => [boolean(l.a === r.a && l.b === r.b), 'complex equality'],
   (l, r) => [boolean(l.value === r.value), 'boolean equality']
@@ -569,115 +441,8 @@ export const equals = binary<Equality, Boolean>(
   when<Unary, Unary>(
     [isUnary, isUnary], 
     (l, r) => [
-      equals(unit(l.value.expression), unit(r.value.expression)), 
+      equals(l.value.expression, r.value.expression), 
       'unary equality'
     ]
   )
 )
-
-namespace BasicOOP {
-  abstract class Base {
-    abstract readonly $kind: string
-
-    abstract add(right: Base): Base
-  }
-
-  abstract class Binary extends Base {
-    constructor(readonly left: Base, readonly right: Base) {super()}
-
-    add: Multi & ((right: Base) => Base) = multi(
-      method(Base, (r: Base) => new Addition(this, r))
-    )
-  }
-
-  class Addition extends Binary {
-    readonly $kind = 'Addition'
-
-    // add: Multi & ((right: Base) => Base) = fromMulti(
-    //   method(Real.Zero, this)
-    // )(super.add)
-  }
-
-  abstract class Unary extends Base {
-    constructor(readonly expression: Base) {super()}
-
-    add: Multi & ((right: Base) => Base) = multi(
-      method(Base, (r: Base) => new Addition(this, r))
-    )
-  }
-
-  class Absolute extends Unary {
-    readonly $kind = 'Absolute'
-  }
-
-  abstract class Primitive<T> extends Base {
-    constructor(readonly value: T) {super()}
-  }
-
-  class Real extends Primitive<number> {
-    static readonly Zero = new Real(0)
-
-    readonly $kind = 'Real'
-
-    add: Multi & ((right: Base) => Base) = multi(
-      (right: Base) => right.$kind,
-      method('Real', (r: Real) => new Real(this.value + r.value)),
-      method('Complex', (c: Complex) => new Complex({a: this.value + c.value.a, b: c.value.b})),
-    )
-  }
-
-  class Complex extends Primitive<{a: number, b: number}> {
-    readonly $kind = 'Complex'
-
-    add: Multi & ((right: Base) => Base) = multi(
-      (right: Base) => right.$kind,
-      method('Real', (r: Real) => new Complex({a: this.value.a + r.value, b: this.value.b})),
-      method('Complex', (c: Complex) => new Complex({a: this.value.a + c.value.a, b: this.value.b + c.value.b}))
-    )
-  }
-
-  const r = new Real(5), c = new Complex({a: 1, b: 2})
-  const a = r.add(c)
-  const a2 = new Addition(r, c).add(new Real(10))
-}
-
-// Ideally: this would have specific visitors for every mathematical operation:
-// e.g. there would be an AdditionVisitor, a multimethod, which would bundle all
-// addition logic together. ???
-namespace OOPWithVisitors {
-  abstract class Base {
-    abstract readonly $kind: string
-  }
-
-  abstract class Binary extends Base {
-    constructor(readonly left: Base, readonly right: Base) {super()}
-  }
-
-  class Addition extends Binary {
-    readonly $kind = 'Addition'
-  }
-
-  class AdditionWithPrimitive extends Addition {
-    constructor(readonly left: Base, readonly right: Real|Complex) {super(left, right)}
-  }
-
-  abstract class Unary extends Base {
-    constructor(readonly expression: Base) {super()}
-  }
-
-  class Absolute extends Unary {
-    readonly $kind = 'Absolute'
-  }
-
-  abstract class Primitive<T> extends Base {
-    constructor(readonly value: T) {super()}
-  }
-
-  class Real extends Primitive<number> {
-    readonly $kind = 'Real'
-  }
-
-  class Complex extends Primitive<{a: number, b: number}> {
-    readonly $kind = 'Complex'
-  }
-}

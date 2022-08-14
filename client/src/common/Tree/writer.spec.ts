@@ -193,10 +193,8 @@ describe('absolute', () => {
 
   it('returns a Writer<Absolute> for variable input', () => {
     expect(absolute(variable('x'))).toEqual({
-      value: {[$kind]: 'Absolute', expression: {
-        [$kind]: 'Variable', name: 'x', value: nil
-      }},
-      log: [{input: variable('x').value, action: 'absolute value'}]
+      value: {[$kind]: 'Absolute', expression: variable('x')},
+      log: [{input: variable('x').value, action: 'absolute'}]
     })
   })
 
@@ -238,7 +236,7 @@ describe('add', () => {
 
   it('returns a Writer<Addition> for variable input', () => {
     expect(add(variable('x'), variable('y'))).toEqual({
-      value: {[$kind]: 'Addition', left: variable('x').value, right: variable('y').value},
+      value: {[$kind]: 'Addition', left: variable('x'), right: variable('y')},
       log: [{
         input: [variable('x').value, variable('y').value],
         action: 'addition'
@@ -328,7 +326,7 @@ describe('add', () => {
 
   it('reorders primitives to the right', () => {
     expect(add(real(5), variable('x'))).toEqual({
-      value: {[$kind]: 'Addition', left: variable('x').value, right: real(5).value},
+      value: {[$kind]: 'Addition', left: variable('x'), right: real(5)},
       log: [
         {
           input: [real(5).value, variable('x').value],
@@ -344,8 +342,12 @@ describe('add', () => {
 
   it('combines reals across nesting levels', () => {
     expect(add(add(variable('x'), real(5)), real(10))).toEqual({
-      value: {[$kind]: 'Addition', left: variable('x').value, right: real(15).value},
+      value: {[$kind]: 'Addition', left: variable('x'), right: real(15)},
       log: [
+        {
+          input: [variable('x').value, real(5).value],
+          action: 'addition'
+        },
         {
           input: [add(variable('x'), real(5)).value, real(10).value],
           action: 'combine primitives across nesting levels'
@@ -382,7 +384,10 @@ describe('add', () => {
     expect(add(add(variable('x'), variable('y')), variable('x'))).toEqual({
       value: add(multiply(real(2), variable('x')), variable('y')).value,
       log: [
-        // Missing steps: tossed out addition of 'x' and 'y'?
+        {
+          input: [variable('x').value, variable('y').value],
+          action: 'addition'
+        },
         {
           input: [add(variable('x'), variable('y')).value, variable('x').value],
           action: 'combined like terms'
@@ -403,10 +408,10 @@ describe('add', () => {
     expect(add(variable('x'), add(variable('y'), add(real(5), real(-5))))).toEqual({
       value: add(variable('x'), variable('y')).value,
       log: [
-        // {
-        //   input: [real(5).value, real(-5).value],
-        //   action: 'real addition'
-        // },
+        {
+          input: [real(5).value, real(-5).value],
+          action: 'real addition'
+        },
         {
           input: [variable('y').value, real(0).value],
           action: 'additive identity'
