@@ -1,5 +1,4 @@
-import { method, multi, Multi, fromMulti, _, inspect } from '@arrows/multimethod'
-// import { is } from './is'
+import { method, multi, Multi, fromMulti, _ } from '@arrows/multimethod'
 
 export interface Operation {
   input: unknown,
@@ -394,6 +393,25 @@ const binary = <T extends Binary, R = void>(
   }
 }
 
+export const partialLeft = <T extends Node, R = void>(fn: BinaryFn<T, R>) =>
+  (left: Writer<Node>): UnaryFn<T> =>
+    multi(method((right: Writer<Node>) => fn(left, right)))
+
+export const partialRight = <T extends Node, R = void>(fn: BinaryFn<T, R>) =>
+  (right: Writer<Node>): UnaryFn<T> =>
+    multi(method((left: Writer<Node>) => fn(left, right)))
+
+type MapFn<T extends Node, R extends Node = Node> = (t: Writer<T>) => Writer<R>
+export const binaryFrom = <T extends Node, R = void>(fn: BinaryFn<T, R>) =>
+  (leftMap: MapFn<Node> | undefined, rightMap: MapFn<Node> | undefined) =>
+    multi(
+      method(
+        (l: Writer<Node>, r: Writer<Node>) => fn(
+          leftMap?.(l) ?? l, rightMap?.(r) ?? r
+        )
+      )
+    ) as typeof fn
+
 type AdditionWithPrimitive = Addition & {right: Primitive}
 
 const isPrimitive = any('Real', 'Complex', 'Boolean')
@@ -427,11 +445,16 @@ export const add = binary<Addition>('Addition')(
   ])
 )
 
+export const subtract = binaryFrom(add)(undefined, r => multiply(real(-1), r))
+
 export const multiply = binary<Multiplication>('Multiplication')(
   (l, r) => [real(l.value * r.value), 'real multiplication'],
   (l, r) => [complex([0, 0]), 'complex multiplication'],
   (l, r) => [boolean(false), 'boolean multiplication']
 )()
+
+export const negate = partialLeft(multiply)(real(-1))
+export const double = partialLeft(multiply)(real(2))
 
 export const equals = binary<Equality, Boolean>('Equality')(
   (l, r) => [boolean(l.value === r.value), 'real equality'],

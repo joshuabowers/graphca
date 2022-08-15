@@ -1,6 +1,6 @@
 import { 
   $kind, real, complex, boolean, nil, nan, variable, absolute, sin, 
-  add, multiply,
+  add, subtract, multiply, negate, double,
   deepEquals
 } from './writer'
 
@@ -419,6 +419,68 @@ describe('add', () => {
         {
           input: [variable('x').value, variable('y').value],
           action: 'addition'
+        }
+      ]
+    })
+  })
+})
+
+describe('subtract', () => {
+  it('returns a Writer<Real> for two real inputs', () => {
+    expect(subtract(real(4), real(5))).toEqual({
+      value: real(-1).value,
+      log: [
+        {
+          input: [real(-1).value, real(5).value],
+          action: 'real multiplication'
+        },
+        {
+          input: [real(4).value, real(-5).value],
+          action: 'real addition'
+        }
+      ]
+    })
+  })
+
+  it('returns a Writer<Addition> for variable inputs', () => {
+    expect(subtract(variable('x'), variable('y'))).toEqual({
+      value: add(variable('x'), multiply(real(-1), variable('y'))).value,
+      log: [
+        {
+          input: [real(-1).value, variable('y').value],
+          action: 'multiplication'
+        },
+        {
+          input: [variable('x').value, multiply(real(-1), variable('y')).value],
+          action: 'addition'  
+        }
+      ]
+    })
+  })
+})
+
+describe('negate', () => {
+  it('returns a Writer<Multiplication> for variable inputs', () => {
+    expect(negate(variable('x'))).toEqual({
+      value: multiply(real(-1), variable('x')).value,
+      log: [
+        {
+          input: [real(-1).value, variable('x').value],
+          action: 'multiplication'  
+        }
+      ]
+    })
+  })
+})
+
+describe('double', () => {
+  it('returns a Writer<Multiplication for variable inputs', () => {
+    expect(double(variable('x'))).toEqual({
+      value: multiply(real(2), variable('x')).value,
+      log: [
+        {
+          input: [real(2).value, variable('x').value],
+          action: 'multiplication'
         }
       ]
     })
