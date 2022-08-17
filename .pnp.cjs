@@ -13154,7 +13154,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@wojtekmaj/enzyme-adapter-react-17", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:0.6.3"],
             ["enzyme", "npm:3.11.0"],
             ["eslint-config-react-app", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:6.0.0"],
-            ["heap-js", "npm:2.1.6"],
             ["husky", "npm:7.0.2"],
             ["identity-obj-proxy", "npm:3.0.0"],
             ["jest-environment-enzyme", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:7.1.2"],
@@ -13174,7 +13173,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["reselect-map", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:1.0.6"],
             ["three", "npm:0.135.0"],
             ["three-stdlib", "virtual:656141524fab26d76b9a0de37412b0bd8d68b112a7ae5bb3607d411763274ecb93d754bd2292ee7cee1844b867cae11a6a7be00b96f1e87fd47684b593faaa6e#npm:2.6.1"],
-            ["ts-pattern", "npm:3.3.3"],
             ["typescript", "patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=32657b"],
             ["web-vitals", "npm:1.1.2"],
             ["webpack-hot-middleware", "npm:2.25.0"]
@@ -18092,15 +18090,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/he-npm-1.2.0-3b73a2ff07-3d4d6babcc.zip/node_modules/he/",
           "packageDependencies": [
             ["he", "npm:1.2.0"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["heap-js", [
-        ["npm:2.1.6", {
-          "packageLocation": "./.yarn/cache/heap-js-npm-2.1.6-b70845bbd1-cb712678bc.zip/node_modules/heap-js/",
-          "packageDependencies": [
-            ["heap-js", "npm:2.1.6"]
           ],
           "linkType": "HARD",
         }]
@@ -29014,15 +29003,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ts-essentials-npm-2.0.12-2c553d7b88-e46916ef44.zip/node_modules/ts-essentials/",
           "packageDependencies": [
             ["ts-essentials", "npm:2.0.12"]
-          ],
-          "linkType": "HARD",
-        }]
-      ]],
-      ["ts-pattern", [
-        ["npm:3.3.3", {
-          "packageLocation": "./.yarn/cache/ts-pattern-npm-3.3.3-18e3ac33df-64c8535fbf.zip/node_modules/ts-pattern/",
-          "packageDependencies": [
-            ["ts-pattern", "npm:3.3.3"]
           ],
           "linkType": "HARD",
         }]

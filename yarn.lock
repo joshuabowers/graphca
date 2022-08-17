@@ -7249,7 +7249,6 @@ __metadata:
     "@wojtekmaj/enzyme-adapter-react-17": ^0.6.3
     enzyme: ^3.11.0
     eslint-config-react-app: ^6.0.0
-    heap-js: ^2.1.6
     husky: ^7.0.2
     identity-obj-proxy: ^3.0.0
     jest-environment-enzyme: ^7.1.2
@@ -7269,7 +7268,6 @@ __metadata:
     reselect-map: ^1.0.6
     three: ^0.135.0
     three-stdlib: ^2.6.1
-    ts-pattern: ^3.3.3
     typescript: ^4.1.2
     web-vitals: ^1.0.1
     webpack-hot-middleware: ^2.25.0
@@ -11290,13 +11288,6 @@ fsevents@^1.2.7:
   bin:
     he: bin/he
   checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
-  languageName: node
-  linkType: hard
-
-"heap-js@npm:^2.1.6":
-  version: 2.1.6
-  resolution: "heap-js@npm:2.1.6"
-  checksum: cb712678bc441b5e9d5b825b1c8db170e1bc5757144ce10687d427ec53ac7ae0d8b9c9d4c18b7554949d7aad2ab8d6c71316355839bc1b7b498eaae088db5d94
   languageName: node
   linkType: hard
 
@@ -20639,13 +20630,6 @@ resolve@^2.0.0-next.3:
   version: 2.0.12
   resolution: "ts-essentials@npm:2.0.12"
   checksum: e46916ef44b4417f0c726faac333c8d2f363a47a5c1994eb9d42045a85d247284a3220cb7f71fb30a9bd2eef43ed7eb3bc1f76f4fedf946200a98cfde7eb3a3f
-  languageName: node
-  linkType: hard
-
-"ts-pattern@npm:^3.3.3":
-  version: 3.3.3
-  resolution: "ts-pattern@npm:3.3.3"
-  checksum: 64c8535fbfc4f56bb9f00c4c4fa5a47471cc4e27c618cb25bc94df3e6f7fdaebff43be0071e117aa1d12ed0fa58ee960895b3311976c64b978559aac228ef0eb
   languageName: node
   linkType: hard
 
