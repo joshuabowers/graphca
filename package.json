@@ -11,8 +11,8 @@
   },
   "private": true,
   "workspaces": [
-    "server",
-    "client"
+    "app/*",
+    "packages/*"
   ],
   "devDependencies": {
     "@types/eslint": "^7",
