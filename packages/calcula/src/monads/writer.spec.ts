@@ -474,6 +474,18 @@ describe('negate', () => {
 })
 
 describe('double', () => {
+  it('returns a Writer<Real> for real inputs', () => {
+    expect(double(real(5))).toEqual({
+      value: real(10).value,
+      log: [
+        {
+          input: [real(2).value, real(5).value],
+          action: 'real multiplication'
+        }
+      ]
+    })
+  })
+
   it('returns a Writer<Multiplication for variable inputs', () => {
     expect(double(variable('x'))).toEqual({
       value: multiply(real(2), variable('x')).value,
