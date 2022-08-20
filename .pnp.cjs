@@ -19,11 +19,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {\
         "name": "graphca",\
         "reference": "workspace:."\
+      },\
+      {\
+        "name": "@bowers/calcula",\
+        "reference": "workspace:packages/calcula"\
       }\
     ],\
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
+      ["@bowers/calcula", ["workspace:packages/calcula"]],\
       ["graphca", ["workspace:."]]\
     ],\
     "fallbackPool": [\
@@ -37,6 +42,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/prettier", "npm:2.3.2"],\
             ["eslint", "npm:8.22.0"],\
             ["prettier", "npm:2.7.1"],\
+            ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=f456af"]\
+          ],\
+          "linkType": "SOFT"\
+        }]\
+      ]],\
+      ["@bowers/calcula", [\
+        ["workspace:packages/calcula", {\
+          "packageLocation": "./packages/calcula/",\
+          "packageDependencies": [\
+            ["@bowers/calcula", "workspace:packages/calcula"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=f456af"]\
           ],\
           "linkType": "SOFT"\
