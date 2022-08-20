@@ -1515,7 +1515,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bowers/calcula@workspace:packages/calcula":
+"@bowers/calcula@workspace:^, @bowers/calcula@workspace:packages/calcula":
   version: 0.0.0-use.local
   resolution: "@bowers/calcula@workspace:packages/calcula"
   dependencies:
@@ -6109,6 +6109,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "frontend@workspace:apps/frontend"
   dependencies:
+    "@bowers/calcula": "workspace:^"
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.3.0
     "@testing-library/user-event": ^13.5.0

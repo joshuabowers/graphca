@@ -18,9 +18,20 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "incremental": true,
+    "outDir": "./build",
+    "paths": {
+      "@bowers/calcula": ["../../packages/calcula"]
+    }
   },
   "include": [
     "src"
+  ],
+  "references": [
+    { "path": "../../packages/calcula" }
   ]
 }

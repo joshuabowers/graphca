@@ -1,6 +1,7 @@
 {
   "name": "@bowers/calcula",
-  "main": "index.js",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
   "packageManager": "yarn@3.2.2",
   "dependencies": {
     "typescript": "^4.7.4"
