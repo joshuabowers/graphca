@@ -11,6 +11,8 @@ export interface Writer<T> {
 }
 
 export type WriterFn<T, U = T> = (value: T) => Writer<U>
+export type Action<T> = [T|Writer<T>, string]
+export type CaseFn<I> = (input: I) => Action<I>
 
 export const unit = <T>(value: T): Writer<T> => ({value, log: []})
 
@@ -23,19 +25,9 @@ export const bind = <T, U = T>(writer: Writer<T>, transform: WriterFn<T, U>): Wr
 export const pipe = <T>(writer: Writer<T>, ...transforms: WriterFn<T>[]): Writer<T> =>
   transforms.reduce(bind, writer)
 
+export const isWriter = <T>(obj: unknown): obj is Writer<T> =>
+  typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
 
-
-export const $kind = Symbol('$kind')
-
-type Kind<T extends string> = {[$kind]: T}
-type Form<K extends string, R extends {}> = Kind<K> & R
-
-type Real = Form<'Real', {value: number}> 
-type Complex = Form<'Complex', {a: number, b: number}> 
-type Boolean = Form<'Boolean', {value: boolean}> 
-type Nil = Kind<'Nil'>
-type NaN = Form<'NaN', {value: number}>
-type Primitive = Real | Complex | Boolean | Nil | NaN
 
 type Variable = {[$kind]: 'Variable', name: string, value: Writer<Node>}
 
@@ -69,20 +61,10 @@ type Unary = Absolute | Factorial | Trigonometric
 
 type Node = Primitive | Unary | Binary | Variable | Nil
 
-type GuardFn<T> = (value: unknown) => value is T
 type CreateFn<T, U> = (value: T) => U
 type CastFn<T, U> = (value: T) => Writer<U>
 type WhenFn<T, U, V> = (create: CreateFn<V, U>) => CastFn<T, U>
 
-type Action<T> = [T|Writer<T>, string]
-type CaseFn<I> = (input: I) => Action<I>
-
-type CreateCase<T, U, I> = (create: CreateFn<U, T>) => (input: I) => Action<T>
-
-const is = (kind: Kinds) => <T extends Node>(t: Writer<T>) => t?.value?.[$kind] === kind
-
-const isWriter = <T>(obj: unknown): obj is Writer<T> =>
-  typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
 
 const isUnary = (v: unknown): v is Writer<Unary> => 
   typeof v === 'object' && v! && isWriter(v) 
@@ -92,134 +74,8 @@ const isBinary = (v: unknown): v is Writer<Binary> =>
   isWriter(v) && typeof v.value === 'object' && v.value! 
   && 'left' in v.value && 'right' in v.value
 
-const areKindEqual = <T extends Node, U extends Node>(
-  t: Writer<T>, u: Writer<U>
-) => t.value[$kind] === u.value[$kind]
-
-type KindPredicate<T extends Node> = (v: unknown) => v is Writer<T>
-type CaseOfPredicate<T extends Node> = (left: T, right: T) => boolean
-const caseOf = <T extends Node>(kind: Kinds | KindPredicate<T>) => 
-  (fn: CaseOfPredicate<T> | boolean) =>
-    method(
-      typeof kind === 'string' ? [is(kind), is(kind)] : [kind, kind], 
-      (l: Writer<T>, r: Writer<T>) => 
-        areKindEqual(l, r) && (typeof fn === 'boolean' ? fn : fn(l.value, r.value)
-      )
-    )
-
-type EqualsFn<T extends Node> = (left: Writer<T>, right: Writer<T>) => boolean
-type DeepEqualsFn = Multi
-  & EqualsFn<Real>
-  & EqualsFn<Complex>
-  & EqualsFn<Boolean>
-  & EqualsFn<Nil>
-  & EqualsFn<NaN>
-  & EqualsFn<Variable>
-  & EqualsFn<Unary>
-  & EqualsFn<Binary>
-  & EqualsFn<Node>
-
-export const deepEquals: DeepEqualsFn = multi(
-  caseOf<Real>('Real')((l, r) => l.value === r.value),
-  caseOf<Complex>('Complex')((l, r) => l.a === r.a && l.b === r.b),
-  caseOf<Boolean>('Boolean')((l, r) => l.value === r.value),
-  caseOf<Nil>('Nil')(true),
-  caseOf<NaN>('NaN')(false),
-  caseOf<Variable>('Variable')((l, r) => l.name === r.name && deepEquals(l.value, r.value)),
-  caseOf<Unary>(isUnary)((l, r) => deepEquals(l.expression, r.expression)),
-  caseOf<Binary>(isBinary)(
-    (l, r) => deepEquals(l.left, r.left) && deepEquals(l.right, r.right)
-  ),
-  method(false)
-)
-
-const isValue = <T extends Node>(expected: Writer<T>) =>
-  <U extends Node>(actual: Writer<U>) =>
-    deepEquals(expected, actual)
-
-type WalkFn<T extends Node, R extends Node = T> = (t: Writer<T>) => Writer<R>
-const deepEqualsAt = <L extends Node, R extends Node>(
-  leftWalk: WalkFn<L, Node>,
-  rightWalk: WalkFn<R, Node>
-) => (l: Writer<L>, r: Writer<R>) => deepEquals(leftWalk(l), rightWalk(r))
-
-type PrimitiveFn<T, U> = Multi
-  & CastFn<U, T>
-  & CastFn<Writer<Real>, T>
-  & CastFn<Writer<Complex>, T>
-  & CastFn<Writer<Boolean>, T>
-
-const primitiveMap = <T, U>(create: CreateFn<U, T>) =>
-  <I>(fn: CreateCase<T, U, I>) =>
-    (writer: Writer<I>) =>
-      bind(writer, input => {
-        const [value, action] = fn(create)(input)
-        return ({
-          value: isWriter(value) ? value.value : value,
-          log: [...(isWriter(value) ? value.log : []), {input, action}]
-        })
-      })
-
-const primitive = <T extends Primitive, U>(
-  guard: GuardFn<U>,
-  create: CreateFn<U, T>
-) => {
-  const pMap = primitiveMap(create)
-  return (
-    whenReal: CreateCase<T, U, Real>,
-    whenComplex: CreateCase<T, U, Complex>,
-    whenBoolean: CreateCase<T, U, Boolean>
-  ) => {
-    const fn: PrimitiveFn<T, U> = multi(
-      (v: Writer<Node>) => v?.value?.[$kind],
-      method(guard, (n: U) => unit(create(n))),
-      method('Real', pMap(whenReal)),
-      method('Complex', pMap(whenComplex)),
-      method('Boolean', pMap(whenBoolean))
-    )
-    return (
-      ...methods: (typeof method)[]
-    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
-  }  
-}
-
-export const nil: Writer<Nil> = unit({[$kind]: 'Nil'})
-export const nan: Writer<NaN> = unit({[$kind]: 'NaN', value: NaN})
-
 export const variable = (name: string, value: Writer<Node> = nil): Writer<Variable> => 
   unit({[$kind]: 'Variable', name, value})
-
-const isNumber = (v: unknown): v is number => typeof v === 'number'
-const isNumberTuple = (v: unknown): v is [number, number] =>
-  Array.isArray(v) && v.length === 2 && isNumber(v[0]) && isNumber(v[1])
-const isBoolean = (v: unknown): v is boolean => typeof v === 'boolean'
-
-export const real = primitive<Real, number>(
-  isNumber,
-  value => ({[$kind]: 'Real', value})
-)(
-  _create => r => [r, ''],
-  create => c => [create(c.a), 'cast to real'],
-  create => b => [create(b.value ? 1 : 0), 'cast to real']
-)()
-
-export const complex = primitive<Complex, [number, number]>(
-  isNumberTuple,
-  ([a, b]) => ({[$kind]: 'Complex', a, b})
-)(
-  create => r => [create([r.value, 0]), 'cast to complex'],
-  _create => c => [c, ''],
-  create => b => [create([b.value ? 1 : 0, 0]), 'cast to complex']
-)()
-
-export const boolean = primitive<Boolean, boolean>(
-  isBoolean,
-  value => ({[$kind]: 'Boolean', value})
-)(
-  create => r => [create(r.value !== 0), 'cast to boolean'],
-  create => c => [create(c.a !== 0 || c.b !== 0), 'cast to boolean'],
-  _create => b => [b, '']
-)()
 
 type UnaryFn<T> = Multi
   & CastFn<Writer<Real>, Real>

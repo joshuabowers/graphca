@@ -1,17 +1,31 @@
-import { Base } from './Expression'
-import { method, multi, Multi } from '@arrows/multimethod'
+import { Boolean, primitive } from '../closures/primitive'
+import { isBoolean } from '../utility/valuePredicates'
+export { Boolean }
 
-export class Boolean extends Base {
-  readonly $kind = 'Boolean'
-  constructor(readonly value: boolean) { super() }
+// import { Base } from './Expression'
+// import { method, multi, Multi } from '@arrows/multimethod'
 
-  static readonly true = new Boolean(true);
-  static readonly false = new Boolean(false);
-}
+// export class Boolean extends Base {
+//   readonly $kind = 'Boolean'
+//   constructor(readonly value: boolean) { super() }
 
-export type BoolFunc = Multi & ((value: boolean) => Boolean)
+//   static readonly true = new Boolean(true);
+//   static readonly false = new Boolean(false);
+// }
 
-export const bool: BoolFunc = multi(
-  method(false, Boolean.false),
-  method(true, Boolean.true)
-)
+// export type BoolFunc = Multi & ((value: boolean) => Boolean)
+
+// export const bool: BoolFunc = multi(
+//   method(false, Boolean.false),
+//   method(true, Boolean.true)
+// )
+
+export const boolean = primitive<boolean, {value: boolean}, Boolean>(
+  isBoolean,
+  value => ({value}),
+  'Boolean'
+)(
+  create => r => [create(r.value !== 0), 'cast to boolean'],
+  create => c => [create(c.a !== 0 || c.b !== 0), 'cast to boolean'],
+  _create => b => [b, '']
+)()
