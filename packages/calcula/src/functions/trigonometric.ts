@@ -17,7 +17,7 @@ export type Cosecant = Trigonometric<Species.csc>
 export type Secant = Trigonometric<Species.sec>
 export type Cotangent = Trigonometric<Species.cot>
 
-export const sin = unary<Sine>(Species.sin)(
+export const [sin, isSine] = unary<Sine>(Species.sin)(
   r => [real(Math.sin(r.value)), 'computed sine'],
   c => [
     complex([
@@ -29,7 +29,7 @@ export const sin = unary<Sine>(Species.sin)(
   b => [boolean(real(Math.sin(b.value ? 1 : 0))), 'computed sine']
 )()
 
-export const cos = unary<Cosine>(Species.cos)(
+export const [cos, isCosine] = unary<Cosine>(Species.cos)(
   r => [real(Math.cos(r.value)), 'computed real cosine'],
   c => [complex([
     Math.cos(c.a) * Math.cosh(c.b),
@@ -38,7 +38,7 @@ export const cos = unary<Cosine>(Species.cos)(
   b => [boolean(real(Math.cos(b.value ? 1 : 0))), 'computed boolean cosine']
 )()
 
-export const tan = unary<Tangent>(Species.tan)(
+export const [tan, isTangent] = unary<Tangent>(Species.tan)(
   r => [real(Math.tan(r.value)), 'computed real tangent'],
   c => {
     const divisor = Math.cos(2 * c.a) + Math.cosh(2 * c.b)
@@ -67,9 +67,6 @@ export const tan = unary<Tangent>(Species.tan)(
 
 export const isTrigonometric = isGenus<TrigonometricNode>(Genera.trigonometric)
 
-export const isSine = isSpecies<Sine>(Species.sin)
-export const isCosine = isSpecies<Cosine>(Species.cos)
-export const isTangent = isSpecies<Tangent>(Species.tan)
 export const isCosecant = isSpecies<Cosecant>(Species.csc)
 export const isSecant = isSpecies<Secant>(Species.sec)
 export const isCotangent = isSpecies<Cotangent>(Species.cot)

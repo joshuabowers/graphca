@@ -68,7 +68,10 @@
 //     }
 import { method, multi, fromMulti, Multi } from "@arrows/multimethod"
 import { Writer, unit, bind, Action, CaseFn, isWriter } from "../monads/writer"
-import { TreeNode, Clades, Genera, Species, isClade } from "../utility/tree"
+import { 
+  TreeNode, Clades, Genera, Species, 
+  isClade, isSpecies, DerivedNode, TreeNodeGuardFn
+} from "../utility/tree"
 import { Real, Complex, Boolean, Nil, NaN, nan } from "../primitives"
 import { CastFn } from "../utility/typings"
 
@@ -90,7 +93,7 @@ export type UnaryFn<T> = Multi
   & CastFn<Writer<Complex>, Complex>
   & CastFn<Writer<Boolean>, Boolean>
   & CastFn<Writer<Nil|NaN>, NaN>
-  & CastFn<Writer<Node>, T>
+  & CastFn<Writer<TreeNode>, T>
 
 const unaryMap = <T>(fn: CaseFn<T>) =>
   (writer: Writer<T>) =>
@@ -103,6 +106,8 @@ const unaryMap = <T>(fn: CaseFn<T>) =>
     })
 
 const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, 'not a number']
+
+export type UnaryNodeGuardPair<T extends UnaryNode> = [UnaryFn<T>, TreeNodeGuardFn<T>]
 
 export const unary = <T extends UnaryNode>(
   species: Species, genus?: Genera
@@ -125,8 +130,9 @@ export const unary = <T extends UnaryNode>(
       method(Species.nan, unaryMap(whenNilOrNaN)),
       method(unaryMap<TreeNode>(input => create(unit(input))))
     )
-    return (
-      ...methods: (typeof method)[]
-    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
+    return (...methods: (typeof method)[]): UnaryNodeGuardPair<T> => [
+      methods.length > 0 ? fromMulti(...methods)(fn) : fn,
+      isSpecies<T>(species)
+    ]
   }
 }

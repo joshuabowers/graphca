@@ -84,7 +84,9 @@
 import { method, multi, fromMulti, Multi, _ } from "@arrows/multimethod"
 import { Writer, bind, unit, isWriter, Action } from "../monads/writer"
 import { CastFn } from "../utility/typings"
-import { TreeNode, Clades, Genera, Species, isClade, any } from "../utility/tree"
+import { 
+  TreeNode, Clades, Genera, Species, isClade, any, TreeNodeGuardFn, isSpecies 
+} from "../utility/tree"
 import { UnaryFn } from "./unary"
 import { 
   Real, Complex, Boolean, Nil, NaN,
@@ -175,6 +177,8 @@ const apply = <T, U>(fn: BinaryFn<T, U>) =>
 
 const eitherNilOrNaN = any(Species.nil, Species.nan)
 
+export type BinaryNodeFnGuardFnPair<T extends BinaryNode, R> = [BinaryFn<T, R>, TreeNodeGuardFn<T>]
+
 export const binary = <T extends BinaryNode, R = void>(
   species: Species, genus?: Genera
 ) => {
@@ -196,7 +200,7 @@ export const binary = <T extends BinaryNode, R = void>(
       when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, 'not a number']),
       method(binaryMap<TreeNode, TreeNode, T>((l, r) => create(unit(l), unit(r))))
     )
-    return (...methods: (typeof method)[]) => {
+    return (...methods: (typeof method)[]): BinaryNodeFnGuardFnPair<T, R> => {
       fn = fromMulti(
         ...methods,
         method([isReal, isComplex], apply(fn)(complex, identity)),
@@ -206,7 +210,7 @@ export const binary = <T extends BinaryNode, R = void>(
         method([isComplex, isBoolean], apply(fn)(identity, complex)),
         method([isBoolean, isComplex], apply(fn)(complex, identity))
       )(fn) as typeof fn
-      return fn
+      return [fn, isSpecies<T>(species)]
     }
   }
 }

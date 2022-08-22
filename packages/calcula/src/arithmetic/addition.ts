@@ -60,22 +60,23 @@
 import { Writer } from '../monads/writer'
 import { _ } from '@arrows/multimethod'
 import { 
-  TreeNode, Genera, Species, isSpecies, any, notAny 
+  TreeNode, Genera, Species, any, notAny 
 } from "../utility/tree"
 import { 
   Real, real, complex, boolean, isPrimitive, PrimitiveNode 
 } from "../primitives"
-import { Binary, binary, when, binaryFrom } from "../closures/binary"
-import { deepEquals, deepEqualsAt } from "../utility/deepEquals"
+import { 
+  Binary, binary, when, binaryFrom, identity, leftChild 
+} from "../closures/binary"
+import { deepEquals, deepEqualsAt, isValue } from "../utility/deepEquals"
+import { multiply, double, negate } from './multiplication'
 
 export type Addition = Binary<Species.add, Genera.arithmetic>
 type AdditionWithPrimitive = Addition & {
   readonly right: Writer<PrimitiveNode>
 }
 
-export const isAddition = isSpecies<Addition>(Species.add)
-
-export const add = binary<Addition>(Species.add, Genera.arithmetic)(
+export const [add, isAddition] = binary<Addition>(Species.add, Genera.arithmetic)(
   (l, r) => [real(l.value + r.value), 'real addition'],
   (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
   (l, r) => [
@@ -97,10 +98,10 @@ export const add = binary<Addition>(Species.add, Genera.arithmetic)(
       'combine primitives across nesting levels'
     ]),
   when(deepEquals, (l, _r) => [
-    multiply(real(2), l), 'equivalence: replaced with double'
+    double(l), 'equivalence: replaced with double'
   ]),
   when<Addition, TreeNode>(deepEqualsAt(leftChild, identity), (l, _r) => [
-    add(multiply(real(2), l.value.left), l.value.right),
+    add(double(l.value.left), l.value.right),
     'combined like terms'
   ])
 )

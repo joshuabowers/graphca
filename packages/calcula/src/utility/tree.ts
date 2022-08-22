@@ -71,6 +71,12 @@ export type TreeNode = {
   readonly species: Species
 }
 
+export type DerivedNode<T extends ((...args: any[]) => any)> = 
+  ReturnType<T> extends Writer<infer U> ? U : never
+
+export type TreeNodeGuardFn<T extends TreeNode> = 
+  (value: Writer<TreeNode>) => value is Writer<T>
+
 // values should be Writer<TreeNode>, narrowed to Writer<T>
 export const isClade = <T extends TreeNode>(clade: Clades) =>
   (value: Writer<TreeNode>): value is Writer<T> =>
@@ -83,7 +89,6 @@ export const isGenus = <T extends TreeNode>(genus: Genera) =>
 export const isSpecies = <T extends TreeNode>(species: Species) =>
   (value: Writer<TreeNode>): value is Writer<T> =>
     value.value.species === species
-
 
 export const notAny = (...args: Species[]) => {
   const exclude = new Set(args)
