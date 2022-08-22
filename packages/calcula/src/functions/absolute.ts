@@ -1,13 +1,14 @@
-import { real } from "./real";
-import { complex } from "./complex";
-import { Unary, unary } from './unary';
 
-export class AbsoluteValue extends Unary {
-  readonly $kind = 'AbsoluteValue'
-}
+import { isSpecies, Species } from "../utility/tree"
+import { real, complex } from "../primitives"
+import { unary, Unary } from "../closures/unary"
 
-export const abs = unary(AbsoluteValue)(
-  r => real(Math.abs(r.value)),
-  c => complex(Math.hypot(c.a, c.b), 0)
+export type Absolute = Unary<Species.abs>
+
+export const abs = unary<Absolute>(Species.abs)(
+  r => [real(Math.abs(r.value)), 'absolute value'],
+  c => [complex([Math.hypot(c.a, c.b), 0]), 'absolute value'],
+  b => [b, 'absolute value']
 )()
-export type AbsFn = typeof abs
+
+export const isAbsolute = isSpecies<Absolute>(Species.abs)

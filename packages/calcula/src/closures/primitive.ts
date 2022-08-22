@@ -1,24 +1,23 @@
 import { method, multi, fromMulti, Multi } from '@arrows/multimethod'
 import { Writer, bind, unit, isWriter, Action } from '../monads/writer'
-import { $kind, ASTNode, Form } from '../utility/ASTNode'
 import { CreateFn, CastFn } from '../utility/typings'
-import { Node, Kinds } from '../utility/nodes'
+import { TreeNode, Clades, Species, isClade } from '../utility/tree'
 
-export type PrimitiveNode = {
-  readonly isPrimitive: true,
-  readonly isUnary: false,
-  readonly isBinary: false
+export type PrimitiveNode = TreeNode & {
+  readonly clade: Clades.primitive
 }
 
-export type PrimitiveForm<K extends string, R extends {}> = 
-  Form<K, Readonly<R> & PrimitiveNode>
+export type Primitive<S extends Species, F extends {}> =
+  PrimitiveNode & {readonly species: S} & Readonly<F>
+
+export const isPrimitive = isClade<PrimitiveNode>(Clades.primitive)
 
 // NOTE: Primitive types defined here to bootstrap primitive.
-export type Real = PrimitiveForm<'Real', {value: number}> 
-export type Complex = PrimitiveForm<'Complex', {a: number, b: number}> 
-export type Boolean = PrimitiveForm<'Boolean', {value: boolean}> 
-export type Nil = PrimitiveForm<'Nil', {}>
-export type NaN = PrimitiveForm<'NaN', {value: number}>
+export type Real = Primitive<Species.real, {value: number}> 
+export type Complex = Primitive<Species.complex, {a: number, b: number}> 
+export type Boolean = Primitive<Species.boolean, {value: boolean}> 
+export type Nil = Primitive<Species.nil, {}>
+export type NaN = Primitive<Species.nan, {value: number}>
 
 type GuardFn<T> = (value: unknown) => value is T
 type CreateCase<T, U, I> = (create: CreateFn<U, T>) => (input: I) => Action<T>
@@ -40,19 +39,15 @@ export type PrimitiveFn<T, U> = Multi
   & CastFn<Writer<Complex>, T>
   & CastFn<Writer<Boolean>, T>
 
-export const primitive = <Params, Fields, T extends ASTNode & Fields & PrimitiveNode>(
+export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
   guard: GuardFn<Params>,
   paramsMap: ((u: Params) => Fields),
-  kind: Kinds
+  species: Species
 ) => {
   const create: CreateFn<Params, T> = (params: Params): T =>
     ({
-      [$kind]: kind,
-      ...({
-        isBinary: false,
-        isUnary: false, 
-        isPrimitive: true
-      }) as PrimitiveNode,
+      clade: Clades.primitive,
+      species,
       ...paramsMap(params)
     }) as T
   const pMap = primitiveMap(create)
@@ -62,11 +57,11 @@ export const primitive = <Params, Fields, T extends ASTNode & Fields & Primitive
     whenBoolean: CreateCase<T, Params, Boolean>
   ) => {
     const fn: PrimitiveFn<T, Params> = multi(
-      (v: Writer<ASTNode>) => v.value[$kind],
+      (v: Writer<TreeNode>) => v.value.species,
       method(guard, (n: Params) => unit(create(n))),
-      method('Real', pMap(whenReal)),
-      method('Complex', pMap(whenComplex)),
-      method('Boolean', pMap(whenBoolean))
+      method(Species.real, pMap(whenReal)),
+      method(Species.complex, pMap(whenComplex)),
+      method(Species.boolean, pMap(whenBoolean))
     )
     return (
       ...methods: (typeof method)[]
