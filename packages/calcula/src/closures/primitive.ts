@@ -57,7 +57,7 @@ export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
     whenBoolean: CreateCase<T, Params, Boolean>
   ) => {
     const fn: PrimitiveFn<T, Params> = multi(
-      (v: Writer<TreeNode>) => v.value.species,
+      (v: Writer<TreeNode>) => v?.value?.species,
       method(guard, (n: Params) => unit(create(n))),
       method(Species.real, pMap(whenReal)),
       method(Species.complex, pMap(whenComplex)),

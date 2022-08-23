@@ -80,15 +80,15 @@ export type TreeNodeGuardFn<T extends TreeNode> =
 // values should be Writer<TreeNode>, narrowed to Writer<T>
 export const isClade = <T extends TreeNode>(clade: Clades) =>
   (value: Writer<TreeNode>): value is Writer<T> =>
-    value.value.clade === clade
+    value?.value.clade === clade
 
 export const isGenus = <T extends TreeNode>(genus: Genera) =>
   (value: Writer<TreeNode>): value is Writer<T> =>
-    value.value.genus === genus
+    value?.value.genus === genus
 
 export const isSpecies = <T extends TreeNode>(species: Species) =>
   (value: Writer<TreeNode>): value is Writer<T> =>
-    value.value.species === species
+    value?.value.species === species
 
 export const notAny = (...args: Species[]) => {
   const exclude = new Set(args)

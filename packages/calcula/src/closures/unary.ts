@@ -125,7 +125,7 @@ export const unary = <T extends UnaryNode>(
       (v: Writer<TreeNode>) => v.value.species,
       method(Species.real, unaryMap(whenReal)),
       method(Species.complex, unaryMap(whenComplex)),
-      method(Species.complex, unaryMap(whenBoolean)),
+      method(Species.boolean, unaryMap(whenBoolean)),
       method(Species.nil, unaryMap(whenNilOrNaN)),
       method(Species.nan, unaryMap(whenNilOrNaN)),
       method(unaryMap<TreeNode>(input => create(unit(input))))

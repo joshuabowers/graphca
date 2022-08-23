@@ -1,5 +1,5 @@
 import { Species } from "../utility/tree"
-import { real, complex } from "../primitives"
+import { real, complex, boolean } from "../primitives"
 import { unary, Unary } from "../closures/unary"
 
 export type Absolute = Unary<Species.abs>

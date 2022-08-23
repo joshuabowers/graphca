@@ -106,4 +106,4 @@ export const [add, isAddition] = binary<Addition>(Species.add, Genera.arithmetic
   ])
 )
 
-export const subtract = binaryFrom(add)(undefined, r => multiply(real(-1), r))
+export const subtract = binaryFrom(add)(undefined, r => negate(r))

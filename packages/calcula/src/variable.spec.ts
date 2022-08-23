@@ -1,12 +1,13 @@
-import { scope } from "./scope";
-import { real } from './real'
-import { assign } from "./variable";
+import { isWriter } from './monads/writer';
+import { real } from './primitives'
+import { Variable, assign, scope } from "./variable";
 
 describe(assign, () => {
   it('returns a new variable with the supplied value', () => {
     const actual = assign('x', real(5), scope())
-    expect(actual.name).toEqual('x')
-    expect(actual.value).toEqual(real(5))
+    expect(isWriter<Variable>(actual)).toBeTruthy()
+    expect(actual.value.name).toEqual('x')
+    expect(actual.value.value).toEqual(real(5))
   })
 
   it('has, as a side effect, the updating of the supplied scope', () => {
