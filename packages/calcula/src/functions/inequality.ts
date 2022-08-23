@@ -62,18 +62,18 @@ import { Genera, Species } from "../utility/tree"
 import { BinaryNode, binary } from "../closures/binary"
 import { Boolean, boolean } from '../primitives'
 
-export type ConnectiveNode = BinaryNode & {
-  readonly genus: Genera.connective
+export type InequalityNode = BinaryNode & {
+  readonly genus: Genera.inequalities
 }
 
-type Connective<S extends Species> = ConnectiveNode & {
+type Inequality<S extends Species> = InequalityNode & {
   readonly species: S
 }
 
-export type Equality = Connective<Species.equals>
+export type Equality = Inequality<Species.equals>
 
 export const [equals, isEquality] = binary<Equality, Boolean>(
-  Species.equals, Genera.connective
+  Species.equals, Genera.inequalities
 )(
   (l, r) => [boolean(l.value === r.value), 'real equality'],
   (l, r) => [boolean(l.a === r.a && l.b === r.b), 'complex equality'],

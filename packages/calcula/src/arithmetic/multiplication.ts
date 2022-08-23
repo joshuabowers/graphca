@@ -173,7 +173,8 @@
 // export const divide = binaryFrom(multiply, (l, r) => [l, reciprocal(r)])
 import { Genera, Species } from '../utility/tree'
 import { real, complex, boolean } from '../primitives'
-import { Binary, binary, partialLeft } from '../closures/binary'
+import { Binary, binary, partialLeft, binaryFrom } from '../closures/binary'
+import { reciprocal } from './exponentiation'
 
 export type Multiplication = Binary<Species.multiply, Genera.arithmetic>
 
@@ -193,3 +194,5 @@ export const [multiply, isMultiplication] = binary<Multiplication>(
 
 export const negate = partialLeft(multiply)(real(-1))
 export const double = partialLeft(multiply)(real(2))
+
+export const divide = binaryFrom(multiply)(undefined, r => reciprocal(r))

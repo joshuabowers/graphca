@@ -9,13 +9,14 @@ export enum Clades {
 
 export enum Genera {
   arithmetic = 'Arithmetic',
+  logarithmic = 'Logarithmic',
   connective = 'Connective',
   inequalities = 'Inequalities',
   trigonometric = 'Trigonometric',
   arcus = 'Arcus',
   hyperbolic = 'Hyperbolic',
   areaHyperbolic = 'AreaHyperbolic',
-  combinatorics = 'Combinatorics'
+  combinatorics = 'Combinatorics',
 }
 
 export enum Species {
@@ -30,6 +31,9 @@ export enum Species {
   add = 'Addition',
   multiply = 'Multiplication',
   raise = 'Exponentiation',
+
+  // Logarithmic
+  log = 'Logarithm',
 
   // Functions
   abs = 'Absolute',

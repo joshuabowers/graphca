@@ -138,10 +138,10 @@ type CorrespondingFn<L, R> = (l: Writer<L>, r: Writer<R>) => Action<TreeNode>
 
 export const when = <L extends TreeNode, R extends TreeNode>(
   predicate: Test<L> | [Test<L>, Test<R>] | BinaryPredicate<L, R>, 
-  fn: CorrespondingFn<L, R>
+  fn: Action<TreeNode> | CorrespondingFn<L, R>
 ) =>
   method(predicate, (l: Writer<L>, r: Writer<R>) => {
-    const [result, action] = fn(l, r)
+    const [result, action] = typeof fn === 'function' ? fn(l, r) : fn
     return ({
       value: isWriter(result) ? result.value : result,
       log: [
