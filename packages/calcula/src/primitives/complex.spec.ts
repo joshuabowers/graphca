@@ -1,4 +1,4 @@
-import { Clades, Genera, Species } from '../utility/tree'
+import { Clades, Species } from '../utility/tree'
 import { real } from './real'
 import { boolean } from './boolean'
 import { complex } from './complex'
