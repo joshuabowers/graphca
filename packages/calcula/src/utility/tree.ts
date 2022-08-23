@@ -41,21 +41,21 @@ export enum Species {
   // :: Inequalities
   equals = 'Equality',
   notEquals = 'Inequality',
-  lessThan = 'LessThan',
-  greaterThan = 'GreaterThan',
-  lessThanEquals = 'LessThanEquals',
-  greaterThanEquals = 'GreaterThanEquals',
+  lessThan = 'Less Than',
+  greaterThan = 'Greater Than',
+  lessThanEquals = 'Less Than Equals',
+  greaterThanEquals = 'Greater Than Equals',
 
   // :: Connectives
   not = 'Complement',
   and = 'Conjunction',
   or = 'Disjunction',
-  xor = 'ExclusiveDisjunction',
+  xor = 'Exclusive Disjunction',
   implies = 'Implication',
-  nand = 'AlternativeDenial',
+  nand = 'Alternative Denial',
   nor = 'JointDenial',
   xnor = 'Biconditional',
-  converse = 'ConverseImplication',
+  converse = 'Converse Implication',
 
   // :: Trigonometric
   sin = 'Sine',
@@ -64,6 +64,30 @@ export enum Species {
   csc = 'Cosecant',
   sec = 'Secant',
   cot = 'Cotangent',
+
+  // :: Arcus
+  asin = 'Arcus Sine',
+  acos = 'Arcus Cosine',
+  atan = 'Arcus Tangent',
+  acsc = 'Arcus Cosecant',
+  asec = 'Arcus Secant',
+  acot = 'Arcus Cotangent',
+
+  // :: Hyperbolic
+  sinh = 'Hyperbolic Sine',
+  cosh = 'Hyperbolic Cosine',
+  tanh = 'Hyperbolic Tangent',
+  csch = 'Hyperbolic Cosecant',
+  sech = 'Hyperbolic Secant',
+  coth = 'Hyperbolic Cotangent',
+
+  // :: Area Hyperbolic
+  asinh = 'Area Hyperbolic Sine',
+  acosh = 'Area Hyperbolic Cosine',
+  atanh = 'Area Hyperbolic Tangent',
+  acsch = 'Area Hyperbolic Cosecant',
+  asech = 'Area Hyperbolic Secant',
+  acoth = 'Area Hyperbolic Cotangent',
 
   // Variables
   variable = 'Variable'

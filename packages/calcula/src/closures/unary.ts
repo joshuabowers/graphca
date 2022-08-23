@@ -88,14 +88,16 @@ export type Unary<S extends Species, G extends Genera|undefined = undefined> =
 
 export const isUnary = isClade<UnaryNode>(Clades.unary)
 
-export type UnaryFn<T> = Multi
-  & CastFn<Writer<Real>, Real>
-  & CastFn<Writer<Complex>, Complex>
-  & CastFn<Writer<Boolean>, Boolean>
+type Choose<D, F> = F extends void ? D : F
+
+export type UnaryFn<T, R = void> = Multi
+  & CastFn<Writer<Real>, Choose<Real, R>>
+  & CastFn<Writer<Complex>, Choose<Complex, R>>
+  & CastFn<Writer<Boolean>, Choose<Boolean, R>>
   & CastFn<Writer<Nil|NaN>, NaN>
   & CastFn<Writer<TreeNode>, T>
 
-const unaryMap = <T>(fn: CaseFn<T>) =>
+const unaryMap = <T, U = T>(fn: CaseFn<T, U>) =>
   (writer: Writer<T>) =>
     bind(writer, input => {
       const [value, action] = fn(input)
@@ -109,17 +111,18 @@ const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, 'not a number']
 
 export type UnaryNodeGuardPair<T extends UnaryNode> = [UnaryFn<T>, TreeNodeGuardFn<T>]
 
-export const unary = <T extends UnaryNode>(
+export const unary = <T extends UnaryNode, R = void>(
   species: Species, genus?: Genera
 ) => {
+  type Result<U extends TreeNode> = R extends void ? U : R
   const create = (expression: Writer<TreeNode>): Action<T> => [
     ({clade: Clades.unary, genus, species, expression}) as T,
     species.toLocaleLowerCase()
   ]
   return (
-    whenReal: CaseFn<Real>,
-    whenComplex: CaseFn<Complex>,
-    whenBoolean: CaseFn<Boolean>
+    whenReal: CaseFn<Real, Result<Real>>,
+    whenComplex: CaseFn<Complex, Result<Complex>>,
+    whenBoolean: CaseFn<Boolean, Result<Boolean>>
   ) => {
     const fn: UnaryFn<T> = multi(
       (v: Writer<TreeNode>) => v.value.species,

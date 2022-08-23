@@ -10,7 +10,7 @@ export interface Writer<T> {
 
 export type WriterFn<T, U = T> = (value: T) => Writer<U>
 export type Action<T> = [T|Writer<T>, string]
-export type CaseFn<I> = (input: I) => Action<I>
+export type CaseFn<I, O = I> = (input: I) => Action<O>
 
 export const unit = <T>(value: T): Writer<T> => ({value, log: []})
 

@@ -1,82 +1,78 @@
-import { real } from './real'
-import { complex } from './complex'
-import { add, subtract } from './addition'
-import { multiply, divide } from './multiplication'
-import { reciprocal, square, sqrt } from './exponentiation'
-import { ln } from './logarithmic'
-import { Unary, unary } from './unary'
+import { unit } from "../monads/writer"
+import { Genera, Species, isGenus } from "../utility/tree"
+import { real, complex, boolean } from "../primitives"
+import { UnaryNode, unary } from "../closures/unary"
+import { 
+  add, subtract, multiply, divide, reciprocal, square, sqrt 
+} from "../arithmetic"
+import { ln } from "./logarithmic"
 
-export abstract class Arcus extends Unary {}
-
-export class ArcusCosine extends Arcus {
-  readonly $kind = 'ArcusCosine'
+export type ArcusNode = UnaryNode & {
+  readonly genus: Genera.arcus
 }
 
-export class ArcusSine extends Arcus {
-  readonly $kind = 'ArcusSine'
+type Arcus<S extends Species> = ArcusNode & {
+  readonly species: S
 }
 
-export class ArcusTangent extends Arcus {
-  readonly $kind = 'ArcusTangent'
-}
+export type ArcusSine = Arcus<Species.asin>
+export type ArcusCosine = Arcus<Species.acos>
+export type ArcusTangent = Arcus<Species.atan>
+export type ArcusCosecant = Arcus<Species.acsc>
+export type ArcusSecant = Arcus<Species.asec>
+export type ArcusCotangent = Arcus<Species.acot>
 
-export class ArcusSecant extends Arcus {
-  readonly $kind = 'ArcusSecant'
-}
-
-export class ArcusCosecant extends Arcus {
-  readonly $kind = 'ArcusCosecant'
-}
-
-export class ArcusCotangent extends Arcus {
-  readonly $kind = 'ArcusCotangent'
-}
-
-const i = complex(0, 1)
+const i = complex([0, 1])
 const halfPi = real(Math.PI/2)
 
-export const acos = unary(ArcusCosine)(
-  r => real(Math.acos(r.value)),
-  c => subtract(halfPi, asin(c))
+export const [acos, isArcusCosine] = unary<ArcusCosine>(Species.acos, Genera.arcus)(
+  r => [real(Math.acos(r.value)), 'computed real arcus cosine'],
+  c => [subtract(halfPi, asin(unit(c))), 'computed complex arcus cosine'],
+  b => [b, 'computed boolean arcus cosine']
 )()
-export type AcosFn = typeof acos
 
-export const asin = unary(ArcusSine)(
-  r => real(Math.asin(r.value)),
+export const [asin, isArcusSine] = unary<ArcusSine>(Species.asin, Genera.arcus)(
+  r => [real(Math.asin(r.value)), 'computed real arcus sine'],
   c => {
-    const iz = multiply(i, c)
-    const distance = sqrt(subtract(real(1), square(c)))
-    return multiply(i, ln(subtract(distance, iz)))
-  }
+    const iz = multiply(i, unit(c))
+    const distance = sqrt(subtract(real(1), square(unit(c))))
+    return [
+      multiply(i, ln(subtract(distance, iz))), 
+      'computed complex arcus sine'
+    ]
+  },
+  b => [b, 'computed boolean arcus sine']
 )()
-export type AsinFn = typeof asin
 
-export const atan = unary(ArcusTangent)(
-  r => real(Math.atan(r.value)),
+export const [atan, isArcusTangent] = unary<ArcusTangent>(Species.atan, Genera.arcus)(
+  r => [real(Math.atan(r.value)), 'computed real arcus tangent'],
   c => {
-    const nHalfI = complex(0, -0.5)
-    const inz = subtract(i, c)
-    const ipz = add(i, c)
+    const nHalfI = complex([0, -0.5])
+    const inz = subtract(i, unit(c))
+    const ipz = add(i, unit(c))
     const ratio = divide(inz, ipz)
-    return multiply(nHalfI, ln(ratio))
-  }
+    return [multiply(nHalfI, ln(ratio)), 'computed complex arcus tangent']
+  },
+  b => [b, 'computed boolean arcus tangent']
 )()
-export type AtanFn = typeof atan
 
-export const asec = unary(ArcusSecant)(
-  r => acos(reciprocal(r)),
-  c => acos(reciprocal(c))
+export const [asec, isArcusSecant] = unary<ArcusSecant>(Species.asec, Genera.arcus)(
+  c => [acos(reciprocal(unit(c))), 'computed real arcus secant'],
+  r => [acos(reciprocal(unit(r))), 'computed complex arcus secant'],
+  b => [acos(reciprocal(unit(b))), 'computed boolean arcus secant']
 )()
-export type AsecFn = typeof asec
 
-export const acsc = unary(ArcusCosecant)(
-  r => asin(reciprocal(r)),
-  c => asin(reciprocal(c))
+export const [acsc, isArcusCosecant] = unary<ArcusCosecant>(Species.acsc, Genera.arcus)(
+  r => [asin(reciprocal(unit(r))), 'computed real arcus cosecant'],
+  c => [asin(reciprocal(unit(c))), 'computed complex arcus cosecant'],
+  b => [asin(reciprocal(unit(b))), 'computed boolean arcus cosecant']
 )()
-export type AcscFn = typeof acsc
 
-export const acot = unary(ArcusCotangent)(
-  r => subtract(halfPi, atan(r)),
-  c => atan(reciprocal(c))
+export const [acot, isArcusCotangent] = unary<ArcusCotangent>(Species.acot, Genera.arcus)(
+  r => [subtract(halfPi, atan(unit(r))), 'computed real arcus cotangent'],
+  c => [atan(reciprocal(unit(c))), 'computed complex arcus cotangent'],
+  b => [
+    boolean(subtract(halfPi, atan(unit(b)))), 
+    'computed boolean arcus cotangent'
+  ]
 )()
-export type AcotFn = typeof acot

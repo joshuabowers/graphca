@@ -1,7 +1,7 @@
-import { real } from './real'
-import { complex } from './complex'
-import { bool } from './boolean'
-import { variable } from './variable'
+import { expectWriter } from '../utility/expectations'
+import { Clades, Genera, Species } from '../utility/tree'
+import { real, complex, boolean } from '../primitives'
+import { variable } from '../variable'
 import {
   LogicalComplement,
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
@@ -13,31 +13,37 @@ import {
 
 describe('not', () => {
   it('yields false for non-zero real inputs', () => {
-    expect(not(real(5))).toEqual(bool(false))
+    expect(not(real(5))).toEqual(boolean(false))
   })
 
   it('yields true for a real value of zero', () => {
-    expect(not(real(0))).toEqual(bool(true))
+    expect(not(real(0))).toEqual(boolean(true))
   })
 
   it('yields false for non-zero complex inputs', () => {
-    expect(not(complex(1, 0))).toEqual(bool(false))
+    expect(not(complex([1, 0]))).toEqual(boolean(false))
   })
 
   it('yields true for complex 0', () => {
-    expect(not(complex(0, 0))).toEqual(bool(true))
+    expect(not(complex([0, 0]))).toEqual(boolean(true))
   })
 
   it('yields false for a true input', () => {
-    expect(not(bool(true))).toEqual(bool(false))
+    expect(not(boolean(true))).toEqual(boolean(false))
   })
 
   it('yields true for a false input', () => {
-    expect(not(bool(false))).toEqual(bool(true))
+    expect(not(boolean(false))).toEqual(boolean(true))
   })
 
   it('yields a logical complement for variable input', () => {
-    expect(not(variable('x'))).toEqual(new LogicalComplement(variable('x')))
+    // expect(not(variable('x'))).toEqual(new LogicalComplement(variable('x')))
+    expectWriter(not(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.connective, species: Species.not,
+        expression: variable('x')
+      } as LogicalComplement
+    )
   })
 
   it('rewrites double negations as the inner expression', () => {
@@ -95,43 +101,43 @@ describe('not', () => {
 
 describe('and', () => {
   it('returns true when given two true things', () => {
-    expect(and(bool(true), bool(true))).toEqual(bool(true))
+    expect(and(boolean(true), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns false if the left argument is false', () => {
-    expect(and(bool(false), bool(true))).toEqual(bool(false))
+    expect(and(boolean(false), boolean(true))).toEqual(boolean(false))
   })
 
   it('returns false if the right argument is false', () => {
-    expect(and(bool(true), bool(false))).toEqual(bool(false))
+    expect(and(boolean(true), boolean(false))).toEqual(boolean(false))
   })
 
   it('returns false if both arguments are false', () => {
-    expect(and(bool(false), bool(false))).toEqual(bool(false))
+    expect(and(boolean(false), boolean(false))).toEqual(boolean(false))
   })
 
   it('casts reals to booleans, where 0 is false, non-zero is true', () => {
-    expect(and(real(5), real(0))).toEqual(bool(false))
+    expect(and(real(5), real(0))).toEqual(boolean(false))
   })
 
   it('casts complexes to booleans, 0 => false, non-0 => true', () => {
-    expect(and(complex(5,0), complex(0,0))).toEqual(bool(false))
+    expect(and(complex([5,0]), complex([0,0]))).toEqual(boolean(false))
   })
 
   it('returns the left operand if the right is true', () => {
-    expect(and(variable('x'), bool(true))).toEqual(variable('x'))
+    expect(and(variable('x'), boolean(true))).toEqual(variable('x'))
   })
 
   it('returns the right operand if the left is true', () => {
-    expect(and(bool(true), variable('x'))).toEqual(variable('x'))
+    expect(and(boolean(true), variable('x'))).toEqual(variable('x'))
   })
 
   it('returns the false if the right operand is false', () => {
-    expect(and(variable('x'), bool(false))).toEqual(bool(false))
+    expect(and(variable('x'), boolean(false))).toEqual(boolean(false))
   })
 
   it('returns false if the left operand is false', () => {
-    expect(and(bool(false), variable('x'))).toEqual(bool(false))
+    expect(and(boolean(false), variable('x'))).toEqual(boolean(false))
   })
 
   it('returns the left operand if left equivalent to right', () => {
@@ -149,59 +155,63 @@ describe('and', () => {
   })
 
   it('returns false if the right operand is the negation of the left', () => {
-    expect(and(variable('x'), not(variable('x')))).toEqual(bool(false))
+    expect(and(variable('x'), not(variable('x')))).toEqual(boolean(false))
   })
 
   it('returns false if the left operand is the negation of the right', () => {
-    expect(and(not(variable('x')), variable('x'))).toEqual(bool(false))
+    expect(and(not(variable('x')), variable('x'))).toEqual(boolean(false))
   })
 
   it('returns a Conjunction on variable input', () => {
-    expect(and(variable('x'), variable('y'))).toEqual(
-      new Conjunction(variable('x'), variable('y'))
+    expectWriter(and(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: Genera.connective, species: Species.and,
+        left: variable('x'), right: variable('y')
+      } as Conjunction,
+      [[variable('x').value, variable('y').value], 'conjunction']
     )
   })
 })
 
 describe('or', () => {
   it('returns true when given two true things', () => {
-    expect(or(bool(true), bool(true))).toEqual(bool(true))
+    expect(or(boolean(true), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns true if the left argument is true', () => {
-    expect(or(bool(true), bool(false))).toEqual(bool(true))
+    expect(or(boolean(true), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns true if the right argument is true', () => {
-    expect(or(bool(false), bool(true))).toEqual(bool(true))
+    expect(or(boolean(false), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns false if both arguments are false', () => {
-    expect(or(bool(false), bool(false))).toEqual(bool(false))
+    expect(or(boolean(false), boolean(false))).toEqual(boolean(false))
   })
 
   it('casts reals to booleans, where 0 is false, non-zero is true', () => {
-    expect(or(real(5), real(0))).toEqual(bool(true))
+    expect(or(real(5), real(0))).toEqual(boolean(true))
   })
 
   it('casts complexes to booleans, 0 => false, non-zero => true', () => {
-    expect(or(complex(5,0), complex(0,0))).toEqual(bool(true))
+    expect(or(complex([5,0]), complex([0,0]))).toEqual(boolean(true))
   })
 
   it('returns the left operand if the right is false', () => {
-    expect(or(variable('x'), bool(false))).toEqual(variable('x'))
+    expect(or(variable('x'), boolean(false))).toEqual(variable('x'))
   })
 
   it('returns the right operand if the left is false', () => {
-    expect(or(bool(false), variable('x'))).toEqual(variable('x'))
+    expect(or(boolean(false), variable('x'))).toEqual(variable('x'))
   })
 
   it('returns true if the right operand is true', () => {
-    expect(or(variable('x'), bool(true))).toEqual(bool(true))
+    expect(or(variable('x'), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns true if the left operand is true', () => {
-    expect(or(bool(true), variable('x'))).toEqual(bool(true))
+    expect(or(boolean(true), variable('x'))).toEqual(boolean(true))
   })
 
   it('returns the left operand if left is equivalent to right', () => {
@@ -219,11 +229,11 @@ describe('or', () => {
   })
 
   it('returns true if the right operand is the negation of the left', () => {
-    expect(or(variable('x'), not(variable('x')))).toEqual(bool(true))
+    expect(or(variable('x'), not(variable('x')))).toEqual(boolean(true))
   })
 
   it('returns true if the left operand is the negation of the right', () => {
-    expect(or(not(variable('x')), variable('x'))).toEqual(bool(true))
+    expect(or(not(variable('x')), variable('x'))).toEqual(boolean(true))
   })
 
   it('returns an implication if the left operand is a complement', () => {
@@ -239,127 +249,139 @@ describe('or', () => {
   })
 
   it('returns a Disjunction on variable input', () => {
-    expect(or(variable('x'), variable('y'))).toEqual(
-      new Disjunction(variable('x'), variable('y'))
+    expectWriter(or(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: Genera.connective, species: Species.or,
+        left: variable('x'), right: variable('y')
+      } as Disjunction,
+      [[variable('x').value, variable('y').value], 'disjunction']
     )
   })
 })
 
 describe('xor', () => {
   it('returns false when given two true things', () => {
-    expect(xor(bool(true), bool(true))).toEqual(bool(false))
+    expect(xor(boolean(true), boolean(true))).toEqual(boolean(false))
   })
 
   it('returns true if the left argument is false', () => {
-    expect(xor(bool(false), bool(true))).toEqual(bool(true))
+    expect(xor(boolean(false), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns true if the right argument is false', () => {
-    expect(xor(bool(true), bool(false))).toEqual(bool(true))
+    expect(xor(boolean(true), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns false if both arguments are false', () => {
-    expect(xor(bool(false), bool(false))).toEqual(bool(false))
+    expect(xor(boolean(false), boolean(false))).toEqual(boolean(false))
   })
 
   it('returns the right operand if the left is false', () => {
-    expect(xor(bool(false), variable('x'))).toEqual(variable('x'))
+    expect(xor(boolean(false), variable('x'))).toEqual(variable('x'))
   })
 
   it('returns the left operand if the right is false', () => {
-    expect(xor(variable('x'), bool(false))).toEqual(variable('x'))
+    expect(xor(variable('x'), boolean(false))).toEqual(variable('x'))
   })
 
   it('returns the complement of the right if the left is true', () => {
-    expect(xor(bool(true), variable('x'))).toEqual(not(variable('x')))
+    expect(xor(boolean(true), variable('x'))).toEqual(not(variable('x')))
   })
 
   it('returns the complement of the left if the right is true', () => {
-    expect(xor(variable('x'), bool(true))).toEqual(not(variable('x')))
+    expect(xor(variable('x'), boolean(true))).toEqual(not(variable('x')))
   })
 
   it('returns false if the left and right operands are equal', () => {
-    expect(xor(variable('x'), variable('x'))).toEqual(bool(false))
+    expect(xor(variable('x'), variable('x'))).toEqual(boolean(false))
   })
 
   it('returns a ExclusiveDisjunction on variable input', () => {
-    expect(xor(variable('x'), variable('y'))).toEqual(
-      new ExclusiveDisjunction(variable('x'), variable('y'))
+    expectWriter(xor(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: Genera.connective, species: Species.xor,
+        left: variable('x'), right: variable('y')
+      } as ExclusiveDisjunction,
+      [[variable('x').value, variable('y').value], 'exclusive disjunction']
     )
   })  
 })
 
 describe('implies', () => {
   it('returns true when given two true things', () => {
-    expect(implies(bool(true), bool(true))).toEqual(bool(true))
+    expect(implies(boolean(true), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns true if the left argument is false', () => {
-    expect(implies(bool(false), bool(true))).toEqual(bool(true))
+    expect(implies(boolean(false), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns false if the right argument is false', () => {
-    expect(implies(bool(true), bool(false))).toEqual(bool(false))
+    expect(implies(boolean(true), boolean(false))).toEqual(boolean(false))
   })
 
   it('returns true if both arguments are false', () => {
-    expect(implies(bool(false), bool(false))).toEqual(bool(true))
+    expect(implies(boolean(false), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns the right operand if the left is true', () => {
-    expect(implies(bool(true), variable('x'))).toEqual(variable('x'))
+    expect(implies(boolean(true), variable('x'))).toEqual(variable('x'))
   })
 
   it('returns true if the right operand is true', () => {
-    expect(implies(variable('x'), bool(true))).toEqual(bool(true))
+    expect(implies(variable('x'), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns true if the left operand is false', () => {
-    expect(implies(bool(false), variable('x'))).toEqual(bool(true))
+    expect(implies(boolean(false), variable('x'))).toEqual(boolean(true))
   })
 
   it('returns the complement of the left if the right is false', () => {
-    expect(implies(variable('x'), bool(false))).toEqual(not(variable('x')))
+    expect(implies(variable('x'), boolean(false))).toEqual(not(variable('x')))
   })
   
   it('returns an Implication on variable input', () => {
-    expect(implies(variable('x'), variable('y'))).toEqual(
-      new Implication(variable('x'), variable('y'))
+    expectWriter(implies(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: Genera.connective, species: Species.implies,
+        left: variable('x'), right: variable('y')
+      } as Implication,
+      [[variable('x').value, variable('y').value], 'implication']
     )
   })
 })
 
 describe('nand', () => {
   it('returns false when given two true things', () => {
-    expect(nand(bool(true), bool(true))).toEqual(bool(false))
+    expect(nand(boolean(true), boolean(true))).toEqual(boolean(false))
   })
 
   it('returns true if the left argument is false', () => {
-    expect(nand(bool(false), bool(true))).toEqual(bool(true))
+    expect(nand(boolean(false), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns true if the right argument is false', () => {
-    expect(nand(bool(true), bool(false))).toEqual(bool(true))
+    expect(nand(boolean(true), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns true if both arguments are false', () => {
-    expect(nand(bool(false), bool(false))).toEqual(bool(true))
+    expect(nand(boolean(false), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns the complement of left operand if the right is true', () => {
-    expect(nand(variable('x'), bool(true))).toEqual(not(variable('x')))
+    expect(nand(variable('x'), boolean(true))).toEqual(not(variable('x')))
   })
 
   it('returns the right operand if the left is true', () => {
-    expect(nand(bool(true), variable('x'))).toEqual(not(variable('x')))
+    expect(nand(boolean(true), variable('x'))).toEqual(not(variable('x')))
   })
 
   it('returns the true if the right operand is false', () => {
-    expect(nand(variable('x'), bool(false))).toEqual(bool(true))
+    expect(nand(variable('x'), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns true if the left operand is false', () => {
-    expect(nand(bool(false), variable('x'))).toEqual(bool(true))
+    expect(nand(boolean(false), variable('x'))).toEqual(boolean(true))
   })
 
   it('returns the complement of the left operand if left equivalent to right', () => {
@@ -382,58 +404,60 @@ describe('nand', () => {
   })
 
   it('returns true if the right operand is the complement of the left', () => {
-    expect(nand(variable('x'), not(variable('x')))).toEqual(bool(true))
+    expect(nand(variable('x'), not(variable('x')))).toEqual(boolean(true))
   })
 
   it('returns true if the left operand is the complement of the right', () => {
-    expect(nand(not(variable('x')), variable('x'))).toEqual(bool(true))
+    expect(nand(not(variable('x')), variable('x'))).toEqual(boolean(true))
   })
 
   it('returns a AlternativeDenial on variable input', () => {
-    expect(nand(variable('x'), variable('y'))).toEqual(
-      new AlternativeDenial(variable('x'), variable('y'))
+    expectWriter(nand(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: Genera.connective, species: Species.nand,
+        left: variable('x'), right: variable('y')
+      } as AlternativeDenial,
+      [[variable('x').value, variable('y').value], 'alternative denial']
     )
   })
 })
 
 describe('nor', () => {
   it('returns false when given two true things', () => {
-    expect(nor(bool(true), bool(true))).toEqual(bool(false))
+    expect(nor(boolean(true), boolean(true))).toEqual(boolean(false))
   })
 
   it('returns false if the left argument is false', () => {
-    expect(nor(bool(false), bool(true))).toEqual(bool(false))
+    expect(nor(boolean(false), boolean(true))).toEqual(boolean(false))
   })
 
   it('returns false if the right argument is false', () => {
-    expect(nor(bool(true), bool(false))).toEqual(bool(false))
+    expect(nor(boolean(true), boolean(false))).toEqual(boolean(false))
   })
 
   it('returns true if both arguments are false', () => {
-    expect(nor(bool(false), bool(false))).toEqual(bool(true))
+    expect(nor(boolean(false), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns the complement of the left operand if the right is false', () => {
-    expect(nor(variable('x'), bool(false))).toEqual(not(variable('x')))
+    expect(nor(variable('x'), boolean(false))).toEqual(not(variable('x')))
   })
 
   it('returns the complement of the right operand if the left is false', () => {
-    expect(nor(bool(false), variable('x'))).toEqual(not(variable('x')))
+    expect(nor(boolean(false), variable('x'))).toEqual(not(variable('x')))
   })
 
   it('returns false if the right operand is true', () => {
-    expect(nor(variable('x'), bool(true))).toEqual(bool(false))
+    expect(nor(variable('x'), boolean(true))).toEqual(boolean(false))
   })
 
   it('returns false if the left operand is true', () => {
-    expect(nor(bool(true), variable('x'))).toEqual(bool(false))
+    expect(nor(boolean(true), variable('x'))).toEqual(boolean(false))
   })
 
   it('returns the complement of the left operand if left is equivalent to right', () => {
     expect(nor(variable('x'), variable('x'))).toEqual(not(variable('x')))
   })
-
-  // \/
 
   it('returns a conjunction of mutually complemented operands', () => {
     expect(
@@ -442,100 +466,112 @@ describe('nor', () => {
   })
 
   it('returns false if the right operand is the complement of the left', () => {
-    expect(nor(variable('x'), not(variable('x')))).toEqual(bool(false))
+    expect(nor(variable('x'), not(variable('x')))).toEqual(boolean(false))
   })
 
   it('returns false if the left operand is the complement of the right', () => {
-    expect(nor(not(variable('x')), variable('x'))).toEqual(bool(false))
+    expect(nor(not(variable('x')), variable('x'))).toEqual(boolean(false))
   })
 
   it('returns a JointDenial on variable input', () => {
-    expect(nor(variable('x'), variable('y'))).toEqual(
-      new JointDenial(variable('x'), variable('y'))
+    expectWriter(nor(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: Genera.connective, species: Species.nor,
+        left: variable('x'), right: variable('y')
+      } as JointDenial,
+      [[variable('x').value, variable('y').value], 'joint denial']
     )
   })
 })
 
 describe('xnor', () => {
   it('returns true when given two true things', () => {
-    expect(xnor(bool(true), bool(true))).toEqual(bool(true))
+    expect(xnor(boolean(true), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns false if the left argument is false', () => {
-    expect(xnor(bool(false), bool(true))).toEqual(bool(false))
+    expect(xnor(boolean(false), boolean(true))).toEqual(boolean(false))
   })
 
   it('returns false if the right argument is false', () => {
-    expect(xnor(bool(true), bool(false))).toEqual(bool(false))
+    expect(xnor(boolean(true), boolean(false))).toEqual(boolean(false))
   })
 
   it('returns true if both arguments are false', () => {
-    expect(xnor(bool(false), bool(false))).toEqual(bool(true))
+    expect(xnor(boolean(false), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns the right operand if the left is true', () => {
-    expect(xnor(bool(true), variable('x'))).toEqual(variable('x'))
+    expect(xnor(boolean(true), variable('x'))).toEqual(variable('x'))
   })
 
   it('returns the left operand if the right is true', () => {
-    expect(xnor(variable('x'), bool(true))).toEqual(variable('x'))
+    expect(xnor(variable('x'), boolean(true))).toEqual(variable('x'))
   })
 
   it('returns the complement of the right if the left is false', () => {
-    expect(xnor(bool(false), variable('x'))).toEqual(not(variable('x')))
+    expect(xnor(boolean(false), variable('x'))).toEqual(not(variable('x')))
   })
 
   it('returns the complement of the left if the right is false', () => {
-    expect(xnor(variable('x'), bool(false))).toEqual(not(variable('x')))
+    expect(xnor(variable('x'), boolean(false))).toEqual(not(variable('x')))
   })
 
   it('returns true if the operands are equal', () => {
-    expect(xnor(variable('x'), variable('x'))).toEqual(bool(true))
+    expect(xnor(variable('x'), variable('x'))).toEqual(boolean(true))
   })
 
   it('returns a Biconditional on variable input', () => {
-    expect(xnor(variable('x'), variable('y'))).toEqual(
-      new Biconditional(variable('x'), variable('y'))
+    expectWriter(xnor(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: Genera.connective, species: Species.xnor,
+        left: variable('x'), right: variable('y')
+      } as Biconditional,
+      [[variable('x').value, variable('y').value], 'biconditional']
     )
   })
 })
 
 describe('converse', () => {
   it('returns true when given two true things', () => {
-    expect(converse(bool(true), bool(true))).toEqual(bool(true))
+    expect(converse(boolean(true), boolean(true))).toEqual(boolean(true))
   })
 
   it('returns false if the left argument is false', () => {
-    expect(converse(bool(false), bool(true))).toEqual(bool(false))
+    expect(converse(boolean(false), boolean(true))).toEqual(boolean(false))
   })
 
   it('returns true if the right argument is false', () => {
-    expect(converse(bool(true), bool(false))).toEqual(bool(true))
+    expect(converse(boolean(true), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns true if both arguments are false', () => {
-    expect(converse(bool(false), bool(false))).toEqual(bool(true))
+    expect(converse(boolean(false), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns true if the left operand is true', () => {
-    expect(converse(bool(true), variable('x'))).toEqual(bool(true))
+    expect(converse(boolean(true), variable('x'))).toEqual(boolean(true))
   })
 
   it('returns the left operand if the right is true', () => {
-    expect(converse(variable('x'), bool(true))).toEqual(variable('x'))
+    expect(converse(variable('x'), boolean(true))).toEqual(variable('x'))
   })
 
   it('returns the complement of the right if the left is false', () => {
-    expect(converse(bool(false), variable('x'))).toEqual(not(variable('x')))
+    expect(converse(boolean(false), variable('x'))).toEqual(not(variable('x')))
   })
 
   it('returns true if the right operand is false', () => {
-    expect(converse(variable('x'), bool(false))).toEqual(bool(true))
+    expect(converse(variable('x'), boolean(false))).toEqual(boolean(true))
   })
 
   it('returns a ConverseImplication on variable input', () => {
-    expect(converse(variable('x'), variable('y'))).toEqual(
-      new ConverseImplication(variable('x'), variable('y'))
+    expectWriter(converse(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: Genera.connective, species: Species.converse,
+        left: variable('x'), right: variable('y')
+      } as ConverseImplication,
+      [[variable('x').value, variable('y').value], 'converse implication']
     )
   })
 })
