@@ -1,35 +1,44 @@
-import { Base } from './Expression'
-import { Binary, binary } from './binary'
-import { subtract } from './addition'
-import { multiply, divide } from './multiplication'
-import { factorial } from './factorial'
+import { Writer, unit } from "../monads/writer"
+import { TreeNode, Genera, Species } from "../utility/tree"
+import { BinaryNode, binary } from "../closures/binary"
+import { subtract, multiply, divide } from "../arithmetic"
+import { factorial } from "./factorial"
 
-export class Permutation extends Binary {
-  readonly $kind = 'Permutation'
+export type CombinatoricsNode = BinaryNode & {
+  readonly genus: Genera.combinatorics
 }
 
-export class Combination extends Binary {
-  readonly $kind = 'Combination'
+type Combinatorics<S extends Species> = CombinatoricsNode & {
+  readonly species: S
 }
 
-const calculatePermutation = <T extends Base>(l: T, r: T): T =>
+export type Permutation = Combinatorics<Species.permute>
+export type Combination = Combinatorics<Species.combine>
+
+const calculatePermutation = <T extends TreeNode>(l: T, r: T): Writer<T> =>
   divide(
-    factorial(l),
-    factorial(subtract(l, r))
-  ) as unknown as T
+    factorial(unit(l)),
+    factorial(subtract(unit(l), unit(r)))
+  ) as unknown as Writer<T>
 
-export const permute = binary(Permutation)(
-  (l, r) => calculatePermutation(l, r),
-  (l, r) => calculatePermutation(l, r)
+export const [permute, isPermutation] = binary<Permutation>(
+  Species.permute, Genera.combinatorics
+)(
+  (l, r) => [calculatePermutation(l, r), 'computed real permutation'],
+  (l, r) => [calculatePermutation(l, r), 'computed complex permutation'],
+  (l, r) => [calculatePermutation(l, r), 'computed boolean permutation']
 )()
 
-const calculateCombination = <T extends Base>(l: T, r: T): T =>
+const calculateCombination = <T extends TreeNode>(l: T, r: T): Writer<T> =>
   divide(
-    factorial(l),
-    multiply(factorial(r), factorial(subtract(l, r)))
-  ) as unknown as T
+    factorial(unit(l)),
+    multiply(factorial(unit(r)), factorial(subtract(unit(l), unit(r))))
+  ) as unknown as Writer<T>
 
-export const combine = binary(Combination)(
-  (l, r) => calculateCombination(l, r),
-  (l, r) => calculateCombination(l, r)
+export const [combine, isCombination] = binary<Combination>(
+  Species.combine, Genera.combinatorics
+)(
+  (l, r) => [calculateCombination(l, r), 'computed real combination'],
+  (l, r) => [calculateCombination(l, r), 'computed complex combination'],
+  (l, r) => [calculateCombination(l, r), 'computed boolean combination']
 )()

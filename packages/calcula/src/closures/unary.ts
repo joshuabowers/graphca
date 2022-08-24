@@ -109,7 +109,7 @@ const unaryMap = <T, U = T>(fn: CaseFn<T, U>) =>
 
 const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, 'not a number']
 
-export type UnaryNodeGuardPair<T extends UnaryNode> = [UnaryFn<T>, TreeNodeGuardFn<T>]
+export type UnaryNodeGuardPair<T extends UnaryNode, R> = [UnaryFn<T, R>, TreeNodeGuardFn<T>]
 
 export const unary = <T extends UnaryNode, R = void>(
   species: Species, genus?: Genera
@@ -124,7 +124,7 @@ export const unary = <T extends UnaryNode, R = void>(
     whenComplex: CaseFn<Complex, Result<Complex>>,
     whenBoolean: CaseFn<Boolean, Result<Boolean>>
   ) => {
-    const fn: UnaryFn<T> = multi(
+    const fn: UnaryFn<T, R> = multi(
       (v: Writer<TreeNode>) => v.value.species,
       method(Species.real, unaryMap(whenReal)),
       method(Species.complex, unaryMap(whenComplex)),
@@ -133,7 +133,7 @@ export const unary = <T extends UnaryNode, R = void>(
       method(Species.nan, unaryMap(whenNilOrNaN)),
       method(unaryMap<TreeNode>(input => create(unit(input))))
     )
-    return (...methods: (typeof method)[]): UnaryNodeGuardPair<T> => [
+    return (...methods: (typeof method)[]): UnaryNodeGuardPair<T, R> => [
       methods.length > 0 ? fromMulti(...methods)(fn) : fn,
       isSpecies<T>(species)
     ]

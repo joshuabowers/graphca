@@ -1,8 +1,9 @@
-import { expectCloseTo } from './expectations'
-import { EulerMascheroni, real } from './real'
-import { complex } from './complex'
-import { variable } from './variable'
-import { negate } from './multiplication'
+import { expectCloseTo, expectWriter } from '../utility/expectations'
+import { Clades, Genera, Species } from '../utility/tree'
+import { EulerMascheroni } from '../primitives/real'
+import { real, complex } from '../primitives'
+import { variable } from '../variable'
+import { negate } from '../arithmetic'
 import { Polygamma, polygamma, digamma } from './polygamma'
 
 describe('polygamma', () => {
@@ -13,8 +14,8 @@ describe('polygamma', () => {
 
     it('calculates an approximate value for complex numbers for m=1', () => {
       expectCloseTo(
-        polygamma(real(1), complex(0, 100)),
-        complex(-0.0000499999999, -0.0099998333299),
+        polygamma(real(1), complex([0, 100])),
+        complex([-0.0000499999999, -0.0099998333299]),
         10
       )
     })
@@ -41,16 +42,20 @@ describe('polygamma', () => {
 
     it('uses a recurrence relation to calculate for a mapped large complex', () => {
       expectCloseTo(
-        polygamma(real(1), complex(1, 1)),
-        complex(0.463000096622, -0.794233542759),
+        polygamma(real(1), complex([1, 1])),
+        complex([0.463000096622, -0.794233542759]),
         10
       )
     })
   })
 
   it('generates a polygamma node of a given order on an expression', () => {
-    expect(polygamma(variable('x'), variable('y'))).toEqual(
-      new Polygamma(variable('x'), variable('y'))
+    expectWriter(polygamma(variable('x'), variable('y')))(
+      {
+        clade: Clades.binary, genus: undefined, species: Species.polygamma,
+        left: variable('x'), right: variable('y')
+      } as Polygamma,
+      [[variable('x').value, variable('y').value], 'polygamma']
     )
   })
 })
@@ -63,8 +68,8 @@ describe('digamma', () => {
 
     it('calculates an approximate value for complex numbers', () => {
       expectCloseTo(
-        digamma(complex(0, 10)), 
-        complex(2.3034192636714, 1.6207963267948), 
+        digamma(complex([0, 10])), 
+        complex([2.3034192636714, 1.6207963267948]), 
         10
       )
     })
@@ -83,14 +88,20 @@ describe('digamma', () => {
 
     it('uses a recurrence relation to calculate for a mapped large complex', () => {
       expectCloseTo(
-        digamma(complex(1, 1)),
-        complex(0.094650320622, 1.076674047468),
+        digamma(complex([1, 1])),
+        complex([0.094650320622, 1.076674047468]),
         10
       )
     })
   })
 
   it('generates a polygamma node of order 0 on an expression', () => {
-    expect(digamma(variable('x'))).toEqual(new Polygamma(real(0), variable('x')))
+    expectWriter(digamma(variable('x')))(
+      {
+        clade: Clades.binary, genus: undefined, species: Species.polygamma,
+        left: real(0), right: variable('x')
+      } as Polygamma,
+      [[real(0).value, variable('x').value], 'polygamma']
+    )
   })
 })

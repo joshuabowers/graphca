@@ -37,6 +37,9 @@ export enum Species {
 
   // Functions
   abs = 'Absolute',
+  factorial = 'Factorial',
+  gamma = 'Gamma',
+  polygamma = 'Polygamma',
 
   // :: Inequalities
   equals = 'Equality',
@@ -88,6 +91,10 @@ export enum Species {
   acsch = 'Area Hyperbolic Cosecant',
   asech = 'Area Hyperbolic Secant',
   acoth = 'Area Hyperbolic Cotangent',
+
+  // :: Combinatorics
+  permute = 'Permutation',
+  combine = 'Combination',
 
   // Variables
   variable = 'Variable'

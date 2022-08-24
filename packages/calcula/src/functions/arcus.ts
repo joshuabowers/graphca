@@ -11,6 +11,8 @@ export type ArcusNode = UnaryNode & {
   readonly genus: Genera.arcus
 }
 
+export const isArcus = isGenus<ArcusNode>(Genera.arcus)
+
 type Arcus<S extends Species> = ArcusNode & {
   readonly species: S
 }

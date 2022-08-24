@@ -1,7 +1,7 @@
-import { expectCloseTo } from './expectations'
-import { real } from './real'
-import { complex } from './complex'
-import { variable } from './variable'
+import { expectCloseTo, expectWriter } from '../utility/expectations'
+import { Clades, Species } from '../utility/tree'
+import { real, complex } from '../primitives'
+import { variable } from '../variable'
 import { Gamma, gamma } from './gamma'
 
 describe('gamma', () => {
@@ -18,10 +18,16 @@ describe('gamma', () => {
   })
 
   it('calculates the value of the gamma function for complex numbers', () => {
-    expectCloseTo(gamma(complex(1, 1)), complex(0.498015668118, -0.154949828301), 10)
+    expectCloseTo(gamma(complex([1, 1])), complex([0.498015668118, -0.154949828301]), 10)
   })
 
   it('generates a Gamma node for unbound variables', () => {
-    expect(gamma(variable('x'))).toEqual(new Gamma(variable('x')))
+    expectWriter(gamma(variable('x')))(
+      {
+        clade: Clades.unary, genus: undefined, species: Species.gamma,
+        expression: variable('x')
+      } as Gamma,
+      [variable('x').value, 'gamma']
+    )
   })
 })

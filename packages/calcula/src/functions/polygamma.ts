@@ -1,34 +1,52 @@
-import { fromMulti, multi, Multi, method } from '@arrows/multimethod'
-import { is } from './is'
-import { Base } from './Expression'
-import { Binary, binary } from './binary'
-import { unaryVia, bindLeft } from './unary'
-import { Real, real } from './real'
-import { Complex } from './complex'
-import { variable } from './variable'
-import { add, subtract } from './addition'
-import { multiply, divide, double } from './multiplication'
-import { raise } from './exponentiation'
-import { cot } from './trigonometric'
-import { ln } from './logarithmic'
-import { factorial } from './factorial'
-import { abs } from './absolute'
-import { reciprocal } from './exponentiation'
-import { differentiate } from './differentiation'
-import { invoke } from './invocation'
+// import { fromMulti, multi, Multi, method } from '@arrows/multimethod'
+// import { is } from './is'
+// import { Base } from './Expression'
+// import { Binary, binary } from './binary'
+// import { unaryVia, bindLeft } from './unary'
+// import { Real, real } from './real'
+// import { Complex } from './complex'
+// import { variable } from './variable'
+// import { add, subtract } from './addition'
+// import { multiply, divide, double } from './multiplication'
+// import { raise } from './exponentiation'
+// import { cot } from './trigonometric'
+// import { ln } from './logarithmic'
+// import { factorial } from './factorial'
+// import { abs } from './absolute'
+// import { reciprocal } from './exponentiation'
+// import { differentiate } from './differentiation'
+// import { invoke } from './invocation'
 
-export class Polygamma extends Binary {
-  readonly $kind = 'Polygamma'
-}
+// export class Polygamma extends Binary {
+//   readonly $kind = 'Polygamma'
+// }
 
-const isNegative = (e: Base) => is(Real)(e) && e.value < 0
+import { multi, method, _, Multi } from "@arrows/multimethod"
+import { Writer, unit } from "../monads/writer"
+import { TreeNode, Species, any } from "../utility/tree"
+import { Real, Complex, Boolean, real, isReal, isComplex } from "../primitives"
+import { Binary, binary, partialLeft, when } from "../closures/binary"
+import { 
+  add, subtract, multiply, divide, double, raise, reciprocal
+} from "../arithmetic"
+import { abs } from "./absolute"
+import { ln } from "./logarithmic"
+import { cot } from "./trigonometric"
+import { factorial } from "./factorial"
 
-type IsSmallFn = Multi & ((r: Real) => boolean) & ((c: Complex) => boolean)
+export type Polygamma = Binary<Species.polygamma>
+
+const isNegative = (e: Writer<TreeNode>) => isReal(e) && e.value.value < 0
+
+type IsSmallFn = Multi 
+  & ((r: Writer<Real>) => boolean) 
+  & ((c: Writer<Complex>) => boolean)
+  & ((v: Writer<TreeNode>) => boolean)
 
 // 10 is arbitrary, but inputs around that comport with Wolfram-Alpha
 const isSmall: IsSmallFn = multi(
-  method(is(Real), (r: Real) => r.value < 10),
-  method(is(Complex), (c: Complex) => abs(c).a < 10),
+  method(isReal, (r: Writer<Real>) => r.value.value < 10),
+  method(isComplex, (c: Writer<Complex>) => abs(c).value.a < 10),
   method(false)
 )
 
@@ -50,15 +68,15 @@ const bernoulli = [
   8615841276005/14322
 ]
 
-const sum = (fn: (b: Real, k: Real) => Base) => 
+const sum = (fn: (b: Writer<Real>, k: Writer<Real>) => Writer<TreeNode>) => 
   bernoulli.map(
     (b, i) => fn(real(b), real(2*(i+1)))
   ).reduce((p, c) => add(p, c), real(0))
 
 const calculatePolygamma = (
-  m: Real|Complex, 
-  z: Real|Complex,
-): Base => {
+  m: Writer<Real|Complex|Boolean>,
+  z: Writer<Real|Complex|Boolean>,
+): Writer<TreeNode> => {
   return add(
     divide(
       multiply(
@@ -85,20 +103,20 @@ const calculatePolygamma = (
   )
 }
 
-const polygammaReflection = (m: Base, z: Base) => {
-  const pi = real(Math.PI)
-  const order = real(is(Real)(m) ? m.value : is(Complex)(m) ? m.a : 0)
-  const d = differentiate(order, cot(multiply(pi, variable('x'))))
-  return subtract(
-    multiply(
-      raise(real(-1), m),
-      polygamma(m, subtract(real(1), z))
-    ),
-    multiply(pi, invoke()(d)(z))
-  )
-}
+// const polygammaReflection = (m: Base, z: Base) => {
+//   const pi = real(Math.PI)
+//   const order = real(is(Real)(m) ? m.value : is(Complex)(m) ? m.a : 0)
+//   const d = differentiate(order, cot(multiply(pi, variable('x'))))
+//   return subtract(
+//     multiply(
+//       raise(real(-1), m),
+//       polygamma(m, subtract(real(1), z))
+//     ),
+//     multiply(pi, invoke()(d)(z))
+//   )
+// }
 
-const polygammaRecurrence = (m: Base, z: Base) => {
+const polygammaRecurrence = (m: Writer<TreeNode>, z: Writer<TreeNode>) => {
   return subtract(
     polygamma(m, add(z, real(1))),
     divide(
@@ -108,16 +126,7 @@ const polygammaRecurrence = (m: Base, z: Base) => {
   )
 }
 
-export const polygamma = binary(Polygamma)(
-  (l, r) => calculatePolygamma(l, r) as Real,
-  (l, r) => calculatePolygamma(l, r) as Complex,
-)(
-  method([real(0), is(Base)], (_l: Base, r: Base) => digamma(r)),
-  method([is(Real), isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),
-  method([is(Real), isSmall], (l: Base, r: Base) => polygammaRecurrence(l, r))
-)
-
-const calculateDigamma = (z: Real|Complex): Base => {
+const calculateDigamma = (z: Writer<Real|Complex|Boolean>): Writer<TreeNode> => {
   return subtract(
     subtract(ln(z), divide(real(0.5), z)),
     sum(
@@ -126,7 +135,7 @@ const calculateDigamma = (z: Real|Complex): Base => {
   )
 }
 
-const digammaReflection = (e: Base) => {
+const digammaReflection = (e: Writer<TreeNode>) => {
   const pi = real(Math.PI)
   return subtract(
     digamma(subtract(real(1), e)),
@@ -134,20 +143,47 @@ const digammaReflection = (e: Base) => {
   )
 }
 
-const digammaRecurrence = (e: Base) => {
+const digammaRecurrence = (e: Writer<TreeNode>) => {
   return subtract(
     digamma(add(e, real(1))),
     reciprocal(e)
   )
 }
 
-const rawDigamma = unaryVia(Polygamma, bindLeft)(real(0))(
-  r => calculateDigamma(r) as Real,
-  c => calculateDigamma(c) as Complex
+export const [polygamma, isPolygamma] = binary<Polygamma>(Species.polygamma)(
+  (l, r) => [
+    calculatePolygamma(unit(l), unit(r)) as Writer<Real>, 
+    'computed real polygamma'
+  ],
+  (l, r) => [
+    calculatePolygamma(unit(l), unit(r)) as Writer<Complex>, 
+    'computed complex polygamma'
+  ],
+  (l, r) => [
+    calculatePolygamma(unit(l), unit(r)) as Writer<Boolean>, 
+    'computed boolean polygamma'
+  ]
+)(
+  when([real(0), isNegative], (_l, r) => [digammaReflection(r), 'digamma reflection for negative value']),
+  when([real(0), isSmall], (_l, r) => [digammaRecurrence(r), 'digamma recurrence for small value']),
+  when<Real, Real|Complex|Boolean>(
+    [real(0), any(Species.real, Species.combine, Species.boolean)], 
+    (_l, r) => [calculateDigamma(r), 'computed digamma']
+  ),
+  // method([real(0), is(Base)], (_l: Base, r: Base) => digamma(r)),
+  // method([is(Real), isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),
+  when([isReal, isSmall], (l, r) => [polygammaRecurrence(l, r), 'polygamma recurrence for small value'])
 )
-export type DigammaFn = typeof rawDigamma
 
-export const digamma: DigammaFn = fromMulti(
-  method(isNegative, (e: Base) => digammaReflection(e)),
-  method(isSmall, (e: Base) => digammaRecurrence(e))
-)(rawDigamma)
+export const digamma = partialLeft(polygamma)(real(0))
+
+// const rawDigamma = unaryVia(Polygamma, bindLeft)(real(0))(
+//   r => calculateDigamma(r) as Real,
+//   c => calculateDigamma(c) as Complex
+// )
+// export type DigammaFn = typeof rawDigamma
+
+// export const digamma: DigammaFn = fromMulti(
+//   method(isNegative, (e: Base) => digammaReflection(e)),
+//   method(isSmall, (e: Base) => digammaRecurrence(e))
+// )(rawDigamma)

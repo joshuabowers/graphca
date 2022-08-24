@@ -1,7 +1,9 @@
-import { expectCloseTo } from './expectations';
-import { real } from './real'
-import { complex } from './complex'
-import { variable } from './variable'
+import { expectCloseTo, expectWriter } from '../utility/expectations';
+import { Clades, Genera, Species } from '../utility/tree';
+// import { real } from './real'
+// import { complex } from './complex'
+import { real, complex } from '../primitives';
+import { variable } from '../variable'
 import { Permutation, Combination, permute, combine } from "./combinatorics";
 
 describe('permute', () => {
@@ -11,15 +13,22 @@ describe('permute', () => {
 
   it('calculates the permutation for complex numbers', () => {
     expectCloseTo(
-      permute(complex(0, 5), complex(1, 1)), 
-      complex(-0.927726831821, 0.060010755560), 
+      permute(complex([0, 5]), complex([1, 1])), 
+      complex([-0.927726831821, 0.060010755560]), 
       10
     )
   })
 
   it('generates a Permutation for unbound sub-expressions', () => {
-    expect(permute(variable('n'), variable('r'))).toEqual(
-      new Permutation(variable('n'), variable('r'))
+    // expect(permute(variable('n'), variable('r'))).toEqual(
+    //   new Permutation(variable('n'), variable('r'))
+    // )
+    expectWriter(permute(variable('n'), variable('r')))(
+      {
+        clade: Clades.binary, genus: Genera.combinatorics, species: Species.permute,
+        left: variable('n'), right: variable('r')
+      } as Permutation,
+      [[variable('n').value, variable('r').value], 'permutation']
     )
   })
 })
@@ -31,15 +40,22 @@ describe('combine', () => {
 
   it('calculates the combination for complex numbers', () => {
     expectCloseTo(
-      combine(complex(0, 5), complex(1, 1)),
-      complex(-1.075594610779, 0.657018673056),
+      combine(complex([0, 5]), complex([1, 1])),
+      complex([-1.075594610779, 0.657018673056]),
       10
     )
   })
 
   it('generates a Combination for unbound sub-expressions', () => {
-    expect(combine(variable('n'), variable('r'))).toEqual(
-      new Combination(variable('n'), variable('r'))
+    // expect(combine(variable('n'), variable('r'))).toEqual(
+    //   new Combination(variable('n'), variable('r'))
+    // )
+    expectWriter(combine(variable('n'), variable('r')))(
+      {
+        clade: Clades.binary, genus: Genera.combinatorics, species: Species.combine,
+        left: variable('n'), right: variable('r')
+      } as Combination,
+      [[variable('n').value, variable('r').value], 'combination']
     )
   })
 })
