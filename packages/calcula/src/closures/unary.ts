@@ -66,7 +66,7 @@
 //         method(is(Base), (expression: Base) => new type(...(bind(expression, bound))))
 //       )
 //     }
-import { method, multi, fromMulti, Multi } from "@arrows/multimethod"
+import { method, multi, fromMulti, Multi, _ } from "@arrows/multimethod"
 import { Writer, unit, bind, Action, CaseFn, isWriter } from "../monads/writer"
 import { 
   TreeNode, Clades, Genera, Species, 
@@ -96,6 +96,26 @@ export type UnaryFn<T, R = void> = Multi
   & CastFn<Writer<Boolean>, Choose<Boolean, R>>
   & CastFn<Writer<Nil|NaN>, NaN>
   & CastFn<Writer<TreeNode>, T>
+
+type UnaryPredicate<T> = (t: Writer<T>) => boolean 
+type Test<T> = UnaryPredicate<T> | Writer<T> | typeof _
+type CorrespondingFn<T> = (t: Writer<T>) => Action<TreeNode>    
+
+export const when = <T extends TreeNode>(
+  predicate: Test<T>, 
+  fn: Action<TreeNode> | CorrespondingFn<T>
+) =>
+  method(predicate, (t: Writer<T>) => {
+    const [result, action] = typeof fn === 'function' ? fn(t) : fn
+    return ({
+      value: isWriter(result) ? result.value : result,
+      log: [
+        ...t.log,
+        {input: t.value, action}, 
+        ...(isWriter(result) ? result.log : [])
+      ]
+    })
+  })  
 
 const unaryMap = <T, U = T>(fn: CaseFn<T, U>) =>
   (writer: Writer<T>) =>

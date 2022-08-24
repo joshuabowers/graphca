@@ -1,36 +1,32 @@
-// import { multi, method } from "@arrows/multimethod";
-// import { is } from './is';
-// import { Base } from "./Expression";
-// import { Real, real } from './real'
-// import { Complex } from "./complex";
-// import { add, subtract } from "./addition";
-// import { multiply, divide, negate } from "./multiplication";
-// import { raise, sqrt } from "./exponentiation";
-// import { sin } from './trigonometric';
-// import { Unary, unary } from "./unary";
-// import { factorial } from './factorial';
-// import { ConstantPredicate } from "./predicates";
-
-// const isPIN = (n: number) => n > 0 && n <= 15 && Number.isInteger(n)
-
-// const isPositiveInteger = (e: Base) =>
-//   (is(Real)(e) && isPIN(e.value))
-//   || (is(Complex)(e) && e.b === 0 && isPIN(e.a))
-
-// const isSmall: ConstantPredicate = multi(
-//   method(is(Real), (r: Real) => r.value < 0.5),
-//   method(is(Complex), (c: Complex) => c.a < 0.5),
-//   method(false)
-// )
-
 import { Writer, unit } from "../monads/writer"
+import { Multi, multi, method } from "@arrows/multimethod"
 import { TreeNode, Species } from "../utility/tree"
-import { Real, Complex, real, boolean } from "../primitives"
-import { Unary, unary } from "../closures/unary"
+import { Real, Complex, real, boolean, isReal, isComplex } from "../primitives"
+import { Unary, unary, when } from "../closures/unary"
 import { 
   add, subtract, multiply, divide, negate, raise, sqrt 
 } from "../arithmetic"
 import { sin } from "./trigonometric"
+import { factorial } from "./factorial"
+
+const isPIN = (n: number) => n > 0 && n <= 15 && Number.isInteger(n)
+
+const isPositiveInteger = (e: Writer<TreeNode>) =>
+  (isReal(e) && isPIN(e.value.value))
+  || (isComplex(e) && e.value.b === 0 && isPIN(e.value.a))
+
+
+export type Predicate<T extends TreeNode> = (t: T) => boolean
+
+export type ConstantPredicate = Multi 
+  & Predicate<Real>
+  & Predicate<Complex>  
+
+const isSmall: ConstantPredicate = multi(
+  method(isReal, (r: Writer<Real>) => r.value.value < 0.5),
+  method(isComplex, (c: Writer<Complex>) => c.value.a < 0.5),
+  method(false)
+)
 
 const lanczos = {
   p: [
@@ -76,6 +72,12 @@ export const [gamma, isGamma] = unary<Gamma>(Species.gamma)(
   c => [calculateGamma(unit(c)) as Writer<Complex>, 'computed complex gamma'],
   b => [boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>), 'computed boolean gamma']
 )(
+  when(isPositiveInteger, t => [factorial(subtract(t, real(1))), 'computing gamma via factorial']),
+  when(
+    t => (isReal(t) && t.value.value < 0.5)
+      || (isComplex(t) && t.value.a < 0.5),
+    t => [gammaReflection(t), 'gamma reflection for small value']
+  )
   // method(isPositiveInteger, (e: Base) => factorial(subtract(e, real(1)))),
   // method(isSmall, (e: Base) => gammaReflection(e))
 )

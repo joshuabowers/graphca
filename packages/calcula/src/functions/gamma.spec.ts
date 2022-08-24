@@ -10,6 +10,8 @@ describe('gamma', () => {
   })
 
   it('calculates the value of the gamma function for integers', () => {
+    console.log(real(24))
+    console.dir(gamma(real(5)))
     expectCloseTo(gamma(real(5)), real(24), 10)
   })
 
