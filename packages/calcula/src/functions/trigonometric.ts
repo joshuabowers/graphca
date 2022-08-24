@@ -8,6 +8,8 @@ export type TrigonometricNode = UnaryNode & {
   readonly genus: Genera.trigonometric
 }
 
+export const isTrigonometric = isGenus<TrigonometricNode>(Genera.trigonometric)
+
 type Trigonometric<S extends Species> = TrigonometricNode & {
   readonly species: S
 }
@@ -69,5 +71,3 @@ export const [cot, isCotangent] = unary<Cotangent>(Species.cot, Genera.trigonome
   c => [reciprocal(tan(unit(c))), 'computed complex cotangent'],
   b => [reciprocal(tan(unit(b))), 'computed boolean cosecant']
 )()
-
-export const isTrigonometric = isGenus<TrigonometricNode>(Genera.trigonometric)

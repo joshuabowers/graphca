@@ -1,78 +1,91 @@
-import { real } from './real';
-import { complex } from './complex';
-import { reciprocal } from './exponentiation';
-import { Unary, unary } from "./unary";
+import { unit } from "../monads/writer"
+import { Genera, Species, isGenus } from "../utility/tree"
+import { real, complex, boolean } from "../primitives"
+import { UnaryNode, unary } from "../closures/unary"
+import { reciprocal } from "../arithmetic"
 
-export abstract class Hyperbolic extends Unary {}
-
-export class HyperbolicCosine extends Hyperbolic {
-  readonly $kind = 'HyperbolicCosine'
+export type HyperbolicNode = UnaryNode & {
+  readonly genus: Genera.hyperbolic
 }
 
-export class HyperbolicSine extends Hyperbolic {
-  readonly $kind = 'HyperbolicSine'
+export const isHyperbolic = isGenus<HyperbolicNode>(Genera.hyperbolic)
+
+type Hyperbolic<S extends Species> = HyperbolicNode & {
+  readonly species: S
 }
 
-export class HyperbolicTangent extends Hyperbolic {
-  readonly $kind = 'HyperbolicTangent'
-}
+export type HyperbolicSine = Hyperbolic<Species.sinh>
+export type HyperbolicCosine = Hyperbolic<Species.cosh>
+export type HyperbolicTangent = Hyperbolic<Species.tanh>
+export type HyperbolicCosecant = Hyperbolic<Species.csch>
+export type HyperbolicSecant = Hyperbolic<Species.sech>
+export type HyperbolicCotangent = Hyperbolic<Species.coth>
 
-export class HyperbolicSecant extends Hyperbolic {
-  readonly $kind = 'HyperbolicSecant'
-}
-
-export class HyperbolicCosecant extends Hyperbolic {
-  readonly $kind = 'HyperbolicCosecant'
-}
-
-export class HyperbolicCotangent extends Hyperbolic {
-  readonly $kind = 'HyperbolicCotangent'
-}
-
-export const cosh = unary(HyperbolicCosine)(
-  r => real(Math.cosh(r.value)),
-  c => complex(
-    Math.cosh(c.a) * Math.cos(c.b),
-    Math.sinh(c.a) * Math.sin(c.b)
-  )
+export const [cosh, isHyperbolicCosine] = unary<HyperbolicCosine>(
+  Species.cosh, Genera.hyperbolic
+)(
+  r => [real(Math.cosh(r.value)), 'computed real hyperbolic cosine'],
+  c => [
+    complex([
+      Math.cosh(c.a) * Math.cos(c.b),
+      Math.sinh(c.a) * Math.sin(c.b)
+    ]),
+    'computed complex hyperbolic cosine'
+  ],
+  b => [b, 'computed boolean hyperbolic cosine']
 )()
-export type CoshFn = typeof cosh
 
-export const sinh = unary(HyperbolicSine)(
-  r => real(Math.sinh(r.value)),
-  c => complex(
-    Math.sinh(c.a) * Math.cos(c.b),
-    Math.cosh(c.a) * Math.sin(c.b)
-  )
+export const [sinh, isHyperbolicSine] = unary<HyperbolicSine>(
+  Species.sinh, Genera.hyperbolic
+)(
+  r => [real(Math.sinh(r.value)), 'computed real hyperbolic sine'],
+  c => [
+    complex([
+      Math.sinh(c.a) * Math.cos(c.b),
+      Math.cosh(c.a) * Math.sin(c.b)
+    ]),
+    'computed complex hyperbolic sine'
+  ],
+  b => [b, 'computed boolean hyperbolic sine']
 )()
-export type SinhFn = typeof sinh
 
-export const tanh = unary(HyperbolicTangent)(
-  r => real(Math.tanh(r.value)),
+export const [tanh, isHyperbolicTangent] = unary<HyperbolicTangent>(
+  Species.tanh, Genera.hyperbolic
+)(
+  r => [real(Math.tanh(r.value)), 'computed real hyperbolic tangent'],
   c => {
     const divisor = Math.cosh(2 * c.a) + Math.cos(2 * c.b)
-    return complex(
-      Math.sinh(2 * c.a) / divisor,
-      Math.sin(2 * c.b) / divisor
-    )
-  }
+    return [
+      complex([
+        Math.sinh(2 * c.a) / divisor,
+        Math.sin(2 * c.b) / divisor
+      ]),
+      'computed complex hyperbolic tangent'
+    ]
+  },
+  b => [b, 'computed boolean hyperbolic tangent']
 )()
-export type TanhFn = typeof sinh
 
-export const sech = unary(HyperbolicSecant)(
-  r => reciprocal(cosh(r)),
-  c => reciprocal(cosh(c))
+export const [sech, isHyperbolicSecant] = unary<HyperbolicSecant>(
+  Species.sech, Genera.hyperbolic
+)(
+  r => [reciprocal(cosh(unit(r))), 'computed real hyperbolic secant'],
+  c => [reciprocal(cosh(unit(c))), 'computed complex hyperbolic secant'],
+  b => [reciprocal(cosh(unit(b))), 'computed boolean hyperbolic secant']
 )()
-export type SechFn = typeof sinh
 
-export const csch = unary(HyperbolicCosecant)(
-  r => reciprocal(sinh(r)),
-  c => reciprocal(sinh(c))
+export const [csch, isHyperbolicCosecant] = unary<HyperbolicCosecant>(
+  Species.csch, Genera.hyperbolic 
+)(
+  r => [reciprocal(sinh(unit(r))), 'computed real hyperbolic cosecant'],
+  c => [reciprocal(sinh(unit(c))), 'computed complex hyperbolic cosecant'],
+  b => [reciprocal(sinh(unit(b))), 'computed boolean hyperbolic cosecant']
 )()
-export type CschFn = typeof sinh
 
-export const coth = unary(HyperbolicCotangent)(
-  r => reciprocal(tanh(r)),
-  c => reciprocal(tanh(c))
+export const [coth, isHyperbolicCotangent] = unary<HyperbolicCotangent>(
+  Species.coth, Genera.hyperbolic
+)(
+  r => [reciprocal(tanh(unit(r))), 'computed hyperbolic cotangent'],
+  c => [reciprocal(tanh(unit(c))), 'computed hyperbolic cotangent'],
+  b => [reciprocal(tanh(unit(b))), 'computed boolean hyperbolic cotangent']
 )()
-export type CothFn = typeof sinh

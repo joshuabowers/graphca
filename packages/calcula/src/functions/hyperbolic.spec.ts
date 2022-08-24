@@ -1,12 +1,12 @@
-import { real } from './real'
-import { complex } from './complex'
-import { variable } from './variable'
+import { Clades, Genera, Species } from '../utility/tree'
+import { real, complex } from '../primitives'
+import { variable } from '../variable'
 import { 
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
   HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
   cosh, sinh, tanh, sech, csch, coth 
 } from './hyperbolic'
-import { expectCloseTo } from './expectations'
+import { expectCloseTo, expectWriter } from '../utility/expectations'
 
 describe('cosh', () => {
   it('calculates the hyperbolic cosine of a real value', () => {
@@ -14,11 +14,17 @@ describe('cosh', () => {
   })
   
   it('calculates the hyperbolic cosine of a complex number', () => {
-    expectCloseTo(cosh(complex(0, 1)), complex(0.540302305868, 0), 10)
+    expectCloseTo(cosh(complex([0, 1])), complex([0.540302305868, 0]), 10)
   })
 
   it('returns a hyperbolic cosine node if not valuable', () => {
-    expect(cosh(variable('x'))).toEqual(new HyperbolicCosine(variable('x')))
+    expectWriter(cosh(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.hyperbolic, species: Species.cosh,
+        expression: variable('x')
+      } as HyperbolicCosine,
+      [variable('x').value, 'hyperbolic cosine']
+    )
   })
 })
 
@@ -28,11 +34,17 @@ describe('sinh', () => {
   })
 
   it('calculates the hyperbolic sine of a complex number', () => {
-    expectCloseTo(sinh(complex(0, 1)), complex(0, 0.841470984807), 10)
+    expectCloseTo(sinh(complex([0, 1])), complex([0, 0.841470984807]), 10)
   })
 
   it('returns a hyperbolic sine node if not valuable', () => {
-    expect(sinh(variable('x'))).toEqual(new HyperbolicSine(variable('x')))
+    expectWriter(sinh(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.hyperbolic, species: Species.sinh,
+        expression: variable('x')
+      } as HyperbolicSine,
+      [variable('x').value, 'hyperbolic sine']
+    )
   })
 })
 
@@ -42,11 +54,17 @@ describe('tanh', () => {
   })
 
   it('calculates the hyperbolic tangent of a complex number', () => {
-    expectCloseTo(tanh(complex(0, 1)), complex(0, 1.557407724654), 10)
+    expectCloseTo(tanh(complex([0, 1])), complex([0, 1.557407724654]), 10)
   })
 
   it('returns a hyperbolic tangent node if not valuable', () => {
-    expect(tanh(variable('x'))).toEqual(new HyperbolicTangent(variable('x')))
+    expectWriter(tanh(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.hyperbolic, species: Species.tanh,
+        expression: variable('x')
+      } as HyperbolicTangent,
+      [variable('x').value, 'hyperbolic tangent']
+    )
   })
 })
 
@@ -56,11 +74,17 @@ describe('sech', () => {
   })
 
   it('calculates the hyperbolic secant of a complex number', () => {
-    expectCloseTo(sech(complex(0, 1)), complex(1.850815717680, 0), 10)
+    expectCloseTo(sech(complex([0, 1])), complex([1.850815717680, 0]), 10)
   })
 
   it('returns a hyperbolic secant node if not valuable', () => {
-    expect(sech(variable('x'))).toEqual(new HyperbolicSecant(variable('x')))
+    expectWriter(sech(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.hyperbolic, species: Species.sech,
+        expression: variable('x')
+      } as HyperbolicSecant,
+      [variable('x').value, 'hyperbolic secant']
+    )
   })
 })
 
@@ -70,11 +94,17 @@ describe('csch', () => {
   })
 
   it('calculates the hyperbolic cosecant of a complex number', () => {
-    expectCloseTo(csch(complex(0, 1)), complex(0, -1.188395105778), 10)
+    expectCloseTo(csch(complex([0, 1])), complex([0, -1.188395105778]), 10)
   })
 
   it('returns a hyperbolic cosecant node if not valuable', () => {
-    expect(csch(variable('x'))).toEqual(new HyperbolicCosecant(variable('x')))
+    expectWriter(csch(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.hyperbolic, species: Species.csch,
+        expression: variable('x')
+      } as HyperbolicCosecant,
+      [variable('x').value, 'hyperbolic cosecant']
+    )
   })
 })
 
@@ -84,10 +114,16 @@ describe('coth', () => {
   })
 
   it('calculates the hyperbolic cotangent of a complex number', () => {
-    expectCloseTo(coth(complex(0, 1)), complex(0, -0.642092615934), 10)
+    expectCloseTo(coth(complex([0, 1])), complex([0, -0.642092615934]), 10)
   })
 
   it('returns a hyperbolic cotangent node if not valuable', () => {
-    expect(coth(variable('x'))).toEqual(new HyperbolicCotangent(variable('x')))
+    expectWriter(coth(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.hyperbolic, species: Species.coth,
+        expression: variable('x')
+      } as HyperbolicCotangent,
+      [variable('x').value, 'hyperbolic cotangent']
+    )
   })
 })

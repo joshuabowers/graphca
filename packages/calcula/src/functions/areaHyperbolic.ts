@@ -1,83 +1,97 @@
-import { real } from './real'
-import { add, subtract } from './addition'
-import { multiply, divide } from './multiplication'
-import { reciprocal, square, sqrt } from './exponentiation'
-import { ln } from './logarithmic'
-import { Unary, unary } from './unary'
+import { unit } from "../monads/writer"
+import { Genera, Species, isGenus } from "../utility/tree"
+import { real, complex, boolean } from "../primitives"
+import { UnaryNode, unary } from "../closures/unary"
+import { 
+  add, subtract, multiply, divide, square, sqrt, reciprocal 
+} from "../arithmetic"
+import { ln } from "./logarithmic"
 
-export abstract class AreaHyperbolic extends Unary {}
-
-export class AreaHyperbolicCosine extends AreaHyperbolic {
-  readonly $kind = 'AreaHyperbolicCosine'
+export type AreaHyperbolicNode = UnaryNode & {
+  readonly genus: Genera.areaHyperbolic
 }
 
-export class AreaHyperbolicSine extends AreaHyperbolic {
-  readonly $kind = 'AreaHyperbolicSine'
+export const isAreaHyperbolic = isGenus<AreaHyperbolicNode>(Genera.areaHyperbolic)
+
+type AreaHyperbolic<S extends Species> = AreaHyperbolicNode & {
+  readonly species: S
 }
 
-export class AreaHyperbolicTangent extends AreaHyperbolic {
-  readonly $kind = 'AreaHyperbolicTangent'
-}
+export type AreaHyperbolicSine = AreaHyperbolic<Species.asinh>
+export type AreaHyperbolicCosine = AreaHyperbolic<Species.acosh>
+export type AreaHyperbolicTangent = AreaHyperbolic<Species.atanh>
+export type AreaHyperbolicCosecant = AreaHyperbolic<Species.acsch>
+export type AreaHyperbolicSecant = AreaHyperbolic<Species.asech>
+export type AreaHyperbolicCotangent = AreaHyperbolic<Species.acoth>
 
-export class AreaHyperbolicSecant extends AreaHyperbolic {
-  readonly $kind = 'AreaHyperbolicSecant'
-}
+export const [acosh, isAreaHyperbolicCosine] = unary<AreaHyperbolicCosine>(
+  Species.acosh, Genera.areaHyperbolic
+)(
+  r => [real(Math.acosh(r.value)), 'computed real area hyperbolic cosine'],
+  c => [
+    ln(add(
+      unit(c), 
+      multiply(
+        sqrt(add(unit(c), real(1))),
+        sqrt(subtract(unit(c), real(1)))
+      )
+    )),
+    'computed complex area hyperbolic cosine'
+  ],
+  b => [b, 'computed boolean area hyperbolic cosine']
+)()
 
-export class AreaHyperbolicCosecant extends AreaHyperbolic {
-  readonly $kind = 'AreaHyperbolicCosecant'
-}
+export const [asinh, isAreaHyperbolicSine] = unary<AreaHyperbolicSine>(
+  Species.asinh, Genera.areaHyperbolic
+)(
+  r => [real(Math.asinh(r.value)), 'computed real area hyperbolic sine'],
+  c => [
+    ln(add(
+      sqrt(add(square(unit(c)), real(1))),
+      unit(c)
+    )),
+    'computed complex area hyperbolic sine'
+  ],
+  b => [b, 'computed boolean area hyperbolic sine']
+)()
 
-export class AreaHyperbolicCotangent extends AreaHyperbolic {
-  readonly $kind = 'AreaHyperbolicCotangent'
-}
-
-export const acosh = unary(AreaHyperbolicCosine)(
-  r => real(Math.acosh(r.value)),
-  c => ln(add(
-    c, 
+export const [atanh, isAreaHyperbolicTangent] = unary<AreaHyperbolicTangent>(
+  Species.atanh, Genera.areaHyperbolic
+)(
+  r => [real(Math.atanh(r.value)), 'computed real hyperbolic tangent'],
+  c => [
     multiply(
-      sqrt(add(c, real(1))),
-      sqrt(subtract(c, real(1)))
-    )
-  ))
+      real(0.5),
+      ln(divide(
+        add(real(1), unit(c)),
+        subtract(real(1), unit(c))
+      ))
+    ),
+    'computed complex area hyperbolic tangent'
+  ],
+  b => [b, 'computed boolean area hyperbolic tangent']
 )()
-export type AcoshFn = typeof acosh
 
-export const asinh = unary(AreaHyperbolicSine)(
-  r => real(Math.asinh(r.value)),
-  c => ln(add(
-    sqrt(add(square(c), real(1))),
-    c
-  ))
+export const [asech, isAreaHyperbolicSecant] = unary<AreaHyperbolicSecant>(
+  Species.asech, Genera.areaHyperbolic
+)(
+  r => [acosh(reciprocal(unit(r))), 'computed real area hyperbolic secant'],
+  c => [acosh(reciprocal(unit(c))), 'computed complex area hyperbolic secant'],
+  b => [acosh(reciprocal(unit(b))), 'computed boolean area hyperbolic secant']
 )()
-export type AsinhFn = typeof asinh
 
-export const atanh = unary(AreaHyperbolicTangent)(
-  r => real(Math.atanh(r.value)),
-  c => multiply(
-    real(0.5),
-    ln(divide(
-      add(real(1), c),
-      subtract(real(1), c)
-    ))
-  )
+export const [acsch, isAreaHyperbolicCosecant] = unary<AreaHyperbolicCosecant>(
+  Species.acsch, Genera.areaHyperbolic
+)(
+  r => [asinh(reciprocal(unit(r))), 'computed real area hyperbolic cosecant'],
+  c => [asinh(reciprocal(unit(c))), 'computed complex area hyperbolic cosecant'],
+  b => [asinh(reciprocal(unit(b))), 'computed boolean area hyperbolic cosecant']
 )()
-export type AtanhFn = typeof atanh
 
-export const asech = unary(AreaHyperbolicSecant)(
-  r => acosh(reciprocal(r)),
-  c => acosh(reciprocal(c))
+export const [acoth, isAreaHyperbolicCotangent] = unary<AreaHyperbolicCotangent>(
+  Species.acoth, Genera.areaHyperbolic
+)(
+  r => [atanh(reciprocal(unit(r))), 'computed real area hyperbolic cotangent'],
+  c => [atanh(reciprocal(unit(c))), 'computed complex area hyperbolic cotangent'],
+  b => [atanh(reciprocal(unit(b))), 'computed boolean area hyperbolic cotangent']
 )()
-export type AsechFn = typeof asech
-
-export const acsch = unary(AreaHyperbolicCosecant)(
-  r => asinh(reciprocal(r)),
-  c => asinh(reciprocal(c))
-)()
-export type AcschFn = typeof acsch
-
-export const acoth = unary(AreaHyperbolicCotangent)(
-  r => atanh(reciprocal(r)),
-  c => atanh(reciprocal(c))
-)()
-export type AcothFn = typeof acoth

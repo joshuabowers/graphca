@@ -1,7 +1,7 @@
-import { expectCloseTo } from './expectations'
-import { real } from './real'
-import { complex } from './complex'
-import { variable } from './variable'
+import { expectCloseTo, expectWriter } from '../utility/expectations'
+import { Clades, Genera, Species } from '../utility/tree'
+import { real, complex } from '../primitives'
+import { variable } from '../variable'
 import { 
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
@@ -14,11 +14,17 @@ describe('acosh', () => {
   })
 
   it('calculates the area hyperbolic cosine of a complex number', () => {
-    expectCloseTo(acosh(complex(2, 1)), complex(1.469351744368, 0.507356303217), 10)
+    expectCloseTo(acosh(complex([2, 1])), complex([1.469351744368, 0.507356303217]), 10)
   })
 
   it('generates an AreaHyperbolicCosine node of a variable expression', () => {
-    expect(acosh(variable('x'))).toEqual(new AreaHyperbolicCosine(variable('x')))
+    expectWriter(acosh(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acosh,
+        expression: variable('x')
+      } as AreaHyperbolicCosine,
+      [variable('x').value, 'area hyperbolic cosine']
+    )
   })
 })
 
@@ -28,11 +34,17 @@ describe('asinh', () => {
   })
 
   it('calculates the area hyperbolic sine of a complex number', () => {
-    expectCloseTo(asinh(complex(0, 1)), complex(0, 1.57079632679), 7)
+    expectCloseTo(asinh(complex([0, 1])), complex([0, 1.57079632679]), 7)
   })
 
   it('generates an AreaHyperbolicSine node of a variable expression', () => {
-    expect(asinh(variable('x'))).toEqual(new AreaHyperbolicSine(variable('x')))
+    expectWriter(asinh(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.asinh,
+        expression: variable('x')
+      } as AreaHyperbolicSine,
+      [variable('x').value, 'area hyperbolic sine']
+    )
   })
 })
 
@@ -42,11 +54,17 @@ describe('atanh', () => {
   })
 
   it('calculates the area hyperbolic tangent of a complex number', () => {
-    expectCloseTo(atanh(complex(0, 1)), complex(0, 0.78539816339), 10)
+    expectCloseTo(atanh(complex([0, 1])), complex([0, 0.78539816339]), 10)
   })
 
   it('generates an AreaHyperbolicTangent node of a variable expression', () => {
-    expect(atanh(variable('x'))).toEqual(new AreaHyperbolicTangent(variable('x')))
+    expectWriter(atanh(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.atanh,
+        expression: variable('x')
+      } as AreaHyperbolicTangent,
+      [variable('x').value, 'area hyperbolic tangent']
+    )
   })
 })
 
@@ -56,11 +74,17 @@ describe('asech', () => {
   })
 
   it('calculates the area hyperbolic secant of a complex number', () => {
-    expectCloseTo(asech(complex(0, 1)), complex(0.88137358701, -1.57079632679), 10)
+    expectCloseTo(asech(complex([0, 1])), complex([0.88137358701, -1.57079632679]), 10)
   })
 
   it('generates an AreaHyperbolicSecant node of a variable expression', () => {
-    expect(asech(variable('x'))).toEqual(new AreaHyperbolicSecant(variable('x')))
+    expectWriter(asech(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.asech,
+        expression: variable('x')
+      } as AreaHyperbolicSecant,
+      [variable('x').value, 'area hyperbolic secant']
+    )
   })
 })
 
@@ -70,11 +94,17 @@ describe('acsch', () => {
   })
 
   it('calculates the area hyperbolic cosecant of a complex number', () => {
-    expectCloseTo(acsch(complex(0, 1)), complex(0, -1.57079632679), 7)
+    expectCloseTo(acsch(complex([0, 1])), complex([0, -1.57079632679]), 7)
   })
 
   it('generates an AreaHyperbolicCosecant node of a variable expression', () => {
-    expect(acsch(variable('x'))).toEqual(new AreaHyperbolicCosecant(variable('x')))
+    expectWriter(acsch(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acsch,
+        expression: variable('x')
+      } as AreaHyperbolicCosecant,
+      [variable('x').value, 'area hyperbolic cosecant']
+    )
   })
 })
 
@@ -84,10 +114,16 @@ describe('acoth', () => {
   })
 
   it('calculates the area hyperbolic cotangent of a complex number', () => {
-    expectCloseTo(acoth(complex(0, 1)), complex(0, -0.78539816339), 10)
+    expectCloseTo(acoth(complex([0, 1])), complex([0, -0.78539816339]), 10)
   })
 
   it('generates an AreaHyperbolicCotangent node of a variable expression', () => {
-    expect(acoth(variable('x'))).toEqual(new AreaHyperbolicCotangent(variable('x')))
+    expectWriter(acoth(variable('x')))(
+      {
+        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acoth,
+        expression: variable('x')
+      } as AreaHyperbolicCotangent,
+      [variable('x').value, 'area hyperbolic cotangent']
+    )
   })
 })
