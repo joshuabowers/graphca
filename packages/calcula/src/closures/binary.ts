@@ -70,15 +70,6 @@ export const when = <L extends TreeNode, R extends TreeNode>(
         })
       })
     )
-    // const [result, action] = typeof fn === 'function' ? fn(l, r) : fn
-    // return ({
-    //   value: isWriter(result) ? result.value : result,
-    //   log: [
-    //     ...l.log, ...r.log,
-    //     {input: [l.value, r.value], action}, 
-    //     ...(isWriter(result) ? result.log : [])
-    //   ]
-    // })
   )
 
 const binaryMap = <L, R, T>(fn: BinaryCaseFn<L, R, T>) =>

@@ -428,7 +428,7 @@ describe('subtract', () => {
         'combined like terms'
       ],
       [[real(1).value, real(-1).value], 'real addition'],
-      [[real(0).value, variable('x').value], 'multiplication']
+      [[real(0).value, variable('x').value], 'zero absorption']
     )
   })
 

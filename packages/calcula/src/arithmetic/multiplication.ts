@@ -166,19 +166,25 @@
 //   method(canFormExponential, exponentialCollect)
 // )
 
-// const fromMultiply = unaryFrom(multiply, bindLeft)
-// export const negate = fromMultiply(real(-1))
-// export const double = fromMultiply(real(2))
-
-// export const divide = binaryFrom(multiply, (l, r) => [l, reciprocal(r)])
-import { Genera, Species } from '../utility/tree'
-import { real, complex, boolean } from '../primitives'
-import { Binary, binary, partialLeft, binaryFrom } from '../closures/binary'
-import { reciprocal } from './exponentiation'
+import { _ } from '@arrows/multimethod'
+import { Writer, unit } from '../monads/writer'
+import { TreeNode, Clades, Genera, Species } from '../utility/tree'
+import { Complex, real, complex, boolean, nan, isReal, isPrimitive, isComplex } from '../primitives'
+import { Binary, binary, partialLeft, binaryFrom, when } from '../closures/binary'
+import { add } from './addition'
+import { 
+  Exponentiation, isExponentiation, raise, reciprocal, square 
+} from './exponentiation'
+import { deepEquals, isValue } from '../utility/deepEquals'
 
 export type Multiplication = Binary<Species.multiply, Genera.arithmetic>
 
-export const [multiply, isMultiplication] = binary<Multiplication>(
+const isComplexWrapped = (v: Writer<TreeNode>): v is Writer<Complex> => 
+  isComplex(v) && v.value.b === 0
+const isImaginary = (v: Writer<TreeNode>): v is Writer<Complex> => 
+  isComplex(v) && v.value.a === 0
+
+export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
   Species.multiply, Genera.arithmetic
 )(
   (l, r) => [real(l.value * r.value), 'real multiplication'],
@@ -190,9 +196,57 @@ export const [multiply, isMultiplication] = binary<Multiplication>(
     'complex multiplication'
   ],
   (l, r) => [boolean(l.value && r.value), 'boolean multiplication']
-)()
+)(
+  when(
+    [l => l.value.clade !== Clades.primitive, isPrimitive],
+    (l, r) => [multiply(unit(r), unit(l)), 'reorder operands']
+  ),
+  when<Complex, Complex>(
+    [isComplexWrapped, isComplexWrapped], 
+    (l, r) => [complex([l.a * r.a, 0]), 'complex multiplication']
+  ),
+  when<Complex, Complex>(
+    [isComplexWrapped, isImaginary],
+    (l, r) => [complex([0, l.a * r.b]), 'complex multiplication']
+  ),
+  when<Complex, Complex>(
+    [isImaginary, isComplexWrapped],
+    (l, r) => [complex([0, l.b * r.a]), 'complex multiplication']
+  ),
+  when<Complex, Complex>(
+    [isComplex, isComplexWrapped],
+    (l, r) => [complex([l.a * r.a, 0]), 'complex multiplication']
+  ),
+  when([isValue(real(0)), isValue(real(Infinity))], [nan, 'incalculable']),
+  when([isValue(real(Infinity)), isValue(real(0))], [nan, 'incalculable']),
+  when([isValue(real(0)), _], [real(0), 'zero absorption']),
+  when([isValue(complex([0, 0])), _], [complex([0, 0]), 'zero absorption']),
+  when([isValue(real(1)), _], (_l, r) => [r, 'multiplicative identity']),
+  when([isValue(complex([1, 0])), _], (_l, r) => [r, 'multiplicative identity']),
+  when([isValue(real(Infinity)), _], [real(Infinity), 'infinite absorption']),
+  when([isValue(real(-Infinity)), _], [real(-Infinity), 'infinite absorption']),
+  when<TreeNode, Multiplication>(
+    (l, r) => isPrimitive(l) && isMultiplication(r) && isPrimitive(r.value.left),
+    (l, r) => [multiply(multiply(unit(l), r.left), r.right),'primitive coalescence']
+  ),
+  when(deepEquals, (l, _r) => [square(unit(l)), 'equivalence: replaced with square']),
+  when<Exponentiation, Exponentiation>(
+    (l, r) => isExponentiation(l) && isExponentiation(r) 
+      && deepEquals(l.value.left, r.value.left),
+    (l, r) => [raise(l.left, add(l.right, r.right)), 'combined like terms']
+  ),
+  when<TreeNode, Exponentiation>(
+    (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),
+    (l, r) => [raise(unit(l), add(real(1), r.right)), 'combined like terms']
+  ),
+  when<Exponentiation, TreeNode>(
+    (l, r) => isExponentiation(l) && deepEquals(l.value.left, r),
+    (l, r) => [raise(unit(r), add(real(1), l.right)), 'combined like terms']
+  )
+)
 
-export const negate = partialLeft(multiply)(real(-1))
-export const double = partialLeft(multiply)(real(2))
+const fromMultiply = partialLeft(multiply)
+export const negate = fromMultiply(real(-1))
+export const double = fromMultiply(real(2))
 
 export const divide = binaryFrom(multiply)(undefined, r => reciprocal(r))

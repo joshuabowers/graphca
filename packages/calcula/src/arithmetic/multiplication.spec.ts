@@ -90,113 +90,6 @@
 // })
 
 // describe('multiply', () => {
-//   it('reorders a real right multiplicand to the left', () => {
-//     expect(multiply(variable('x'), real(5))).toEqual(multiply(real(5), variable('x')))
-//   })
-
-//   it('reorders a complex right to left unless left real', () => {
-//     expect(multiply(variable('x'), complex(1, 2))).toEqual(
-//       multiply(complex(1, 2), variable('x'))
-//     )
-//   })
-
-//   it('is NaN if 0 and Infinity', () => {
-//     expect(multiply(real(0), real(Infinity))).toEqual(real(NaN))
-//   })
-
-//   it('is real 0 if left is real 0', () => {
-//     expect(multiply(real(0), variable('x'))).toEqual(real(0))
-//   })
-
-//   it('is real 0 if right is real 0', () => {
-//     expect(multiply(variable('x'), real(0))).toEqual(real(0))
-//   })
-
-//   it('is infinity if left is infinity', () => {
-//     expect(multiply(real(Infinity), variable('x'))).toEqual(real(Infinity))
-//   })
-
-//   it('is infinity if right is infinity', () => {
-//     expect(multiply(variable('x'), real(Infinity))).toEqual(real(Infinity))
-//   })
-
-//   it('is negative infinity if left is negative infinity', () => {
-//     expect(multiply(real(-Infinity), variable('x'))).toEqual(real(-Infinity))
-//   })
-
-//   it('is negative infinity if right is negative infinity', () => {
-//     expect(multiply(variable('x'), real(-Infinity))).toEqual(real(-Infinity))
-//   })
-
-//   it('is the right if left is 1', () => {
-//     expect(multiply(variable('x'), real(1))).toEqual(variable('x'))
-//   })
-
-//   it('is the left if right is 1', () => {
-//     expect(multiply(real(1), variable('x'))).toEqual(variable('x'))
-//   })
-
-//   it('multiplies two reals together', () => {
-//     expect(multiply(real(2), real(3))).toEqual(real(6))
-//   })
-
-//   it('multiplies two complex numbers together', () => {
-//     expect(multiply(complex(2, 3), complex(3, 4))).toEqual(complex(-6, 17))
-//   })
-
-//   it('multiplies reals and complexes', () => {
-//     expect(multiply(complex(2, 3), real(5))).toEqual(complex(10, 15))
-//   })
-
-//   it('squares left if right is equal', () => {
-//     expect(multiply(variable('x'), variable('x'))).toEqual(square(variable('x')))
-//   })
-
-//   it('adds to the power when multiplying by the base from the left', () => {
-//     expect(multiply(variable('x'), square(variable('x')))).toEqual(
-//       raise(variable('x'), real(3))
-//     )
-//   })
-
-//   it('adds to the power when multiplying by the base from the right', () => {
-//     expect(multiply(square(variable('x')), variable('x'))).toEqual(
-//       raise(variable('x'), real(3))
-//     )
-//   })
-
-//   it('combines equivalent based powers together', () => {
-//     expect(
-//       multiply(square(variable('x')), raise(variable('x'), real(3)))
-//     ).toEqual(
-//       raise(variable('x'), real(5))
-//     )
-//   })
-
-//   it('multiplies complex infinity against complex 1 correctly', () => {
-//     expect(multiply(complex(-Infinity, 0), complex(1, 0))).toEqual(complex(-Infinity, 0))
-//   })
-
-//   it('multiplies a complex wrapped real by a pure imaginary correctly', () => {
-//     expect(multiply(complex(Infinity, 0), complex(0, 3))).toEqual(complex(0, Infinity))
-//   })
-
-//   it('multiplies a pure imaginary by a complex wrapped real correctly', () => {
-//     expect(multiply(complex(0, 3), complex(Infinity, 0))).toEqual(complex(0, Infinity))
-//   })
-
-//   it('multiplies two complexes together correctly', () => {
-//     expectCloseTo(
-//       multiply(complex(1.098684113467, 0.455089860562), complex(1.755317301824, 0.284848784593)), 
-//       complex(1.79890743995, 1.11178594050), 
-//       10
-//     )
-//   })
-
-//   it('simplifies a constant multiplied against a multiplication with a constant', () => {
-//     expect(multiply(real(5), multiply(variable('x'), complex(1, 1)))).toEqual(
-//       multiply(complex(5, 5), variable('x'))
-//     )
-//   })
 
 //   it('isEa_A2xEa: combines nested multiplications involving similar exponentiations', () => {
 //     expect(
@@ -488,47 +381,295 @@
 //     ).toEqual(divide(variable('y'), variable('z')))
 //   })
 // })
-import { Species } from '../utility/tree'
-import { real } from '../primitives'
+import { expectWriter } from '../utility/expectations'
+import { Clades, Genera, Species } from '../utility/tree'
+import { ComplexInfinity } from '../primitives/complex'
+import { real, complex, nan } from '../primitives'
 import { variable } from '../variable'
-import { multiply, negate, double } from './multiplication'
+import { $multiply, multiply, negate, double } from './multiplication'
+import { raise, square } from './exponentiation'
+
+describe('$multiply', () => {
+  it('returns an Action<Multiplication> for any input without logic', () => {
+    expect($multiply(real(1), real(2))).toEqual([
+      {
+        clade: Clades.binary, genus: Genera.arithmetic, species: Species.multiply,
+        left: real(1), right: real(2)
+      },
+      'multiplication'
+    ])
+  })
+})
+
+describe('multiply', () => {
+  describe('when given two primitives', () => {
+    it('is the product of two reals', () => {
+      expectWriter(
+        multiply(real(2), real(3))
+      )(
+        real(6).value,
+        [[real(2).value, real(3).value], 'real multiplication']
+      )
+    })
+
+    it('is the product of two complexes', () => {
+      expectWriter(
+        multiply(complex([2, 3]), complex([3, 4]))
+      )(
+        complex([-6, 17]).value,
+        [[complex([2, 3]).value, complex([3, 4]).value], 'complex multiplication']
+      )
+    })
+
+    it('is the product of mixed inputs', () => {
+      expectWriter(
+        multiply(complex([2, 3]), real(5))
+      )(
+        complex([10, 15]).value,
+        [real(5).value, 'cast to complex'],
+        [[complex([2, 3]).value, complex([5, 0]).value], 'complex multiplication']
+      )
+    })
+
+    it('multiplies complex infinity against complex 1 correctly', () => {
+      expectWriter(
+        multiply(ComplexInfinity, complex([1, 0]))
+      )(
+        complex([Infinity, 0]).value,
+        [[ComplexInfinity.value, complex([1, 0]).value], 'complex multiplication']
+      )
+    })
+
+    it('multiplies a complex wrapped real by a pure imaginary correctly', () => {
+      expectWriter(
+        multiply(complex([Infinity, 0]), complex([0, 3]))
+      )(
+        complex([0, Infinity]).value,
+        [[complex([Infinity, 0]).value, complex([0, 3]).value], 'complex multiplication']
+      )
+    })
+
+    it('multiplies a pure imaginary by a complex wrapped real correctly', () => {
+      expectWriter(
+        multiply(complex([0, 3]), complex([Infinity, 0]))
+      )(
+        complex([0, Infinity]).value,
+        [[complex([0, 3]).value, complex([Infinity, 0]).value], 'complex multiplication']
+      )
+    })
+  })
+
+  describe('when given a primitive and a not primitive', () => {
+    it('reorders a real right multiplicand to the left', () => {
+      expectWriter(
+        multiply(variable('x'), real(5))
+      )(
+        $multiply(real(5), variable('x'))[0],
+        [[variable('x').value, real(5).value], 'reorder operands'],
+        [[real(5).value, variable('x').value], 'multiplication']
+      )
+    })
+
+    it('reorder a complex right multiplicand to the left', () => {
+      expectWriter(
+        multiply(variable('x'), complex([0, 1]))
+      )(
+        $multiply(complex([0, 1]), variable('x'))[0],
+        [[variable('x').value, complex([0, 1]).value], 'reorder operands'],
+        [[complex([0, 1]).value, variable('x').value], 'multiplication']
+      )
+    })
+  })
+
+  describe('when dealing with 0, 1, or (+/-)Infinity', () => {
+    it('is NaN if given 0 and Infinity', () => {
+      expectWriter(
+        multiply(real(0), real(Infinity))
+      )(
+        nan.value,
+        [[real(0).value, real(Infinity).value], 'incalculable']
+      )
+    })
+
+    it('is real 0 if the left is real 0', () => {
+      expectWriter(
+        multiply(real(0), variable('x'))
+      )(
+        real(0).value,
+        [[real(0).value, variable('x').value], 'zero absorption']
+      )
+    })
+
+    it('is real 0 if the right is real 0', () => {
+      expectWriter(
+        multiply(variable('x'), real(0))
+      )(
+        real(0).value,
+        [[variable('x').value, real(0).value], 'reorder operands'],
+        [[real(0).value, variable('x').value], 'zero absorption']
+      )
+    })
+
+    it('is infinity if left is infinity', () => {
+      expectWriter(
+        multiply(real(Infinity), variable('x'))
+      )(
+        real(Infinity).value,
+        [[real(Infinity).value, variable('x').value], 'infinite absorption']
+      )
+    })
+
+    it('is infinity if right is infinity', () => {
+      expectWriter(
+        multiply(variable('x'), real(Infinity))
+      )(
+        real(Infinity).value,
+        [[variable('x').value, real(Infinity).value], 'reorder operands'],
+        [[real(Infinity).value, variable('x').value], 'infinite absorption']
+      )
+    })
+
+    it('is negative infinity if left is negative infinity', () => {
+      expectWriter(
+        multiply(real(-Infinity), variable('x'))
+      )(
+        real(-Infinity).value,
+        [[real(-Infinity).value, variable('x').value], 'infinite absorption']
+      )
+    })
+
+    it('is negative infinity if right is negative infinity', () => {
+      expectWriter(
+        multiply(variable('x'), real(-Infinity))
+      )(
+        real(-Infinity).value,
+        [[variable('x').value, real(-Infinity).value], 'reorder operands'],
+        [[real(-Infinity).value, variable('x').value], 'infinite absorption']
+      )
+    })
+
+    it('is the right if the left is 1', () => {
+      expectWriter(
+        multiply(real(1), variable('x'))
+      )(
+        variable('x').value,
+        [[real(1).value, variable('x').value], 'multiplicative identity']
+      )
+    })
+
+    it('is the left if the right is 1', () => {
+      expectWriter(
+        multiply(variable('x'), real(1))
+      )(
+        variable('x').value,
+        [[variable('x').value, real(1).value], 'reorder operands'],
+        [[real(1).value, variable('x').value], 'multiplicative identity']
+      )
+    })
+  })
+
+  describe('when dealing with nested multiplications with primitives', () => {
+    it('multiplies primitives across nested multiplications', () => {
+      expectWriter(
+        multiply(real(5), multiply(variable('x'), complex([1, 1])))
+      )(
+        multiply(complex([5, 5]), variable('x')).value,
+        [[variable('x').value, complex([1, 1]).value], 'reorder operands'],
+        [[complex([1, 1]).value, variable('x').value], 'multiplication'],
+        [
+          [real(5).value, multiply(complex([1, 1]), variable('x')).value], 
+          'primitive coalescence'
+        ],
+        [real(5).value, 'cast to complex'],
+        [[complex([5, 0]).value, complex([1, 1]).value], 'complex multiplication'],
+        [[complex([5, 5]).value, variable('x').value], 'multiplication']
+      )
+    })
+  })
+
+  describe('when dealing with equivalent subtrees', () => {
+    it('squares the left if the right is equivalent', () => {
+      expectWriter(
+        multiply(variable('x'), variable('x'))
+      )(
+        square(variable('x')).value,
+        [
+          [variable('x').value, variable('x').value], 
+          'equivalence: replaced with square'
+        ],
+        [[variable('x').value, real(2).value], 'exponentiation']
+      )
+    })
+
+    it('adds to the power when multiplying by the base from the left', () => {
+      expectWriter(
+        multiply(variable('x'), square(variable('x')))
+      )(
+        raise(variable('x'), real(3)).value,
+        [[variable('x').value, real(2).value], 'exponentiation'],
+        [[variable('x').value, square(variable('x')).value], 'combined like terms'],
+        [[real(1).value, real(2).value], 'real addition'],
+        [[variable('x').value, real(3).value], 'exponentiation']
+      )
+    })
+
+    it('adds to the power when multiplying by the base from the right', () => {
+      expectWriter(
+        multiply(square(variable('x')), variable('x'))
+      )(
+        raise(variable('x'), real(3)).value,
+        [[variable('x').value, real(2).value], 'exponentiation'],
+        [[square(variable('x')).value, variable('x').value], 'combined like terms'],
+        [[real(1).value, real(2).value], 'real addition'],
+        [[variable('x').value, real(3).value], 'exponentiation']
+      )
+    })
+
+    it('combines equivalently-based powers together', () => {
+      expectWriter(
+        multiply(square(variable('x')), raise(variable('x'), real(3)))
+      )(
+        raise(variable('x'), real(5)).value,
+        [[variable('x').value, real(2).value], 'exponentiation'],
+        [[variable('x').value, real(3).value], 'exponentiation'],
+        [
+          [square(variable('x')).value, raise(variable('x'), real(3)).value],
+          'combined like terms'
+        ],
+        [[real(2).value, real(3).value], 'real addition'],
+        [[variable('x').value, real(5).value], 'exponentiation']
+      )
+    })
+  })
+})
 
 describe('negate', () => {
   it('returns a Writer<Multiplication> for variable inputs', () => {
-    expect(negate(variable('x'))).toEqual({
-      value: multiply(real(-1), variable('x')).value,
-      log: [
-        {
-          input: [real(-1).value, variable('x').value],
-          action: 'multiplication'  
-        }
-      ]
-    })
+    expectWriter(
+      negate(variable('x'))
+    )(
+      multiply(real(-1), variable('x')).value,
+      [[real(-1).value, variable('x').value], 'multiplication']
+    )
   })
 })
 
 describe('double', () => {
   it('returns a Writer<Real> for real inputs', () => {
-    expect(double(real(5))).toEqual({
-      value: real(10).value,
-      log: [
-        {
-          input: [real(2).value, real(5).value],
-          action: 'real multiplication'
-        }
-      ]
-    })
+    expectWriter(
+      double(real(5))
+    )(
+      real(10).value,
+      [[real(2).value, real(5).value], 'real multiplication']
+    )
   })
 
   it('returns a Writer<Multiplication for variable inputs', () => {
-    expect(double(variable('x'))).toEqual({
-      value: multiply(real(2), variable('x')).value,
-      log: [
-        {
-          input: [real(2).value, variable('x').value],
-          action: 'multiplication'
-        }
-      ]
-    })
+    expectWriter(
+      double(variable('x'))
+    )(
+      multiply(real(2), variable('x')).value,
+      [[real(2).value, variable('x').value], 'multiplication']
+    )
   })
 })
