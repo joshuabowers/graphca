@@ -1,42 +1,10 @@
-// import { method } from '@arrows/multimethod'
-// import { is } from './is'
-// import { notAny, visit, leftChild, rightChild, identity, negated } from './predicates'
-// import { Base } from './Expression'
-// import { Real, real } from './real'
-// import { Complex, complex } from './complex'
-// import { Binary, binary, binaryFrom } from './binary'
-// import { Multiplication, multiply, negate, double } from './multiplication'
-// import { equals } from './equality'
 
-// export class Addition extends Binary {
-//   readonly $kind = 'Addition'
-// }
-
-// const isXpR_R = (l: Base, r: Base) =>
-//   l instanceof Addition 
-//   && (l.right instanceof Real || l.right instanceof Complex)
-//   && (r instanceof Real || r instanceof Complex)
-
-// const ApB = visit(Addition, Base)
-// const BpA = visit(Base, Addition)
 // const MpM = visit(Multiplication, Multiplication)
 // const MpB = visit(Multiplication, Base)
 // const BpM = visit(Base, Multiplication)
 
 // export const add = binary(Addition)(
-//   (l, r) => real(l.value + r.value),
-//   (l, r) => complex(l.a + r.a, l.b + r.b)
 // )(
-//   method([real(0), is(Base)], (_l: Real, r: Base) => r),
-//   method([is(Base), real(0)], (l: Base, _r: Real) => l),
-//   method([is(Complex), notAny<Base>(Complex, Real)], (l: Complex, r: Base) => add(r, l)),
-//   method([is(Real), notAny<Base>(Complex, Real)], (l: Real, r: Base) => add(r, l)),
-//   method(equals, (l: Base, _r: Base) => double(l)),
-//   method(isXpR_R, (l: Addition, r: Real) => add(l.left, add(l.right, r))),
-//   ApB(leftChild, identity)((l, r) => add(double(r), l.right)),
-//   ApB(rightChild, identity)((l, r) => add(double(r), l.left)),
-//   BpA(identity, leftChild)((l, r) => add(double(l), r.right)),
-//   BpA(identity, rightChild)((l, r) => add(double(l), r.left)),
 //   MpM(rightChild, rightChild)((l, r) => multiply(add(l.left, r.left), l.right)),
 //   MpM(leftChild, rightChild)((l, r) => multiply(add(l.right, r.left), l.left)),
 //   MpM(rightChild, leftChild)((l, r) => multiply(add(l.left, r.right), l.right)),
@@ -49,6 +17,7 @@
 //   MpM(negated(rightChild), rightChild)((l, r) => (is(Binary)(l.right) && multiply(subtract(r.left, l.right.left), r.right)) || real(NaN)),
 //   MpM(negated(leftChild), leftChild)((l, r) => (is(Binary)(l.right) && multiply(subtract(r.right, l.right.right), r.left)) || real(NaN)),
 //   MpM(negated(leftChild), rightChild)((l, r) => (is(Binary)(l.right) && multiply(subtract(r.left, l.right.right), r.right)) || real(NaN)),
+
 //   MpB(leftChild, identity)((l, r) => multiply(add(real(1), l.right), r)),
 //   MpB(rightChild, identity)((l, r) => multiply(add(real(1), l.left), r)),
 //   BpM(identity, leftChild)((l, r) => multiply(add(real(1), r.right), l)),
@@ -57,7 +26,7 @@
 
 // export const subtract = binaryFrom(add, (l, r) => [l, negate(r)])
 
-import { Writer } from '../monads/writer'
+import { Writer, unit } from '../monads/writer'
 import { _ } from '@arrows/multimethod'
 import { 
   TreeNode, Genera, Species, any, notAny 
@@ -66,17 +35,17 @@ import {
   Real, real, complex, boolean, isPrimitive, PrimitiveNode 
 } from "../primitives"
 import { 
-  Binary, binary, when, binaryFrom, identity, leftChild 
+  Binary, binary, when, binaryFrom, identity, leftChild, rightChild 
 } from "../closures/binary"
 import { deepEquals, deepEqualsAt, isValue } from "../utility/deepEquals"
-import { multiply, double, negate } from './multiplication'
+import { multiply, double, negate, Multiplication, isMultiplication } from './multiplication'
 
 export type Addition = Binary<Species.add, Genera.arithmetic>
 type AdditionWithPrimitive = Addition & {
   readonly right: Writer<PrimitiveNode>
 }
 
-export const [add, isAddition] = binary<Addition>(Species.add, Genera.arithmetic)(
+export const [add, isAddition, $add] = binary<Addition>(Species.add, Genera.arithmetic)(
   (l, r) => [real(l.value + r.value), 'real addition'],
   (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
   (l, r) => [
@@ -87,23 +56,54 @@ export const [add, isAddition] = binary<Addition>(Species.add, Genera.arithmetic
   when([
     any(Species.real, Species.complex, Species.boolean), 
     notAny(Species.real, Species.complex, Species.boolean)
-  ], (l, r) => [add(r, l), 're-order operands']),
+  ], (l, r) => [add(unit(r), unit(l)), 're-order operands']),
   when<TreeNode, Real>([_, isValue(real(0))], (l, _r) => [l, 'additive identity']),
   when<AdditionWithPrimitive, PrimitiveNode>(
     (l, r) => isAddition(l) 
       && isPrimitive(l.value.right) 
       && isPrimitive(r), 
     (l, r) => [
-      add(l.value.left, add(l.value.right, r)), 
+      add(l.left, add(l.right, unit(r))), 
       'combine primitives across nesting levels'
     ]),
   when(deepEquals, (l, _r) => [
-    double(l), 'equivalence: replaced with double'
+    double(unit(l)), 'equivalence: replaced with double'
   ]),
-  when<Addition, TreeNode>(deepEqualsAt(leftChild, identity), (l, _r) => [
-    add(double(l.value.left), l.value.right),
-    'combined like terms'
-  ])
+  when<Addition, TreeNode>(
+    (l, r) => isAddition(l) && deepEquals(l.value.left, r),
+    (l, _r) => [add(double(l.left), l.right), 'combined like terms']
+  ),
+  when<Addition, TreeNode>(
+    (l, r) => isAddition(l) && deepEquals(l.value.right, r),
+    (l, _r) => [add(double(l.right), l.left), 'combined like terms']
+  ),
+  when<TreeNode, Addition>(
+    (l, r) => isAddition(r) && deepEquals(l, r.value.left),
+    (_l, r) => [add(double(r.left), r.right), 'combined like terms']
+  ),
+  when<TreeNode, Addition>(
+    (l, r) => isAddition(r) && deepEquals(l, r.value.right),
+    (_l, r) => [add(double(r.right), r.left), 'combined like terms']
+  ),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && isPrimitive(l.value.left) && isPrimitive(r.value.left)
+      && deepEquals(l.value.right, r.value.right),
+    (l, r) => [
+      multiply(add(l.left, r.left), l.right), 
+      'combined like terms'
+    ]
+  ),
+  when<TreeNode, Multiplication>(
+    (l, r) => isMultiplication(r) && isPrimitive(r.value.left) 
+      && deepEquals(l, r.value.right),
+    (l, r) => [multiply(add(real(1), r.left), unit(l)), 'combined like terms']
+  ),
+  when<Multiplication, TreeNode>(
+    (l, r) => isMultiplication(l) && isPrimitive(l.value.left) 
+      && deepEquals(l.value.right, r),
+    (l, r) => [multiply(add(real(1), l.left), unit(r)), 'combined like terms']
+  )
 )
 
 export const subtract = binaryFrom(add)(undefined, r => negate(r))

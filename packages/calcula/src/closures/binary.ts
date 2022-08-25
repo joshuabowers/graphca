@@ -1,86 +1,3 @@
-// import { method, multi, Multi, fromMulti } from '@arrows/multimethod'
-// import { is } from './is'
-// import { Base, Constructor } from './Expression'
-// import { Real, real } from './real'
-// import { Complex, complex } from './complex'
-// import { Boolean } from './boolean'
-// import { Nil } from './nil'
-
-// export abstract class Binary extends Base {
-//   constructor(readonly left: Base, readonly right: Base) { super() }
-// }
-
-// const coerce = (b: Boolean) => real(b.value ? 1 : 0)
-
-// type when<P, R = P> = (left: P, right: P) => R
-// type cast<L, R, V> = (left: L, right: R) => V
-
-// type Choose<D, F> = F extends void ? D : F
-
-// type BinaryFn<T, R = void> = Multi
-//   & when<Real, Choose<Real, R>>
-//   & cast<Real, Complex, Choose<Complex, R>>
-//   & cast<Complex, Real, Choose<Complex, R>>
-//   & when<Complex, Choose<Complex, R>>
-//   & when<Boolean, Choose<Boolean, R>>
-//   & cast<Boolean, Base, Choose<Real, R>>
-//   & cast<Base, Boolean, Choose<Real, R>>
-//   & cast<Nil, Base, Choose<Real, R>>
-//   & cast<Base, Nil, Choose<Real, R>>
-//   & when<Base, T>
-
-// type MethodFn = typeof method
-
-// export const binary = <T extends Binary, R = void>(
-//   type: Constructor<T>, resultType?: Constructor<R>
-// ) => {
-//   type Result<U extends Base> = R extends void ? U : R
-//   return (
-//     whenRxR: when<Real, Result<Real>>,
-//     whenCxC: when<Complex, Result<Complex>>,
-//     whenBxB?: when<Boolean, Result<Boolean>>
-//   ) => {
-//     const whenBaseXBase: when<Base, T> = (l, r) => new type(l, r)
-//     const fn: BinaryFn<T, R> = multi(
-//       method([is(Real), is(Real)], whenRxR),
-//       method([is(Complex), is(Complex)], whenCxC),
-//       method([is(Boolean), is(Boolean)], (whenBxB ?? ((l: Boolean, r: Boolean) => fn(coerce(l), coerce(r))))),
-//       method([is(Boolean), is(Base)], (l: Boolean, r: Base) => fn(coerce(l), r)),
-//       method([is(Base), is(Boolean)], (l: Base, r: Boolean) => fn(l, coerce(r))),
-//       method([is(Real), is(Complex)], (l: Real, r: Complex) => fn(complex(l.value, 0), r)),
-//       method([is(Complex), is(Real)], (l: Complex, r: Real) => fn(l, complex(r.value, 0))),
-//       method([is(Nil), is(Base)], real(NaN)),
-//       method([is(Base), is(Nil)], real(NaN)),
-//       method([is(Base), is(Base)], whenBaseXBase)
-//     )
-//     return (
-//       ...methods: MethodFn[]
-//     ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
-//   }
-// }
-
-// export type BindTo = (unbound: Base, bound: Base) => [Base, Base]
-
-// export const bindLeft: BindTo = (unbound, bound) => [bound, unbound]
-// export const bindRight: BindTo = (unbound, bound) => [unbound, bound]
-
-// export const unaryFrom = <T extends Binary>(fn: BinaryFn<T>, bind: BindTo) => {
-//   type UnaryFn = Multi
-//     & ((expression: Real) => Real)
-//     & ((expression: Complex) => Complex)
-//     & ((expression: Base) => T)
-//   return (bound: Base) => multi(
-//     method(is(Base), (unbound: Base) => fn(...bind(unbound, bound)))
-//   ) as UnaryFn
-// }
-
-// type BinaryMapFn = (left: Base, right: Base) => [Base, Base]
-
-// export const binaryFrom = <T extends Binary>(fn: BinaryFn<T>, map: BinaryMapFn): BinaryFn<T> => (
-//   multi(
-//     method([is(Base), is(Base)], (l: Base, r: Base) => fn(...map(l, r)))
-//   )
-// )
 import { method, multi, fromMulti, Multi, _ } from "@arrows/multimethod"
 import { Writer, bind, unit, isWriter, Action } from "../monads/writer"
 import { CastFn } from "../utility/typings"
@@ -134,23 +51,35 @@ type BinaryFn<T, R = void> = Multi
 type UnaryPredicate<L> = (t: Writer<L>) => boolean 
 type BinaryPredicate<L, R> = (l: Writer<L>, r: Writer<R>) => boolean  
 type Test<T> = UnaryPredicate<T> | Writer<T> | typeof _
-type CorrespondingFn<L, R> = (l: Writer<L>, r: Writer<R>) => Action<TreeNode>  
+type CorrespondingFn<L, R> = (l: L, r: R) => Action<TreeNode>  
 
 export const when = <L extends TreeNode, R extends TreeNode>(
   predicate: Test<L> | [Test<L>, Test<R>] | BinaryPredicate<L, R>, 
   fn: Action<TreeNode> | CorrespondingFn<L, R>
 ) =>
-  method(predicate, (l: Writer<L>, r: Writer<R>) => {
-    const [result, action] = typeof fn === 'function' ? fn(l, r) : fn
-    return ({
-      value: isWriter(result) ? result.value : result,
-      log: [
-        ...l.log, ...r.log,
-        {input: [l.value, r.value], action}, 
-        ...(isWriter(result) ? result.log : [])
-      ]
-    })
-  })  
+  method(predicate, (l: Writer<L>, r: Writer<R>) =>
+    bind(l, x => 
+      bind(r, y => {
+        const [result, action] = typeof fn === 'function' ? fn(x, y) : fn
+        return ({
+          value: isWriter(result) ? result.value : result,
+          log: [
+            {input: [x, y], action},
+            ...(isWriter(result) ? result.log : [])
+          ]
+        })
+      })
+    )
+    // const [result, action] = typeof fn === 'function' ? fn(l, r) : fn
+    // return ({
+    //   value: isWriter(result) ? result.value : result,
+    //   log: [
+    //     ...l.log, ...r.log,
+    //     {input: [l.value, r.value], action}, 
+    //     ...(isWriter(result) ? result.log : [])
+    //   ]
+    // })
+  )
 
 const binaryMap = <L, R, T>(fn: BinaryCaseFn<L, R, T>) =>
   (l: Writer<L>, r: Writer<R>) => 
@@ -177,7 +106,15 @@ const apply = <T, U>(fn: BinaryFn<T, U>) =>
 
 const eitherNilOrNaN = any(Species.nil, Species.nan)
 
-export type BinaryNodeFnGuardFnPair<T extends BinaryNode, R> = [BinaryFn<T, R>, TreeNodeGuardFn<T>]
+// export type BinaryNodeFnGuardFnPair<T extends BinaryNode, R> = [BinaryFn<T, R>, TreeNodeGuardFn<T>]
+
+export type BinaryCreateFn<T extends BinaryNode> = 
+  (l: Writer<TreeNode>, r: Writer<TreeNode>) => Action<T>
+export type BinaryNodeMetaTuple<T extends BinaryNode, R> = [
+  BinaryFn<T, R>,
+  TreeNodeGuardFn<T>,
+  BinaryCreateFn<T>
+]
 
 export const binary = <T extends BinaryNode, R = void>(
   species: Species, genus?: Genera
@@ -200,7 +137,7 @@ export const binary = <T extends BinaryNode, R = void>(
       when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, 'not a number']),
       method(binaryMap<TreeNode, TreeNode, T>((l, r) => create(unit(l), unit(r))))
     )
-    return (...methods: (typeof method)[]): BinaryNodeFnGuardFnPair<T, R> => {
+    return (...methods: (typeof method)[]): BinaryNodeMetaTuple<T, R> => {
       fn = fromMulti(
         ...methods,
         method([isReal, isComplex], apply(fn)(complex, identity)),
@@ -210,7 +147,7 @@ export const binary = <T extends BinaryNode, R = void>(
         method([isComplex, isBoolean], apply(fn)(identity, complex)),
         method([isBoolean, isComplex], apply(fn)(complex, identity))
       )(fn) as typeof fn
-      return [fn, isSpecies<T>(species)]
+      return [fn, isSpecies<T>(species), create]
     }
   }
 }
