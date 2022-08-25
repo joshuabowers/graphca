@@ -24,7 +24,7 @@ export const [log, isLogarithm] = binary<Logarithm>(Species.log, Genera.logarith
 )(
   when<TreeNode, Exponentiation>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),
-    (_l, r) => [r.value.right, 'inverse operation cancellation']
+    (_l, r) => [r.right, 'inverse operation cancellation']
   )
 )
 

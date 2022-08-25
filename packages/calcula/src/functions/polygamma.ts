@@ -1,26 +1,3 @@
-// import { fromMulti, multi, Multi, method } from '@arrows/multimethod'
-// import { is } from './is'
-// import { Base } from './Expression'
-// import { Binary, binary } from './binary'
-// import { unaryVia, bindLeft } from './unary'
-// import { Real, real } from './real'
-// import { Complex } from './complex'
-// import { variable } from './variable'
-// import { add, subtract } from './addition'
-// import { multiply, divide, double } from './multiplication'
-// import { raise } from './exponentiation'
-// import { cot } from './trigonometric'
-// import { ln } from './logarithmic'
-// import { factorial } from './factorial'
-// import { abs } from './absolute'
-// import { reciprocal } from './exponentiation'
-// import { differentiate } from './differentiation'
-// import { invoke } from './invocation'
-
-// export class Polygamma extends Binary {
-//   readonly $kind = 'Polygamma'
-// }
-
 import { multi, method, _, Multi } from "@arrows/multimethod"
 import { Writer, unit } from "../monads/writer"
 import { TreeNode, Species, any } from "../utility/tree"
@@ -164,26 +141,14 @@ export const [polygamma, isPolygamma] = binary<Polygamma>(Species.polygamma)(
     'computed boolean polygamma'
   ]
 )(
-  when([real(0), isNegative], (_l, r) => [digammaReflection(r), 'digamma reflection for negative value']),
-  when([real(0), isSmall], (_l, r) => [digammaRecurrence(r), 'digamma recurrence for small value']),
+  when([real(0), isNegative], (_l, r) => [digammaReflection(unit(r)), 'digamma reflection for negative value']),
+  when([real(0), isSmall], (_l, r) => [digammaRecurrence(unit(r)), 'digamma recurrence for small value']),
   when<Real, Real|Complex|Boolean>(
     [real(0), any(Species.real, Species.combine, Species.boolean)], 
-    (_l, r) => [calculateDigamma(r), 'computed digamma']
+    (_l, r) => [calculateDigamma(unit(r)), 'computed digamma']
   ),
-  // method([real(0), is(Base)], (_l: Base, r: Base) => digamma(r)),
   // method([is(Real), isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),
-  when([isReal, isSmall], (l, r) => [polygammaRecurrence(l, r), 'polygamma recurrence for small value'])
+  when([isReal, isSmall], (l, r) => [polygammaRecurrence(unit(l), unit(r)), 'polygamma recurrence for small value'])
 )
 
 export const digamma = partialLeft(polygamma)(real(0))
-
-// const rawDigamma = unaryVia(Polygamma, bindLeft)(real(0))(
-//   r => calculateDigamma(r) as Real,
-//   c => calculateDigamma(c) as Complex
-// )
-// export type DigammaFn = typeof rawDigamma
-
-// export const digamma: DigammaFn = fromMulti(
-//   method(isNegative, (e: Base) => digammaReflection(e)),
-//   method(isSmall, (e: Base) => digammaRecurrence(e))
-// )(rawDigamma)

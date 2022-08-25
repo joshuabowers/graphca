@@ -417,7 +417,6 @@ describe('subtract', () => {
   })
 
   it('returns 0 if subtracting a quantity from itself', () => {
-    console.dir(subtract(variable('x'), variable('x')), {depth: 6})
     expectWriter(
       subtract(variable('x'), variable('x'))
     )(
