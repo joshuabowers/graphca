@@ -179,65 +179,163 @@ describe('not', () => {
 
 describe('and', () => {
   it('returns true when given two true things', () => {
-    expect(and(boolean(true), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      and(boolean(true), boolean(true))
+    )(
+      boolean(true),
+      [[boolean(true), boolean(true)], 'conjunctive identity']
+    )
   })
 
   it('returns false if the left argument is false', () => {
-    expect(and(boolean(false), boolean(true))).toEqual(boolean(false))
+    expectWriter(
+      and(boolean(false), boolean(true))
+    )(
+      boolean(false),
+      [[boolean(false), boolean(true)], 'conjunctive identity']
+    )
   })
 
   it('returns false if the right argument is false', () => {
-    expect(and(boolean(true), boolean(false))).toEqual(boolean(false))
+    expectWriter(
+      and(boolean(true), boolean(false))
+    )(
+      boolean(false),
+      [[boolean(true), boolean(false)], 'conjunctive identity']
+    )
   })
 
   it('returns false if both arguments are false', () => {
-    expect(and(boolean(false), boolean(false))).toEqual(boolean(false))
+    expectWriter(
+      and(boolean(false), boolean(false))
+    )(
+      boolean(false),
+      [[boolean(false), boolean(false)], 'conjunctive annihilator']
+    )
   })
 
   it('casts reals to booleans, where 0 is false, non-zero is true', () => {
-    expect(and(real(5), real(0))).toEqual(boolean(false))
+    expectWriter(
+      and(real(5), real(0))
+    )(
+      boolean(false),
+      [[real(5), real(0)], 'real conjunction']
+    )
   })
 
   it('casts complexes to booleans, 0 => false, non-0 => true', () => {
-    expect(and(complex([5,0]), complex([0,0]))).toEqual(boolean(false))
+    expectWriter(
+      and(complex([5,0]), complex([0,0]))
+    )(
+      boolean(false),
+      [[complex([5, 0]), complex([0, 0])], 'complex conjunction']
+    )
   })
 
   it('returns the left operand if the right is true', () => {
-    expect(and(variable('x'), boolean(true))).toEqual(variable('x'))
+    expectWriter(
+      and(variable('x'), boolean(true))
+    )(
+      variable('x'),
+      [[variable('x'), boolean(true)], 'conjunctive identity']
+    )
   })
 
   it('returns the right operand if the left is true', () => {
-    expect(and(boolean(true), variable('x'))).toEqual(variable('x'))
+    expectWriter(
+      and(boolean(true), variable('x'))
+    )(
+      variable('x'),
+      [[boolean(true), variable('x')], 'conjunctive identity']
+    )
   })
 
   it('returns the false if the right operand is false', () => {
-    expect(and(variable('x'), boolean(false))).toEqual(boolean(false))
+    expectWriter(
+      and(variable('x'), boolean(false))
+    )(
+      boolean(false),
+      [[variable('x'), boolean(false)], 'conjunctive annihilator']
+    )
   })
 
   it('returns false if the left operand is false', () => {
-    expect(and(boolean(false), variable('x'))).toEqual(boolean(false))
+    expectWriter(
+      and(boolean(false), variable('x'))
+    )(
+      boolean(false),
+      [[boolean(false), variable('x')], 'conjunctive annihilator']
+    )
   })
 
   it('returns the left operand if left equivalent to right', () => {
-    expect(and(variable('x'), variable('x'))).toEqual(variable('x'))
+    expectWriter(
+      and(variable('x'), variable('x'))
+    )(
+      variable('x'),
+      [[variable('x'), variable('x')], 'conjunctive idempotency']
+    )
   })
 
+  // See (e.g.): https://en.wikipedia.org/wiki/Boolean_algebra#Monotone_laws
+  // x | y | x or y | x and (x or y) | x and x | x and y | (x and x) or (x and y)
+  // ----------------------------------------------------------------------------
+  // F | F | F      | F              | F       | F       | F 
+  // F | T | T      | F              | F       | F       | F
+  // T | F | T      | T              | T       | F       | T
+  // T | T | T      | T              | T       | T       | T
   it('returns the left operand if the right is a Disjunction of the left', () => {
-    expect(and(variable('x'), or(variable('x'), variable('y')))).toEqual(variable('x'))
-    expect(and(variable('x'), or(variable('y'), variable('x')))).toEqual(variable('x'))
+    expectWriter(
+      and(variable('x'), or(variable('x'), variable('y')))
+    )(
+      variable('x'),
+      [[variable('x'), variable('y')], 'disjunction'],
+      [[variable('x'), or(variable('x'), variable('y'))], 'conjunctive absorption']
+    )
+    expectWriter(
+      and(variable('x'), or(variable('y'), variable('x')))
+    )(
+      variable('x'),
+      [[variable('y'), variable('x')], 'disjunction'],
+      [[variable('x'), or(variable('y'), variable('x'))], 'conjunctive absorption']
+    )
   })
 
   it('returns the right operand if the left is a Disjunction of the right', () => {
-    expect(and(or(variable('x'), variable('y')), variable('x'))).toEqual(variable('x'))
-    expect(and(or(variable('y'), variable('x')), variable('x'))).toEqual(variable('x'))
+    expectWriter(
+      and(or(variable('x'), variable('y')), variable('x'))
+    )(
+      variable('x'),
+      [[variable('x'), variable('y')], 'disjunction'],
+      [[or(variable('x'), variable('y')), variable('x')], 'conjunctive absorption']
+    )
+    expectWriter(
+      and(or(variable('y'), variable('x')), variable('x'))
+    )(
+      variable('x'),
+      [[variable('y'), variable('x')], 'disjunction'],
+      [[or(variable('y'), variable('x')), variable('x')], 'conjunctive absorption']
+    )
   })
 
   it('returns false if the right operand is the negation of the left', () => {
-    expect(and(variable('x'), not(variable('x')))).toEqual(boolean(false))
+    expectWriter(
+      and(variable('x'), not(variable('x')))
+    )(
+      boolean(false),
+      [variable('x'), 'complement'],
+      [[variable('x'), not(variable('x'))], 'contradiction']
+    )
   })
 
   it('returns false if the left operand is the negation of the right', () => {
-    expect(and(not(variable('x')), variable('x'))).toEqual(boolean(false))
+    expectWriter(
+      and(not(variable('x')), variable('x'))
+    )(
+      boolean(false),
+      [variable('x'), 'complement'],
+      [[not(variable('x')), variable('x')], 'contradiction']
+    )
   })
 
   it('returns a Conjunction on variable input', () => {

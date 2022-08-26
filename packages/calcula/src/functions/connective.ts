@@ -1,9 +1,10 @@
-
+import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../monads/writer"
-import { Clades, Genera, Species, isSpecies } from "../utility/tree"
+import { Clades, Genera, Species, isSpecies, isGenus } from "../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../primitives"
 import { Unary, unary, when as upon } from "../closures/unary"
 import { BinaryNode, binary, when } from "../closures/binary"
+import { deepEquals, isValue } from "../utility/deepEquals"
 
 export type ConnectiveNode = BinaryNode & {
   readonly genus: Genera.connective
@@ -12,6 +13,8 @@ export type ConnectiveNode = BinaryNode & {
 type Connective<S extends Species> = ConnectiveNode & {
   readonly species: S
 }
+
+export const isConnective = isGenus<ConnectiveNode>(Genera.connective)
 
 export type LogicalComplement = Unary<Species.not, Genera.connective>
 export type Conjunction = Connective<Species.and>
@@ -79,17 +82,35 @@ export const [and, isConjunction, $and] = binary<Conjunction, Boolean>(
   ],
   (l, r) => [boolean(l.value && r.value), 'boolean conjunction']
 )(
-  // method([_, bool(true)], (l: Base, _r: Boolean) => l),
-  // method([bool(true), _], (_l: Boolean, r: Base) => r),
-  // method([_, bool(false)], bool(false)),
-  // method([bool(false), _], bool(false)),
-  // method(equals, (l: Base, _r: Base) => l),
-  // visit(Base, Disjunction)(identity, leftChild)((l, _r) => l),
-  // visit(Base, Disjunction)(identity, rightChild)((l, _r) => l),
-  // visit(Disjunction, Base)(leftChild, identity)((_l, r) => r),
-  // visit(Disjunction, Base)(rightChild, identity)((_l, r) => r),
-  // visit(Base, LogicalComplement)(identity, child)((_l, _r) => bool(false)),
-  // visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(false))
+  when([_, isValue(boolean(true))], (l, _r) => [unit(l), 'conjunctive identity']),
+  when([isValue(boolean(true)), _], (_l, r) => [unit(r), 'conjunctive identity']),
+  when([_, isValue(boolean(false))], [boolean(false), 'conjunctive annihilator']),
+  when([isValue(boolean(false)), _], [boolean(false), 'conjunctive annihilator']),
+  when(deepEquals, (l, _r) => [unit(l), 'conjunctive idempotency']),
+  when(
+    (l, r) => isDisjunction(r) && deepEquals(l, r.value.left),
+    (l, _r) => [unit(l), 'conjunctive absorption']
+  ),
+  when(
+    (l, r) => isDisjunction(r) && deepEquals(l, r.value.right),
+    (l, _r) => [unit(l), 'conjunctive absorption']
+  ),
+  when(
+    (l, r) => isDisjunction(l) && deepEquals(l.value.left, r),
+    (_l, r) => [unit(r), 'conjunctive absorption']
+  ),
+  when(
+    (l, r) => isDisjunction(l) && deepEquals(l.value.right, r),
+    (_l, r) => [unit(r), 'conjunctive absorption']
+  ),
+  when(
+    (l, r) => isLogicalCompliment(r) && deepEquals(l, r.value.expression),
+    [boolean(false), 'contradiction']
+  ),
+  when(
+    (l, r) => isLogicalCompliment(l) && deepEquals(l.value.expression, r),
+    [boolean(false), 'contradiction']
+  )
 )
 
 export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
