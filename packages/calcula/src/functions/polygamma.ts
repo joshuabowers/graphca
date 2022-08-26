@@ -44,11 +44,11 @@ const bernoulli = [
   8553103/6,
   -23749461029/870,
   8615841276005/14322
-]
+].map((b, i) => [real(b), real(2*(i+1))])
 
 const sum = (fn: (b: Writer<Real>, k: Writer<Real>) => Writer<TreeNode>) => 
   bernoulli.map(
-    (b, i) => fn(real(b), real(2*(i+1)))
+    ([b, i]) => fn(b, i)
   ).reduce((p, c) => add(p, c), real(0))
 
 const calculatePolygamma = (
