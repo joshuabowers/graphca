@@ -56,7 +56,7 @@ export enum Species {
   xor = 'Exclusive Disjunction',
   implies = 'Implication',
   nand = 'Alternative Denial',
-  nor = 'JointDenial',
+  nor = 'Joint Denial',
   xnor = 'Biconditional',
   converse = 'Converse Implication',
 

@@ -1,5 +1,5 @@
 import { method, multi, Multi, _ } from '@arrows/multimethod'
-import { Writer } from '../monads/writer'
+import { isWriter, Writer } from '../monads/writer'
 import { TreeNode } from './tree'
 import { Real, Complex, isReal, isComplex } from '../primitives'
 
@@ -22,7 +22,8 @@ export const expectCloseTo: ExpectCloseTo = multi(
   )
 )
 
-export type Operation = [TreeNode|[TreeNode, TreeNode], string]
+type Input = TreeNode|Writer<TreeNode>|[Input, Input]
+export type Operation = [Input, string]
 
 export const expectWriter = <
   Actual extends TreeNode, 
@@ -31,7 +32,14 @@ export const expectWriter = <
   actual: Writer<Actual>
 ) => (expected: Expected, ...operations: Operation[]) => {
   expect(actual).toEqual({
-    value: expected,
-    log: operations.map(([input, action]) => ({input, action}))
+    value: isWriter(expected) ? expected.value : expected,
+    log: operations.map(([input, action]) => ({
+      input: isWriter(input) 
+        ? input.value 
+        : (Array.isArray(input) 
+          ? input.map(i => isWriter(i) ? i.value : i)
+          : input), 
+      action
+    }))
   })
 }

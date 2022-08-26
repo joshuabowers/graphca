@@ -1,8 +1,8 @@
 
 import { Writer, unit } from "../monads/writer"
-import { Clades, Genera, Species } from "../utility/tree"
+import { Clades, Genera, Species, isSpecies } from "../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../primitives"
-import { Unary, unary } from "../closures/unary"
+import { Unary, unary, when as upon } from "../closures/unary"
 import { BinaryNode, binary, when } from "../closures/binary"
 
 export type ConnectiveNode = BinaryNode & {
@@ -23,25 +23,53 @@ export type JointDenial = Connective<Species.nor>
 export type Biconditional = Connective<Species.xnor>
 export type ConverseImplication = Connective<Species.converse>
 
-export const [not, isLogicalCompliment] = unary<LogicalComplement, Boolean>(
-  Species.nor, Genera.connective
+export const [not, isLogicalCompliment, $not] = unary<LogicalComplement, Boolean>(
+  Species.not, Genera.connective
 )(
   r => [boolean(r.value === 0), 'real complement'],
   c => [boolean(c.a === 0 && c.b === 0), 'complex complement'],
   b => [boolean(!b.value), 'boolean complement']
 )(
-  // method(is(LogicalComplement), (e: LogicalComplement) => e.expression),
-  // method(is(Conjunction), (e: Conjunction) => nand(e.left, e.right)),
-  // method(is(Disjunction), (e: Disjunction) => nor(e.left, e.right)),
-  // method(is(AlternativeDenial), (e: AlternativeDenial) => and(e.left, e.right)),
-  // method(is(JointDenial), (e: JointDenial) => or(e.left, e.right)),
-  // method(is(ExclusiveDisjunction), (e: ExclusiveDisjunction) => xnor(e.left, e.right)),
-  // method(is(Implication), (e: Implication) => and(e.left, not(e.right))),
-  // method(is(Biconditional), (e: Biconditional) => xor(e.left, e.right)),
-  // method(is(ConverseImplication), (e: ConverseImplication) => and(not(e.left), e.right))
+  // NOTE: Cannot use derived isSpecies guards as they are not defined
+  // by this point.
+  upon<LogicalComplement>(
+    isSpecies(Species.not), v => [v.expression, 'double complement']
+  ),
+  upon<Conjunction>(
+    isSpecies(Species.and), 
+    v => [nand(v.left, v.right), 'complement of conjunction']
+  ),
+  upon<Disjunction>(
+    isSpecies(Species.or), 
+    v => [nor(v.left, v.right), 'complement of disjunction']
+  ),
+  upon<AlternativeDenial>(
+    isSpecies(Species.nand), 
+    v => [and(v.left, v.right), 'complement of alternative denial']
+  ),
+  upon<JointDenial>(
+    isSpecies(Species.nor), 
+    v => [or(v.left, v.right), 'complement of joint denial']
+  ),
+  upon<ExclusiveDisjunction>(
+    isSpecies(Species.xor), 
+    v => [xnor(v.left, v.right), 'complement of exclusive disjunction']
+  ),
+  upon<Implication>(
+    isSpecies(Species.implies),
+    v => [and(v.left, not(v.right)), 'complement of implication']
+  ),
+  upon<Biconditional>(
+    isSpecies(Species.xnor),
+    v => [xor(v.left, v.right), 'complement of biconditional']
+  ),
+  upon<ConverseImplication>(
+    isSpecies(Species.converse),
+    v => [and(not(v.left), v.right), 'complement of converse implication']
+  )
 )
 
-export const [and, isConjunction] = binary<Conjunction, Boolean>(
+export const [and, isConjunction, $and] = binary<Conjunction, Boolean>(
   Species.and, Genera.connective
 )(
   (l, r) => [boolean(l.value !== 0 && r.value !== 0), 'real conjunction'],
@@ -64,7 +92,7 @@ export const [and, isConjunction] = binary<Conjunction, Boolean>(
   // visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(false))
 )
 
-export const [or, isDisjunction] = binary<Disjunction, Boolean>(
+export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
   Species.or, Genera.connective
 )(
   (l, r) => [boolean(l.value !== 0 || r.value !== 0), 'real disjunction'],
@@ -89,7 +117,7 @@ export const [or, isDisjunction] = binary<Disjunction, Boolean>(
   // method([_, is(LogicalComplement)], (l: Base, r: LogicalComplement) => converse(l, r.expression))
 )
 
-export const [xor, isExclusiveDisjunction] = binary<ExclusiveDisjunction, Boolean>(
+export const [xor, isExclusiveDisjunction, $xor] = binary<ExclusiveDisjunction, Boolean>(
   Species.xor, Genera.connective
 )(
   (l, r) => [and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 'real exclusive disjunction'],
@@ -103,7 +131,7 @@ export const [xor, isExclusiveDisjunction] = binary<ExclusiveDisjunction, Boolea
   // method(equals, (_l: Base, _r: Base) => bool(false))
 )
 
-export const [implies, isImplication] = binary<Implication, Boolean>(
+export const [implies, isImplication, $implies] = binary<Implication, Boolean>(
   Species.implies, Genera.connective
 )(
   (l, r) => [or(not(unit(l)), unit(r)), 'real implication'],
@@ -116,7 +144,7 @@ export const [implies, isImplication] = binary<Implication, Boolean>(
   // method([_, bool(false)], (l: Base, _r: Boolean) => not(l))
 )
 
-export const [nand, isAlternativeDenial] = binary<AlternativeDenial, Boolean>(
+export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Boolean>(
   Species.nand, Genera.connective
 )(
   (l, r) => [not(and(unit(l), unit(r))), 'real alternative denial'],
@@ -138,7 +166,7 @@ export const [nand, isAlternativeDenial] = binary<AlternativeDenial, Boolean>(
   // visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(true)) 
 )
 
-export const [nor, isJointDenial] = binary<JointDenial, Boolean>(
+export const [nor, isJointDenial, $nor] = binary<JointDenial, Boolean>(
   Species.nor, Genera.connective
 )(
   (l, r) => [not(or(unit(l), unit(r))), 'real joint denial'],
@@ -158,7 +186,7 @@ export const [nor, isJointDenial] = binary<JointDenial, Boolean>(
   // visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(false))
 )
 
-export const [xnor, isBiconditional] = binary<Biconditional, Boolean>(
+export const [xnor, isBiconditional, $xnor] = binary<Biconditional, Boolean>(
   Species.xnor, Genera.connective
 )(
   (l, r) => [and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 'real biconditional'],
@@ -172,7 +200,7 @@ export const [xnor, isBiconditional] = binary<Biconditional, Boolean>(
   // method(equals, (_l: Base, _r: Base) => bool(true))
 )
 
-export const [converse, isConverseImplication] = binary<ConverseImplication, Boolean>(
+export const [converse, isConverseImplication, $converse] = binary<ConverseImplication, Boolean>(
   Species.converse, Genera.connective
 )(
   (l, r) => [or(unit(l), not(unit(r))), 'real converse implication'],
