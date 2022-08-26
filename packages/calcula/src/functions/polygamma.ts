@@ -10,6 +10,7 @@ import { abs } from "./absolute"
 import { ln } from "./logarithmic"
 import { cot } from "./trigonometric"
 import { factorial } from "./factorial"
+import { isValue } from "../utility/deepEquals"
 
 export type Polygamma = Binary<Species.polygamma>
 
@@ -141,10 +142,10 @@ export const [polygamma, isPolygamma] = binary<Polygamma>(Species.polygamma)(
     'computed boolean polygamma'
   ]
 )(
-  when([real(0), isNegative], (_l, r) => [digammaReflection(unit(r)), 'digamma reflection for negative value']),
-  when([real(0), isSmall], (_l, r) => [digammaRecurrence(unit(r)), 'digamma recurrence for small value']),
+  when([isValue(real(0)), isNegative], (_l, r) => [digammaReflection(unit(r)), 'digamma reflection for negative value']),
+  when([isValue(real(0)), isSmall], (_l, r) => [digammaRecurrence(unit(r)), 'digamma recurrence for small value']),
   when<Real, Real|Complex|Boolean>(
-    [real(0), any(Species.real, Species.combine, Species.boolean)], 
+    [isValue(real(0)), any(Species.real, Species.combine, Species.boolean)], 
     (_l, r) => [calculateDigamma(unit(r)), 'computed digamma']
   ),
   // method([is(Real), isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),

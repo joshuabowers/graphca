@@ -70,7 +70,7 @@ import { method, multi, fromMulti, Multi, _ } from "@arrows/multimethod"
 import { Writer, unit, bind, Action, CaseFn, isWriter } from "../monads/writer"
 import { 
   TreeNode, Clades, Genera, Species, 
-  isClade, isSpecies, DerivedNode, TreeNodeGuardFn
+  isClade, isSpecies, TreeNodeGuardFn
 } from "../utility/tree"
 import { Real, Complex, Boolean, Nil, NaN, nan } from "../primitives"
 import { CastFn } from "../utility/typings"
@@ -99,23 +99,24 @@ export type UnaryFn<T, R = void> = Multi
 
 type UnaryPredicate<T> = (t: Writer<T>) => boolean 
 type Test<T> = UnaryPredicate<T> | Writer<T> | typeof _
-type CorrespondingFn<T> = (t: Writer<T>) => Action<TreeNode>    
+type CorrespondingFn<T> = (t: T) => Action<TreeNode>    
 
 export const when = <T extends TreeNode>(
   predicate: Test<T>, 
   fn: Action<TreeNode> | CorrespondingFn<T>
 ) =>
-  method(predicate, (t: Writer<T>) => {
-    const [result, action] = typeof fn === 'function' ? fn(t) : fn
-    return ({
-      value: isWriter(result) ? result.value : result,
-      log: [
-        ...t.log,
-        {input: t.value, action}, 
-        ...(isWriter(result) ? result.log : [])
-      ]
+  method(predicate, (t: Writer<T>) =>
+    bind(t, input => {
+      const [result, action] = typeof fn === 'function' ? fn(input) : fn
+      return ({
+        value: isWriter(result) ? result.value : result,
+        log: [
+          {input, action},
+          ...(isWriter(result) ? result.log : [])
+        ]
+      })
     })
-  })  
+  )
 
 const unaryMap = <T, U = T>(fn: CaseFn<T, U>) =>
   (writer: Writer<T>) =>
@@ -129,7 +130,15 @@ const unaryMap = <T, U = T>(fn: CaseFn<T, U>) =>
 
 const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, 'not a number']
 
-export type UnaryNodeGuardPair<T extends UnaryNode, R> = [UnaryFn<T, R>, TreeNodeGuardFn<T>]
+// export type UnaryNodeGuardPair<T extends UnaryNode, R> = [UnaryFn<T, R>, TreeNodeGuardFn<T>]
+
+export type UnaryCreateFn<T extends UnaryNode> = 
+  (e: Writer<TreeNode>) => Action<T>
+export type UnaryNodeMetaTuple<T extends UnaryNode, R> = [
+  UnaryFn<T, R>,
+  TreeNodeGuardFn<T>,
+  UnaryCreateFn<T>
+]
 
 export const unary = <T extends UnaryNode, R = void>(
   species: Species, genus?: Genera
@@ -153,9 +162,10 @@ export const unary = <T extends UnaryNode, R = void>(
       method(Species.nan, unaryMap(whenNilOrNaN)),
       method(unaryMap<TreeNode>(input => create(unit(input))))
     )
-    return (...methods: (typeof method)[]): UnaryNodeGuardPair<T, R> => [
+    return (...methods: (typeof method)[]): UnaryNodeMetaTuple<T, R> => [
       methods.length > 0 ? fromMulti(...methods)(fn) : fn,
-      isSpecies<T>(species)
+      isSpecies<T>(species),
+      create
     ]
   }
 }

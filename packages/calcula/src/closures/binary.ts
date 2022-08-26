@@ -97,8 +97,6 @@ const apply = <T, U>(fn: BinaryFn<T, U>) =>
 
 const eitherNilOrNaN = any(Species.nil, Species.nan)
 
-// export type BinaryNodeFnGuardFnPair<T extends BinaryNode, R> = [BinaryFn<T, R>, TreeNodeGuardFn<T>]
-
 export type BinaryCreateFn<T extends BinaryNode> = 
   (l: Writer<TreeNode>, r: Writer<TreeNode>) => Action<T>
 export type BinaryNodeMetaTuple<T extends BinaryNode, R> = [

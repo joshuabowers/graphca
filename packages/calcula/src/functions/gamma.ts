@@ -72,12 +72,13 @@ export const [gamma, isGamma] = unary<Gamma>(Species.gamma)(
   c => [calculateGamma(unit(c)) as Writer<Complex>, 'computed complex gamma'],
   b => [boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>), 'computed boolean gamma']
 )(
-  when(isPositiveInteger, t => [factorial(subtract(t, real(1))), 'computing gamma via factorial']),
+  when(
+    isPositiveInteger, 
+    t => [factorial(subtract(unit(t), real(1))), 'computing gamma via factorial']
+  ),
   when(
     t => (isReal(t) && t.value.value < 0.5)
       || (isComplex(t) && t.value.a < 0.5),
-    t => [gammaReflection(t), 'gamma reflection for small value']
+    t => [gammaReflection(unit(t)), 'gamma reflection for small value']
   )
-  // method(isPositiveInteger, (e: Base) => factorial(subtract(e, real(1)))),
-  // method(isSmall, (e: Base) => gammaReflection(e))
 )
