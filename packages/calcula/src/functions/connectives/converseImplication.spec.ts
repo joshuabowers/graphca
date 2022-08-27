@@ -7,35 +7,77 @@ import { ConverseImplication, converse } from './converseImplication'
 
 describe('converse', () => {
   it('returns true when given two true things', () => {
-    expect(converse(boolean(true), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      converse(boolean(true), boolean(true))
+    )(
+      boolean(true),
+      [[boolean(true), boolean(true)], 'converse implication annihilator']
+    )
   })
 
   it('returns false if the left argument is false', () => {
-    expect(converse(boolean(false), boolean(true))).toEqual(boolean(false))
+    expectWriter(
+      converse(boolean(false), boolean(true))
+    )(
+      boolean(false),
+      [[boolean(false), boolean(true)], 'converse implication identity']
+    )
   })
 
   it('returns true if the right argument is false', () => {
-    expect(converse(boolean(true), boolean(false))).toEqual(boolean(true))
+    expectWriter(
+      converse(boolean(true), boolean(false))
+    )(
+      boolean(true),
+      [[boolean(true), boolean(false)], 'converse implication annihilator']
+    )
   })
 
   it('returns true if both arguments are false', () => {
-    expect(converse(boolean(false), boolean(false))).toEqual(boolean(true))
+    expectWriter(
+      converse(boolean(false), boolean(false))
+    )(
+      boolean(true),
+      [[boolean(false), boolean(false)], 'converse implication complementation'],
+      [boolean(false), 'boolean complement']
+    )
   })
 
   it('returns true if the left operand is true', () => {
-    expect(converse(boolean(true), variable('x'))).toEqual(boolean(true))
+    expectWriter(
+      converse(boolean(true), variable('x'))
+    )(
+      boolean(true),
+      [[boolean(true), variable('x')], 'converse implication annihilator']
+    )
   })
 
   it('returns the left operand if the right is true', () => {
-    expect(converse(variable('x'), boolean(true))).toEqual(variable('x'))
+    expectWriter(
+      converse(variable('x'), boolean(true))
+    )(
+      variable('x'),
+      [[variable('x'), boolean(true)], 'converse implication identity']
+    )
   })
 
   it('returns the complement of the right if the left is false', () => {
-    expect(converse(boolean(false), variable('x'))).toEqual(not(variable('x')))
+    expectWriter(
+      converse(boolean(false), variable('x'))
+    )(
+      not(variable('x')),
+      [[boolean(false), variable('x')], 'converse implication complementation'],
+      [variable('x'), 'complement']
+    )
   })
 
   it('returns true if the right operand is false', () => {
-    expect(converse(variable('x'), boolean(false))).toEqual(boolean(true))
+    expectWriter(
+      converse(variable('x'), boolean(false))
+    )(
+      boolean(true),
+      [[variable('x'), boolean(false)], 'converse implication annihilator']
+    )
   })
 
   it('returns a ConverseImplication on variable input', () => {

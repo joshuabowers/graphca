@@ -17,8 +17,20 @@ export const [converse, isConverseImplication, $converse] = binary<ConverseImpli
   (l, r) => [or(unit(l), not(unit(r))), 'complex converse implication'],
   (l, r) => [or(unit(l), not(unit(r))), 'boolean converse implication']
 )(
-  // method([bool(true), _], bool(true)),
-  // method([_, bool(true)], (l: Base, _r: Boolean) => l),
-  // method([bool(false), _], (_l: Boolean, r: Base) => not(r)),
-  // method([_, bool(false)], bool(true))
+  when(
+    [isValue(boolean(true)), _], 
+    [boolean(true), 'converse implication annihilator']
+  ),
+  when(
+    [_, isValue(boolean(true))], 
+    (l, _r) => [unit(l), 'converse implication identity']
+  ),
+  when(
+    [isValue(boolean(false)), _], 
+    (_l, r) => [not(unit(r)), 'converse implication complementation']
+  ),
+  when(
+    [_, isValue(boolean(false))], 
+    [boolean(true), 'converse implication annihilator']
+  )
 )
