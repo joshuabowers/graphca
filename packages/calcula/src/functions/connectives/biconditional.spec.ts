@@ -7,39 +7,87 @@ import { Biconditional, xnor } from './biconditional'
 
 describe('xnor', () => {
   it('returns true when given two true things', () => {
-    expect(xnor(boolean(true), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      xnor(boolean(true), boolean(true))
+    )(
+      boolean(true),
+      [[boolean(true), boolean(true)], 'biconditional identity']
+    )
   })
 
   it('returns false if the left argument is false', () => {
-    expect(xnor(boolean(false), boolean(true))).toEqual(boolean(false))
+    expectWriter(
+      xnor(boolean(false), boolean(true))
+    )(
+      boolean(false),
+      [[boolean(false), boolean(true)], 'biconditional identity']
+    )
   })
 
   it('returns false if the right argument is false', () => {
-    expect(xnor(boolean(true), boolean(false))).toEqual(boolean(false))
+    expectWriter(
+      xnor(boolean(true), boolean(false))
+    )(
+      boolean(false),
+      [[boolean(true), boolean(false)], 'biconditional identity']
+    )
   })
 
   it('returns true if both arguments are false', () => {
-    expect(xnor(boolean(false), boolean(false))).toEqual(boolean(true))
+    expectWriter(
+      xnor(boolean(false), boolean(false))
+    )(
+      boolean(true),
+      [[boolean(false), boolean(false)], 'biconditional complementation'],
+      [boolean(false), 'boolean complement']
+    )
   })
 
   it('returns the right operand if the left is true', () => {
-    expect(xnor(boolean(true), variable('x'))).toEqual(variable('x'))
+    expectWriter(
+      xnor(boolean(true), variable('x'))
+    )(
+      variable('x'),
+      [[boolean(true), variable('x')], 'biconditional identity']
+    )
   })
 
   it('returns the left operand if the right is true', () => {
-    expect(xnor(variable('x'), boolean(true))).toEqual(variable('x'))
+    expectWriter(
+      xnor(variable('x'), boolean(true))
+    )(
+      variable('x'),
+      [[variable('x'), boolean(true)], 'biconditional identity']
+    )
   })
 
   it('returns the complement of the right if the left is false', () => {
-    expect(xnor(boolean(false), variable('x'))).toEqual(not(variable('x')))
+    expectWriter(
+      xnor(boolean(false), variable('x'))
+    )(
+      not(variable('x')),
+      [[boolean(false), variable('x')], 'biconditional complementation'],
+      [variable('x'), 'complement']
+    )
   })
 
   it('returns the complement of the left if the right is false', () => {
-    expect(xnor(variable('x'), boolean(false))).toEqual(not(variable('x')))
+    expectWriter(
+      xnor(variable('x'), boolean(false))
+    )(
+      not(variable('x')),
+      [[variable('x'), boolean(false)], 'biconditional complementation'],
+      [variable('x'), 'complement']
+    )
   })
 
   it('returns true if the operands are equal', () => {
-    expect(xnor(variable('x'), variable('x'))).toEqual(boolean(true))
+    expectWriter(
+      xnor(variable('x'), variable('x'))
+    )(
+      boolean(true),
+      [[variable('x'), variable('x')], 'biconditional annihilator']
+    )
   })
 
   it('returns a Biconditional on variable input', () => {

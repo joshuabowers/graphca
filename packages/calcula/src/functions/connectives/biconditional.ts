@@ -18,9 +18,21 @@ export const [xnor, isBiconditional, $xnor] = binary<Biconditional, Boolean>(
   (l, r) => [and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 'complex biconditional'],
   (l, r) => [and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 'boolean biconditional']
 )(
-  // method([bool(true), _], (_l: Boolean, r: Base) => r),
-  // method([_, bool(true)], (l: Base, _r: Boolean) => l),
-  // method([bool(false), _], (_l: Boolean, r: Base) => not(r)),
-  // method([_, bool(false)], (l: Base, _r: Boolean) => not(l)),
-  // method(equals, (_l: Base, _r: Base) => bool(true))
+  when(
+    [isValue(boolean(true)), _],
+    (_l, r) => [unit(r), 'biconditional identity']
+  ),
+  when(
+    [_, isValue(boolean(true))],
+    (l, _r) => [unit(l), 'biconditional identity']
+  ),
+  when(
+    [isValue(boolean(false)), _],
+    (_l, r) => [not(unit(r)), 'biconditional complementation']
+  ),
+  when(
+    [_, isValue(boolean(false))],
+    (l, _r) => [not(unit(l)), 'biconditional complementation']
+  ),
+  when(deepEquals, [boolean(true), 'biconditional annihilator'])
 )
