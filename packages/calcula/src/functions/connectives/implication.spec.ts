@@ -7,35 +7,76 @@ import { Implication, implies } from './implication'
 
 describe('implies', () => {
   it('returns true when given two true things', () => {
-    expect(implies(boolean(true), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      implies(boolean(true), boolean(true))
+    )(
+      boolean(true),
+      [[boolean(true), boolean(true)], 'implicative identity']
+    )
   })
 
   it('returns true if the left argument is false', () => {
-    expect(implies(boolean(false), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      implies(boolean(false), boolean(true))
+    )(
+      boolean(true),
+      [[boolean(false), boolean(true)], 'implicative annihilator']
+    )
   })
 
   it('returns false if the right argument is false', () => {
-    expect(implies(boolean(true), boolean(false))).toEqual(boolean(false))
+    expectWriter(
+      implies(boolean(true), boolean(false))
+    )(
+      boolean(false),
+      [[boolean(true), boolean(false)], 'implicative identity']
+    )
   })
 
   it('returns true if both arguments are false', () => {
-    expect(implies(boolean(false), boolean(false))).toEqual(boolean(true))
+    expectWriter(
+      implies(boolean(false), boolean(false))
+    )(
+      boolean(true),
+      [[boolean(false), boolean(false)], 'implicative annihilator']
+    )
   })
 
   it('returns the right operand if the left is true', () => {
-    expect(implies(boolean(true), variable('x'))).toEqual(variable('x'))
+    expectWriter(
+      implies(boolean(true), variable('x'))
+    )(
+      variable('x'),
+      [[boolean(true), variable('x')], 'implicative identity']
+    )
   })
 
   it('returns true if the right operand is true', () => {
-    expect(implies(variable('x'), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      implies(variable('x'), boolean(true))
+    )(
+      boolean(true),
+      [[variable('x'), boolean((true))], 'implicative annihilator']
+    )
   })
 
   it('returns true if the left operand is false', () => {
-    expect(implies(boolean(false), variable('x'))).toEqual(boolean(true))
+    expectWriter(
+      implies(boolean(false), variable('x'))
+    )(
+      boolean(true),
+      [[boolean(false), variable('x')], 'implicative annihilator']
+    )
   })
 
   it('returns the complement of the left if the right is false', () => {
-    expect(implies(variable('x'), boolean(false))).toEqual(not(variable('x')))
+    expectWriter(
+      implies(variable('x'), boolean(false))
+    )(
+      not(variable('x')),
+      [[variable('x'), boolean(false)], 'implicative complementation'],
+      [variable('x'), 'complement']
+    )
   })
   
   it('returns an Implication on variable input', () => {

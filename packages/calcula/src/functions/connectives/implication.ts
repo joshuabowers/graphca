@@ -17,8 +17,11 @@ export const [implies, isImplication, $implies] = binary<Implication, Boolean>(
   (l, r) => [or(not(unit(l)), unit(r)), 'complex implication'],
   (l, r) => [or(not(unit(l)), unit(r)), 'boolean implication']
 )(
-  // method([bool(true), _], (_l: Boolean, r: Base) => r),
-  // method([_, bool(true)], (_l: Base, _r: Boolean) => bool(true)),
-  // method([bool(false), _], (_l: Boolean, _r: Base) => bool(true)),
-  // method([_, bool(false)], (l: Base, _r: Boolean) => not(l))
+  when([isValue(boolean(true)), _], (_l, r) => [unit(r), 'implicative identity']),
+  when([_, isValue(boolean(true))], [boolean(true), 'implicative annihilator']),
+  when([isValue(boolean(false)), _], [boolean(true), 'implicative annihilator']),
+  when(
+    [_, isValue(boolean(false))], 
+    (l, _r) => [not(unit(l)), 'implicative complementation']
+  )
 )
