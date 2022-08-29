@@ -18,9 +18,23 @@ export const [xor, isExclusiveDisjunction, $xor] = binary<ExclusiveDisjunction, 
   (l, r) => [and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 'complex exclusive disjunction'],
   (l, r) => [and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 'boolean exclusive disjunction']
 )(
-  // method([bool(false), _], (_l: Boolean, r: Base) => r),
-  // method([_, bool(false)], (l: Base, _r: Boolean) => l),
-  // method([bool(true), _], (_l: Boolean, r: Base) => not(r)),
-  // method([_, bool(true)], (l: Base, _r: Boolean) => not(l)),
-  // method(equals, (_l: Base, _r: Base) => bool(false))
+  when(
+    [isValue(boolean(false)), _], 
+    (_l, r) => [unit(r), 'exclusive disjunctive identity']
+  ),
+  when(
+    [_, isValue(boolean(false))],
+    (l, _r) => [unit(l), 'exclusive disjunctive identity']
+  ),
+  when(
+    [isValue(boolean(true)), _],
+    (_l, r) => [not(unit(r)), 'exclusive disjunctive complementation']
+  ),
+  when(
+    [_, isValue(boolean(true))],
+    (l, _r) => [not(unit(l)), 'exclusive disjunctive complementation']
+  ),
+  when(
+    deepEquals, [boolean(false), 'exclusive disjunctive annihilator']
+  )
 )
