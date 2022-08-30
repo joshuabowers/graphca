@@ -1,14 +1,12 @@
 import { expectCloseTo, expectWriter } from '../utility/expectations';
 import { Clades, Genera, Species } from '../utility/tree';
-// import { real } from './real'
-// import { complex } from './complex'
 import { real, complex } from '../primitives';
 import { variable } from '../variable'
 import { Permutation, Combination, permute, combine } from "./combinatorics";
 
 describe('permute', () => {
   it('calculates the permutation for real inputs', () => {
-    expect(permute(real(5), real(3))).toEqual(real(60))
+    expectCloseTo(permute(real(5), real(3)), real(60), 10)
   })
 
   it('calculates the permutation for complex numbers', () => {
@@ -20,9 +18,6 @@ describe('permute', () => {
   })
 
   it('generates a Permutation for unbound sub-expressions', () => {
-    // expect(permute(variable('n'), variable('r'))).toEqual(
-    //   new Permutation(variable('n'), variable('r'))
-    // )
     expectWriter(permute(variable('n'), variable('r')))(
       {
         clade: Clades.binary, genus: Genera.combinatorics, species: Species.permute,
@@ -35,7 +30,7 @@ describe('permute', () => {
 
 describe('combine', () => {
   it('calculates the combination for real inputs', () => {
-    expect(combine(real(5), real(3))).toEqual(real(10))
+    expectCloseTo(combine(real(5), real(3)), real(10), 10)
   })
 
   it('calculates the combination for complex numbers', () => {
@@ -47,9 +42,6 @@ describe('combine', () => {
   })
 
   it('generates a Combination for unbound sub-expressions', () => {
-    // expect(combine(variable('n'), variable('r'))).toEqual(
-    //   new Combination(variable('n'), variable('r'))
-    // )
     expectWriter(combine(variable('n'), variable('r')))(
       {
         clade: Clades.binary, genus: Genera.combinatorics, species: Species.combine,
