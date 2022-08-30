@@ -1,11 +1,14 @@
 import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
-import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
+import { TreeNode, Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
 import { BinaryNode, binary, when } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
-import { isComplement } from './complement'
+import { Complement, isComplement } from './complement'
+import { isConjunction } from './conjunction'
+import { implies } from './implication'
+import { converse } from './converseImplication'
 
 export type Disjunction = Connective<Species.or>
 
@@ -19,17 +22,53 @@ export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
   ],
   (l, r) => [boolean(l.value || r.value), 'boolean disjunction']
 )(
-  // method([_, bool(false)], (l: Base, _r: Boolean) => l),
-  // method([bool(false), _], (_r: Boolean, l: Base) => l),
-  // method([_, bool(true)], bool(true)),
-  // method([bool(true), _], bool(true)),
-  // method(equals, (l: Base, _r: Base) => l),
-  // visit(Base, Conjunction)(identity, leftChild)((l, _r) => l),
-  // visit(Base, Conjunction)(identity, rightChild)((l, _r) => l),
-  // visit(Conjunction, Base)(leftChild, identity)((_l, r) => r),
-  // visit(Conjunction, Base)(rightChild, identity)((_l, r) => r),
-  // visit(Base, LogicalComplement)(identity, child)((_l, _r) => bool(true)),
-  // visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(true)),
-  // method([is(LogicalComplement), _], (l: LogicalComplement, r: Base) => implies(l.expression, r)),
-  // method([_, is(LogicalComplement)], (l: Base, r: LogicalComplement) => converse(l, r.expression))
+  when(
+    [_, isValue(boolean(false))],
+    (l, _r) => [unit(l), 'disjunctive identity']
+  ),
+  when(
+    [isValue(boolean(false)), _],
+    (_l, r) => [unit(r), 'disjunctive identity']
+  ),
+  when(
+    [_, isValue(boolean(true))],
+    [boolean(true), 'disjunctive annihilator']
+  ),
+  when(
+    [isValue(boolean(true)), _],
+    [boolean(true), 'disjunctive annihilator']
+  ),
+  when(deepEquals, (l, _r) => [unit(l), 'disjunctive idempotency']),
+  when(
+    (l, r) => isConjunction(r) && deepEquals(l, r.value.left),
+    (l, _r) => [unit(l), 'disjunctive absorption']
+  ),
+  when(
+    (l, r) => isConjunction(r) && deepEquals(l, r.value.right),
+    (l, _r) => [unit(l), 'disjunctive absorption']
+  ),
+  when(
+    (l, r) => isConjunction(l) && deepEquals(l.value.left, r),
+    (_l, r) => [unit(r), 'disjunctive absorption']
+  ),
+  when(
+    (l, r) => isConjunction(l) && deepEquals(l.value.right, r),
+    (_l, r) => [unit(r), 'disjunctive absorption']
+  ),
+  when(
+    (l, r) => isComplement(r) && deepEquals(l, r.value.expression),
+    [boolean(true), 'disjunctive complementation']
+  ),
+  when(
+    (l, r) => isComplement(l) && deepEquals(l.value.expression, r),
+    [boolean(true), 'disjunctive complementation']
+  ),
+  when<Complement, TreeNode>(
+    (l, _r) => isComplement(l),
+    (l, r) => [implies(l.expression, unit(r)), 'disjunctive implication']
+  ),
+  when<TreeNode, Complement>(
+    (_l, r) => isComplement(r),
+    (l, r) => [converse(unit(l), r.expression), 'disjunctive converse implication']
+  )
 )

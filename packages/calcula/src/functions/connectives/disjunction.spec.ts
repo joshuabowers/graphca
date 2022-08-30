@@ -10,77 +10,178 @@ import { Disjunction, or } from './disjunction'
 
 describe('or', () => {
   it('returns true when given two true things', () => {
-    expect(or(boolean(true), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      or(boolean(true), boolean(true))
+    )(
+      boolean(true),
+      [[boolean(true), boolean(true)], 'disjunctive annihilator']
+    )
   })
 
   it('returns true if the left argument is true', () => {
-    expect(or(boolean(true), boolean(false))).toEqual(boolean(true))
+    expectWriter(
+      or(boolean(true), boolean(false))
+    )(
+      boolean(true),
+      [[boolean(true), boolean(false)], 'disjunctive identity']
+    )
   })
 
   it('returns true if the right argument is true', () => {
-    expect(or(boolean(false), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      or(boolean(false), boolean(true))
+    )(
+      boolean(true),
+      [[boolean(false), boolean(true)], 'disjunctive identity']
+    )
   })
 
   it('returns false if both arguments are false', () => {
-    expect(or(boolean(false), boolean(false))).toEqual(boolean(false))
+    expectWriter(
+      or(boolean(false), boolean(false))
+    )(
+      boolean(false),
+      [[boolean(false), boolean(false)], 'disjunctive identity']
+    )
   })
 
   it('casts reals to booleans, where 0 is false, non-zero is true', () => {
-    expect(or(real(5), real(0))).toEqual(boolean(true))
+    expectWriter(
+      or(real(5), real(0))
+    )(
+      boolean(true),
+      [[real(5), real(0)], 'real disjunction']
+    )
   })
 
   it('casts complexes to booleans, 0 => false, non-zero => true', () => {
-    expect(or(complex([5,0]), complex([0,0]))).toEqual(boolean(true))
+    expectWriter(
+      or(complex([5,0]), complex([0,0]))
+    )(
+      boolean(true),
+      [[complex([5, 0]), complex([0, 0])], 'complex disjunction']
+    )
   })
 
   it('returns the left operand if the right is false', () => {
-    expect(or(variable('x'), boolean(false))).toEqual(variable('x'))
+    expectWriter(
+      or(variable('x'), boolean(false))
+    )(
+      variable('x'),
+      [[variable('x'), boolean(false)], 'disjunctive identity']
+    )
   })
 
   it('returns the right operand if the left is false', () => {
-    expect(or(boolean(false), variable('x'))).toEqual(variable('x'))
+    expectWriter(
+      or(boolean(false), variable('x'))
+    )(
+      variable('x'),
+      [[boolean(false), variable('x')], 'disjunctive identity']
+    )
   })
 
   it('returns true if the right operand is true', () => {
-    expect(or(variable('x'), boolean(true))).toEqual(boolean(true))
+    expectWriter(
+      or(variable('x'), boolean(true))
+    )(
+      boolean(true),
+      [[variable('x'), boolean(true)], 'disjunctive annihilator']
+    )
   })
 
   it('returns true if the left operand is true', () => {
-    expect(or(boolean(true), variable('x'))).toEqual(boolean(true))
+    expectWriter(
+      or(boolean(true), variable('x'))
+    )(
+      boolean(true),
+      [[boolean(true), variable('x')], 'disjunctive annihilator']
+    )
   })
 
   it('returns the left operand if left is equivalent to right', () => {
-    expect(or(variable('x'), variable('x'))).toEqual(variable('x'))
+    expectWriter(
+      or(variable('x'), variable('x'))
+    )(
+      variable('x'),
+      [[variable('x'), variable('x')], 'disjunctive idempotency']
+    )
   })
 
   it('returns the left operand if the right is a Conjunction of the left', () => {
-    expect(or(variable('x'), and(variable('x'), variable('y')))).toEqual(variable('x'))
-    expect(or(variable('x'), and(variable('y'), variable('x')))).toEqual(variable('x'))
+    expectWriter(
+      or(variable('x'), and(variable('x'), variable('y')))
+    )(
+      variable('x'),
+      [[variable('x'), variable('y')], 'conjunction'],
+      [[variable('x'), and(variable('x'), variable('y'))], 'disjunctive absorption']
+    )
+    expectWriter(
+      or(variable('x'), and(variable('y'), variable('x')))
+    )(
+      variable('x'),
+      [[variable('y'), variable('x')], 'conjunction'],
+      [[variable('x'), and(variable('y'), variable('x'))], 'disjunctive absorption']
+    )
   })
 
   it('returns the right operand if the left is a Conjunction of the right', () => {
-    expect(or(and(variable('x'), variable('y')), variable('x'))).toEqual(variable('x'))
-    expect(or(and(variable('y'), variable('x')), variable('x'))).toEqual(variable('x'))
+    expectWriter(
+      or(and(variable('x'), variable('y')), variable('x'))
+    )(
+      variable('x'),
+      [[variable('x'), variable('y')], 'conjunction'],
+      [[and(variable('x'), variable('y')), variable('x')], 'disjunctive absorption']
+    )
+    expectWriter(
+      or(and(variable('y'), variable('x')), variable('x'))
+    )(
+      variable('x'),
+      [[variable('y'), variable('x')], 'conjunction'],
+      [[and(variable('y'), variable('x')), variable('x')], 'disjunctive absorption']
+    )
   })
 
   it('returns true if the right operand is the negation of the left', () => {
-    expect(or(variable('x'), not(variable('x')))).toEqual(boolean(true))
+    expectWriter(
+      or(variable('x'), not(variable('x')))
+    )(
+      boolean(true),
+      [variable('x'), 'complement'],
+      [[variable('x'), not(variable('x'))], 'disjunctive complementation']
+    )
   })
 
   it('returns true if the left operand is the negation of the right', () => {
-    expect(or(not(variable('x')), variable('x'))).toEqual(boolean(true))
+    expectWriter(
+      or(not(variable('x')), variable('x'))
+    )(
+      boolean(true),
+      [variable('x'), 'complement'],
+      [[not(variable('x')), variable('x')], 'disjunctive complementation']
+    )
   })
 
   it('returns an implication if the left operand is a complement', () => {
-    expect(
+    expectWriter(
       or(not(variable('x')), variable('y'))
-    ).toEqual(implies(variable('x'), variable('y')))
+    )(
+      implies(variable('x'), variable('y')),
+      [variable('x'), 'complement'],
+      [[not(variable('x')), variable('y')], 'disjunctive implication'],
+      [[variable('x'), variable('y')], 'implication']
+    )
   })
 
   it('returns a converse if the right operand is a complement', () => {
-    expect(
+    expectWriter(
       or(variable('x'), not(variable('y')))
-    ).toEqual(converse(variable('x'), variable('y')))
+    )(
+      converse(variable('x'), variable('y')),
+      [variable('y'), 'complement'],
+      [[variable('x'), not(variable('y'))], 'disjunctive converse implication'],
+      [[variable('x'), variable('y')], 'converse implication']
+    )
   })
 
   it('returns a Disjunction on variable input', () => {
