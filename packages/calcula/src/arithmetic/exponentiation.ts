@@ -16,10 +16,12 @@
 // const isMultiplication = (left: Base, _right: Base) =>
 //   left instanceof Multiplication
 
+import { _ } from '@arrows/multimethod'
 import { Genera, Species } from "../utility/tree"
 import { ComplexInfinity } from "../primitives/complex"
 import { real, complex, boolean } from "../primitives"
 import { Binary, binary, when, partialRight } from "../closures/binary"
+import { isValue } from "../utility/deepEquals"
 
 export type Exponentiation = Binary<Species.raise, Genera.arithmetic>
 
@@ -43,7 +45,9 @@ export const [raise, isExponentiation] = binary<Exponentiation>(
 )(
   when([complex([0, 0]), real(-1)], [ComplexInfinity, 'division by complex zero']),
   when([real(0), real(-1)], [real(Infinity), 'division by zero']),
-  when([real(-0), real(-1)], [real(-Infinity), 'division by negative zero'])
+  when([real(-0), real(-1)], [real(-Infinity), 'division by negative zero']),
+  when([isValue(real(0)), _], [real(0), 'powers of 0']),
+  when([_, isValue(real(0))], [real(1), 'exponent of 0'])
   // method([real(0), _], real(0)),
   // method([_, real(0)], real(1)),
   // method([real(1), _], real(1)),

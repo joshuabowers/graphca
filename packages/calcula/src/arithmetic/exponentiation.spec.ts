@@ -8,41 +8,7 @@
 
 // describe('raise', () => {
 
-//   it('calculates the complex square root', () => {
-//     expectCloseTo(raise(complex(2, 3), real(0.5)), complex(1.67414922803554, 0.89597747612983), 10)
-//   })
 
-//   it('returns 0 when the base is 0', () => {
-//     expect(raise(real(0), variable('x'))).toEqual(real(0))
-//   })
-
-//   it('returns 1 when the exponent is 0', () => {
-//     expect(raise(variable('x'), real(0))).toEqual(real(1))
-//   })
-
-//   it('returns 1 when the base is 1', () => {
-//     expect(raise(real(1), variable('x'))).toEqual(real(1))
-//   })
-
-//   it('returns the base whenever the exponent is 1', () => {
-//     expect(raise(variable('x'), real(1))).toEqual(variable('x'))
-//   })
-
-//   it('returns the sub-expression of an lb if base 2', () => {
-//     expect(raise(real(2), lb(variable('x')))).toEqual(variable('x'))
-//   })
-
-//   it('returns the sub-expression of an ln if base e', () => {
-//     expect(raise(real(Math.E), ln(variable('x')))).toEqual(variable('x'))
-//   })
-
-//   it('returns the sub-expression of an lg if base 10', () => {
-//     expect(raise(real(10), lg(variable('x')))).toEqual(variable('x'))
-//   })
-  
-//   it('returns the value of a logarithm if raising similar base to it', () => {
-//     expect(raise(complex(0, 1), log(complex(0, 1), variable('x')))).toEqual(variable('x'))
-//   })
 
 //   it('multiplies the exponent of a base exponential against the exponent', () => {
 //     expect(
@@ -108,8 +74,10 @@
 //   })
 // })
 import { real, complex } from '../primitives'
+import { variable } from '../variable'
 import { raise, reciprocal, square, sqrt } from './exponentiation'
-import { expectCloseTo } from '../utility/expectations'
+import { log, lb, ln, lg } from '../functions/logarithmic'
+import { expectCloseTo, expectWriter } from '../utility/expectations'
 
 describe('raise', () => {
   it('computes the value of a real raised to a real', () => {
@@ -126,6 +94,90 @@ describe('raise', () => {
 
   it('calculates the value of raising a complex number to a real', () => {
     expectCloseTo(raise(complex([2, 3]), real(5)), complex([122, -597]), 10)
+  })
+
+  it('calculates the complex square root', () => {
+    expectCloseTo(
+      raise(complex([2, 3]), real(0.5)), 
+      complex([1.67414922803554, 0.89597747612983]), 
+      10
+    )
+  })
+
+  it('returns 0 when the base is 0', () => {
+    expectWriter(
+      raise(real(0), variable('x'))
+    )(
+      real(0),
+      [[real(0), real(0)], 'powers of 0']
+    )
+  })
+
+  it('returns 1 when the exponent is 0', () => {
+    expectWriter(
+      raise(variable('x'), real(0))
+    )(
+      real(1),
+      [[variable('x'), real(0)], 'exponent of 0']
+    )
+  })
+
+  it('returns 1 when the base is 1', () => {
+    expectWriter(
+      raise(real(1), variable('x'))
+    )(
+      real(1),
+      [[real(1), variable('x')], 'powers of 1']
+    )
+  })
+
+  it('returns the base whenever the exponent is 1', () => {
+    expectWriter(
+      raise(variable('x'), real(1))
+    )(
+      variable('x'),
+      [[variable('x'), real(1)], 'exponent of 1']
+    )
+  })
+
+  it('returns the sub-expression of an lb if base 2', () => {
+    expectWriter(
+      raise(real(2), lb(variable('x')))
+    )(
+      variable('x'),
+      [[real(2), variable('x')], 'logarithm'],
+      [[real(2), lb(variable('x'))], 'inverse function cancellation']
+    )
+  })
+
+  it('returns the sub-expression of an ln if base e', () => {
+    expectWriter(
+      raise(real(Math.E), ln(variable('x')))
+    )(
+      variable('x'),
+      [[real(Math.E), variable('x')], 'logarithm'],
+      [[real(Math.E), ln(variable('x'))], 'inverse function cancellation']
+    )
+  })
+
+  it('returns the sub-expression of an lg if base 10', () => {
+    expectWriter(
+      raise(real(10), lg(variable('x')))
+    )(
+      variable('x'),
+      [[real(10), variable('x')], 'logarithm'],
+      [[real(10), lg(variable('x'))], 'inverse function cancellation']
+    )
+  })
+  
+  it('returns the value of a logarithm if raising similar base to it', () => {
+    expectWriter(
+      raise(complex([0, 1]), log(complex([0, 1]), variable('x')))
+    )(
+      variable('x'),
+      [[complex([0, 1]), variable('x')], 'logarithm'],
+      [[complex([0, 1]), log(complex([0, 1]), variable('x'))], 'inverse function cancellation']
+    )
   })
 })
 
