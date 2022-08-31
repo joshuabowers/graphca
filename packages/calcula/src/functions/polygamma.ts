@@ -1,7 +1,7 @@
 import { multi, method, _, Multi } from "@arrows/multimethod"
 import { Writer, unit } from "../monads/writer"
 import { TreeNode, Species, any } from "../utility/tree"
-import { Real, Complex, Boolean, real, isReal, isComplex } from "../primitives"
+import { Real, Complex, Boolean, real, isReal, isComplex, isPrimitive } from "../primitives"
 import { Binary, binary, partialLeft, when } from "../closures/binary"
 import { 
   add, subtract, multiply, divide, double, raise, reciprocal
@@ -142,10 +142,16 @@ export const [polygamma, isPolygamma] = binary<Polygamma>(Species.polygamma)(
     'computed boolean polygamma'
   ]
 )(
-  when([isValue(real(0)), isNegative], (_l, r) => [digammaReflection(unit(r)), 'digamma reflection for negative value']),
-  when([isValue(real(0)), isSmall], (_l, r) => [digammaRecurrence(unit(r)), 'digamma recurrence for small value']),
+  when(
+    (l, r) => isValue(real(0))(l) && isNegative(r),
+    (_l, r) => [digammaReflection(unit(r)), 'digamma reflection for negative value']
+  ),
+  when(
+    (l, r) => isValue(real(0))(l) && isSmall(r),
+    (_l, r) => [digammaRecurrence(unit(r)), 'digamma recurrence for small value']
+  ),
   when<Real, Real|Complex|Boolean>(
-    [isValue(real(0)), any(Species.real, Species.combine, Species.boolean)], 
+    (l, r) => isValue(real(0))(l) && isPrimitive(r),
     (_l, r) => [calculateDigamma(unit(r)), 'computed digamma']
   ),
   // method([is(Real), isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),
