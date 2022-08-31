@@ -67,7 +67,6 @@ describe('digamma', () => {
     })
 
     it('calculates an approximate value for complex numbers', () => {
-      console.dir(digamma(complex([0, 10])), {depth: 6})
       expectCloseTo(
         digamma(complex([0, 10])), 
         complex([2.3034192636714, 1.6207963267948]), 

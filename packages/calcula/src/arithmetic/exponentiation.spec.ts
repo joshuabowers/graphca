@@ -1,81 +1,7 @@
-// import { expectCloseTo } from './expectations'
-// import { Exponentiation, raise, reciprocal, square, sqrt } from './exponentiation'
-// import { real } from './real'
-// import { complex } from './complex'
-// import { variable } from './variable'
-// import { multiply } from './multiplication'
-// import { log, lb, ln, lg } from './logarithmic'
-
-// describe('raise', () => {
-
-
-
-//   it('multiplies the exponent of a base exponential against the exponent', () => {
-//     expect(
-//       raise(raise(variable('x'), variable('y')), variable('z'))
-//     ).toEqual(raise(variable('x'), multiply(variable('y'), variable('z'))))
-//   })
-
-//   it('converts a base multiplication into a product of exponentiations', () => {
-//     expect(
-//       raise(multiply(variable('x'), variable('y')), variable('z'))
-//     ).toEqual(
-//       multiply(
-//         raise(variable('x'), variable('z')), 
-//         raise(variable('y'), variable('z'))
-//       )
-//     )
-//   })
-  
-//   it('creates an Exponentiation when given non-constants', () => {
-//     expect(raise(variable('x'), real(3))).toEqual(new Exponentiation(variable('x'), real(3)))
-//   })
-// })
-
-// describe('reciprocal', () => {
-//   it('raises its argument to the power of -1', () => {
-//     expect(reciprocal(variable('x'))).toEqual(raise(variable('x'), real(-1)))
-//   })
-
-//   it('raises complex 1 to -1 correctly', () => {
-//     expect(reciprocal(complex(1, 0))).toEqual(complex(1, 0))
-//   })
-
-//   it('calculates a complex reciprocal correctly', () => {
-//     expectCloseTo(reciprocal(complex(1, 1)), complex(0.5, -0.5), 10)
-//   })
-
-//   it('calculates a reciprocal of complex 0 correctly', () => {
-//     expectCloseTo(reciprocal(complex(0, 0)), complex(Infinity, 0), 10)
-//   })
-// })
-
-// describe('square', () => {
-//   it('raises its argument to the power of 2', () => {
-//     expect(square(variable('x'))).toEqual(raise(variable('x'), real(2)))
-//   })
-
-//   it('calculates the proper square of a complex number', () => {
-//     expectCloseTo(square(complex(1, 1)), complex(0, 2), 10)
-//   })
-// })
-
-// describe('sqrt', () => {
-//   it('raises its argument to the power of 0.5', () => {
-//     expect(sqrt(variable('x'))).toEqual(raise(variable('x'), real(0.5)))
-//   })
-
-//   it('calculates the proper sqrt of a complex number', () => {
-//     expectCloseTo(sqrt(complex(1, 1)), complex(1.098684113467, 0.455089860562), 10)
-//   })
-
-//   it('calculates the complex sqrt of a complex number', () => {
-//     expectCloseTo(sqrt(complex(3, 1)), complex(1.755317301824, 0.284848784593), 10)
-//   })
-// })
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
-import { raise, reciprocal, square, sqrt } from './exponentiation'
+import { multiply } from './multiplication'
+import { raise, reciprocal, square, sqrt, $raise } from './exponentiation'
 import { log, lb, ln, lg } from '../functions/logarithmic'
 import { expectCloseTo, expectWriter } from '../utility/expectations'
 
@@ -109,7 +35,7 @@ describe('raise', () => {
       raise(real(0), variable('x'))
     )(
       real(0),
-      [[real(0), real(0)], 'powers of 0']
+      [[real(0), variable('x')], 'powers of 0']
     )
   })
 
@@ -179,16 +105,107 @@ describe('raise', () => {
       [[complex([0, 1]), log(complex([0, 1]), variable('x'))], 'inverse function cancellation']
     )
   })
+
+  it('multiplies the exponent of a base exponential against the exponent', () => {
+    expectWriter(
+      raise(raise(variable('x'), variable('y')), variable('z'))
+    )(
+      raise(variable('x'), multiply(variable('y'), variable('z'))),
+      [[variable('x'), variable('y')], 'exponentiation'],
+      [[raise(variable('x'), variable('y')), variable('z')], 'exponential product'],
+      [[variable('y'), variable('z')], 'multiplication'],
+      [[variable('x'), multiply(variable('y'), variable('z'))], 'exponentiation']
+    )
+  })
+
+  it('converts a base multiplication into a product of exponentiations', () => {
+    expectWriter(
+      raise(multiply(variable('x'), variable('y')), variable('z'))
+    )(
+      multiply(
+        raise(variable('x'), variable('z')), 
+        raise(variable('y'), variable('z'))
+      ),
+      [[variable('x'), variable('y')], 'multiplication'],
+      [[multiply(variable('x'), variable('y')), variable('z')], 'exponential distribution'],
+      [[variable('x'), variable('z')], 'exponentiation'],
+      [[variable('y'), variable('z')], 'exponentiation'],
+      [
+        [raise(variable('x'), variable('z')), raise(variable('y'), variable('z'))],
+        'multiplication'
+      ]
+    )
+  })
+  
+  it('creates an Exponentiation when given non-constants', () => {
+    expectWriter(
+      raise(variable('x'), real(3))
+    )(
+      $raise(variable('x'), real(3))[0],
+      [[variable('x'), real(3)], 'exponentiation']
+    )
+  })
 })
 
 describe('reciprocal', () => {
+  it('raises its argument to the power of -1', () => {
+    expectWriter(
+      reciprocal(variable('x'))
+    )(
+      raise(variable('x'), real(-1)),
+      [[variable('x'), real(-1)], 'exponentiation']
+    )
+  })
 
+  it('raises complex 1 to -1 correctly', () => {
+    expectWriter(
+      reciprocal(complex([1, 0]))
+    )(
+      complex([1, 0]),
+      [real(-1), 'cast to complex'],
+      [[complex([1, 0]), complex([-1, 0])], 'complex exponentiation']
+    )
+  })
+
+  it('calculates a complex reciprocal correctly', () => {
+    expectCloseTo(reciprocal(complex([1, 1])), complex([0.5, -0.5]), 10)
+  })
+
+  it('calculates a reciprocal of complex 0 correctly', () => {
+    expectCloseTo(reciprocal(complex([0, 0])), complex([Infinity, 0]), 10)
+  })
 })
 
 describe('square', () => {
+  it('raises its argument to the power of 2', () => {
+    expectWriter(
+      square(variable('x'))
+    )(
+      raise(variable('x'), real(2)),
+      [[variable('x'), real(2)], 'exponentiation']
+    )
+  })
 
+  it('calculates the proper square of a complex number', () => {
+    expectCloseTo(square(complex([1, 1])), complex([0, 2]), 10)
+  })
 })
 
 describe('sqrt', () => {
+  it('raises its argument to the power of 0.5', () => {
+    expectWriter(
+      sqrt(variable('x'))
+    )(
+      raise(variable('x'), real(0.5)),
+      [[variable('x'), real(0.5)], 'exponentiation']
+    )
+  })
 
+  it('calculates the proper sqrt of a complex number', () => {
+    expectCloseTo(sqrt(complex([1, 1])), complex([1.098684113467, 0.455089860562]), 10)
+  })
+
+  it('calculates the complex sqrt of a complex number', () => {
+    expectCloseTo(sqrt(complex([3, 1])), complex([1.755317301824, 0.284848784593]), 10)
+  })
 })

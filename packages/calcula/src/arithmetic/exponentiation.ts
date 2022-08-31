@@ -17,15 +17,18 @@
 //   left instanceof Multiplication
 
 import { _ } from '@arrows/multimethod'
-import { Genera, Species } from "../utility/tree"
+import { unit } from '../monads/writer'
+import { TreeNode, Genera, Species } from "../utility/tree"
 import { ComplexInfinity } from "../primitives/complex"
 import { real, complex, boolean } from "../primitives"
 import { Binary, binary, when, partialRight } from "../closures/binary"
-import { isValue } from "../utility/deepEquals"
+import { deepEquals, isValue } from "../utility/deepEquals"
+import { isMultiplication, Multiplication, multiply } from './multiplication'
+import { isLogarithm, Logarithm } from '../functions/logarithmic'
 
 export type Exponentiation = Binary<Species.raise, Genera.arithmetic>
 
-export const [raise, isExponentiation] = binary<Exponentiation>(
+export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
   Species.raise, Genera.arithmetic
 )(
   (l, r) => [real(l.value ** r.value), 'real exponentiation'],
@@ -43,18 +46,28 @@ export const [raise, isExponentiation] = binary<Exponentiation>(
   },
   (l, r) => [boolean(l.value || !r.value), 'boolean exponentiation']
 )(
-  when([complex([0, 0]), real(-1)], [ComplexInfinity, 'division by complex zero']),
-  when([real(0), real(-1)], [real(Infinity), 'division by zero']),
-  when([real(-0), real(-1)], [real(-Infinity), 'division by negative zero']),
+  when([isValue(complex([0, 0])), isValue(real(-1))], [complex([Infinity, 0]), 'division by complex zero']),
+  when([isValue(real(0)), isValue(real(-1))], [real(Infinity), 'division by zero']),
+  when([isValue(real(-0)), isValue(real(-1))], [real(-Infinity), 'division by negative zero']),
   when([isValue(real(0)), _], [real(0), 'powers of 0']),
-  when([_, isValue(real(0))], [real(1), 'exponent of 0'])
-  // method([real(0), _], real(0)),
-  // method([_, real(0)], real(1)),
-  // method([real(1), _], real(1)),
-  // method([_, real(1)], (l: Base, _r: Real) => l),
-  // visit(Base, Logarithm)(identity, leftChild)((_l, r) => r.right),
-  // method(isExponentiation, (l: Exponentiation, r: Base) => raise(l.left, multiply(l.right, r))),
-  // method(isMultiplication, (l: Multiplication, r: Base) => multiply(raise(l.left, r), raise(l.right, r))),
+  when([_, isValue(real(0))], [real(1), 'exponent of 0']),
+  when([isValue(real(1)), _], [real(1), 'powers of 1']),
+  when([_, isValue(real(1))], (l, _r) => [unit(l), 'exponent of 1']),
+  when<TreeNode, Logarithm>(
+    (l, r) => isLogarithm(r) && deepEquals(l, r.value.left),
+    (_l, r) => [r.right, 'inverse function cancellation']
+  ),
+  when<Exponentiation, TreeNode>(
+    (l, _r) => isExponentiation(l),
+    (l, r) => [raise(l.left, multiply(l.right, unit(r))), 'exponential product']
+  ),
+  when<Multiplication, TreeNode>(
+    (l, _r) => isMultiplication(l),
+    (l, r) => [
+      multiply(raise(l.left, unit(r)), raise(l.right, unit(r))), 
+      'exponential distribution'
+    ]
+  )
 )
 
 export const reciprocal = partialRight(raise)(real(-1))
