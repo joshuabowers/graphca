@@ -230,10 +230,162 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => [multiply(multiply(unit(l), r.left), r.right),'primitive coalescence']
   ),
   when(deepEquals, (l, _r) => [square(unit(l)), 'equivalence: replaced with square']),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && deepEquals(l.value.left, r.value.left),
+    (l, r) => [
+      multiply(
+        multiply(l.left, r.left),
+        multiply(l.right, r.right)
+      ),
+      'collecting equivalent left multiplicands'
+    ]
+  ),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && deepEquals(l.value.left, r.value.right),
+    (l, r) => [
+      multiply(
+        multiply(l.left, r.right),
+        multiply(l.right, r.left)
+      ),
+      'collecting equivalent left/right multiplicands'
+    ]
+  ),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && deepEquals(l.value.right, r.value.left),
+    (l, r) => [
+      multiply(
+        multiply(l.right, r.left),
+        multiply(l.left, r.right)
+      ),
+      'collecting equivalent right/left multiplicands'
+    ]
+  ),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && deepEquals(l.value.right, r.value.right),
+    (l, r) => [
+      multiply(
+        multiply(l.left, r.left),
+        multiply(l.right, r.right)
+      ),
+      'collecting equivalent right multiplicands'
+    ]
+  ),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && deepEquals(l, r.value.left),
+    (l, r) => [
+      multiply(square(unit(l)), r.right), 
+      'equivalent: left operand and left child of right operand'
+    ]
+  ),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && deepEquals(l, r.value.right),
+    (l, r) => [
+      multiply(square(unit(l)), r.left), 
+      'equivalent: left operand and right child of right operand'
+    ]
+  ),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && deepEquals(l.value.left, r),
+    (l, r) => [
+      multiply(square(unit(r)), l.right),
+      'equivalent: left child of left operand and right operand'
+    ]
+  ),
+  when<Multiplication, Multiplication>(
+    (l, r) => isMultiplication(l) && isMultiplication(r)
+      && deepEquals(l.value.right, r),
+    (l, r) => [
+      multiply(square(unit(r)), l.left),
+      'equivalent: right child of left operand and right operand'
+    ]
+  ),
   when<Exponentiation, Exponentiation>(
     (l, r) => isExponentiation(l) && isExponentiation(r) 
       && deepEquals(l.value.left, r.value.left),
     (l, r) => [raise(l.left, add(l.right, r.right)), 'combined like terms']
+  ),
+  when<Exponentiation, Multiplication>(
+    (l, r) => isExponentiation(l) && isMultiplication(r)
+      && deepEquals(l.value.left, r.value.left),
+    (l, r) => [
+      multiply(
+        raise(l.left, add(l.right, real(1))), r.right
+      ),
+      'equivalent: base of left exponentiation and left child of right'
+    ]
+  ),
+  when<Exponentiation, Multiplication>(
+    (l, r) => isExponentiation(l) && isMultiplication(r)
+      && deepEquals(l.value.left, r.value.right),
+    (l, r) => [
+      multiply(
+        raise(l.left, add(l.right, real(1))), r.left
+      ),
+      'equivalent: base of left exponentiation and right child of right'
+    ]
+  ),
+  when<Multiplication, Exponentiation>(
+    (l, r) => isMultiplication(l) && isExponentiation(r)
+      && deepEquals(l.value.left, r.value.left),
+    (l, r) => [
+      multiply(
+        raise(r.left, add(r.right, real(1))), l.right
+      ),
+      'equivalent: left child of left and base of right exponentiation'
+    ]
+  ),
+  when<Multiplication, Exponentiation>(
+    (l, r) => isMultiplication(l) && isExponentiation(r)
+      && deepEquals(l.value.right, r.value.left),
+    (l, r) => [
+      multiply(
+        raise(r.left, add(r.right, real(1))), l.left
+      ),
+      'equivalent: right child of left and base of right exponentiation'
+    ]
+  ),
+  when<TreeNode, Multiplication>(
+    (l, r) => isMultiplication(r) && deepEquals(l, r.value.left),
+    (l, r) => [
+      multiply(
+        r.right, multiply(unit(l), r.left)
+      ),
+      'equivalent: left operand and left child of right operand'
+    ]
+  ),
+  when<TreeNode, Multiplication>(
+    (l, r) => isMultiplication(r) && deepEquals(l, r.value.right),
+    (l, r) => [
+      multiply(
+        r.left, multiply(unit(l), r.right)
+      ),
+      'equivalent: left operand and right child of right operand'
+    ]
+  ),
+  when<Multiplication, TreeNode>(
+    (l, r) => isMultiplication(l) && deepEquals(l.value.left, r),
+    (l, r) => [
+      multiply(
+        l.right, multiply(unit(r), l.left)
+      ),
+      'equivalent: left child of left operand and right operand'
+    ]
+  ),
+  when<Multiplication, TreeNode>(
+    (l, r) => isMultiplication(l) && deepEquals(l.value.right, r),
+    (l, r) => [
+      multiply(
+        l.left, multiply(unit(r), l.right)
+      ),
+      'equivalent: right child of left operand and right operand'
+    ]
   ),
   when<TreeNode, Exponentiation>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),

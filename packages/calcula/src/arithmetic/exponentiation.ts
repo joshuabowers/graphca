@@ -1,25 +1,6 @@
-// import { method, _ } from '@arrows/multimethod';
-// import { Base } from './Expression';
-// import { Real, real } from './real';
-// import { complex } from './complex';
-// import { Binary, binary, unaryFrom, bindRight } from './binary';
-// import { Multiplication, multiply } from './multiplication';
-// import { Logarithm } from './logarithmic';
-// import { visit, identity, leftChild } from './predicates';
-
-// export class Exponentiation extends Binary {
-//   readonly $kind = 'Exponentiation'
-// }
-
-// const isExponentiation = (left: Base, _right: Base) =>
-//   left instanceof Exponentiation
-// const isMultiplication = (left: Base, _right: Base) =>
-//   left instanceof Multiplication
-
 import { _ } from '@arrows/multimethod'
 import { unit } from '../monads/writer'
 import { TreeNode, Genera, Species } from "../utility/tree"
-import { ComplexInfinity } from "../primitives/complex"
 import { real, complex, boolean } from "../primitives"
 import { Binary, binary, when, partialRight } from "../closures/binary"
 import { deepEquals, isValue } from "../utility/deepEquals"

@@ -89,305 +89,14 @@
 //   })
 // })
 
-// describe('multiply', () => {
 
-//   it('isEa_A2xEa: combines nested multiplications involving similar exponentiations', () => {
-//     expect(
-//       multiply(
-//         square(variable('x')), 
-//         multiply(
-//           variable('y'), 
-//           raise(variable('x'), real(3))
-//         )
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(5)))
-//     )
-//   })
-
-//   it('isEa_EaxA2: combines nested multiplications involving similar exponentiations', () => {
-//     expect(
-//       multiply(
-//         square(variable('x')), 
-//         multiply(
-//           raise(variable('x'), real(3)),
-//           variable('y')
-//         )
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(5)))
-//     )
-//   })
-
-//   it('isA2xEa_Ea: combines nested multiplications involving similar exponentiations', () => {
-//     expect(
-//       multiply(
-//         multiply(
-//           variable('y'), 
-//           raise(variable('x'), real(3))
-//         ),
-//         square(variable('x'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(5)))
-//     )
-//   })
-
-//   it('isEaxA2_Ea: combines nested multiplications involving similar exponentiations', () => {
-//     expect(
-//       multiply(
-//         multiply(
-//           raise(variable('x'), real(3)),
-//           variable('y')
-//         ),
-//         square(variable('x'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(5)))
-//     )
-//   })
-
-//   it('isA1_A1xA2: combines nested multiplications involving similar terms', () => {
-//     expect(
-//       multiply(
-//         variable('x'),
-//         multiply(variable('x'), variable('y'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), square(variable('x')))
-//     )
-//   })
-
-//   it('isA1_A2xA1: combines nested multiplications involving similar terms', () => {
-//     expect(
-//       multiply(
-//         variable('x'),
-//         multiply(variable('y'), variable('x'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), square(variable('x')))
-//     )
-//   })
-
-//   it('isA1xA2_A1: combines nested multiplications involving similar terms', () => {
-//     expect(
-//       multiply(
-//         multiply(variable('x'), variable('y')),
-//         variable('x')
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), square(variable('x')))
-//     )
-//   })
-
-//   it('isA2xA1_A1: combines nested multiplications involving similar terms', () => {
-//     expect(
-//       multiply(
-//         multiply(variable('y'), variable('x')),
-//         variable('x')
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), square(variable('x')))
-//     )    
-//   })
-
-//   it('isA1_A2xEa1: adds to an exponential across nested multiplications', () => {
-//     expect(
-//       multiply(
-//         variable('x'),
-//         multiply(variable('y'), square(variable('x')))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(3)))
-//     )
-//   })
-
-//   it('isA1_Ea1xA2: adds to an exponential across nested multiplications', () => {
-//     expect(
-//       multiply(
-//         variable('x'),
-//         multiply(square(variable('x')), variable('y'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(3)))
-//     )
-//   })
-
-//   it('isA2xEa1_A1: adds to an exponential across nested multiplications', () => {
-//     expect(
-//       multiply(
-//         multiply(variable('y'), square(variable('x'))),
-//         variable('x')
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(3)))
-//     )
-//   })
-
-//   it('isEa1xA2_A1: adds to an exponential across nested multiplications', () => {
-//     expect(
-//       multiply(
-//         multiply(square(variable('x')), variable('y')),
-//         variable('x')
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(3)))
-//     )
-//   })
-
-//   // isEa1_A1xA2
-//   it('isEa1_A1xA2: adds to an exponential across nested multiplications', () => {
-//     expect(
-//       multiply(
-//         square(variable('x')),
-//         multiply(variable('x'), variable('y'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(3)))
-//     )
-//   })
-
-//   // isEa1_A2xA1
-//   it('isEa1_A2xA1: adds to an exponential across nested multiplications', () => {
-//     expect(
-//       multiply(
-//         square(variable('x')),
-//         multiply(variable('y'), variable('x'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(3)))
-//     )
-//   })
-
-//   // isA1xA2_Ea1
-//   it('isA1xA2_Ea1: adds to an exponential across nested multiplications', () => {
-//     expect(
-//       multiply(
-//         multiply(variable('x'), variable('y')),
-//         square(variable('x'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(3)))
-//     )
-//   })
-
-//   // isA2xA1_Ea1
-//   it('isA2xA1_Ea1: adds to an exponential across nested multiplications', () => {
-//     expect(
-//       multiply(
-//         multiply(variable('y'), variable('x')),
-//         square(variable('x'))
-//       )
-//     ).toEqual(
-//       multiply(variable('y'), raise(variable('x'), real(3)))
-//     )
-//   })
-
-//   it('creates a Multiplication for unhandled edge cases', () => {
-//     expect(multiply(real(2), variable('x'))).toEqual(
-//       new Multiplication(real(2), variable('x'))
-//     )
-//   })
-// })
-
-// describe(negate, () => {
-//   it('results in a real with negative value, when real', () => {
-//     expect(negate(real(1))).toEqual(real(-1))
-//   })
-
-//   it('results in a multiplication node with -1 as the left', () => {
-//     expect(negate(variable('x'))).toEqual(multiply(real(-1), variable('x')))
-//   })
-// })
-
-// describe(double, () => {
-//   it('results in a real with 2 times the value, when real', () => {
-//     expect(double(real(2))).toEqual(real(4))
-//   })
-
-//   it('results in a multiplication node with 2 as the left', () => {
-//     expect(double(variable('x'))).toEqual(multiply(real(2), variable('x')))
-//   })
-// })
-
-// describe('divide', () => {
-//   it('results in a division of the two real arguments', () => {
-//     expect(divide(real(10), real(5))).toEqual(real(2))
-//   })
-
-//   it('is the multiplication of the numerator by the reciprocal of the denominator', () => {
-//     expect(divide(real(2), variable('x'))).toEqual(
-//       multiply(real(2), reciprocal(variable('x')))
-//     )
-//   })
-
-//   it('handles division by zero correctly', () => {
-//     expect(divide(variable('x'), real(0))).toEqual(real(Infinity))
-//   })
-
-//   it('properly calculates real / complex division', () => {
-//     expectCloseTo(divide(real(1), complex(1, 2)), complex(0.2, -0.4), 10)
-//   })
-
-//   it('properly handles dividing complex 0 by another complex', () => {
-//     expectCloseTo(divide(complex(0, 0), complex(0, 2)), complex(0, 0), 10)
-//   })
-
-//   it('properly handles dividing a complex by complex 0', () => {
-//     expectCloseTo(divide(complex(0, 2), complex(0, 0)), complex(0, Infinity), 10)
-//   })
-
-//   it('properly divides a complex value by complex 1', () => {
-//     expect(divide(complex(2, 0), complex(1, 0))).toEqual(complex(2, 0))
-//   })
-
-//   it('properly divides complex negative infinity by complex 1', () => {
-//     expect(divide(complex(-Infinity, 0), complex(1, 0))).toEqual(complex(-Infinity, 0))
-//   })
-
-//   it('a: cancels like terms in a division of multiplications', () => {
-//     expect(
-//       divide(
-//         multiply(variable('x'), variable('y')), 
-//         multiply(variable('z'), variable('y'))
-//       )
-//     ).toEqual(divide(variable('x'), variable('z')))
-//   })
-
-//   it('b; cancels like terms in a division of multiplications', () => {
-//     expect(
-//       divide(
-//         multiply(variable('x'), variable('y')),
-//         multiply(variable('x'), variable('z'))
-//       )
-//     ).toEqual(divide(variable('y'), variable('z')))
-//   })
-
-//   it('c: cancels like terms in a division of multiplications', () => {
-//     expect(
-//       divide(
-//         multiply(variable('x'), variable('y')),
-//         multiply(variable('y'), variable('z'))
-//       )
-//     ).toEqual(divide(variable('x'), variable('z')))
-//   })
-
-//   it('d: cancels like terms in a division of multiplications', () => {
-//     expect(
-//       divide(
-//         multiply(variable('x'), variable('y')),
-//         multiply(variable('z'), variable('x'))
-//       )
-//     ).toEqual(divide(variable('y'), variable('z')))
-//   })
-// })
-import { expectWriter } from '../utility/expectations'
+import { expectWriter, expectCloseTo } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { ComplexInfinity } from '../primitives/complex'
 import { real, complex, nan } from '../primitives'
 import { variable } from '../variable'
-import { $multiply, multiply, negate, double } from './multiplication'
-import { raise, square } from './exponentiation'
+import { $multiply, multiply, negate, double, divide } from './multiplication'
+import { raise, square, reciprocal } from './exponentiation'
 
 describe('$multiply', () => {
   it('returns an Action<Multiplication> for any input without logic', () => {
@@ -641,6 +350,200 @@ describe('multiply', () => {
       )
     })
   })
+
+  describe('when dealing with exponentiations', () => {
+    it('isEa_A2xEa: combines nested multiplications involving similar exponentiations', () => {
+      expect(
+        multiply(
+          square(variable('x')), 
+          multiply(
+            variable('y'), 
+            raise(variable('x'), real(3))
+          )
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(5))).value
+      )
+    })
+
+    it('isEa_EaxA2: combines nested multiplications involving similar exponentiations', () => {
+      expect(
+        multiply(
+          square(variable('x')), 
+          multiply(
+            raise(variable('x'), real(3)),
+            variable('y')
+          )
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(5))).value
+      )
+    })
+
+    it('isA2xEa_Ea: combines nested multiplications involving similar exponentiations', () => {
+      expect(
+        multiply(
+          multiply(
+            variable('y'), 
+            raise(variable('x'), real(3))
+          ),
+          square(variable('x'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(5))).value
+      )
+    })
+
+    it('isEaxA2_Ea: combines nested multiplications involving similar exponentiations', () => {
+      expect(
+        multiply(
+          multiply(
+            raise(variable('x'), real(3)),
+            variable('y')
+          ),
+          square(variable('x'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(5))).value
+      )
+    })
+
+    it('isA1_A1xA2: combines nested multiplications involving similar terms', () => {
+      expect(
+        multiply(
+          variable('x'),
+          multiply(variable('x'), variable('y'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), square(variable('x'))).value
+      )
+    })
+
+    it('isA1_A2xA1: combines nested multiplications involving similar terms', () => {
+      expect(
+        multiply(
+          variable('x'),
+          multiply(variable('y'), variable('x'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), square(variable('x'))).value
+      )
+    })
+
+    it('isA1xA2_A1: combines nested multiplications involving similar terms', () => {
+      expect(
+        multiply(
+          multiply(variable('x'), variable('y')),
+          variable('x')
+        ).value
+      ).toEqual(
+        multiply(variable('y'), square(variable('x'))).value
+      )
+    })
+
+    it('isA2xA1_A1: combines nested multiplications involving similar terms', () => {
+      expect(
+        multiply(
+          multiply(variable('y'), variable('x')),
+          variable('x')
+        ).value
+      ).toEqual(
+        multiply(variable('y'), square(variable('x'))).value
+      )    
+    })
+
+    it('isA1_A2xEa1: adds to an exponential across nested multiplications', () => {
+      expect(
+        multiply(
+          variable('x'),
+          multiply(variable('y'), square(variable('x')))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(3))).value
+      )
+    })
+
+    it('isA1_Ea1xA2: adds to an exponential across nested multiplications', () => {
+      expect(
+        multiply(
+          variable('x'),
+          multiply(square(variable('x')), variable('y'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(3))).value
+      )
+    })
+
+    it('isA2xEa1_A1: adds to an exponential across nested multiplications', () => {
+      expect(
+        multiply(
+          multiply(variable('y'), square(variable('x'))),
+          variable('x')
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(3))).value
+      )
+    })
+
+    it('isEa1xA2_A1: adds to an exponential across nested multiplications', () => {
+      expect(
+        multiply(
+          multiply(square(variable('x')), variable('y')),
+          variable('x')
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(3))).value
+      )
+    })
+
+    // isEa1_A1xA2
+    it('isEa1_A1xA2: adds to an exponential across nested multiplications', () => {
+      expect(
+        multiply(
+          square(variable('x')),
+          multiply(variable('x'), variable('y'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(3))).value
+      )
+    })
+
+    // isEa1_A2xA1
+    it('isEa1_A2xA1: adds to an exponential across nested multiplications', () => {
+      expect(
+        multiply(
+          square(variable('x')),
+          multiply(variable('y'), variable('x'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(3))).value
+      )
+    })
+
+    // isA1xA2_Ea1
+    it('isA1xA2_Ea1: adds to an exponential across nested multiplications', () => {
+      expect(
+        multiply(
+          multiply(variable('x'), variable('y')),
+          square(variable('x'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(3))).value
+      )
+    })
+
+    // isA2xA1_Ea1
+    it('isA2xA1_Ea1: adds to an exponential across nested multiplications', () => {
+      expect(
+        multiply(
+          multiply(variable('y'), variable('x')),
+          square(variable('x'))
+        ).value
+      ).toEqual(
+        multiply(variable('y'), raise(variable('x'), real(3))).value
+      )
+    })
+  })
 })
 
 describe('negate', () => {
@@ -650,6 +553,15 @@ describe('negate', () => {
     )(
       multiply(real(-1), variable('x')).value,
       [[real(-1).value, variable('x').value], 'multiplication']
+    )
+  })
+
+  it('results in a real with negative value, when real', () => {
+    expectWriter(
+      negate(real(1))
+    )(
+      real(-1),
+      [[real(-1), real(1)], 'real multiplication']
     )
   })
 })
@@ -670,6 +582,115 @@ describe('double', () => {
     )(
       multiply(real(2), variable('x')).value,
       [[real(2).value, variable('x').value], 'multiplication']
+    )
+  })
+})
+
+describe('divide', () => {
+  it('results in a division of the two real arguments', () => {
+    expectWriter(
+      divide(real(10), real(5))
+    )(
+      real(2),
+      [[real(5), real(-1)], 'real exponentiation'],
+      [[real(10), real(0.2)], 'real multiplication']
+    )
+  })
+
+  it('is the multiplication of the numerator by the reciprocal of the denominator', () => {
+    expectWriter(
+      divide(real(2), variable('x'))
+    )(
+      multiply(real(2), reciprocal(variable('x'))),
+      [[variable('x'), real(-1)], 'exponentiation'],
+      [[real(2), reciprocal(variable('x'))], 'multiplication']
+    )
+  })
+
+  it('handles division by zero correctly', () => {
+    expectWriter(
+      divide(variable('x'), real(0))
+    )(
+      real(Infinity),
+      [[real(0), real(-1)], 'division by zero'],
+      [[variable('x'), real(Infinity)], 'reorder operands'],
+      [[real(Infinity), variable('x')], 'infinite absorption']
+    )
+  })
+
+  it('properly calculates real / complex division', () => {
+    expectCloseTo(divide(real(1), complex([1, 2])), complex([0.2, -0.4]), 10)
+  })
+
+  it('properly handles dividing complex 0 by another complex', () => {
+    expectCloseTo(divide(complex([0, 0]), complex([0, 2])), complex([0, 0]), 10)
+  })
+
+  it('properly handles dividing a complex by complex 0', () => {
+    expectCloseTo(divide(complex([0, 2]), complex([0, 0])), complex([0, Infinity]), 10)
+  })
+
+  it('properly divides a complex value by complex 1', () => {
+    expectCloseTo(divide(complex([2, 0]), complex([1, 0])), complex([2, 0]), 10)
+  })
+
+  it('properly divides complex negative infinity by complex 1', () => {
+    expectCloseTo(divide(complex([-Infinity, 0]), complex([1, 0])), complex([-Infinity, 0]), 10)
+  })
+
+  it('a: cancels like terms in a division of multiplications', () => {
+    expectWriter(
+      divide(
+        multiply(variable('x'), variable('y')), 
+        multiply(variable('z'), variable('y'))
+      )
+    )(
+      divide(variable('x'), variable('z')),
+      [[variable('x'), variable('y')], 'multiplication'],
+      [[variable('x'), variable('y')], 'multiplication'],
+      [[multiply(variable('z'), variable('y')), real(-1)], 'exponential distribution'],
+      [
+        [
+          multiply(variable('x'), variable('y')), 
+          reciprocal(multiply(variable('z'), variable('y')))
+        ],
+        'term collecting'
+      ],
+      [[variable('z'), real(-1)], 'exponentiation'],
+      [[variable('x'), reciprocal(variable('z'))], 'multiplication']
+    )
+  })
+
+  it('b; cancels like terms in a division of multiplications', () => {
+    expectWriter(
+      divide(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('x'), variable('z'))
+      )
+    )(
+      divide(variable('y'), variable('z'))
+    )
+  })
+
+  it('c: cancels like terms in a division of multiplications', () => {
+    expectWriter(
+      divide(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('y'), variable('z'))
+      )
+    )(
+      divide(variable('x'), variable('z'))
+    )
+  })
+
+  it('d: cancels like terms in a division of multiplications', () => {
+    expectWriter(
+      divide(
+        multiply(variable('x'), variable('y')),
+        multiply(variable('z'), variable('x'))
+      )
+    )(
+      divide(variable('y'), variable('z'))
     )
   })
 })
