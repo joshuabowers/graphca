@@ -1,95 +1,3 @@
-// import { expectCloseTo } from './expectations'
-// import { real } from './real'
-// import { complex } from './complex'
-// import { variable } from './variable'
-// import { 
-//   Multiplication, multiply, negate, double, divide, 
-//   exponentialCollect, collectFromProducts, canFormExponential
-// } from './multiplication'
-// import { raise, reciprocal, square } from './exponentiation'
-
-// describe('canFormExponential', () => {
-//   it('is true for equivalent things', () => {
-//     expect(canFormExponential(variable('x'), variable('x'))).toBeTruthy()
-//   })
-
-//   it('is false for non-equitable things', () => {
-//     expect(canFormExponential(variable('y'), variable('x'))).toBeFalsy()
-//   })
-
-//   it('is true if a thing is multiplied by a product of itself', () => {
-//     expect(canFormExponential(variable('x'), multiply(variable('y'), variable('x'))))
-//   })
-
-//   it('is true if an exponential is multiplied by a multiplication of its base', () => {
-//     expect(canFormExponential(square(variable('x')), double(variable('x'))))
-//   })
-
-//   it('is true if two products multiplied together have similar terms', () => {
-//     expect(
-//       canFormExponential(
-//         multiply(variable('x'), variable('y')),
-//         multiply(variable('x'), variable('z'))
-//       )
-//     ).toBeTruthy()
-//   })
-
-//   it('is true for two products dividing each other with similar terms', () => {
-//     expect(
-//       canFormExponential(
-//         multiply(variable('x'), variable('y')),
-//         reciprocal(multiply(variable('x'), variable('z')))
-//       )
-//     ).toBeTruthy()
-//   })
-// })
-
-// describe('exponentialCollect', () => {
-//   it('squares equivalent things', () => {
-//     expect(exponentialCollect(variable('x'), variable('x'))).toEqual(
-//       square(variable('x'))
-//     )
-//   })
-
-//   it('creates a new exponential from a nested multiplication', () => {
-//     expect(
-//       exponentialCollect(variable('x'), multiply(variable('y'), variable('x')))
-//     ).toEqual(multiply(variable('y'), square(variable('x'))))
-//   })
-
-//   it('collects an exponential across a multiplication', () => {
-//     expect(
-//       exponentialCollect(square(variable('x')), double(variable('x')))
-//     ).toEqual(multiply(real(2), raise(variable('x'), real(3))))
-//   })
-// })
-
-// describe('collectsFromProducts', () => {
-//   it('squares equivalent things', () => {
-//     expect(
-//       collectFromProducts(
-//         multiply(variable('x'), variable('y')),
-//         multiply(variable('x'), variable('y'))
-//       )
-//     ).toEqual(multiply(square(variable('x')), square(variable('y'))))
-//   })
-
-//   it('collects like terms across multiplications', () => {
-//     expect(
-//       collectFromProducts(
-//         multiply(variable('x'), variable('y')),
-//         multiply(variable('x'), variable('z'))
-//       )
-//     ).toEqual(
-//       multiply(
-//         square(variable('x')),
-//         multiply(variable('y'), variable('z'))
-//       )
-//     )
-//   })
-// })
-
-
 import { expectWriter, expectCloseTo } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { ComplexInfinity } from '../primitives/complex'
@@ -639,58 +547,46 @@ describe('divide', () => {
   })
 
   it('a: cancels like terms in a division of multiplications', () => {
-    expectWriter(
+    expect(
       divide(
         multiply(variable('x'), variable('y')), 
         multiply(variable('z'), variable('y'))
-      )
-    )(
-      divide(variable('x'), variable('z')),
-      [[variable('x'), variable('y')], 'multiplication'],
-      [[variable('x'), variable('y')], 'multiplication'],
-      [[multiply(variable('z'), variable('y')), real(-1)], 'exponential distribution'],
-      [
-        [
-          multiply(variable('x'), variable('y')), 
-          reciprocal(multiply(variable('z'), variable('y')))
-        ],
-        'term collecting'
-      ],
-      [[variable('z'), real(-1)], 'exponentiation'],
-      [[variable('x'), reciprocal(variable('z'))], 'multiplication']
+      ).value
+    ).toEqual(
+      divide(variable('x'), variable('z')).value
     )
   })
 
   it('b; cancels like terms in a division of multiplications', () => {
-    expectWriter(
+    expect(
       divide(
         multiply(variable('x'), variable('y')),
         multiply(variable('x'), variable('z'))
-      )
-    )(
-      divide(variable('y'), variable('z'))
+      ).value
+    ).toEqual(
+      divide(variable('y'), variable('z')).value
     )
   })
 
   it('c: cancels like terms in a division of multiplications', () => {
-    expectWriter(
+    expect(
       divide(
         multiply(variable('x'), variable('y')),
         multiply(variable('y'), variable('z'))
-      )
-    )(
-      divide(variable('x'), variable('z'))
+      ).value
+    ).toEqual(
+      divide(variable('x'), variable('z')).value
     )
   })
 
   it('d: cancels like terms in a division of multiplications', () => {
-    expectWriter(
+    expect(
       divide(
         multiply(variable('x'), variable('y')),
         multiply(variable('z'), variable('x'))
-      )
-    )(
-      divide(variable('y'), variable('z'))
+      ).value
+    ).toEqual(
+      divide(variable('y'), variable('z')).value
     )
   })
 })
