@@ -1,5 +1,5 @@
 import { Writer, unit } from './monads/writer'
-import { TreeNode, Clades, Species } from './utility/tree'
+import { TreeNode, Clades, Species, isSpecies } from './utility/tree'
 import { nil } from './primitives'
 
 export type Variable = TreeNode & {
@@ -8,6 +8,8 @@ export type Variable = TreeNode & {
   readonly name: string,
   readonly value: Writer<TreeNode>
 }
+
+export const isVariable = isSpecies<Variable>(Species.variable)
 
 export const variable = (
   name: string, value: Writer<TreeNode> = nil

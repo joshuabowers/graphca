@@ -1,4 +1,4 @@
-import { Writer } from "../monads/writer"
+import { isWriter, Writer } from "../monads/writer"
 
 export enum Clades {
   primitive = 'Primitive',  // Constants: 10, 4 - 5i, true
@@ -124,6 +124,10 @@ export const isGenus = <T extends TreeNode>(genus: Genera) =>
 export const isSpecies = <T extends TreeNode>(species: Species) =>
   (value: Writer<TreeNode>): value is Writer<T> =>
     value?.value.species === species
+
+export const isTreeNode = <T extends TreeNode>(value: unknown): value is Writer<T> =>
+  isWriter(value) && typeof value.value === 'object' 
+  && 'clade' in value.value! && 'species' in value.value!
 
 export const notAny = (...args: Species[]) => {
   const exclude = new Set(args)
