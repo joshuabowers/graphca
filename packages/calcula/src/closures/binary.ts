@@ -34,7 +34,7 @@ type BinaryCastFn<L, R = L, T = L> = (l: Writer<L>, r: Writer<R>) => Writer<T>
 
 type Choose<D, F> = F extends void ? D : F
 
-type BinaryFn<T, R = void> = Multi
+export type BinaryFn<T, R = void> = Multi
   & BinaryCastFn<Real, Real, Choose<Real, R>>
   & BinaryCastFn<Complex, Complex, Choose<Complex, R>>
   & BinaryCastFn<Boolean, Boolean, Choose<Boolean, R>>
