@@ -1,152 +1,3 @@
-// import { method, multi, Multi } from '@arrows/multimethod'
-// import { is } from './is'
-// import { Base } from './Expression'
-// import { Binary } from './binary'
-// import { Unary } from './unary'
-// import { Scope, scope as createScope } from './scope'
-// import { Real } from './real'
-// import { Complex } from './complex'
-// import { Variable, variable } from './variable'
-// import { Addition, add } from './addition'
-// import { Multiplication, multiply } from './multiplication'
-// import { Exponentiation, raise } from './exponentiation'
-// import { Logarithm, log } from './logarithmic'
-// import { AbsoluteValue, abs } from './absolute'
-// import {
-//   Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
-//   cos, sin, tan, sec, csc, cot
-// } from './trigonometric'
-// import {
-//   ArcusCosine, ArcusSine, ArcusTangent,
-//   ArcusSecant, ArcusCosecant, ArcusCotangent,
-//   acos, asin, atan, asec, acsc, acot
-// } from './arcus'
-// import { 
-//   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
-//   HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
-//   cosh, sinh, tanh, sech, csch, coth 
-// } from './hyperbolic'
-// import {
-//   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
-//   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
-//   acosh, asinh, atanh, asech, acsch, acoth
-// } from './areaHyperbolic'
-// import { Factorial, factorial } from './factorial'
-// import { Gamma, gamma } from './gamma'
-// import { Polygamma, polygamma } from './polygamma'
-// import { Permutation, Combination, permute, combine } from './combinatorics'
-// import { 
-//   Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
-//   equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals
-// } from './inequality'
-// import {
-//   LogicalComplement,
-//   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
-//   AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
-//   not,
-//   and, or, xor, implies,
-//   nand, nor, xnor, converse
-// } from './connective'
-
-// type EvaluateFn = Multi & ((expression: Base) => Base)
-
-// const createEvaluate = (scope: Scope) => {
-//   const constant = <T>() => (n: T) => n
-//   const binary = (b: (...args: Base[]) => Base) => 
-//     (e: Binary) => b(fn(e.left), fn(e.right))
-//   const unary = (u: (arg: Base) => Base) => 
-//     (e: Unary) => u(fn(e.expression))
-
-//   const fn: EvaluateFn = multi(
-//     method(is(Real), constant<Real>()),
-//     method(is(Complex), constant<Complex>()),
-//     method(is(Variable), (v: Variable) => scope.get(v.name)?.value ?? v),
-  
-//     method(is(Addition), binary(add)),
-//     method(is(Multiplication), binary(multiply)),
-//     method(is(Exponentiation), binary(raise)),
-//     method(is(Logarithm), binary(log)),
-
-//     method(is(Equals), binary(equals)),
-//     method(is(NotEquals), binary(notEquals)),
-//     method(is(LessThan), binary(lessThan)),
-//     method(is(GreaterThan), binary(greaterThan)),
-//     method(is(LessThanEquals), binary(lessThanEquals)),
-//     method(is(GreaterThanEquals), binary(greaterThanEquals)),
-//     method(is(LogicalComplement), unary(not)),
-
-//     method(is(Conjunction), binary(and)),
-//     method(is(Disjunction), binary(or)),
-//     method(is(ExclusiveDisjunction), binary(xor)),
-//     method(is(Implication), binary(implies)),
-//     method(is(AlternativeDenial), binary(nand)),
-//     method(is(JointDenial), binary(nor)),
-//     method(is(Biconditional), binary(xnor)),
-//     method(is(ConverseImplication), binary(converse)),
-
-//     method(is(Permutation), binary(permute)),
-//     method(is(Combination), binary(combine)),
-  
-//     method(is(AbsoluteValue), unary(abs)),
-  
-//     method(is(Cosine), unary(cos)),
-//     method(is(Sine), unary(sin)),
-//     method(is(Tangent), unary(tan)),
-//     method(is(Secant), unary(sec)),
-//     method(is(Cosecant), unary(csc)),
-//     method(is(Cotangent), unary(cot)),
-  
-//     method(is(ArcusCosine), unary(acos)),
-//     method(is(ArcusSine), unary(asin)),
-//     method(is(ArcusTangent), unary(atan)),
-//     method(is(ArcusSecant), unary(asec)),
-//     method(is(ArcusCosecant), unary(acsc)),
-//     method(is(ArcusCotangent), unary(acot)),
-  
-//     method(is(HyperbolicCosine), unary(cosh)),
-//     method(is(HyperbolicSine), unary(sinh)),
-//     method(is(HyperbolicTangent), unary(tanh)),
-//     method(is(HyperbolicSecant), unary(sech)),
-//     method(is(HyperbolicCosecant), unary(csch)),
-//     method(is(HyperbolicCotangent), unary(coth)),
-  
-//     method(is(AreaHyperbolicCosine), unary(acosh)),
-//     method(is(AreaHyperbolicSine), unary(asinh)),
-//     method(is(AreaHyperbolicTangent), unary(atanh)),
-//     method(is(AreaHyperbolicSecant), unary(asech)),
-//     method(is(AreaHyperbolicCosecant), unary(acsch)),
-//     method(is(AreaHyperbolicCotangent), unary(acoth)),
-  
-//     method(is(Factorial), unary(factorial)),
-//     method(is(Gamma), unary(gamma)),
-//     method(
-//       (v: unknown) => v instanceof Polygamma, 
-//       (e: Binary) => polygamma(fn(e.left), fn(e.right))
-//     )
-//   )
-//   return fn
-// }
-
-// const union = <T>(a: Set<T>, b: Set<T>) => {
-//   const r = new Set<T>(a)
-//   for(const i of b){
-//     r.add(i)
-//   }
-//   return r
-// }
-
-// type ParameterizeFn = Multi
-//   & ((expression: Base) => Set<string>)
-
-// // Potential speed boost alternative: write this as generators, and
-// // coalesce the resulting iterable externally.
-// export const parameterize: ParameterizeFn = multi(
-//   method(is(Variable), (v: Variable) => new Set(v.name)),
-//   method(is(Binary), (b: Binary) => union(parameterize(b.left), parameterize(b.right))),
-//   method(is(Unary), (u: Unary) => parameterize(u.expression)),
-//   method(new Set<string>())
-// )
-
 import { multi, method, Multi } from '@arrows/multimethod'
 import * as R from './monads/reader'
 import * as W from './monads/writer'
@@ -165,8 +16,9 @@ import {
 } from './arithmetic'
 import { log, isLogarithm } from './functions/logarithmic'
 import { 
-  equals, 
-  isEquality 
+  equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals,
+  isEquality, isStrictInequality, isLessThan, isGreaterThan,
+  isLessThanEquals, isGreaterThanEquals
 } from './functions/inequality'
 import { 
   not, and, or, xor, implies, nand, nor, xnor, converse,
@@ -183,6 +35,24 @@ import {
   cos, sin, tan, sec, csc, cot,
   isCosine, isSine, isTangent, isSecant, isCosecant, isCotangent
 } from './functions/trigonometric'
+import {
+  acos, asin, atan, asec, acsc, acot,
+  isArcusCosine, isArcusSine, isArcusTangent,
+  isArcusSecant, isArcusCosecant, isArcusCotangent
+} from './functions/arcus'
+import {
+  cosh, sinh, tanh, sech, csch, coth,
+  isHyperbolicCosine, isHyperbolicSine, isHyperbolicTangent,
+  isHyperbolicSecant, isHyperbolicCosecant, isHyperbolicCotangent
+} from './functions/hyperbolic'
+import {
+  acosh, asinh, atanh, asech, acsch, acoth,
+  isAreaHyperbolicCosine, isAreaHyperbolicSine, isAreaHyperbolicTangent,
+  isAreaHyperbolicSecant, isAreaHyperbolicCosecant, isAreaHyperbolicCotangent
+} from './functions/areaHyperbolic'
+import { factorial, isFactorial } from './functions/factorial'
+import { gamma, isGamma } from './functions/gamma'
+import { polygamma, isPolygamma } from './functions/polygamma'
 import { parameterize } from './utility/parameterization'
 
 type EvaluableNode<T extends TreeNode> = R.Reader<Scope, W.Writer<T>>
@@ -196,19 +66,19 @@ const emptyScope = createScope()
 const guardFrom = <T extends TreeNode>(guard: TreeNodeGuardFn<T>) =>
   (expression: EvaluableNode<T>) => guard(expression(emptyScope))
 
-const constant = <T extends PrimitiveNode>(species: Species): CorrespondingFn<T> => 
-  _ => (n: T): W.Action<T> => [n, `invoked ${species}`]
+const constant = <T extends PrimitiveNode>(): CorrespondingFn<T> => 
+  _ => (n: T): W.Action<T> => [n, `invoked ${n.species}`]
 
-const binary = <T extends BinaryNode, R>(b: BinaryFn<T, R>, species: Species): CorrespondingFn<T> =>
+const binary = <T extends BinaryNode, R>(b: BinaryFn<T, R>): CorrespondingFn<T> =>
   scope => (e: BinaryNode): W.Action<T> => [
     b(evaluate(s => e.left)(scope), evaluate(s => e.right)(scope)), 
-    `invoked ${species}`
+    `invoked ${e.species}`
   ]
 
-const unary = <T extends UnaryNode, R>(u: UnaryFn<T, R>, species: Species): CorrespondingFn<T> =>
+const unary = <T extends UnaryNode, R>(u: UnaryFn<T, R>): CorrespondingFn<T> =>
   scope => (e: UnaryNode): W.Action<T> => [
     u(evaluate(s => e.expression)(scope)),
-    `invoked ${species}`
+    `invoked ${e.species}`
   ]
 
 const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: CorrespondingFn<T>) =>
@@ -229,49 +99,73 @@ const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: CorrespondingFn
   )
 
 const evaluate: EvaluateFn = multi(
-  when(isReal, constant<Real>(Species.real)),
-  when(isComplex, constant<Complex>(Species.complex)),
-  when(isBoolean, constant<Boolean>(Species.boolean)),
+  when(isReal, constant<Real>()),
+  when(isComplex, constant<Complex>()),
+  when(isBoolean, constant<Boolean>()),
 
   when(isVariable, scope => v => [
     scope.get(v.name)?.value.value ?? v, 
     `${scope.get(v.name)?.value.value ? 'substituting' : 'invoking'} variable ${v.name}`
   ]),
 
-  when(isAddition, binary(add, Species.add)),
-  when(isMultiplication, binary(multiply, Species.multiply)),
-  when(isExponentiation, binary(raise, Species.raise)),
-  when(isLogarithm, binary(log, Species.log)),
+  when(isAddition, binary(add)),
+  when(isMultiplication, binary(multiply)),
+  when(isExponentiation, binary(raise)),
+  when(isLogarithm, binary(log)),
 
-//     method(is(Equals), binary(equals)),
-//     method(is(NotEquals), binary(notEquals)),
-//     method(is(LessThan), binary(lessThan)),
-//     method(is(GreaterThan), binary(greaterThan)),
-//     method(is(LessThanEquals), binary(lessThanEquals)),
-//     method(is(GreaterThanEquals), binary(greaterThanEquals)),
-  when(isEquality, binary(equals, Species.equals)),
+  when(isEquality, binary(equals)),
+  when(isStrictInequality, binary(notEquals)),
+  when(isLessThan, binary(lessThan)),
+  when(isGreaterThan, binary(greaterThan)),
+  when(isLessThanEquals, binary(lessThanEquals)),
+  when(isGreaterThanEquals, binary(greaterThanEquals)),
 
-  when(isComplement, unary(not, Species.not)),
-  when(isConjunction, binary(and, Species.and)),
-  when(isDisjunction, binary(or, Species.or)),
-  when(isExclusiveDisjunction, binary(xor, Species.xor)),
-  when(isImplication, binary(implies, Species.implies)),
-  when(isAlternativeDenial, binary(nand, Species.nand)),
-  when(isJointDenial, binary(nor, Species.nor)),
-  when(isBiconditional, binary(xnor, Species.xnor)),
-  when(isConverseImplication, binary(converse, Species.converse)),
+  when(isComplement, unary(not)),
+  when(isConjunction, binary(and)),
+  when(isDisjunction, binary(or)),
+  when(isExclusiveDisjunction, binary(xor)),
+  when(isImplication, binary(implies)),
+  when(isAlternativeDenial, binary(nand)),
+  when(isJointDenial, binary(nor)),
+  when(isBiconditional, binary(xnor)),
+  when(isConverseImplication, binary(converse)),
 
-  when(isPermutation, binary(permute, Species.permute)),
-  when(isCombination, binary(combine, Species.combine)),
+  when(isPermutation, binary(permute)),
+  when(isCombination, binary(combine)),
 
-  when(isAbsolute, unary(abs, Species.abs)),
+  when(isAbsolute, unary(abs)),
 
-  when(isCosine, unary(cos, Species.cos)),
-  when(isSine, unary(sin, Species.sin)),
-  when(isTangent, unary(tan, Species.tan)),
-  when(isSecant, unary(sec, Species.sec)),
-  when(isCosecant, unary(csc, Species.csc)),
-  when(isCotangent, unary(cot, Species.cot)),
+  when(isCosine, unary(cos)),
+  when(isSine, unary(sin)),
+  when(isTangent, unary(tan)),
+  when(isSecant, unary(sec)),
+  when(isCosecant, unary(csc)),
+  when(isCotangent, unary(cot)),
+
+  when(isArcusCosine, unary(acos)),
+  when(isArcusSine, unary(asin)),
+  when(isArcusTangent, unary(atan)),
+  when(isArcusSecant, unary(asec)),
+  when(isArcusCosecant, unary(acsc)),
+  when(isArcusCotangent, unary(acot)),
+  
+  when(isHyperbolicCosine, unary(cosh)),
+  when(isHyperbolicSine, unary(sinh)),
+  when(isHyperbolicTangent, unary(tanh)),
+  when(isHyperbolicSecant, unary(sech)),
+  when(isHyperbolicCosecant, unary(csch)),
+  when(isHyperbolicCotangent, unary(coth)),
+  
+  when(isAreaHyperbolicCosine, unary(acosh)),
+  when(isAreaHyperbolicSine, unary(asinh)),
+  when(isAreaHyperbolicTangent, unary(atanh)),
+  when(isAreaHyperbolicSecant, unary(asech)),
+  when(isAreaHyperbolicCosecant, unary(acsch)),
+  when(isAreaHyperbolicCotangent, unary(acoth)),
+
+  when(isFactorial, unary(factorial)),
+  when(isGamma, unary(gamma)),
+  when(isPolygamma, binary(polygamma))
 )
 
 function* zip<T, U>(parameters: Set<T>, args: U[]) {
