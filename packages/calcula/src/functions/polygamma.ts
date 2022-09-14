@@ -1,8 +1,9 @@
 import { multi, method, _, Multi } from "@arrows/multimethod"
 import { Writer, unit } from "../monads/writer"
-import { TreeNode, Species, any } from "../utility/tree"
+import { TreeNode, Species } from "../utility/tree"
 import { Real, Complex, Boolean, real, isReal, isComplex, isPrimitive } from "../primitives"
-import { Binary, binary, partialLeft, when } from "../closures/binary"
+import { variable } from "../variable"
+import { Binary, binary, partialLeft, when, BinaryNodeMetaTuple } from "../closures/binary"
 import { 
   add, subtract, multiply, divide, double, raise, reciprocal
 } from "../arithmetic"
@@ -11,6 +12,8 @@ import { ln } from "./logarithmic"
 import { cot } from "./trigonometric"
 import { factorial } from "./factorial"
 import { isValue } from "../utility/deepEquals"
+import { differentiate } from "../calculus/differentiation"
+import { invoke } from "../invocation"
 
 export type Polygamma = Binary<Species.polygamma>
 
@@ -81,18 +84,18 @@ const calculatePolygamma = (
   )
 }
 
-// const polygammaReflection = (m: Base, z: Base) => {
-//   const pi = real(Math.PI)
-//   const order = real(is(Real)(m) ? m.value : is(Complex)(m) ? m.a : 0)
-//   const d = differentiate(order, cot(multiply(pi, variable('x'))))
-//   return subtract(
-//     multiply(
-//       raise(real(-1), m),
-//       polygamma(m, subtract(real(1), z))
-//     ),
-//     multiply(pi, invoke()(d)(z))
-//   )
-// }
+const polygammaReflection = (m: Writer<TreeNode>, z: Writer<TreeNode>) => {
+  const pi = real(Math.PI)
+  const order = real(isReal(m) ? m.value.value : isComplex(m) ? m.value.a : 0)
+  const d = differentiate(order, cot(multiply(pi, variable('x'))))
+  return subtract(
+    multiply(
+      raise(real(-1), m),
+      polygamma(m, subtract(real(1), z))
+    ),
+    multiply(pi, invoke()(d)(z))
+  )
+}
 
 const polygammaRecurrence = (m: Writer<TreeNode>, z: Writer<TreeNode>) => {
   return subtract(
@@ -128,7 +131,7 @@ const digammaRecurrence = (e: Writer<TreeNode>) => {
   )
 }
 
-export const [polygamma, isPolygamma] = binary<Polygamma>(Species.polygamma)(
+export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(Species.polygamma)(
   (l, r) => [
     calculatePolygamma(unit(l), unit(r)) as Writer<Real>, 
     'computed real polygamma'
@@ -154,8 +157,20 @@ export const [polygamma, isPolygamma] = binary<Polygamma>(Species.polygamma)(
     (l, r) => isValue(real(0))(l) && isPrimitive(r),
     (_l, r) => [calculateDigamma(unit(r)), 'computed digamma']
   ),
-  // method([is(Real), isNegative], (l: Base, r: Base) => polygammaReflection(l, r)),
-  when([isReal, isSmall], (l, r) => [polygammaRecurrence(unit(l), unit(r)), 'polygamma recurrence for small value'])
+  when(
+    (l, r) => isReal(l) && isNegative(r),
+    (l, r) => [
+      polygammaReflection(unit(l), unit(r)), 
+      'polygamma reflection for negative value'
+    ]
+  ),
+  when(
+    (l, r) => isReal(l) && isSmall(r),
+    (l, r) => [
+      polygammaRecurrence(unit(l), unit(r)), 
+      'polygamma recurrence for small value'
+    ]
+  )
 )
 
 export const digamma = partialLeft(polygamma)(real(0))

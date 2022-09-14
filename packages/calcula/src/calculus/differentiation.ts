@@ -1,6 +1,8 @@
 import { method, multi, Multi } from '@arrows/multimethod'
 import { Writer, Action, unit, bind, isWriter } from '../monads/writer'
-import { TreeNode, TreeNodeGuardFn, isTreeNode } from '../utility/tree'
+import { 
+  TreeNode, TreeNodeGuardFn, isTreeNode, isSpecies, Species 
+} from '../utility/tree'
 import { 
   Real,
   isReal, isComplex, isBoolean, isNil, isNaN,
@@ -33,7 +35,7 @@ import {
 } from '../functions/areaHyperbolic'
 import { isFactorial } from '../functions/factorial'
 import { isGamma } from '../functions/gamma'
-import { isPolygamma, polygamma, digamma } from '../functions/polygamma'
+import { polygamma, digamma, Polygamma } from '../functions/polygamma'
 
 type DifferentiateFn = Multi
   & ((order: Writer<Real>, expression: Writer<TreeNode>) => Writer<TreeNode>)
@@ -280,7 +282,12 @@ export const differentiate: DifferentiateFn = multi(
     chain(multiply(unit(e), digamma(e.expression)), e.expression),
     'derivative of gamma'
   ]),
-  when(isPolygamma, e => [
+  // NOTE: while 'isPolygamma' is the more natural and consistent fit, here,
+  // that function is defined explicitly as the output of 'binary'; the
+  // 'polygamma' function depends upon 'differentiate', in part, for its
+  // reflection formula, which borks this logic. Easier to replace with a
+  // 'isSpecies'.
+  when(isSpecies<Polygamma>(Species.polygamma), e => [
     chain(polygamma(add(e.left, real(1)), e.right), e.right),
     'derivative of polygamma'
   ])
