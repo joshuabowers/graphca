@@ -4,7 +4,8 @@
   "types": "./build/index.d.ts",
   "packageManager": "yarn@3.2.2",
   "dependencies": {
-    "@arrows/multimethod": "^2.1.0"
+    "@arrows/multimethod": "^2.1.0",
+    "pegase": "^0.6.3"
   },
   "devDependencies": {
     "@types/jest": "^28.1.7",

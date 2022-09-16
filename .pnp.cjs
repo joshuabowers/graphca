@@ -2907,6 +2907,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@arrows/multimethod", "npm:2.1.0"],\
             ["@types/jest", "npm:28.1.7"],\
             ["jest", "virtual:162322011086e8b9f14181c28073a0473aa57bda6cae6375d16535b68a4133635a14aca7937c193e1e87c412f430690052faf19923fbabafbd81d6d6de85833a#npm:28.1.3"],\
+            ["pegase", "npm:0.6.3"],\
             ["ts-jest", "virtual:162322011086e8b9f14181c28073a0473aa57bda6cae6375d16535b68a4133635a14aca7937c193e1e87c412f430690052faf19923fbabafbd81d6d6de85833a#npm:28.0.8"],\
             ["ts-node", "virtual:390ff1b1511aac112ef8a303cbf240bcaf253c15f25cbee55942b0d3ebf7c4fe11e2f2e3648334c8c0a3e2090df1a6349e8830aefd2702622816d7bf1fdfbfe2#npm:10.9.1"],\
             ["typescript", "patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=f456af"]\
@@ -12988,6 +12989,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/path-type-npm-4.0.0-10d47fc86a-5b1e2daa24.zip/node_modules/path-type/",\
           "packageDependencies": [\
             ["path-type", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["pegase", [\
+        ["npm:0.6.3", {\
+          "packageLocation": "./.yarn/cache/pegase-npm-0.6.3-a63b46b756-64f4944c51.zip/node_modules/pegase/",\
+          "packageDependencies": [\
+            ["pegase", "npm:0.6.3"]\
           ],\
           "linkType": "HARD"\
         }]\

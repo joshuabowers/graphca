@@ -1,16 +1,40 @@
-import { Unicode } from './MathSymbols'
-import {
-  Base,
-  real, complex, bool, not, nil, variable, assign,
-  raise, negate, factorial, polygamma, digamma, log,
-  differentiate, invoke,
-  operators, connectives, inequality, additive, multiplicative, 
-  functions, permute, combine
-} from './Tree'
+import { Unicode } from './Unicode'
+import { Writer } from './monads/writer'
+import { TreeNode } from './utility/tree'
+import { real, complex, boolean, nil, isNil } from './primitives'
+import { variable, assign, Scope } from './variable'
+import { 
+  raise, negate, additive, multiplicative, AdditiveFn, MultiplicativeFn
+} from './arithmetic'
+import { log } from './functions/logarithmic'
+import { factorial } from './functions/factorial'
+import { polygamma, digamma } from './functions/polygamma'
+import { permute, combine } from './functions/combinatorics'
+import { 
+  not, connectives, inequality, functions, ConnectiveFn, InequalityFn 
+} from './functions'
+import { differentiate } from './calculus/differentiation'
+import { invoke } from './invocation'
 import { peg, $fail, $context } from 'pegase'
-import { EulerMascheroni } from './Tree/real'
-export { scope } from './Tree/scope'
-export type { Scope } from './Tree/scope'
+import { EulerMascheroni } from './primitives/real'
+export { scope } from './variable'
+export type { Scope } from './variable'
+
+type Operator = ConnectiveFn | InequalityFn | AdditiveFn | MultiplicativeFn
+
+const operators = new Map<string, Operator>()
+for(const [op, func] of connectives){
+  operators.set(op, func)
+}
+for(const [op, func] of inequality){
+  operators.set(op, func)
+}
+for(const [op, func] of additive){
+  operators.set(op, func)
+}
+for(const [op, func] of multiplicative){
+  operators.set(op, func)
+}
 
 const capture = (s: string) => `"${s}"`
 const connectiveOperators = peg([...connectives.keys()].map(capture).join('|'))
@@ -29,11 +53,11 @@ const validIdentifier = new RegExp(`[${letterRange}][${letterRange}0-9]*`, 'u')
 
 type Tail = {
   op: string,
-  a: Base,
+  a: Writer<TreeNode>,
   b?: Tail
 }
 
-const leftAssociate = (node: Base, tail: Tail | undefined): Base | undefined => {
+const leftAssociate = (node: Writer<TreeNode>, tail: Tail | undefined): Writer<TreeNode> | undefined => {
   if(!tail){ return node; }
   const operator = operators.get(tail.op)
   if(!operator){ 
@@ -47,16 +71,16 @@ const leftAssociate = (node: Base, tail: Tail | undefined): Base | undefined => 
 }
 
 type InvokeList = {
-  a: Base[],
+  a: Writer<TreeNode>[],
   b?: InvokeList
 }
 
-const createInvoke = (node: Base, tail: InvokeList | undefined): Base | undefined => {
+const createInvoke = (node: Writer<TreeNode>, tail: InvokeList | undefined): Writer<TreeNode> | undefined => {
   if(!tail){ return node }
   return createInvoke(invoke($context())(node)(...tail.a), tail.b)
 }
 
-const builtInFunction = (name: string, expression: Base): Base | undefined => {
+const builtInFunction = (name: string, expression: Writer<TreeNode>): Writer<TreeNode> | undefined => {
   const f = functions.get(name)
   if(!f){ 
     $fail(`could not locate built-in function '${name}'`)
@@ -65,18 +89,18 @@ const builtInFunction = (name: string, expression: Base): Base | undefined => {
   return f(expression)
 }
 
-const unbox = (value: Base | undefined) => value?.$kind !== 'Nil' ? value : undefined
+const unbox = (value: Writer<TreeNode> | undefined) => value && !isNil(value) ? value : undefined
 
 // NOTE on Factorial: '!' is used in both factorial and not equals (!=);
 // this can confuse peg (think 5! == x, 5 != x); so factorial deliberately
 // fails if it encounters a '=' afterward. Might need to revisit once
 // equals is integrated.
 
-export const parser = peg<Base>`
-expression: <a>assignment ${({a}) => assign('Ans', a, $context()).value}
+export const parser = peg<Writer<TreeNode>, Scope>`
+expression: <a>assignment ${({a}) => assign('Ans', a, $context()).value.value}
 
 assignment:
-| <a>$variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b, $context()).value}
+| <a>$variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b, $context()).value.value}
 | connectives
 
 connectives: leftAssociative(inequality, ${connectiveOperators})
@@ -146,7 +170,7 @@ derivative:
 }
 
 primitive:
-| $nil ${() => nil()}
+| $nil ${() => nil}
 | variable
 | constant
 
@@ -156,25 +180,25 @@ constant:
 | boolean
 
 variable:
-| <name>$variable ${({name}) => unbox($context()?.get(name)?.value) ?? variable(name)}
+| <name>$variable ${({name}) => unbox($context()?.get(name)?.value.value) ?? variable(name)}
 
 complex:
 | <n>${subtractionOperators}? <a>real ${additionOperators} <b>real? $i ${({n, a, b}) => {
-  return complex((n ? -1 : 1) * a.value, b?.value ?? 1)
+  return complex([(n ? -1 : 1) * a.value.value, b?.value.value ?? 1])
 }}
-| <n>${subtractionOperators}? <a>real ${subtractionOperators} <b>real? $i ${({n, a, b}) => complex((n ? -1 : 1) * a.value, -(b?.value ?? 1))}
-| <n>${subtractionOperators}? <b>real? $i ${({n, b}) => complex(0, (n ? -1 : 1) * (b?.value ?? 1))}
+| <n>${subtractionOperators}? <a>real ${subtractionOperators} <b>real? $i ${({n, a, b}) => complex([(n ? -1 : 1) * a.value.value, -(b?.value.value ?? 1)])}
+| <n>${subtractionOperators}? <b>real? $i ${({n, b}) => complex([0, (n ? -1 : 1) * (b?.value.value ?? 1)])}
 
 real:
-| <value>$real ${({value}) => real(value)}
+| <value>$real ${({value}) => real(Number(value))}
 | $e ${() => real(Math.E)}
 | $euler ${() => EulerMascheroni}
 | $pi ${() => real(Math.PI)}
 | $infinity ${() => real(Infinity)}
 
 boolean:
-| $true ${() => bool(true)}
-| $false ${() => bool(false)}
+| $true ${() => boolean(true)}
+| $false ${() => boolean(false)}
 
 keywords: 
 | builtInFunction

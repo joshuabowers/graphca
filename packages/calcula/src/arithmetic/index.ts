@@ -17,3 +17,16 @@ export {
 export {
   isAddition, isMultiplication, isExponentiation
 }
+
+export type AdditiveFn = typeof add | typeof subtract
+export type MultiplicativeFn = typeof multiply | typeof divide
+
+export const additive = new Map<string, AdditiveFn>([
+  ['+', add],
+  ['-', subtract]
+])
+
+export const multiplicative = new Map<string, MultiplicativeFn>([
+  ['*', multiply],
+  ['/', divide]
+])

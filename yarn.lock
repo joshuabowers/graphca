@@ -1557,6 +1557,7 @@ __metadata:
     "@arrows/multimethod": ^2.1.0
     "@types/jest": ^28.1.7
     jest: ^28.1.3
+    pegase: ^0.6.3
     ts-jest: ^28.0.8
     ts-node: ^10.9.1
     typescript: ^4.7.4
@@ -9779,6 +9780,13 @@ __metadata:
   version: 4.0.0
   resolution: "path-type@npm:4.0.0"
   checksum: 5b1e2daa247062061325b8fdbfd1fb56dde0a448fb1455453276ea18c60685bdad23a445dc148cf87bc216be1573357509b7d4060494a6fd768c7efad833ee45
+  languageName: node
+  linkType: hard
+
+"pegase@npm:^0.6.3":
+  version: 0.6.3
+  resolution: "pegase@npm:0.6.3"
+  checksum: 64f4944c515994ee24e468874b791d60a3fd5660d56b62562a028e502c9bfe95f9ab3c8a69682fc5b2aecf92e8d1b43bd04e3b13ce0f0ed482539e5ad65ae2e5
   languageName: node
   linkType: hard
 
