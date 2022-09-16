@@ -14,7 +14,7 @@ import {
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,
   abs, gamma, greaterThan, lessThan, lessThanEquals,
-  and, factorial, polygamma, digamma, permute, combine
+  and, factorial, polygamma, digamma, permute, combine, or
 } from './functions'
 import { differentiate } from './calculus/differentiation';
 import { parser, Scope, scope } from "./parser";
@@ -29,7 +29,6 @@ const expectObject = (input: string, expected: Writer<TreeNode>, scope?: Scope) 
 const expectInScope = (scope: Scope, input: string, ...expected: Writer<Variable>[]) => {
   expectObject(input, expected[0].value.value ?? real(0xdeadbeef), scope)
   for(let e of expected){
-    // expect(scope.get(e.value.name)?.value).toEqual(e.value)
     if(e.value.value && !isNil(e.value.value)) {
       expect(scope.get(e.value.name)?.value).toEqual(e.value)
     } else {
@@ -527,7 +526,10 @@ describe('parser', () => {
     })
 
     it('assigns the value of the expression automatically to Ans', () => {
-      expectInScope(scope(), '2 * 5', variable('Ans', real(10)))
+      // NOTE: multiplication used to ensure proper log information is
+      // added to the Writer for comparison against the actual result.
+      // Otherwise, would have to ignore log info on variable comparisons.
+      expectInScope(scope(), '2 * 5', variable('Ans', multiply(real(2), real(5))))
     })
   })
 
@@ -641,7 +643,13 @@ describe('parser', () => {
     })
 
     it('matches connectives with greater precedence than assignment', () => {
-      expectInScope(scope(), `y := false ${Unicode.or} true`, variable('y', boolean(true)))
+      // NOTE: using the 'or' function to generate log information for
+      // the Writer for the value bound to the variable.
+      expectInScope(
+        scope(), 
+        `y := false ${Unicode.or} true`, 
+        variable('y', or(boolean(false), boolean(true)))
+      )
     })
 
     it('matches connectives with lower precedence than inequalities', () => {

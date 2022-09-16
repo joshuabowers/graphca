@@ -1,6 +1,6 @@
 import { Writer, unit } from './monads/writer'
 import { TreeNode, Clades, Species, isSpecies } from './utility/tree'
-import { nil } from './primitives'
+import { isNil, nil } from './primitives'
 
 export type Variable = TreeNode & {
   readonly clade: Clades.variadic,
@@ -29,6 +29,9 @@ export const scope = (entries: Entries = []): Scope =>
 
 export const assign = (name: string, value: Writer<TreeNode>, scope?: Scope) => {
   const v = variable(name, value)
-  scope?.set(name, v)
+  if(scope){
+    if(isNil(value)){ scope.delete(name) }
+    else { scope.set(name, v) }
+  }
   return v
 }
