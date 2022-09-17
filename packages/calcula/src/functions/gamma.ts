@@ -67,7 +67,7 @@ const calculateGamma = (input: Writer<Real|Complex>): Writer<TreeNode> => {
 
 export type Gamma = Unary<Species.gamma>
 
-export const [gamma, isGamma] = unary<Gamma>(Species.gamma)(
+export const [gamma, isGamma, $gamma] = unary<Gamma>(Species.gamma)(
   r => [calculateGamma(unit(r)) as Writer<Real>, 'computed real gamma'],
   c => [calculateGamma(unit(c)) as Writer<Complex>, 'computed complex gamma'],
   b => [boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>), 'computed boolean gamma']

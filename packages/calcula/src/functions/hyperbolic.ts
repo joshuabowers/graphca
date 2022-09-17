@@ -21,7 +21,7 @@ export type HyperbolicCosecant = Hyperbolic<Species.csch>
 export type HyperbolicSecant = Hyperbolic<Species.sech>
 export type HyperbolicCotangent = Hyperbolic<Species.coth>
 
-export const [cosh, isHyperbolicCosine] = unary<HyperbolicCosine>(
+export const [cosh, isHyperbolicCosine, $cosh] = unary<HyperbolicCosine>(
   Species.cosh, Genera.hyperbolic
 )(
   r => [real(Math.cosh(r.value)), 'computed real hyperbolic cosine'],
@@ -35,7 +35,7 @@ export const [cosh, isHyperbolicCosine] = unary<HyperbolicCosine>(
   b => [b, 'computed boolean hyperbolic cosine']
 )()
 
-export const [sinh, isHyperbolicSine] = unary<HyperbolicSine>(
+export const [sinh, isHyperbolicSine, $sinh] = unary<HyperbolicSine>(
   Species.sinh, Genera.hyperbolic
 )(
   r => [real(Math.sinh(r.value)), 'computed real hyperbolic sine'],
@@ -49,7 +49,7 @@ export const [sinh, isHyperbolicSine] = unary<HyperbolicSine>(
   b => [b, 'computed boolean hyperbolic sine']
 )()
 
-export const [tanh, isHyperbolicTangent] = unary<HyperbolicTangent>(
+export const [tanh, isHyperbolicTangent, $tanh] = unary<HyperbolicTangent>(
   Species.tanh, Genera.hyperbolic
 )(
   r => [real(Math.tanh(r.value)), 'computed real hyperbolic tangent'],
@@ -66,7 +66,7 @@ export const [tanh, isHyperbolicTangent] = unary<HyperbolicTangent>(
   b => [b, 'computed boolean hyperbolic tangent']
 )()
 
-export const [sech, isHyperbolicSecant] = unary<HyperbolicSecant>(
+export const [sech, isHyperbolicSecant, $sech] = unary<HyperbolicSecant>(
   Species.sech, Genera.hyperbolic
 )(
   r => [reciprocal(cosh(unit(r))), 'computed real hyperbolic secant'],
@@ -74,7 +74,7 @@ export const [sech, isHyperbolicSecant] = unary<HyperbolicSecant>(
   b => [reciprocal(cosh(unit(b))), 'computed boolean hyperbolic secant']
 )()
 
-export const [csch, isHyperbolicCosecant] = unary<HyperbolicCosecant>(
+export const [csch, isHyperbolicCosecant, $csch] = unary<HyperbolicCosecant>(
   Species.csch, Genera.hyperbolic 
 )(
   r => [reciprocal(sinh(unit(r))), 'computed real hyperbolic cosecant'],
@@ -82,7 +82,7 @@ export const [csch, isHyperbolicCosecant] = unary<HyperbolicCosecant>(
   b => [reciprocal(sinh(unit(b))), 'computed boolean hyperbolic cosecant']
 )()
 
-export const [coth, isHyperbolicCotangent] = unary<HyperbolicCotangent>(
+export const [coth, isHyperbolicCotangent, $coth] = unary<HyperbolicCotangent>(
   Species.coth, Genera.hyperbolic
 )(
   r => [reciprocal(tanh(unit(r))), 'computed hyperbolic cotangent'],

@@ -21,7 +21,7 @@ export type Cosecant = Trigonometric<Species.csc>
 export type Secant = Trigonometric<Species.sec>
 export type Cotangent = Trigonometric<Species.cot>
 
-export const [sin, isSine] = unary<Sine>(Species.sin, Genera.trigonometric)(
+export const [sin, isSine, $sin] = unary<Sine>(Species.sin, Genera.trigonometric)(
   r => [real(Math.sin(r.value)), 'computed real sine'],
   c => [
     complex([
@@ -33,7 +33,7 @@ export const [sin, isSine] = unary<Sine>(Species.sin, Genera.trigonometric)(
   b => [boolean(real(Math.sin(b.value ? 1 : 0))), 'computed boolean sine']
 )()
 
-export const [cos, isCosine] = unary<Cosine>(Species.cos, Genera.trigonometric)(
+export const [cos, isCosine, $cos] = unary<Cosine>(Species.cos, Genera.trigonometric)(
   r => [real(Math.cos(r.value)), 'computed real cosine'],
   c => [complex([
     Math.cos(c.a) * Math.cosh(c.b),
@@ -42,7 +42,7 @@ export const [cos, isCosine] = unary<Cosine>(Species.cos, Genera.trigonometric)(
   b => [boolean(real(Math.cos(b.value ? 1 : 0))), 'computed boolean cosine']
 )()
 
-export const [tan, isTangent] = unary<Tangent>(Species.tan, Genera.trigonometric)(
+export const [tan, isTangent, $tan] = unary<Tangent>(Species.tan, Genera.trigonometric)(
   r => [real(Math.tan(r.value)), 'computed real tangent'],
   c => {
     const divisor = Math.cos(2 * c.a) + Math.cosh(2 * c.b)
@@ -54,19 +54,19 @@ export const [tan, isTangent] = unary<Tangent>(Species.tan, Genera.trigonometric
   b => [boolean(real(Math.tan(b.value ? 1 : 0))), 'computed boolean tangent']
 )()
 
-export const [sec, isSecant] = unary<Secant>(Species.sec, Genera.trigonometric)(
+export const [sec, isSecant, $sec] = unary<Secant>(Species.sec, Genera.trigonometric)(
   r => [reciprocal(cos(unit(r))), 'computed real secant'],
   c => [reciprocal(cos(unit(c))), 'computed complex secant'],
   b => [reciprocal(cos(unit(b))), 'computed boolean secant']
 )()
 
-export const [csc, isCosecant] = unary<Cosecant>(Species.csc, Genera.trigonometric)(
+export const [csc, isCosecant, $csc] = unary<Cosecant>(Species.csc, Genera.trigonometric)(
   r => [reciprocal(sin(unit(r))), 'computed real cosecant'],
   c => [reciprocal(sin(unit(c))), 'computed complex cosecant'],
   b => [reciprocal(sin(unit(b))), 'computed boolean cosecant']
 )()
 
-export const [cot, isCotangent] = unary<Cotangent>(Species.cot, Genera.trigonometric)(
+export const [cot, isCotangent, $cot] = unary<Cotangent>(Species.cot, Genera.trigonometric)(
   r => [reciprocal(tan(unit(r))), 'computed real cotangent'],
   c => [reciprocal(tan(unit(c))), 'computed complex cotangent'],
   b => [reciprocal(tan(unit(b))), 'computed boolean cosecant']

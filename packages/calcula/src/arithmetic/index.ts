@@ -1,9 +1,9 @@
-import { add, subtract, Addition, isAddition } from "./addition";
+import { add, subtract, Addition, isAddition, $add } from "./addition";
 import { 
-  multiply, divide, negate, double, Multiplication, isMultiplication 
+  multiply, divide, negate, double, Multiplication, isMultiplication, $multiply
 } from "./multiplication";
 import { 
-  raise, reciprocal, square, sqrt, Exponentiation, isExponentiation 
+  raise, reciprocal, square, sqrt, Exponentiation, isExponentiation, $raise
 } from "./exponentiation";
 
 export { 
@@ -16,6 +16,9 @@ export {
 }
 export {
   isAddition, isMultiplication, isExponentiation
+}
+export { 
+  $add, $multiply, $raise
 }
 
 export type AdditiveFn = typeof add | typeof subtract

@@ -1,18 +1,64 @@
 import { Unicode } from "../Unicode"
 import { 
+  Equality, StrictInequality, LessThan, GreaterThan,
+  LessThanEquals, GreaterThanEquals,
   equals, notEquals, lessThan, greaterThan,
-  lessThanEquals, greaterThanEquals
+  lessThanEquals, greaterThanEquals,
+  isEquality, isStrictInequality, isLessThan, isGreaterThan,
+  isLessThanEquals, isGreaterThanEquals,
+  $equals, $notEquals, $lessThan, $greaterThan,
+  $lessThanEquals, $greaterThanEquals
 } from "./inequality"
 import { 
-  not, and, or, xor, implies, nand, nor, xnor, converse 
+  Complement, Conjunction, Disjunction, ExclusiveDisjunction,
+  Implication, AlternativeDenial, JointDenial, Biconditional, ConverseImplication,
+  not, and, or, xor, implies, nand, nor, xnor, converse,
+  isComplement, isConjunction, isDisjunction, isExclusiveDisjunction,
+  isImplication, isAlternativeDenial, isJointDenial, isBiconditional,
+  isConverseImplication, isConnective,
+  $not, $and, $or, $xor, $implies, $nand, $nor, $xnor, $converse
 } from "./connectives"
-import { lb, ln, lg } from './logarithmic'
-import { cos, sin, tan, sec, csc, cot } from './trigonometric'
-import { acos, asin, atan, asec, acsc, acot } from './arcus'
-import { cosh, sinh, tanh, sech, csch, coth } from './hyperbolic'
-import { acosh, asinh, atanh, asech, acsch, acoth } from './areaHyperbolic'
-import { gamma } from './gamma'
-import { abs } from './absolute'
+import { 
+  Logarithm, lb, ln, lg, isLogarithm, $log
+} from './logarithmic'
+import { 
+  Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
+  cos, sin, tan, sec, csc, cot,
+  isTrigonometric,
+  isCosine, isSine, isTangent, isSecant, isCosecant, isCotangent,
+  $cos, $sin, $tan, $sec, $csc, $cot
+} from './trigonometric'
+import { 
+  ArcusCosine, ArcusSine, ArcusTangent, 
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
+  acos, asin, atan, asec, acsc, acot,
+  isArcus, isArcusCosine, isArcusSine, isArcusTangent,
+  isArcusSecant, isArcusCosecant, isArcusCotangent,
+  $acos, $asin, $atan, $asec, $acsc, $acot
+} from './arcus'
+import { 
+  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
+  cosh, sinh, tanh, sech, csch, coth,
+  isHyperbolic, isHyperbolicCosine, isHyperbolicSine, isHyperbolicTangent,
+  isHyperbolicSecant, isHyperbolicCosecant, isHyperbolicCotangent,
+  $cosh, $sinh, $tanh, $sech, $csch, $coth
+} from './hyperbolic'
+import { 
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
+  acosh, asinh, atanh, asech, acsch, acoth,
+  isAreaHyperbolic, isAreaHyperbolicCosine, isAreaHyperbolicSine,
+  isAreaHyperbolicTangent, isAreaHyperbolicSecant, isAreaHyperbolicCosecant,
+  isAreaHyperbolicCotangent,
+  $acosh, $asinh, $atanh, $asech, $acsch, $acoth
+} from './areaHyperbolic'
+import { 
+  Gamma, gamma, isGamma, $gamma
+} from './gamma'
+import { 
+  Absolute, abs, isAbsolute, $abs
+} from './absolute'
 import { sqrt } from '../arithmetic/exponentiation'
 
 export type InequalityFn = 
@@ -94,6 +140,21 @@ export const functions = new Map<string, Functions>([
 ])
 
 export {
+  Equality, StrictInequality, LessThan, GreaterThan,
+  LessThanEquals, GreaterThanEquals,
+  Complement, Conjunction, Disjunction, ExclusiveDisjunction,
+  Implication, AlternativeDenial, JointDenial, Biconditional, ConverseImplication, 
+  Logarithm, Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
+  ArcusCosine, ArcusSine, ArcusTangent, 
+  ArcusSecant, ArcusCosecant, ArcusCotangent,
+  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
+  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
+  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
+  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
+  Gamma, Absolute
+}
+
+export {
   equals, notEquals, lessThan, greaterThan,
   lessThanEquals, greaterThanEquals,
   not, and, or, xor, implies, nand, nor, xnor, converse,
@@ -104,6 +165,40 @@ export {
   gamma, abs
 }
 
-export { factorial } from './factorial'
-export { polygamma, digamma } from './polygamma'
-export { permute, combine } from './combinatorics'
+export {
+  isEquality, isStrictInequality, isLessThan, isGreaterThan,
+  isLessThanEquals, isGreaterThanEquals,
+  isComplement, isConjunction, isDisjunction, isExclusiveDisjunction,
+  isImplication, isAlternativeDenial, isJointDenial, isBiconditional,
+  isConverseImplication, isConnective, isLogarithm, isTrigonometric,
+  isCosine, isSine, isTangent, isSecant, isCosecant, isCotangent,
+  isArcus, isArcusCosine, isArcusSine, isArcusTangent,
+  isArcusSecant, isArcusCosecant, isArcusCotangent,
+  isHyperbolic, isHyperbolicCosine, isHyperbolicSine, isHyperbolicTangent,
+  isHyperbolicSecant, isHyperbolicCosecant, isHyperbolicCotangent,
+  isAreaHyperbolic, isAreaHyperbolicCosine, isAreaHyperbolicSine,
+  isAreaHyperbolicTangent, isAreaHyperbolicSecant, isAreaHyperbolicCosecant,
+  isAreaHyperbolicCotangent, isGamma, isAbsolute
+}
+
+export {
+  $equals, $notEquals, $lessThan, $greaterThan,
+  $lessThanEquals, $greaterThanEquals,
+  $not, $and, $or, $xor, $implies, $nand, $nor, $xnor, $converse,
+  $log, $cos, $sin, $tan, $sec, $csc, $cot,
+  $acos, $asin, $atan, $asec, $acsc, $acot,
+  $cosh, $sinh, $tanh, $sech, $csch, $coth,
+  $acosh, $asinh, $atanh, $asech, $acsch, $acoth,
+  $gamma, $abs
+}
+
+export { Factorial, factorial, isFactorial, $factorial } from './factorial'
+export { 
+  Polygamma, polygamma, digamma, isPolygamma, $polygamma 
+} from './polygamma'
+export { 
+  Permutation, Combination, 
+  permute, combine, 
+  isPermutation, isCombination, 
+  $permute, $combine
+} from './combinatorics'

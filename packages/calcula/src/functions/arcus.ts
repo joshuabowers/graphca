@@ -27,13 +27,13 @@ export type ArcusCotangent = Arcus<Species.acot>
 const i = complex([0, 1])
 const halfPi = real(Math.PI/2)
 
-export const [acos, isArcusCosine] = unary<ArcusCosine>(Species.acos, Genera.arcus)(
+export const [acos, isArcusCosine, $acos] = unary<ArcusCosine>(Species.acos, Genera.arcus)(
   r => [real(Math.acos(r.value)), 'computed real arcus cosine'],
   c => [subtract(halfPi, asin(unit(c))), 'computed complex arcus cosine'],
   b => [b, 'computed boolean arcus cosine']
 )()
 
-export const [asin, isArcusSine] = unary<ArcusSine>(Species.asin, Genera.arcus)(
+export const [asin, isArcusSine, $asin] = unary<ArcusSine>(Species.asin, Genera.arcus)(
   r => [real(Math.asin(r.value)), 'computed real arcus sine'],
   c => {
     const iz = multiply(i, unit(c))
@@ -46,7 +46,7 @@ export const [asin, isArcusSine] = unary<ArcusSine>(Species.asin, Genera.arcus)(
   b => [b, 'computed boolean arcus sine']
 )()
 
-export const [atan, isArcusTangent] = unary<ArcusTangent>(Species.atan, Genera.arcus)(
+export const [atan, isArcusTangent, $atan] = unary<ArcusTangent>(Species.atan, Genera.arcus)(
   r => [real(Math.atan(r.value)), 'computed real arcus tangent'],
   c => {
     const nHalfI = complex([0, -0.5])
@@ -58,19 +58,19 @@ export const [atan, isArcusTangent] = unary<ArcusTangent>(Species.atan, Genera.a
   b => [b, 'computed boolean arcus tangent']
 )()
 
-export const [asec, isArcusSecant] = unary<ArcusSecant>(Species.asec, Genera.arcus)(
+export const [asec, isArcusSecant, $asec] = unary<ArcusSecant>(Species.asec, Genera.arcus)(
   c => [acos(reciprocal(unit(c))), 'computed real arcus secant'],
   r => [acos(reciprocal(unit(r))), 'computed complex arcus secant'],
   b => [acos(reciprocal(unit(b))), 'computed boolean arcus secant']
 )()
 
-export const [acsc, isArcusCosecant] = unary<ArcusCosecant>(Species.acsc, Genera.arcus)(
+export const [acsc, isArcusCosecant, $acsc] = unary<ArcusCosecant>(Species.acsc, Genera.arcus)(
   r => [asin(reciprocal(unit(r))), 'computed real arcus cosecant'],
   c => [asin(reciprocal(unit(c))), 'computed complex arcus cosecant'],
   b => [asin(reciprocal(unit(b))), 'computed boolean arcus cosecant']
 )()
 
-export const [acot, isArcusCotangent] = unary<ArcusCotangent>(Species.acot, Genera.arcus)(
+export const [acot, isArcusCotangent, $acot] = unary<ArcusCotangent>(Species.acot, Genera.arcus)(
   r => [subtract(halfPi, atan(unit(r))), 'computed real arcus cotangent'],
   c => [atan(reciprocal(unit(c))), 'computed complex arcus cotangent'],
   b => [

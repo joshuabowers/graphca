@@ -24,7 +24,7 @@ export type AreaHyperbolicCosecant = AreaHyperbolic<Species.acsch>
 export type AreaHyperbolicSecant = AreaHyperbolic<Species.asech>
 export type AreaHyperbolicCotangent = AreaHyperbolic<Species.acoth>
 
-export const [acosh, isAreaHyperbolicCosine] = unary<AreaHyperbolicCosine>(
+export const [acosh, isAreaHyperbolicCosine, $acosh] = unary<AreaHyperbolicCosine>(
   Species.acosh, Genera.areaHyperbolic
 )(
   r => [real(Math.acosh(r.value)), 'computed real area hyperbolic cosine'],
@@ -41,7 +41,7 @@ export const [acosh, isAreaHyperbolicCosine] = unary<AreaHyperbolicCosine>(
   b => [b, 'computed boolean area hyperbolic cosine']
 )()
 
-export const [asinh, isAreaHyperbolicSine] = unary<AreaHyperbolicSine>(
+export const [asinh, isAreaHyperbolicSine, $asinh] = unary<AreaHyperbolicSine>(
   Species.asinh, Genera.areaHyperbolic
 )(
   r => [real(Math.asinh(r.value)), 'computed real area hyperbolic sine'],
@@ -55,7 +55,7 @@ export const [asinh, isAreaHyperbolicSine] = unary<AreaHyperbolicSine>(
   b => [b, 'computed boolean area hyperbolic sine']
 )()
 
-export const [atanh, isAreaHyperbolicTangent] = unary<AreaHyperbolicTangent>(
+export const [atanh, isAreaHyperbolicTangent, $atanh] = unary<AreaHyperbolicTangent>(
   Species.atanh, Genera.areaHyperbolic
 )(
   r => [real(Math.atanh(r.value)), 'computed real hyperbolic tangent'],
@@ -72,7 +72,7 @@ export const [atanh, isAreaHyperbolicTangent] = unary<AreaHyperbolicTangent>(
   b => [b, 'computed boolean area hyperbolic tangent']
 )()
 
-export const [asech, isAreaHyperbolicSecant] = unary<AreaHyperbolicSecant>(
+export const [asech, isAreaHyperbolicSecant, $asech] = unary<AreaHyperbolicSecant>(
   Species.asech, Genera.areaHyperbolic
 )(
   r => [acosh(reciprocal(unit(r))), 'computed real area hyperbolic secant'],
@@ -80,7 +80,7 @@ export const [asech, isAreaHyperbolicSecant] = unary<AreaHyperbolicSecant>(
   b => [acosh(reciprocal(unit(b))), 'computed boolean area hyperbolic secant']
 )()
 
-export const [acsch, isAreaHyperbolicCosecant] = unary<AreaHyperbolicCosecant>(
+export const [acsch, isAreaHyperbolicCosecant, $acsch] = unary<AreaHyperbolicCosecant>(
   Species.acsch, Genera.areaHyperbolic
 )(
   r => [asinh(reciprocal(unit(r))), 'computed real area hyperbolic cosecant'],
@@ -88,7 +88,7 @@ export const [acsch, isAreaHyperbolicCosecant] = unary<AreaHyperbolicCosecant>(
   b => [asinh(reciprocal(unit(b))), 'computed boolean area hyperbolic cosecant']
 )()
 
-export const [acoth, isAreaHyperbolicCotangent] = unary<AreaHyperbolicCotangent>(
+export const [acoth, isAreaHyperbolicCotangent, $acoth] = unary<AreaHyperbolicCotangent>(
   Species.acoth, Genera.areaHyperbolic
 )(
   r => [atanh(reciprocal(unit(r))), 'computed real area hyperbolic cotangent'],

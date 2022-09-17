@@ -21,7 +21,7 @@ const calculatePermutation = <T extends TreeNode>(l: T, r: T): Writer<T> =>
     factorial(subtract(unit(l), unit(r)))
   ) as unknown as Writer<T>
 
-export const [permute, isPermutation] = binary<Permutation>(
+export const [permute, isPermutation, $permute] = binary<Permutation>(
   Species.permute, Genera.combinatorics
 )(
   (l, r) => [calculatePermutation(l, r), 'computed real permutation'],
@@ -35,7 +35,7 @@ const calculateCombination = <T extends TreeNode>(l: T, r: T): Writer<T> =>
     multiply(factorial(unit(r)), factorial(subtract(unit(l), unit(r))))
   ) as unknown as Writer<T>
 
-export const [combine, isCombination] = binary<Combination>(
+export const [combine, isCombination, $combine] = binary<Combination>(
   Species.combine, Genera.combinatorics
 )(
   (l, r) => [calculateCombination(l, r), 'computed real combination'],

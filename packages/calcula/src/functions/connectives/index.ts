@@ -1,3 +1,4 @@
+export { isConnective } from './connective'
 export { Complement, not, isComplement, $not } from './complement'
 export { Conjunction, and, isConjunction, $and  } from './conjunction'
 export { Disjunction, or, isDisjunction, $or } from './disjunction'

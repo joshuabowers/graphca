@@ -12,7 +12,7 @@ const lnComplex = (c: Complex) => complex([
   Math.atan2(c.b, c.a)
 ])
 
-export const [log, isLogarithm] = binary<Logarithm>(Species.log, Genera.logarithmic)(
+export const [log, isLogarithm, $log] = binary<Logarithm>(Species.log, Genera.logarithmic)(
   (l, r) => [real(Math.log(r.value) / Math.log(l.value)), 'computed real logarithm'],
   (l, r) => {
     const n = lnComplex(r)
