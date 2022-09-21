@@ -3,8 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@arrows/multimethod": "^2.1.0",
     "@bowers/calcula": "workspace:^",
+    "@react-three/drei": "^9.31.1",
+    "@react-three/fiber": "^8.7.4",
     "@reduxjs/toolkit": "^1.8.5",
+    "@testing-library/dom": "^8.18.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
@@ -12,13 +16,19 @@
     "@types/node": "^16.11.51",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-redux": "^8.0.2",
     "react-scripts": "5.0.1",
+    "reselect": "^4.1.6",
+    "reselect-map": "^1.0.6",
+    "three": "^0.144.0",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
     "@types/react": "^18.0.17",
-    "@types/react-dom": "^18.0.6"
+    "@types/react-dom": "^18.0.6",
+    "@types/three": "^0.144.0",
+    "@types/webpack-env": "^1.18.0"
   },
   "scripts": {
     "start": "react-scripts start",

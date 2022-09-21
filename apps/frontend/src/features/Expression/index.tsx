@@ -1,13 +1,13 @@
 import React from 'react'
 import { method, multi, Multi } from '@arrows/multimethod'
-import { is } from '../../common/Tree/is'
+// import { is } from '../../common/Tree/is'
 import styles from './Expression.module.css'
 import {
-  Base, Unary, Binary,
+  Unicode, Writer, TreeNode, Unary, Binary,
   Real, Complex, Boolean, Nil, Variable, Addition, Multiplication, Exponentiation,
-  Logarithm, AbsoluteValue, Gamma, Factorial,
+  Logarithm, Absolute, Gamma, Factorial,
   Trigonometric, Arcus, Hyperbolic, AreaHyperbolic,
-  Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
+  isCosine, isSine, isTangent, isSecant, isCosecant, isCotangent,
   ArcusCosine, ArcusSine, ArcusTangent,
   ArcusSecant, ArcusCosecant, ArcusCotangent,
   HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
@@ -15,22 +15,22 @@ import {
   AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
   AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
   Permutation, Combination,
-  real, multiply, negate, reciprocal, Polygamma, LogicalComplement,
-  Equals, NotEquals, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
+  real, multiply, negate, reciprocal, Polygamma, Complement,
+  Equality, StrictInequality, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
   AlternativeDenial, JointDenial, Biconditional, ConverseImplication
-} from '../../common/Tree'
-import { Unicode } from '../../common/MathSymbols'
+} from '@bowers/calcula'
+// import { Unicode } from '../../common/MathSymbols'
 
 type FnNameFn<T extends Unary> = Multi & ((node: T) => string)
 
 const trigonometric: FnNameFn<Trigonometric> = multi(
-  method(is(Cosine), 'cos'),
-  method(is(Sine), 'sin'),
-  method(is(Tangent), 'tan'),
-  method(is(Secant), 'sec'),
-  method(is(Cosecant), 'csc'),
-  method(is(Cotangent), 'cot')
+  method(isCosine, 'cos'),
+  method(isSine, 'sin'),
+  method(isTangent, 'tan'),
+  method(isSecant, 'sec'),
+  method(isCosecant, 'csc'),
+  method(isCotangent, 'cot')
 )
 
 const arcus: FnNameFn<Arcus> = multi(
