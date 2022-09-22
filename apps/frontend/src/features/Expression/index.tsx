@@ -2,19 +2,25 @@ import React from 'react'
 import { method, multi, Multi } from '@arrows/multimethod'
 // import { is } from '../../common/Tree/is'
 import styles from './Expression.module.css'
+import { UnaryNode } from '@bowers/calcula/src/closures/unary'
+import { BinaryNode } from '@bowers/calcula/src/closures/binary'
+import { TrigonometricNode } from '@bowers/calcula/src/functions/trigonometric'
+import { ArcusNode } from '@bowers/calcula/src/functions/arcus'
+import { HyperbolicNode } from '@bowers/calcula/src/functions/hyperbolic'
+import { AreaHyperbolicNode } from '@bowers/calcula/src/functions/areaHyperbolic'
 import {
-  Unicode, Writer, TreeNode, Unary, Binary,
-  Real, Complex, Boolean, Nil, Variable, Addition, Multiplication, Exponentiation,
-  Logarithm, Absolute, Gamma, Factorial,
-  Trigonometric, Arcus, Hyperbolic, AreaHyperbolic,
+  Unicode, W, TreeNode, 
+  isReal, Complex, Boolean, Nil, Variable, 
+  Addition, isMultiplication, Exponentiation,
+  isLogarithm, isAbsolute, isGamma, isFactorial,
   isCosine, isSine, isTangent, isSecant, isCosecant, isCotangent,
-  ArcusCosine, ArcusSine, ArcusTangent,
-  ArcusSecant, ArcusCosecant, ArcusCotangent,
-  HyperbolicCosine, HyperbolicSine, HyperbolicTangent,
-  HyperbolicSecant, HyperbolicCosecant, HyperbolicCotangent,
-  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
-  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
-  Permutation, Combination,
+  isArcusCosine, isArcusSine, isArcusTangent,
+  isArcusSecant, isArcusCosecant, isArcusCotangent,
+  isHyperbolicCosine, isHyperbolicSine, isHyperbolicTangent,
+  isHyperbolicSecant, isHyperbolicCosecant, isHyperbolicCotangent,
+  isAreaHyperbolicCosine, isAreaHyperbolicSine, isAreaHyperbolicTangent,
+  isAreaHyperbolicSecant, isAreaHyperbolicCosecant, isAreaHyperbolicCotangent,
+  isPermutation, isCombination,
   real, multiply, negate, reciprocal, Polygamma, Complement,
   Equality, StrictInequality, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
   Conjunction, Disjunction, ExclusiveDisjunction, Implication,
@@ -22,9 +28,9 @@ import {
 } from '@bowers/calcula'
 // import { Unicode } from '../../common/MathSymbols'
 
-type FnNameFn<T extends Unary> = Multi & ((node: T) => string)
+type FnNameFn<T extends UnaryNode> = Multi & ((node: W.Writer<T>) => string)
 
-const trigonometric: FnNameFn<Trigonometric> = multi(
+const trigonometric: FnNameFn<TrigonometricNode> = multi(
   method(isCosine, 'cos'),
   method(isSine, 'sin'),
   method(isTangent, 'tan'),
@@ -33,42 +39,43 @@ const trigonometric: FnNameFn<Trigonometric> = multi(
   method(isCotangent, 'cot')
 )
 
-const arcus: FnNameFn<Arcus> = multi(
-  method(is(ArcusCosine), 'acos'),
-  method(is(ArcusSine), 'asin'),
-  method(is(ArcusTangent), 'atan'),
-  method(is(ArcusSecant), 'asec'),
-  method(is(ArcusCosecant), 'acsc'),
-  method(is(ArcusCotangent), 'acot'),
+const arcus: FnNameFn<ArcusNode> = multi(
+  method(isArcusCosine, 'acos'),
+  method(isArcusSine, 'asin'),
+  method(isArcusTangent, 'atan'),
+  method(isArcusSecant, 'asec'),
+  method(isArcusCosecant, 'acsc'),
+  method(isArcusCotangent, 'acot'),
 )
 
-const hyperbolic: FnNameFn<Hyperbolic> = multi(
-  method(is(HyperbolicCosine), 'cosh'),
-  method(is(HyperbolicSine), 'sinh'),
-  method(is(HyperbolicTangent), 'tanh'),
-  method(is(HyperbolicSecant), 'sech'),
-  method(is(HyperbolicCosecant), 'csch'),
-  method(is(HyperbolicCotangent), 'coth'),
+const hyperbolic: FnNameFn<HyperbolicNode> = multi(
+  method(isHyperbolicCosine, 'cosh'),
+  method(isHyperbolicSine, 'sinh'),
+  method(isHyperbolicTangent, 'tanh'),
+  method(isHyperbolicSecant, 'sech'),
+  method(isHyperbolicCosecant, 'csch'),
+  method(isHyperbolicCotangent, 'coth'),
 )
 
-const areaHyperbolic: FnNameFn<AreaHyperbolic> = multi(
-  method(is(AreaHyperbolicCosine), 'acosh'),
-  method(is(AreaHyperbolicSine), 'asinh'),
-  method(is(AreaHyperbolicTangent), 'atanh'),
-  method(is(AreaHyperbolicSecant), 'asech'),
-  method(is(AreaHyperbolicCosecant), 'acsch'),
-  method(is(AreaHyperbolicCotangent), 'acoth'),
+const areaHyperbolic: FnNameFn<AreaHyperbolicNode> = multi(
+  method(isAreaHyperbolicCosine, 'acosh'),
+  method(isAreaHyperbolicSine, 'asinh'),
+  method(isAreaHyperbolicTangent, 'atanh'),
+  method(isAreaHyperbolicSecant, 'asech'),
+  method(isAreaHyperbolicCosecant, 'acsch'),
+  method(isAreaHyperbolicCotangent, 'acoth'),
 )
 
-const unary: FnNameFn<Unary> = multi(
-  method(is(AbsoluteValue), 'abs'),
-  method(is(Gamma), Unicode.gamma)
+const unary: FnNameFn<UnaryNode> = multi(
+  method(isAbsolute, 'abs'),
+  method(isGamma, Unicode.gamma)
 )
 
 type LogarithmNameFn = Multi
-  & ((base: Real) => string)
-  & ((base: Base) => string)
+  & ((base: W.Writer<Real>) => string)
+  & ((base: W.Writer<TreeNode>) => string)
 
+// Will not work: likely need isValue
 const logarithm: LogarithmNameFn = multi(
   method(real(2), 'lb'),
   method(real(Math.E), 'ln'),
@@ -77,8 +84,8 @@ const logarithm: LogarithmNameFn = multi(
 )
 
 const isNegative = multi(
-  method(is(Real), (e: Real) => e.value < 0),
-  method(is(Multiplication), (e: Multiplication) => isNegative(e.left) || isNegative(e.right)),
+  method(isReal, (e: Real) => e.value < 0),
+  method(isMultiplication, (e: Multiplication) => isNegative(e.left) || isNegative(e.right)),
   method(false)
 )
 
@@ -358,7 +365,7 @@ export const componentize: ComponentizeFn = multi(
 )
 
 export type ExpressionProps = {
-  node: Base
+  node: W.Writer<TreeNode>
 }
 
 export type ExpressionComponent = (props: ExpressionProps) => JSX.Element
