@@ -4,7 +4,7 @@ import styles from './ToggleKey.module.css'
 import { KeyProps, KeyCSSProperties, main, indexByType } from '../Key';
 import { Mode, ModeType } from '../Mode';
 import { useAppDispatch } from '../../app/hooks';
-import { MathSymbols } from '../../common/MathSymbols';
+import { MathSymbols } from '../../features/MathSymbols';
 import { changeMode } from '../../layouts/Keypad/Keypad.slice';
 
 export interface ToggleKeyProps extends KeyProps {

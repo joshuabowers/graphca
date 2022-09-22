@@ -1,21 +1,16 @@
-import { Unicode } from '../MathSymbols'
+import { Unicode } from '../Unicode'
 
-import { real } from './real'
-import { complex } from './complex'
-import { variable } from './variable'
-import { add, subtract } from './addition'
-import { multiply, divide } from './multiplication'
-import { raise } from './exponentiation'
-import { lb } from './logarithmic'
-import { permute, combine } from './combinatorics'
-import { cos, sin, tan, sec, csc, cot } from './trigonometric'
-import { acos, asin, atan, asec, acsc, acot } from './arcus'
-import { cosh, sinh, tanh, sech, csch, coth } from './hyperbolic'
-import { acosh, asinh, atanh, asech, acsch, acoth } from './areaHyperbolic'
-import { factorial } from './factorial'
-import { gamma } from './gamma'
-import { polygamma } from './polygamma'
-import { abs } from './absolute'
+import { real, complex } from '../primitives'
+import { variable } from '../variable'
+import { add, subtract, multiply, divide, raise } from '../arithmetic'
+import { 
+  lb, permute, combine,
+  cos, sin, tan, sec, csc, cot,
+  acos, asin, atan, asec, acsc, acot,
+  cosh, sinh, tanh, sech, csch, coth,
+  acosh, asinh, atanh, asech, acsch, acoth,
+  factorial, gamma, polygamma, abs
+} from '../functions'
 
 import { stringify } from './stringify'
 
@@ -26,7 +21,7 @@ describe('stringify', () => {
     })
   
     it('converts complex numbers to strings', () => {
-      expect(stringify(complex(2, -3))).toEqual(`2-3${Unicode.i}`)
+      expect(stringify(complex([2, -3]))).toEqual(`2-3${Unicode.i}`)
     })
   
     it('converts variables to strings', () => {

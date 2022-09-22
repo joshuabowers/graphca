@@ -3,7 +3,7 @@ import {
   createKey, main, shift, alphaMega, alphaMicron, trig,
   alt, logic, constant
 } from '../../features/Key';
-import { Unicode, functional } from '../../common/MathSymbols';
+import { Unicode, functional } from '../../features/MathSymbols';
 
 export interface FunctionalProps {
 

@@ -1,15 +1,16 @@
 import React, { useMemo, useState } from 'react'
 import { useThree, useFrame } from '@react-three/fiber'
-import { Base, Real, real, invoke } from '../../common/Tree'
+// import { Base, Real, real, invoke } from '../../common/Tree'
+import { W, TreeNode, invoke, real, isReal } from '@bowers/calcula'
 import { Color, Vector3 } from 'three';
 import { Line } from '@react-three/drei';
 
 interface CurveProps {
-  expression: Base
+  expression: W.Writer<TreeNode>
   color: Color
 }
 
-function valuesBetween(expression: Base, min: number, max: number, slices: number = 100) {
+function valuesBetween(expression: W.Writer<TreeNode>, min: number, max: number, slices: number = 100) {
   console.log('slices:', slices)
   const increment = (max - min) / slices
   const r = new Array<Vector3>(slices);
@@ -17,8 +18,8 @@ function valuesBetween(expression: Base, min: number, max: number, slices: numbe
   let j = 0;
   for(let i = min; i < max; i += increment) {
     const y = valueAt(real(i))
-    if(!(y instanceof Real)){ throw new Error(`Unexpected invocation result: ${y.$kind}`)}
-    r[j++] = new Vector3(i, y.value, 0)
+    if(!isReal(y)){ throw new Error(`Unexpected invocation result: ${y.value.species}`)}
+    r[j++] = new Vector3(i, y.value.value, 0)
   }
   return r
 }

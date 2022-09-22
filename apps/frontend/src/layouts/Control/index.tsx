@@ -1,7 +1,7 @@
 import React from 'react';
 import { commandKey } from '../../features/Key';
 import { createToggleKey } from '../../features/ToggleKey';
-import { Unicode } from '../../common/MathSymbols';
+import { Unicode } from '../../features/MathSymbols';
 import { calculate, deleteLast } from '../../features/Terminal/Terminal.slice';
 import { useAppSelector } from '../../app/hooks';
 

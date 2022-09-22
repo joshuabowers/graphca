@@ -11,3 +11,4 @@ export * from './utility/deepEquals'
 export * from './calculus/differentiation' // TODO: Index calculus
 export * from './invocation'
 export * from './parser'
+export { stringify } from './utility/stringify'

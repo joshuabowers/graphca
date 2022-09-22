@@ -2,12 +2,10 @@ import * as THREE from 'three'
 import React, { useRef } from 'react'
 import styles from './Graph.module.css';
 import { Canvas } from '@react-three/fiber';
-// import { Base } from '../../common/Tree'
 import { TreeNode, W, parser } from '@bowers/calcula'
 import { RootState } from '../../app/store';
 import { Plot } from './Graph.slice';
 import { createArraySelector } from 'reselect-map';
-// import { parser } from '../../common/parser';
 import { useAppSelector } from '../../app/hooks';
 import { MapControls } from '@react-three/drei';
 import { Grid2 } from '../Geometry/Grid2';
