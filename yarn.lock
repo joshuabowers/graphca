@@ -3372,7 +3372,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/testing-library__jest-dom@npm:^5.9.1":
+"@types/testing-library__jest-dom@npm:^5.14.5, @types/testing-library__jest-dom@npm:^5.9.1":
   version: 5.14.5
   resolution: "@types/testing-library__jest-dom@npm:5.14.5"
   dependencies:
@@ -6859,8 +6859,10 @@ __metadata:
     "@types/node": ^16.11.51
     "@types/react": ^18.0.17
     "@types/react-dom": ^18.0.6
+    "@types/testing-library__jest-dom": ^5.14.5
     "@types/three": ^0.144.0
     "@types/webpack-env": ^1.18.0
+    identity-obj-proxy: ^3.0.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-redux: ^8.0.2

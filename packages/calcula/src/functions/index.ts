@@ -19,7 +19,7 @@ import {
   $not, $and, $or, $xor, $implies, $nand, $nor, $xnor, $converse
 } from "./connectives"
 import { 
-  Logarithm, lb, ln, lg, isLogarithm, $log
+  Logarithm, log, lb, ln, lg, isLogarithm, $log
 } from './logarithmic'
 import { 
   Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
@@ -158,7 +158,7 @@ export {
   equals, notEquals, lessThan, greaterThan,
   lessThanEquals, greaterThanEquals,
   not, and, or, xor, implies, nand, nor, xnor, converse,
-  lb, ln, lg, cos, sin, tan, sec, csc, cot,
+  log, lb, ln, lg, cos, sin, tan, sec, csc, cot,
   acos, asin, atan, asec, acsc, acot,
   cosh, sinh, tanh, sech, csch, coth,
   acosh, asinh, atanh, asech, acsch, acoth,

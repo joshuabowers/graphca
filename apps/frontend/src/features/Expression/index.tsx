@@ -1,113 +1,89 @@
-import React from 'react'
-import { method, multi, Multi } from '@arrows/multimethod'
-// import { is } from '../../common/Tree/is'
+// type FnNameFn<T extends UnaryNode> = Multi & ((node: W.Writer<T>) => string)
+
+// const trigonometric: FnNameFn<TrigonometricNode> = multi(
+//   method(isCosine, 'cos'),
+//   method(isSine, 'sin'),
+//   method(isTangent, 'tan'),
+//   method(isSecant, 'sec'),
+//   method(isCosecant, 'csc'),
+//   method(isCotangent, 'cot')
+// )
+
+// const arcus: FnNameFn<ArcusNode> = multi(
+//   method(isArcusCosine, 'acos'),
+//   method(isArcusSine, 'asin'),
+//   method(isArcusTangent, 'atan'),
+//   method(isArcusSecant, 'asec'),
+//   method(isArcusCosecant, 'acsc'),
+//   method(isArcusCotangent, 'acot'),
+// )
+
+// const hyperbolic: FnNameFn<HyperbolicNode> = multi(
+//   method(isHyperbolicCosine, 'cosh'),
+//   method(isHyperbolicSine, 'sinh'),
+//   method(isHyperbolicTangent, 'tanh'),
+//   method(isHyperbolicSecant, 'sech'),
+//   method(isHyperbolicCosecant, 'csch'),
+//   method(isHyperbolicCotangent, 'coth'),
+// )
+
+// const areaHyperbolic: FnNameFn<AreaHyperbolicNode> = multi(
+//   method(isAreaHyperbolicCosine, 'acosh'),
+//   method(isAreaHyperbolicSine, 'asinh'),
+//   method(isAreaHyperbolicTangent, 'atanh'),
+//   method(isAreaHyperbolicSecant, 'asech'),
+//   method(isAreaHyperbolicCosecant, 'acsch'),
+//   method(isAreaHyperbolicCotangent, 'acoth'),
+// )
+
+// const unary: FnNameFn<UnaryNode> = multi(
+//   method(isAbsolute, 'abs'),
+//   method(isGamma, Unicode.gamma)
+// )
+
+
+
+
+
+// type when<T> = (expression: T) => JSX.Element
+
+
+// const createUnary = <T extends Unary>(metaClass: string, fnNames: FnNameFn<T>): when<T> =>
+//   (node: T) =>
+//     <span className={[styles.functional, styles[metaClass]].join(' ')}>
+//       {fnNames(node)}({componentize(node.expression)})
+//     </span>
+
+// const whenTrigonometric = createUnary('trigonometric', trigonometric)
+// const whenArcus = createUnary('arcus', arcus)
+// const whenHyperbolic = createUnary('hyperbolic', hyperbolic)
+// const whenAreaHyperbolic = createUnary('areaHyperbolic', areaHyperbolic)
+// const whenUnary = createUnary('unary', unary)
+
+
+
 import styles from './Expression.module.css'
-import { UnaryNode } from '@bowers/calcula/src/closures/unary'
-import { BinaryNode } from '@bowers/calcula/src/closures/binary'
-import { TrigonometricNode } from '@bowers/calcula/src/functions/trigonometric'
-import { ArcusNode } from '@bowers/calcula/src/functions/arcus'
-import { HyperbolicNode } from '@bowers/calcula/src/functions/hyperbolic'
-import { AreaHyperbolicNode } from '@bowers/calcula/src/functions/areaHyperbolic'
-import {
-  Unicode, W, TreeNode, 
-  isReal, Complex, Boolean, Nil, Variable, 
-  Addition, isMultiplication, Exponentiation,
-  isLogarithm, isAbsolute, isGamma, isFactorial,
-  isCosine, isSine, isTangent, isSecant, isCosecant, isCotangent,
-  isArcusCosine, isArcusSine, isArcusTangent,
-  isArcusSecant, isArcusCosecant, isArcusCotangent,
-  isHyperbolicCosine, isHyperbolicSine, isHyperbolicTangent,
-  isHyperbolicSecant, isHyperbolicCosecant, isHyperbolicCotangent,
-  isAreaHyperbolicCosine, isAreaHyperbolicSine, isAreaHyperbolicTangent,
-  isAreaHyperbolicSecant, isAreaHyperbolicCosecant, isAreaHyperbolicCotangent,
-  isPermutation, isCombination,
-  real, multiply, negate, reciprocal, Polygamma, Complement,
-  Equality, StrictInequality, LessThan, GreaterThan, LessThanEquals, GreaterThanEquals,
-  Conjunction, Disjunction, ExclusiveDisjunction, Implication,
-  AlternativeDenial, JointDenial, Biconditional, ConverseImplication
-} from '@bowers/calcula'
-// import { Unicode } from '../../common/MathSymbols'
+import { multi, method, Multi } from "@arrows/multimethod"
+import { BinaryNode, isBinary } from '@bowers/calcula/src/closures/binary'
+import { 
+  Unicode, TreeNode, W, isTreeNode, TreeNodeGuardFn, Species, notAny,
+  real, multiply, reciprocal, negate, isValue,
+  isReal, isComplex, isBoolean, isNil, isNaN, isVariable, 
+  isAddition, isMultiplication, isExponentiation, isLogarithm, 
+  isEquality, isStrictInequality, isLessThan, isGreaterThan, 
+  isLessThanEquals, isGreaterThanEquals, isComplement, 
+  isConjunction, isDisjunction, isExclusiveDisjunction, isImplication,
+  isAlternativeDenial, isJointDenial, isBiconditional, isConverseImplication, 
+  isPermutation, isCombination, isFactorial, isPolygamma
+} from "@bowers/calcula"
 
-type FnNameFn<T extends UnaryNode> = Multi & ((node: W.Writer<T>) => string)
+type AsComponent<T extends TreeNode> = (expression: T) => JSX.Element
+type AsBoolean<T extends TreeNode> = (expression: T) => boolean
+type ComponentizeFn = Multi & ((expression: W.Writer<TreeNode>) => JSX.Element)
 
-const trigonometric: FnNameFn<TrigonometricNode> = multi(
-  method(isCosine, 'cos'),
-  method(isSine, 'sin'),
-  method(isTangent, 'tan'),
-  method(isSecant, 'sec'),
-  method(isCosecant, 'csc'),
-  method(isCotangent, 'cot')
-)
-
-const arcus: FnNameFn<ArcusNode> = multi(
-  method(isArcusCosine, 'acos'),
-  method(isArcusSine, 'asin'),
-  method(isArcusTangent, 'atan'),
-  method(isArcusSecant, 'asec'),
-  method(isArcusCosecant, 'acsc'),
-  method(isArcusCotangent, 'acot'),
-)
-
-const hyperbolic: FnNameFn<HyperbolicNode> = multi(
-  method(isHyperbolicCosine, 'cosh'),
-  method(isHyperbolicSine, 'sinh'),
-  method(isHyperbolicTangent, 'tanh'),
-  method(isHyperbolicSecant, 'sech'),
-  method(isHyperbolicCosecant, 'csch'),
-  method(isHyperbolicCotangent, 'coth'),
-)
-
-const areaHyperbolic: FnNameFn<AreaHyperbolicNode> = multi(
-  method(isAreaHyperbolicCosine, 'acosh'),
-  method(isAreaHyperbolicSine, 'asinh'),
-  method(isAreaHyperbolicTangent, 'atanh'),
-  method(isAreaHyperbolicSecant, 'asech'),
-  method(isAreaHyperbolicCosecant, 'acsch'),
-  method(isAreaHyperbolicCotangent, 'acoth'),
-)
-
-const unary: FnNameFn<UnaryNode> = multi(
-  method(isAbsolute, 'abs'),
-  method(isGamma, Unicode.gamma)
-)
-
-type LogarithmNameFn = Multi
-  & ((base: W.Writer<Real>) => string)
-  & ((base: W.Writer<TreeNode>) => string)
-
-// Will not work: likely need isValue
-const logarithm: LogarithmNameFn = multi(
-  method(real(2), 'lb'),
-  method(real(Math.E), 'ln'),
-  method(real(10), 'lg'),
-  method('log')
-)
-
-const isNegative = multi(
-  method(isReal, (e: Real) => e.value < 0),
-  method(isMultiplication, (e: Multiplication) => isNegative(e.left) || isNegative(e.right)),
-  method(false)
-)
-
-const isReciprocal = multi(
-  method(is(Exponentiation), (e: Exponentiation) => isNegative(e.right)),
-  method(false)
-)
-
-const notAny = <T extends Base>(...types: (new(...args: any[]) => T)[]) => (value: unknown) => types.every((type) => !(value instanceof type))
-
-const identity = (n: JSX.Element) => n
-const wrap = (n: JSX.Element) => <>({n})</>
-
-type ParenthesizeFn = Multi
-  & ((node: Binary, child: Base) => (component: JSX.Element) => JSX.Element)
-
-const parenthesize: ParenthesizeFn = multi(
-  method([is(Multiplication), is(Addition)], () => wrap),
-  method([is(Multiplication), is(Multiplication)], () => wrap),
-  method([is(Exponentiation), notAny<Base>(Real, Variable)], () => wrap),
-  method(() => identity)
-)
+const when = <T extends TreeNode>(
+  guard: TreeNodeGuardFn<T>, fn: AsComponent<T> | AsBoolean<T>
+) => method(guard, (e: W.Writer<T>) => fn(e.value))
 
 const specialNumbers = new Map([
   [Number.POSITIVE_INFINITY.toString(), Unicode.infinity],
@@ -146,33 +122,46 @@ const stringifyComplex: StringifyComplexFn = multi(
   method((a: number, b: number) => `${symA(a)} + ${symB(b)}`)
 )
 
-type when<T> = (expression: T) => JSX.Element
+const identity = (n: JSX.Element) => n
+const wrap = (n: JSX.Element) => <>({n})</>
 
-const whenReal: when<Real> = e => 
-  <span className={[styles.constant, styles.real].join(' ')}>
-    {symbolic(e.value)}
-  </span>
+type ParenthesizeFn = Multi
+  & ((node: W.Writer<BinaryNode>, child: W.Writer<TreeNode>) => 
+    (component: JSX.Element) => JSX.Element)
 
-const whenComplex: when<Complex> = e => 
-  <span className={[styles.constant, styles.complex].join(' ')}>
-    {stringifyComplex(e.a, e.b)}
-  </span>
-
-const whenNil: when<Nil> = e =>
-  <span className={styles.nothing}>nil</span>
-
-const whenBoolean: when<Boolean> = e =>
-  <span className={styles.boolean}>{e.value.toString()}</span>
-
-const whenVariable: when<Variable> = e => (
-  e.value
-    ? componentize(e.value)
-    : <span className={styles.variable}>
-        {e.name}
-      </span>
+const parenthesize: ParenthesizeFn = multi(
+  method([isMultiplication, isAddition], () => wrap),
+  method([isMultiplication, isMultiplication], () => wrap),
+  method([isExponentiation, notAny(Species.real, Species.variable)], () => wrap),
+  method(() => identity)
 )
 
-const binary = (className: string, operator: string, l: JSX.Element, r: JSX.Element) => (
+type NumericPredicateFn = Multi & ((expression: W.Writer<TreeNode>) => boolean)
+
+const isNegative: NumericPredicateFn = multi(
+  when(isReal, e => e.value < 0),
+  when(isMultiplication, e => isNegative(e.left) || isNegative(e.right)),
+  method(false)
+)
+
+const isReciprocal: NumericPredicateFn = multi(
+  when(isExponentiation, e => isNegative(e.right)),
+  method(false)
+)
+
+type LogarithmNameFn = Multi & ((base: W.Writer<TreeNode>) => string)
+
+const logarithm: LogarithmNameFn = multi(
+  method(isValue(real(2)), 'lb'),
+  method(isValue(real(Math.E)), 'ln'),
+  method(isValue(real(10)), 'lg'),
+  method('log')
+)
+
+const asConstant = (className: string, value: JSX.Element|string) =>
+  <span className={[styles.constant, className].join(' ')}>{value}</span>
+
+const asBinary = (className: string, operator: string, l: JSX.Element, r: JSX.Element) => (
   <span className={[styles.binary, styles[className]].join(' ')}>
     {l}
     <span className={styles.operator}>{operator}</span>
@@ -180,188 +169,168 @@ const binary = (className: string, operator: string, l: JSX.Element, r: JSX.Elem
   </span>
 )
 
-const whenAddition: when<Addition> = e => {
-  const lNegative = isNegative(e.left), rNegative = isNegative(e.right)
-  const either = lNegative || rNegative, lExclusive = lNegative && !rNegative
-  const left = lExclusive ? e.right : e.left, 
-    right = lExclusive ? e.left : e.right
-  const l = componentize(left), 
-    r = componentize(either ? negate(right) : right)
-  const className = either ? 'subtraction' : 'addition'
-  const operator = either ? Unicode.minus : '+'
-  return binary(className, operator, parenthesize(e, left)(l), parenthesize(e, right)(r))
-}
-
-const whenMultiplication: when<Multiplication> = e => {
-  const lReciprocal = isReciprocal(e.left), rReciprocal = isReciprocal(e.right)
-  const either = lReciprocal || rReciprocal, lExclusive = lReciprocal && !rReciprocal
-  const both = lReciprocal && rReciprocal
-  const reorderLeft = lExclusive ? e.right : e.left,
-    reorderRight = lExclusive ? e.left : e.right
-  const left = both ? real(1) : reorderLeft,
-    right = both ? multiply(reciprocal(reorderLeft), reciprocal(reorderRight)) : (
-      rReciprocal ? reciprocal(reorderRight) : reorderRight
-    )
-  const lNegative = left instanceof Real && left.value === -1
-  const l = componentize(left), r = componentize(right)
-  const className = either ? 'division' : (lNegative ? 'negation' : 'multiplication')
-  const operator = either ? Unicode.division : (lNegative ? Unicode.minus : Unicode.multiplication)
-  return binary(
-    className, operator, 
-    className === 'negation' ? <></> : parenthesize(e, left)(l), 
-    parenthesize(e, right)(r)
-  )
-}
-
-const whenExponentiation: when<Exponentiation> = e => {
-  const l = componentize(e.left), r = componentize(e.right)
-  return binary('exponentiation', '^', parenthesize(e, e.left)(l), parenthesize(e, e.right)(r))
-}
-
-const whenLogarithm: when<Logarithm> = e => {
-  const functionName = logarithm(e.left)
-  const base = functionName === 'log' ? componentize(e.left) : <></>
-  return <span className={[styles.functional, styles.logarithmic].join(' ')}>
-    {functionName}<span className={styles.sub}>{base}</span>({componentize(e.right)})
-  </span>
-}
-
-const createLogicalBinary = (className: string) =>
-  <T extends Binary>(operator: string) =>
-    (expression: T) => {
-      const l = componentize(expression.left), r = componentize(expression.right)
-      return binary(className, operator, l, r)  
-    }
-
-const whenInequality = createLogicalBinary('inequality')
-
-const whenEquals = whenInequality<Equals>('==')
-const whenNotEquals = whenInequality<NotEquals>('!=')
-const whenLessThan = whenInequality<LessThan>('<')
-const whenGreaterThan = whenInequality<GreaterThan>('>')
-const whenLessThanEquals = whenInequality<LessThanEquals>('<=')
-const whenGreaterThanEquals = whenInequality<GreaterThanEquals>('>=')
-
-const whenConnective = createLogicalBinary('connective')
-
-const whenConjunction = whenConnective<Conjunction>('/\\')
-const whenDisjunction = whenConnective<Disjunction>('\\/')
-const whenExclusiveDisjunction = whenConnective<ExclusiveDisjunction>(Unicode.xor)
-const whenImplication = whenConnective<Implication>('->')
-const whenAlternativeDenial = whenConnective<AlternativeDenial>(Unicode.nand)
-const whenJointDenial = whenConnective<JointDenial>(Unicode.nor)
-const whenBiconditional = whenConnective<Biconditional>('<->')
-const whenConverseImplication = whenConnective<ConverseImplication>('<-')
-
-const createUnary = <T extends Unary>(metaClass: string, fnNames: FnNameFn<T>): when<T> =>
-  (node: T) =>
-    <span className={[styles.functional, styles[metaClass]].join(' ')}>
-      {fnNames(node)}({componentize(node.expression)})
-    </span>
-
-const whenTrigonometric = createUnary('trigonometric', trigonometric)
-const whenArcus = createUnary('arcus', arcus)
-const whenHyperbolic = createUnary('hyperbolic', hyperbolic)
-const whenAreaHyperbolic = createUnary('areaHyperbolic', areaHyperbolic)
-const whenUnary = createUnary('unary', unary)
-
-const whenLogicalComplement: when<LogicalComplement> = e => {
-  const child = componentize(e.expression)
-  const shouldWrap = e.expression instanceof Binary
-  return <span className={[styles.functional, styles.unary].join(' ')}>
-    {Unicode.not}{shouldWrap ? <>({child})</> : child}
-  </span>
-}
-
-const whenFactorial: when<Factorial> = e => {
-  const child = componentize(e.expression)
-  const shouldWrap = e.expression instanceof Binary
-  return <span className={styles.factorial}>
-    {shouldWrap ? <>({child})</> : child}!
-  </span>
-}
-
-const whenPolygamma: when<Polygamma> = e => {
-  const order = componentize(e.left)
-  const expression = componentize(e.right)
-  return <span className={[styles.functional, styles.polygamma].join(' ')}>
-    {Unicode.digamma}<span className={styles.super}><span>({order})</span></span>({expression})
-  </span>
-}
-
-const createCombinatorial = (fnName: string) =>
-  (node: Binary) => {
+const asCombinatorial = (fnName: string) =>
+  (node: BinaryNode) => {
     const l = componentize(node.left), r = componentize(node.right)
     return <span className={[styles.functional, styles.combinatorial].join(' ')}>
       {fnName}({l}, {r})
     </span>
   }
 
-const whenPermutation = createCombinatorial('P')
-const whenCombination = createCombinatorial('C')
+const createLogicalBinary = (className: string) =>
+  <T extends BinaryNode>(operator: string) =>
+    (expression: T) => {
+      const l = componentize(expression.left), r = componentize(expression.right)
+      return asBinary(className, operator, l, r)  
+    }
 
-const whenBase: when<Base> = e => <span className={styles.unhandled}>Unhandled: {e.$kind}</span>
+const asInequality = createLogicalBinary('inequality')
+const asConnective = createLogicalBinary('connective')
 
-export type ComponentizeFn = Multi
-  & typeof whenReal & typeof whenComplex & typeof whenVariable
-  & typeof whenAddition & typeof whenMultiplication 
-  & typeof whenExponentiation & typeof whenLogarithm
-  & typeof whenTrigonometric & typeof whenArcus
-  & typeof whenHyperbolic & typeof whenAreaHyperbolic
-  & typeof whenUnary & typeof whenFactorial & typeof whenPolygamma
-  & typeof whenPermutation & typeof whenCombination
-  & typeof whenLogicalComplement
-  & typeof whenEquals & typeof whenNotEquals 
-  & typeof whenLessThan & typeof whenGreaterThan
-  & typeof whenLessThanEquals & typeof whenGreaterThanEquals
-  & typeof whenConjunction & typeof whenDisjunction
-  & typeof whenExclusiveDisjunction & typeof whenImplication
-  & typeof whenAlternativeDenial & typeof whenJointDenial
-  & typeof whenBiconditional & typeof whenConverseImplication
-  & typeof whenBase
+const componentize: ComponentizeFn = multi(
+  // Primitives
+  when(isReal, e => asConstant(styles.real, symbolic(e.value))),
+  when(
+    isComplex, 
+    e => asConstant(styles.complex, stringifyComplex(e.a, e.b))
+  ),
+  when(isBoolean, e => asConstant(styles.boolean, e.value.toString())),
+  when(isNil, _ => asConstant(styles.nil, 'nil')),
+  when(isNaN, _ => asConstant(styles.nan, 'nan')),
 
-export const componentize: ComponentizeFn = multi(
-  method(is(Real), whenReal),
-  method(is(Complex), whenComplex),
-  method(is(Nil), whenNil),
-  method(is(Boolean), whenBoolean),
-  method(is(Variable), whenVariable),
+  when(
+    isVariable,
+    e => (
+      !isNil(e.value)
+        ? componentize(e.value)
+        : <span className={styles.variable}>
+            {e.name}
+          </span>
+    )
+  ),
 
-  method(is(Addition), whenAddition),
-  method(is(Multiplication), whenMultiplication),
-  method(is(Exponentiation), whenExponentiation),
-  method(is(Logarithm), whenLogarithm),
+  // arithmetic
+  when(
+    isAddition,
+    e => {
+      const lNegative = isNegative(e.left), rNegative = isNegative(e.right)
+      const either = lNegative || rNegative, lExclusive = lNegative && !rNegative
+      const left = lExclusive ? e.right : e.left, 
+        right = lExclusive ? e.left : e.right
+      const l = componentize(left), 
+        r = componentize(either ? negate(right) : right)
+      const className = either ? 'subtraction' : 'addition'
+      const operator = either ? Unicode.minus : '+'
+      return asBinary(
+        className, operator, 
+        parenthesize(W.unit(e), left)(l), 
+        parenthesize(W.unit(e), right)(r)
+      )
+    }
+  ),
+  when(
+    isMultiplication,
+    e => {
+      const lReciprocal = isReciprocal(e.left), rReciprocal = isReciprocal(e.right)
+      const either = lReciprocal || rReciprocal, lExclusive = lReciprocal && !rReciprocal
+      const both = lReciprocal && rReciprocal
+      const reorderLeft = lExclusive ? e.right : e.left,
+        reorderRight = lExclusive ? e.left : e.right
+      const left = both ? real(1) : reorderLeft,
+        right = both ? multiply(reciprocal(reorderLeft), reciprocal(reorderRight)) : (
+          rReciprocal ? reciprocal(reorderRight) : reorderRight
+        )
+      // const lNegative = left instanceof Real && left.value === -1
+      const lNegative = isNegative(left)
+      const l = componentize(left), r = componentize(right)
+      const className = either ? 'division' : (lNegative ? 'negation' : 'multiplication')
+      const operator = either ? Unicode.division : (lNegative ? Unicode.minus : Unicode.multiplication)
+      return asBinary(
+        className, operator, 
+        className === 'negation' ? <></> : parenthesize(W.unit(e), left)(l), 
+        parenthesize(W.unit(e), right)(r)
+      )
+    }
+  ),
+  when(
+    isExponentiation,
+    e => {
+      const l = componentize(e.left), r = componentize(e.right)
+      return asBinary(
+        'exponentiation', '^', 
+        parenthesize(W.unit(e), e.left)(l), parenthesize(W.unit(e), e.right)(r)
+      )
+    }
+  ),
 
-  method(is(Equals), whenEquals),
-  method(is(NotEquals), whenNotEquals),
-  method(is(LessThan), whenLessThan),
-  method(is(GreaterThan), whenGreaterThan),
-  method(is(LessThanEquals), whenLessThanEquals),
-  method(is(GreaterThanEquals), whenGreaterThanEquals),
+  // functions
+  when(
+    isLogarithm,
+    e => {
+      const functionName = logarithm(e.left)
+      const base = functionName === 'log' ? componentize(e.left) : <></>
+      return <span className={[styles.functional, styles.logarithmic].join(' ')}>
+        {functionName}<span className={styles.sub}>{base}</span>({componentize(e.right)})
+      </span>
+    }
+  ),
 
-  method(is(Conjunction), whenConjunction),
-  method(is(Disjunction), whenDisjunction),
-  method(is(ExclusiveDisjunction), whenExclusiveDisjunction),
-  method(is(Implication), whenImplication),
-  method(is(AlternativeDenial), whenAlternativeDenial),
-  method(is(JointDenial), whenJointDenial),
-  method(is(Biconditional), whenBiconditional),
-  method(is(ConverseImplication), whenConverseImplication),
+  when(isPermutation, asCombinatorial('P')),
+  when(isCombination, asCombinatorial('C')),
 
-  method(is(Trigonometric), whenTrigonometric),
-  method(is(Arcus), whenArcus),
-  method(is(Hyperbolic), whenHyperbolic),
-  method(is(AreaHyperbolic), whenAreaHyperbolic),
-  method(is(Factorial), whenFactorial),
-  method(is(LogicalComplement), whenLogicalComplement),
-  method(is(Unary), whenUnary),
-  method(is(Polygamma), whenPolygamma),
+  when(isEquality, asInequality('==')),
+  when(isStrictInequality, asInequality('!=')),
+  when(isLessThan, asInequality('<')),
+  when(isGreaterThan, asInequality('>')),
+  when(isLessThanEquals, asInequality('<=')),
+  when(isGreaterThanEquals, asInequality('>=')),
 
-  method(is(Permutation), whenPermutation),
-  method(is(Combination), whenCombination),
+  when(isConjunction, asConnective('/\\')),
+  when(isDisjunction, asConnective('\\/')),
+  when(isExclusiveDisjunction, asConnective(Unicode.xor)),
+  when(isImplication, asConnective('->')),
+  when(isAlternativeDenial, asConnective(Unicode.nand)),
+  when(isJointDenial, asConnective(Unicode.nor)),
+  when(isBiconditional, asConnective('<->')),
+  when(isConverseImplication, asConnective('<-')),
+  when(
+    isComplement, 
+    e => {
+      const child = componentize(e.expression)
+      const shouldWrap = isBinary(e.expression)
+      return <span className={[styles.functional, styles.unary].join(' ')}>
+        {Unicode.not}{shouldWrap ? <>({child})</> : child}
+      </span>
+    }
+  ),
 
+  when(
+    isFactorial,
+    e => {
+      const child = componentize(e.expression)
+      const shouldWrap = isBinary(e.expression)
+      return <span className={styles.factorial}>
+        {shouldWrap ? <>({child})</> : child}!
+      </span>
+    }
+  ),
 
-  method(is(Base), whenBase)
+  when(
+    isPolygamma,
+    e => {
+      const order = componentize(e.left)
+      const expression = componentize(e.right)
+      return <span className={[styles.functional, styles.polygamma].join(' ')}>
+        {Unicode.digamma}<span className={styles.super}><span>({order})</span></span>({expression})
+      </span>
+    }
+  ),
+
+  // Fallback
+  when(
+    isTreeNode, 
+    e => <span className={styles.unhandled}>Unhandled: {e.species}</span>
+  )
 )
 
 export type ExpressionProps = {
