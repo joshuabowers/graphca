@@ -247,43 +247,111 @@ describe(Expression, () => {
   })
 
   describe('of unary functions', () => {
-    it('renders trigonometric functions', () => {
-      expectMarkup(cos(variable('x')), 'functional trigonometric', 'cos(x)')
-      expectMarkup(sin(variable('x')), 'functional trigonometric', 'sin(x)')
-      expectMarkup(tan(variable('x')), 'functional trigonometric', 'tan(x)')
-      expectMarkup(sec(variable('x')), 'functional trigonometric', 'sec(x)')
-      expectMarkup(csc(variable('x')), 'functional trigonometric', 'csc(x)')
-      expectMarkup(cot(variable('x')), 'functional trigonometric', 'cot(x)')
-    })
-  
-    it('renders arcus functions', () => {
-      expectMarkup(acos(variable('x')), 'functional arcus', 'acos(x)')
-      expectMarkup(asin(variable('x')), 'functional arcus', 'asin(x)')
-      expectMarkup(atan(variable('x')), 'functional arcus', 'atan(x)')
-      expectMarkup(asec(variable('x')), 'functional arcus', 'asec(x)')
-      expectMarkup(acsc(variable('x')), 'functional arcus', 'acsc(x)')
-      expectMarkup(acot(variable('x')), 'functional arcus', 'acot(x)')
-    })
-  
-    it('renders hyperbolic functions', () => {
-      expectMarkup(cosh(variable('x')), 'functional hyperbolic', 'cosh(x)')
-      expectMarkup(sinh(variable('x')), 'functional hyperbolic', 'sinh(x)')
-      expectMarkup(tanh(variable('x')), 'functional hyperbolic', 'tanh(x)')
-      expectMarkup(sech(variable('x')), 'functional hyperbolic', 'sech(x)')
-      expectMarkup(csch(variable('x')), 'functional hyperbolic', 'csch(x)')
-      expectMarkup(coth(variable('x')), 'functional hyperbolic', 'coth(x)')
-    })
-  
-    it('renders area hyperbolic functions', () => {
-      expectMarkup(acosh(variable('x')), 'functional areaHyperbolic', 'acosh(x)')
-      expectMarkup(asinh(variable('x')), 'functional areaHyperbolic', 'asinh(x)')
-      expectMarkup(atanh(variable('x')), 'functional areaHyperbolic', 'atanh(x)')
-      expectMarkup(asech(variable('x')), 'functional areaHyperbolic', 'asech(x)')
-      expectMarkup(acsch(variable('x')), 'functional areaHyperbolic', 'acsch(x)')
-      expectMarkup(acoth(variable('x')), 'functional areaHyperbolic', 'acoth(x)')
+    describe('which are trigonometric', () => {
+      it('renders cosines', () => {
+        expectMarkup(cos(variable('x')), 'functional trigonometric', 'cos(x)')
+      })
+
+      it('renders sines', () => {
+        expectMarkup(sin(variable('x')), 'functional trigonometric', 'sin(x)')
+      })
+
+      it('renders tangents', () => {
+        expectMarkup(tan(variable('x')), 'functional trigonometric', 'tan(x)')
+      })
+
+      it('renders secants', () => {
+        expectMarkup(sec(variable('x')), 'functional trigonometric', 'sec(x)')
+      })
+
+      it('renders cosecants', () => {
+        expectMarkup(csc(variable('x')), 'functional trigonometric', 'csc(x)')
+      })
+
+      it('renders cotangents', () => {
+        expectMarkup(cot(variable('x')), 'functional trigonometric', 'cot(x)')
+      })
     })
 
-    describe('of factorials', () => {
+    describe('which are arcus', () => {
+      it('renders arcus cosines', () => {
+        expectMarkup(acos(variable('x')), 'functional arcus', 'acos(x)')
+      })
+
+      it('renders arcus sines', () => {
+        expectMarkup(asin(variable('x')), 'functional arcus', 'asin(x)')
+      })
+
+      it('renders arcus cotangents', () => {
+        expectMarkup(atan(variable('x')), 'functional arcus', 'atan(x)')
+      })
+
+      it('renders arcus secants', () => {
+        expectMarkup(asec(variable('x')), 'functional arcus', 'asec(x)')
+      })
+
+      it('renders arcus cosecants', () => {
+        expectMarkup(acsc(variable('x')), 'functional arcus', 'acsc(x)')
+      })
+
+      it('renders arcus cotangents', () => {
+        expectMarkup(acot(variable('x')), 'functional arcus', 'acot(x)')
+      })
+    })
+
+    describe('which are hyperbolic', () => {
+      it('renders hyperbolic cosines', () => {
+        expectMarkup(cosh(variable('x')), 'functional hyperbolic', 'cosh(x)')
+      })
+
+      it('renders hyperbolic sines', () => {
+        expectMarkup(sinh(variable('x')), 'functional hyperbolic', 'sinh(x)')
+      })
+
+      it('renders hyperbolic cotangents', () => {
+        expectMarkup(tanh(variable('x')), 'functional hyperbolic', 'tanh(x)')
+      })
+
+      it('renders hyperbolic secants', () => {
+        expectMarkup(sech(variable('x')), 'functional hyperbolic', 'sech(x)')
+      })
+
+      it('renders hyperbolic cosecants', () => {
+        expectMarkup(csch(variable('x')), 'functional hyperbolic', 'csch(x)')
+      })
+
+      it('renders hyperbolic cotangents', () => {
+        expectMarkup(coth(variable('x')), 'functional hyperbolic', 'coth(x)')
+      })
+    })
+
+    describe('which are area hyperbolic', () => {
+      it('renders area hyperbolic cosines', () => {
+        expectMarkup(acosh(variable('x')), 'functional areaHyperbolic', 'acosh(x)')
+      })
+      
+      it('renders area hyperbolic sines', () => {
+        expectMarkup(asinh(variable('x')), 'functional areaHyperbolic', 'asinh(x)')
+      })
+
+      it('renders area hyperbolic cotangents', () => {
+        expectMarkup(atanh(variable('x')), 'functional areaHyperbolic', 'atanh(x)')
+      })
+
+      it('renders area hyperbolic secants', () => {
+        expectMarkup(asech(variable('x')), 'functional areaHyperbolic', 'asech(x)')
+      })
+
+      it('renders area hyperbolic cosecants', () => {
+        expectMarkup(acsch(variable('x')), 'functional areaHyperbolic', 'acsch(x)')
+      })
+
+      it('renders area hyperbolic cotangents', () => {
+        expectMarkup(acoth(variable('x')), 'functional areaHyperbolic', 'acoth(x)')        
+      })
+    })
+
+    describe('which are factorials', () => {
       it('renders without wrapping for non binary children', () => {
         expectMarkup(factorial(variable('x')), 'factorial', 'x!')
       })
@@ -327,25 +395,38 @@ describe(Expression, () => {
         `x+1${Unicode.minus}(2${Unicode.multiplication}y)${Unicode.division}z`
       )
     })
-  
-    it('renders parentheses when needed to disambiguate', () => {
-      expectMarkup(
-        multiply(variable('x'), subtract(variable('y'), real(1))), 'binary', 
-        `x${Unicode.multiplication}(y${Unicode.minus}1)`
-      )
-      expectMarkup(
-        divide(add(real(1), variable('x')), variable('y')), 'binary', 
-        `(x+1)${Unicode.division}y`
-      )
-      expectMarkup(
-        square(add(real(2), variable('x'))), 'binary', 
-        `(x+2)^2`
-      )
-    })
 
-    it('renders nested functions', () => {
-      expectMarkup(cos(lg(variable('x'))), 'functional trigonometric', 'cos(lg(x))')
-      expectMarkup(lg(cos(variable('x'))), 'functional logarithmic', 'lg(cos(x))')
-    })  
+    describe('which require parentheses to disambiguate', () => {
+      it('groups a child subtraction of a multiplication', () => {
+        expectMarkup(
+          multiply(variable('x'), subtract(variable('y'), real(1))), 'binary', 
+          `x${Unicode.multiplication}(y${Unicode.minus}1)`
+        )  
+      })
+
+      it('groups a child addition of a division', () => {
+        expectMarkup(
+          divide(add(real(1), variable('x')), variable('y')), 'binary', 
+          `(x+1)${Unicode.division}y`
+        )  
+      })
+
+      it('groups a child addition as base of an exponentiation', () => {
+        expectMarkup(
+          square(add(real(2), variable('x'))), 'binary', 
+          `(x+2)^2`
+        )  
+      })
+    })
+  
+    describe('which are nested functions', () => {
+      it('renders a cosine of a logarithm correctly', () => {
+        expectMarkup(cos(lg(variable('x'))), 'functional trigonometric', 'cos(lg(x))')
+      })
+
+      it('renders a logarithm of a cosine correctly', () => {
+        expectMarkup(lg(cos(variable('x'))), 'functional logarithmic', 'lg(cos(x))')
+      })
+    })
   })
 })

@@ -1,70 +1,7 @@
-// type FnNameFn<T extends UnaryNode> = Multi & ((node: W.Writer<T>) => string)
-
-// const trigonometric: FnNameFn<TrigonometricNode> = multi(
-//   method(isCosine, 'cos'),
-//   method(isSine, 'sin'),
-//   method(isTangent, 'tan'),
-//   method(isSecant, 'sec'),
-//   method(isCosecant, 'csc'),
-//   method(isCotangent, 'cot')
-// )
-
-// const arcus: FnNameFn<ArcusNode> = multi(
-//   method(isArcusCosine, 'acos'),
-//   method(isArcusSine, 'asin'),
-//   method(isArcusTangent, 'atan'),
-//   method(isArcusSecant, 'asec'),
-//   method(isArcusCosecant, 'acsc'),
-//   method(isArcusCotangent, 'acot'),
-// )
-
-// const hyperbolic: FnNameFn<HyperbolicNode> = multi(
-//   method(isHyperbolicCosine, 'cosh'),
-//   method(isHyperbolicSine, 'sinh'),
-//   method(isHyperbolicTangent, 'tanh'),
-//   method(isHyperbolicSecant, 'sech'),
-//   method(isHyperbolicCosecant, 'csch'),
-//   method(isHyperbolicCotangent, 'coth'),
-// )
-
-// const areaHyperbolic: FnNameFn<AreaHyperbolicNode> = multi(
-//   method(isAreaHyperbolicCosine, 'acosh'),
-//   method(isAreaHyperbolicSine, 'asinh'),
-//   method(isAreaHyperbolicTangent, 'atanh'),
-//   method(isAreaHyperbolicSecant, 'asech'),
-//   method(isAreaHyperbolicCosecant, 'acsch'),
-//   method(isAreaHyperbolicCotangent, 'acoth'),
-// )
-
-// const unary: FnNameFn<UnaryNode> = multi(
-//   method(isAbsolute, 'abs'),
-//   method(isGamma, Unicode.gamma)
-// )
-
-
-
-
-
-// type when<T> = (expression: T) => JSX.Element
-
-
-// const createUnary = <T extends Unary>(metaClass: string, fnNames: FnNameFn<T>): when<T> =>
-//   (node: T) =>
-//     <span className={[styles.functional, styles[metaClass]].join(' ')}>
-//       {fnNames(node)}({componentize(node.expression)})
-//     </span>
-
-// const whenTrigonometric = createUnary('trigonometric', trigonometric)
-// const whenArcus = createUnary('arcus', arcus)
-// const whenHyperbolic = createUnary('hyperbolic', hyperbolic)
-// const whenAreaHyperbolic = createUnary('areaHyperbolic', areaHyperbolic)
-// const whenUnary = createUnary('unary', unary)
-
-
-
 import styles from './Expression.module.css'
 import { multi, method, Multi } from "@arrows/multimethod"
 import { BinaryNode, isBinary } from '@bowers/calcula/src/closures/binary'
+import { UnaryNode } from '@bowers/calcula/src/closures/unary'
 import { 
   Unicode, TreeNode, W, isTreeNode, TreeNodeGuardFn, Species, notAny,
   real, multiply, reciprocal, negate, isValue,
@@ -74,7 +11,14 @@ import {
   isLessThanEquals, isGreaterThanEquals, isComplement, 
   isConjunction, isDisjunction, isExclusiveDisjunction, isImplication,
   isAlternativeDenial, isJointDenial, isBiconditional, isConverseImplication, 
-  isPermutation, isCombination, isFactorial, isPolygamma
+  isCosine, isSine, isTangent, isSecant, isCosecant, isCotangent,
+  isArcusCosine, isArcusSine, isArcusTangent,
+  isArcusSecant, isArcusCosecant, isArcusCotangent,
+  isHyperbolicCosine, isHyperbolicSine, isHyperbolicTangent,
+  isHyperbolicSecant, isHyperbolicCosecant, isHyperbolicCotangent,
+  isAreaHyperbolicCosine, isAreaHyperbolicSine, isAreaHyperbolicTangent,
+  isAreaHyperbolicSecant, isAreaHyperbolicCosecant, isAreaHyperbolicCotangent,
+  isPermutation, isCombination, isFactorial, isGamma, isPolygamma, isAbsolute
 } from "@bowers/calcula"
 
 type AsComponent<T extends TreeNode> = (expression: T) => JSX.Element
@@ -168,6 +112,12 @@ const asBinary = (className: string, operator: string, l: JSX.Element, r: JSX.El
     {r}
   </span>
 )
+
+const asUnary = <T extends UnaryNode>(genus: string, species: string) =>
+  (node: T) =>
+    <span className={[styles.functional, styles[genus]].join(' ')}>
+      {species}({componentize(node.expression)})
+    </span>
 
 const asCombinatorial = (fnName: string) =>
   (node: BinaryNode) => {
@@ -304,6 +254,34 @@ const componentize: ComponentizeFn = multi(
     }
   ),
 
+  when(isCosine, asUnary('trigonometric', 'cos')),
+  when(isSine, asUnary('trigonometric', 'sin')),
+  when(isTangent, asUnary('trigonometric', 'tan')),
+  when(isSecant, asUnary('trigonometric', 'sec')),
+  when(isCosecant, asUnary('trigonometric', 'csc')),
+  when(isCotangent, asUnary('trigonometric', 'cot')),
+
+  when(isArcusCosine, asUnary('arcus', 'acos')),
+  when(isArcusSine, asUnary('arcus', 'asin')),
+  when(isArcusTangent, asUnary('arcus', 'atan')),
+  when(isArcusSecant, asUnary('arcus', 'asec')),
+  when(isArcusCosecant, asUnary('arcus', 'acsc')),
+  when(isArcusCotangent, asUnary('arcus', 'acot')),
+
+  when(isHyperbolicCosine, asUnary('hyperbolic', 'cosh')),
+  when(isHyperbolicSine, asUnary('hyperbolic', 'sinh')),
+  when(isHyperbolicTangent, asUnary('hyperbolic', 'tanh')),
+  when(isHyperbolicSecant, asUnary('hyperbolic', 'sech')),
+  when(isHyperbolicCosecant, asUnary('hyperbolic', 'csch')),
+  when(isHyperbolicCotangent, asUnary('hyperbolic', 'coth')),
+
+  when(isAreaHyperbolicCosine, asUnary('areaHyperbolic', 'acosh')),
+  when(isAreaHyperbolicSine, asUnary('areaHyperbolic', 'asinh')),
+  when(isAreaHyperbolicTangent, asUnary('areaHyperbolic', 'atanh')),
+  when(isAreaHyperbolicSecant, asUnary('areaHyperbolic', 'asech')),
+  when(isAreaHyperbolicCosecant, asUnary('areaHyperbolic', 'acsch')),
+  when(isAreaHyperbolicCotangent, asUnary('areaHyperbolic', 'acoth')),
+
   when(
     isFactorial,
     e => {
@@ -315,6 +293,8 @@ const componentize: ComponentizeFn = multi(
     }
   ),
 
+  when(isGamma, asUnary('unary', Unicode.gamma)),
+
   when(
     isPolygamma,
     e => {
@@ -325,6 +305,8 @@ const componentize: ComponentizeFn = multi(
       </span>
     }
   ),
+
+  when(isAbsolute, asUnary('unary', 'abs')),
 
   // Fallback
   when(
