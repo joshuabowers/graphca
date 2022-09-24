@@ -1,9 +1,8 @@
 import styles from './Expression.module.css'
 import { multi, method, Multi } from "@arrows/multimethod"
-import { BinaryNode, isBinary } from '@bowers/calcula/src/closures/binary'
-import { UnaryNode } from '@bowers/calcula/src/closures/unary'
 import { 
   Unicode, TreeNode, W, isTreeNode, TreeNodeGuardFn, Species, notAny,
+  BinaryNode, isBinary, UnaryNode,
   real, multiply, reciprocal, negate, isValue,
   isReal, isComplex, isBoolean, isNil, isNaN, isVariable, 
   isAddition, isMultiplication, isExponentiation, isLogarithm, 

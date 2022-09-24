@@ -2914,6 +2914,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@bowers/calcula", "workspace:packages/calcula"],\
             ["@arrows/multimethod", "npm:2.1.0"],\
             ["@types/jest", "npm:28.1.7"],\
+            ["@types/node", "npm:18.7.19"],\
             ["jest", "virtual:162322011086e8b9f14181c28073a0473aa57bda6cae6375d16535b68a4133635a14aca7937c193e1e87c412f430690052faf19923fbabafbd81d6d6de85833a#npm:28.1.3"],\
             ["pegase", "npm:0.6.3"],\
             ["ts-jest", "virtual:162322011086e8b9f14181c28073a0473aa57bda6cae6375d16535b68a4133635a14aca7937c193e1e87c412f430690052faf19923fbabafbd81d6d6de85833a#npm:28.0.8"],\
@@ -5105,6 +5106,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-node-npm-16.11.51-02764a2cd3-b4193d3f9d.zip/node_modules/@types/node/",\
           "packageDependencies": [\
             ["@types/node", "npm:16.11.51"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
+        ["npm:18.7.19", {\
+          "packageLocation": "./.yarn/cache/@types-node-npm-18.7.19-7d2784ef0e-879366b379.zip/node_modules/@types/node/",\
+          "packageDependencies": [\
+            ["@types/node", "npm:18.7.19"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -17878,7 +17886,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@tsconfig/node12", "npm:1.0.11"],\
             ["@tsconfig/node14", "npm:1.0.3"],\
             ["@tsconfig/node16", "npm:1.0.3"],\
-            ["@types/node", null],\
+            ["@types/node", "npm:18.7.19"],\
             ["@types/swc__core", null],\
             ["@types/swc__wasm", null],\
             ["@types/typescript", null],\

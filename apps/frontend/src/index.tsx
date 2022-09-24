@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import { App } from './app';
 import { store } from './app/store';
@@ -8,16 +8,17 @@ import reportWebVitals from './reportWebVitals';
 import { ErrorBoundary } from './features/ErrorBoundary';
 
 const renderApp = () =>
-  ReactDOM.render(
+  createRoot(
+    document.getElementById('root') ?? document.createElement('div')
+  ).render(
     <React.StrictMode>
       <Provider store={store}>
         <ErrorBoundary>
           <App />
         </ErrorBoundary>
       </Provider>
-    </React.StrictMode>,
-    document.getElementById('root')
-  );
+    </React.StrictMode>
+  )
 
 if(process.env.NODE_ENV !== 'production' && module.hot){
   module.hot.accept('./app', renderApp);

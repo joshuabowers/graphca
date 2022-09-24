@@ -25,7 +25,7 @@ export const Terminal = (props: TerminalProps) => {
     () => createArraySelector<RootState, TerminalEntryState, JSX.Element>(
       (state: RootState) => state.terminal.history,
       (entry: TerminalEntryState) => <Parse enteredAt={entry.enteredAt} input={entry.content} scope={scope} />
-    ) as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>,
+    ), //as OutputSelector<RootState, JSX.Element[], (elem: TerminalEntryState) => JSX.Element>,
     [scope]
   )
 
