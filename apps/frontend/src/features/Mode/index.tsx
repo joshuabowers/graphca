@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppDispatch } from '../../app/hooks';
-import { MathSymbols } from '../../common/MathSymbols';
+import { MathSymbols } from '../../features/MathSymbols';
 import styles from './Mode.module.css';
 
 export type ModeType = 

@@ -2,7 +2,7 @@ import React, { CSSProperties, useEffect, useState } from 'react';
 import { useAppDispatch, AppDispatch, useAppSelector } from '../../app/hooks';
 import { keyPress } from '../Terminal/Terminal.slice';
 import { Mode, ModeProps, ModeType } from '../Mode';
-import { MathSymbols } from '../../common/MathSymbols';
+import { MathSymbols } from '../MathSymbols';
 import styles from './Key.module.css';
 
 export interface KeyProps {

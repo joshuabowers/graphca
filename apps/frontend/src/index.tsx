@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './app';
+import { App } from './app';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import reportWebVitals from './reportWebVitals';
@@ -20,7 +20,7 @@ const renderApp = () =>
   );
 
 if(process.env.NODE_ENV !== 'production' && module.hot){
-  module.hot.accept('./app/App', renderApp);
+  module.hot.accept('./app', renderApp);
 }
 
 renderApp();

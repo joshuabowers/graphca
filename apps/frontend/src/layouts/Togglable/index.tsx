@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Unicode } from '../../common/MathSymbols';
+import { Unicode } from '../../features/MathSymbols';
 import { Key, commandKey } from '../../features/Key'
 import { createToggleKey } from '../../features/ToggleKey';
 import { KeyGroup } from '../../features/KeyGroup';

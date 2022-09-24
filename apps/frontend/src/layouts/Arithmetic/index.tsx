@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   createKey, main, shift, alphaMega, alphaMicron, trig, logic
 } from '../../features/Key';
-import { functional, Unicode } from '../../common/MathSymbols';
+import { functional, Unicode } from '../../features/MathSymbols';
 
 export interface ArithmeticProps {
 

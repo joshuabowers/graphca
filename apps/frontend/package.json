@@ -19,6 +19,7 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.2",
     "react-scripts": "5.0.1",
+    "redux-logger": "^3.0.6",
     "reselect": "^4.1.6",
     "reselect-map": "^1.0.6",
     "three": "^0.144.0",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "@types/redux-logger": "^3",
     "@types/three": "^0.144.0",
     "@types/webpack-env": "^1.18.0",
     "identity-obj-proxy": "^3.0.0"

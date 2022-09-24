@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
-import { scope as createScope } from '../../common/parser'
+import { scope as createScope } from '@bowers/calcula'
 import { Parse } from '../Parse';
 import styles from './Terminal.module.css';
 import { RootState } from '../../app/store';
