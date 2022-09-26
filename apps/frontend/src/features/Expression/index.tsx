@@ -169,7 +169,7 @@ const componentize: ComponentizeFn = multi(
       const l = componentize(left), 
         r = componentize(either ? negate(right) : right)
       const className = either ? 'subtraction' : 'addition'
-      const operator = either ? Unicode.minus : '+'
+      const operator = either ? '-' : '+'
       return asBinary(
         className, operator, 
         parenthesize(W.unit(e), left)(l), 
@@ -193,7 +193,7 @@ const componentize: ComponentizeFn = multi(
       const lNegative = isNegative(left)
       const l = componentize(left), r = componentize(right)
       const className = either ? 'division' : (lNegative ? 'negation' : 'multiplication')
-      const operator = either ? Unicode.division : (lNegative ? Unicode.minus : Unicode.multiplication)
+      const operator = either ? '/' : (lNegative ? '-' : '*')
       return asBinary(
         className, operator, 
         className === 'negation' ? <></> : parenthesize(W.unit(e), left)(l), 

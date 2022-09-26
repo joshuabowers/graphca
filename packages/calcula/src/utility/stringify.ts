@@ -44,7 +44,7 @@ export const stringify: StringifyFn = multi(
   when(isBoolean, b => b.value.value.toString()),
   when(isVariable, v => v.value.name),
   when(isAddition, binaryInfix('+')),
-  when(isMultiplication, binaryInfix(Unicode.multiplication)),
+  when(isMultiplication, binaryInfix('*')),
   when(isExponentiation, binaryInfix('^')),
   when(isLogarithm, binary('log')),
   when(isPermutation, binary('P')),

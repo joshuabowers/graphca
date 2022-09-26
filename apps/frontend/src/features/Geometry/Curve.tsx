@@ -68,7 +68,6 @@ const segmentize = (points: Vector3[], topEdge: number, bottomEdge: number): Vec
 }
 
 export const Curve = (props: CurveProps) => {
-
   const { camera, viewport } = useThree();
   const [range, setRange] = useState<Range>(boundary(camera, viewport.width, viewport.height))
 
