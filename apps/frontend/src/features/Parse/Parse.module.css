@@ -29,6 +29,7 @@
 
 .result > .entryControls {
   margin-right: 1em;
+  z-index: 1;
 }
 
 .result > .entryControls > button {

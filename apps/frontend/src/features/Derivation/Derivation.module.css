@@ -1,0 +1,13 @@
+.normal {
+  background-color: #254525AA;
+  color: white;
+  opacity: 0;
+  height: 0;
+  transition: all 200ms ease-in;
+  z-index: -1;
+}
+
+.visible {
+  opacity: 1;
+  height: 100%;
+}

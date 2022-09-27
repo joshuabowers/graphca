@@ -3,6 +3,7 @@ export interface TerminalEntryState {
   type: 'input' | 'output';
   content: string;
   enteredAt: number;
+  showDerivation: boolean;
 }
 
 export interface TerminalState {
@@ -33,9 +34,15 @@ export const terminalSlice = createSlice({
       state.history.push({
         type: 'input',
         content: state.currentLine.join(''),
-        enteredAt: Date.now()
+        enteredAt: Date.now(),
+        showDerivation: false
       });
       state.currentLine = [];
+    },
+
+    toggleDerivation: (state, action: PayloadAction<number>) => {
+      const entry = state.history.find(item => item.enteredAt === action.payload)
+      if(entry){ entry.showDerivation = !entry.showDerivation }
     },
 
     forget: (state, action: PayloadAction<number>) => {
@@ -44,7 +51,9 @@ export const terminalSlice = createSlice({
   }
 })
 
-export const { keyPress, deleteLast, calculate, forget } = terminalSlice.actions
+export const { 
+  keyPress, deleteLast, calculate, toggleDerivation, forget 
+} = terminalSlice.actions
 export default terminalSlice.reducer
 
 const rawCurrentLine = (state: TerminalState) => state.currentLine;
