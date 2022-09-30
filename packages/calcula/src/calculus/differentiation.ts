@@ -51,10 +51,11 @@ export const when = <T extends TreeNode>(
   method(predicate, (t: Writer<T>) =>
     bind(t, input => {
       const [result, action] = typeof fn === 'function' ? fn(input) : fn
+      const output = isWriter(result) ? result.value : result
       return ({
-        value: isWriter(result) ? result.value : result,
+        value: output,
         log: [
-          {input, action},
+          {input, output, action},
           ...(isWriter(result) ? result.log : [])
         ]
       })

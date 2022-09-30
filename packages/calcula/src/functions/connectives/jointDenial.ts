@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
 import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when } from "../../closures/binary"
+import { BinaryNode, binary } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { Complement, isComplement, not } from './complement'
@@ -17,7 +17,7 @@ export const [nor, isJointDenial, $nor] = binary<JointDenial, Boolean>(
   (l, r) => [not(or(unit(l), unit(r))), 'real joint denial'],
   (l, r) => [not(or(unit(l), unit(r))), 'complex joint denial'],
   (l, r) => [not(or(unit(l), unit(r))), 'boolean joint denial']
-)(
+)( when => [
   when(
     [_, isValue(boolean(true))],
     [boolean(false), 'joint denial annihilator']
@@ -60,4 +60,4 @@ export const [nor, isJointDenial, $nor] = binary<JointDenial, Boolean>(
   // ),
   // visit(Base, LogicalComplement)(identity, child)((_l, _r) => bool(false)),
   // visit(LogicalComplement, Base)(child, identity)((_l, _r) => bool(false))
-)
+])

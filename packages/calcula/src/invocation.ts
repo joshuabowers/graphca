@@ -87,10 +87,11 @@ const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: CorrespondingFn
     (reader: EvaluableNode<T>) => R.bind(reader)<W.Writer<TreeNode>>(
       writer => scope => W.bind(writer, input => {
         const [result, action] = fn(scope)(input)
+        const output = W.isWriter(result) ? result.value : result
         return ({
-          value: W.isWriter(result) ? result.value : result,
+          value: output,
           log: [
-            {input, action},
+            {input, output, action},
             ...(W.isWriter(result) ? result.log : [])
           ]
         })

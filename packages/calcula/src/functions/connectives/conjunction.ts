@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
 import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when } from "../../closures/binary"
+import { BinaryNode, binary } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { isComplement } from './complement'
@@ -19,7 +19,7 @@ export const [and, isConjunction, $and] = binary<Conjunction, Boolean>(
     'complex conjunction'
   ],
   (l, r) => [boolean(l.value && r.value), 'boolean conjunction']
-)(
+)( when => [
   when([_, isValue(boolean(true))], (l, _r) => [unit(l), 'conjunctive identity']),
   when([isValue(boolean(true)), _], (_l, r) => [unit(r), 'conjunctive identity']),
   when([_, isValue(boolean(false))], [boolean(false), 'conjunctive annihilator']),
@@ -49,4 +49,4 @@ export const [and, isConjunction, $and] = binary<Conjunction, Boolean>(
     (l, r) => isComplement(l) && deepEquals(l.value.expression, r),
     [boolean(false), 'contradiction']
   )
-)
+])

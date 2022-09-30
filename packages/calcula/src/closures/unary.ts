@@ -31,39 +31,47 @@ export type UnaryFn<T, R = void> = Multi
 
 type UnaryPredicate<T> = (t: Writer<T>) => boolean 
 type Test<T> = UnaryPredicate<T> | Writer<T> | typeof _
-type CorrespondingFn<T> = (t: T) => Action<TreeNode>    
+type CorrespondingFn<T> = (t: T) => Action<TreeNode> 
 
-export const when = <T extends TreeNode>(
-  predicate: Test<T>, 
-  fn: Action<TreeNode> | CorrespondingFn<T>
-) =>
-  method(predicate, (t: Writer<T>) =>
-    bind(t, input => {
-      const [result, action] = typeof fn === 'function' ? fn(input) : fn
-      return ({
-        value: isWriter(result) ? result.value : result,
-        log: [
-          {input, action},
-          ...(isWriter(result) ? result.log : [])
-        ]
+export type UnaryCreateFn<T extends UnaryNode> = 
+  (e: Writer<TreeNode>) => Action<T>
+
+const createWhen = <U extends UnaryNode>(create: UnaryCreateFn<U>) =>
+  <T extends TreeNode>(
+    predicate: Test<T>, 
+    fn: Action<TreeNode> | CorrespondingFn<T>
+  ) =>
+    method(predicate, (t: Writer<T>) =>
+      bind(t, input => {
+        const [result, action] = typeof fn === 'function' ? fn(input) : fn
+        const node = create(t)[0]
+        const output = isWriter(result) ? result.value : result
+        return ({
+          value: output,
+          log: [
+            {input: isWriter(node) ? node.value : node, output, action},
+            ...(isWriter(result) ? result.log : [])
+          ]
+        })
       })
-    })
-  )
+    )
+
+export type WhenFn = ReturnType<typeof createWhen>
+export type EdgeCaseFns = (when: WhenFn) => (typeof method)[]
 
 const unaryMap = <T, U = T>(fn: CaseFn<T, U>) =>
   (writer: Writer<T>) =>
     bind(writer, input => {
       const [value, action] = fn(input)
+      const output = isWriter(value) ? value.value : value
       return ({
-        value: isWriter(value) ? value.value : value,
-        log: [...(isWriter(value) ? value.log : []), {input, action}]
+        value: output,
+        log: [...(isWriter(value) ? value.log : []), {input, output, action}]
       })
     })
 
 const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, 'not a number']
 
-export type UnaryCreateFn<T extends UnaryNode> = 
-  (e: Writer<TreeNode>) => Action<T>
 export type UnaryNodeMetaTuple<T extends UnaryNode, R> = [
   UnaryFn<T, R>,
   TreeNodeGuardFn<T>,
@@ -78,6 +86,7 @@ export const unary = <T extends UnaryNode, R = void>(
     ({clade: Clades.unary, genus, species, expression}) as T,
     species.toLocaleLowerCase()
   ]
+  const when = createWhen(create)
   return (
     whenReal: CaseFn<Real, Result<Real>>,
     whenComplex: CaseFn<Complex, Result<Complex>>,
@@ -92,8 +101,8 @@ export const unary = <T extends UnaryNode, R = void>(
       method(Species.nan, unaryMap(whenNilOrNaN)),
       method(unaryMap<TreeNode>(input => create(unit(input))))
     )
-    return (...methods: (typeof method)[]): UnaryNodeMetaTuple<T, R> => [
-      methods.length > 0 ? fromMulti(...methods)(fn) : fn,
+    return (edgeCases?: EdgeCaseFns): UnaryNodeMetaTuple<T, R> => [
+      edgeCases ? fromMulti(...edgeCases(when))(fn) : fn,
       isSpecies<T>(species),
       create
     ]

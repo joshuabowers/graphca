@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
 import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when } from "../../closures/binary"
+import { BinaryNode, binary } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { not } from './complement'
@@ -17,7 +17,7 @@ export const [xor, isExclusiveDisjunction, $xor] = binary<ExclusiveDisjunction, 
   (l, r) => [and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 'real exclusive disjunction'],
   (l, r) => [and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 'complex exclusive disjunction'],
   (l, r) => [and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 'boolean exclusive disjunction']
-)(
+)( when => [
   when(
     [isValue(boolean(false)), _], 
     (_l, r) => [unit(r), 'exclusive disjunctive identity']
@@ -37,4 +37,4 @@ export const [xor, isExclusiveDisjunction, $xor] = binary<ExclusiveDisjunction, 
   when(
     deepEquals, [boolean(false), 'exclusive disjunctive annihilator']
   )
-)
+])

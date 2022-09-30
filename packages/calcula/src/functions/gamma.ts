@@ -2,7 +2,7 @@ import { Writer, unit } from "../monads/writer"
 import { Multi, multi, method } from "@arrows/multimethod"
 import { TreeNode, Species } from "../utility/tree"
 import { Real, Complex, real, boolean, isReal, isComplex } from "../primitives"
-import { Unary, unary, when } from "../closures/unary"
+import { Unary, unary } from "../closures/unary"
 import { 
   add, subtract, multiply, divide, negate, raise, sqrt 
 } from "../arithmetic"
@@ -71,7 +71,7 @@ export const [gamma, isGamma, $gamma] = unary<Gamma>(Species.gamma)(
   r => [calculateGamma(unit(r)) as Writer<Real>, 'computed real gamma'],
   c => [calculateGamma(unit(c)) as Writer<Complex>, 'computed complex gamma'],
   b => [boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>), 'computed boolean gamma']
-)(
+)( when => [
   when(
     isPositiveInteger, 
     t => [factorial(subtract(unit(t), real(1))), 'computing gamma via factorial']
@@ -81,4 +81,4 @@ export const [gamma, isGamma, $gamma] = unary<Gamma>(Species.gamma)(
       || (isComplex(t) && t.value.a < 0.5),
     t => [gammaReflection(unit(t)), 'gamma reflection for small value']
   )
-)
+])

@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from '../monads/writer'
 import { TreeNode, Clades, Genera, Species } from '../utility/tree'
 import { Complex, real, complex, boolean, nan, isReal, isPrimitive, isComplex } from '../primitives'
-import { Binary, binary, partialLeft, binaryFrom, when } from '../closures/binary'
+import { Binary, binary, partialLeft, binaryFrom } from '../closures/binary'
 import { add } from './addition'
 import { 
   Exponentiation, isExponentiation, raise, reciprocal, square 
@@ -34,7 +34,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     'complex multiplication'
   ],
   (l, r) => [boolean(l.value && r.value), 'boolean multiplication']
-)(
+)( when => [
   when(
     [l => l.value.clade !== Clades.primitive, isPrimitive],
     (l, r) => [multiply(unit(r), unit(l)), 'reorder operands']
@@ -387,7 +387,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => isExponentiation(l) && deepEquals(l.value.left, r),
     (l, r) => [raise(unit(r), add(real(1), l.right)), 'combined like terms']
   )
-)
+])
 
 const fromMultiply = partialLeft(multiply)
 export const negate = fromMultiply(real(-1))

@@ -1,5 +1,6 @@
 export interface Operation {
   input: unknown,
+  output: unknown,
   action: string
 }
 

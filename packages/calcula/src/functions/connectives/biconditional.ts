@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
 import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when } from "../../closures/binary"
+import { BinaryNode, binary } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { not } from './complement'
@@ -17,7 +17,7 @@ export const [xnor, isBiconditional, $xnor] = binary<Biconditional, Boolean>(
   (l, r) => [and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 'real biconditional'],
   (l, r) => [and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 'complex biconditional'],
   (l, r) => [and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 'boolean biconditional']
-)(
+)( when => [
   when(
     [isValue(boolean(true)), _],
     (_l, r) => [unit(r), 'biconditional identity']
@@ -35,4 +35,4 @@ export const [xnor, isBiconditional, $xnor] = binary<Biconditional, Boolean>(
     (l, _r) => [not(unit(l)), 'biconditional complementation']
   ),
   when(deepEquals, [boolean(true), 'biconditional annihilator'])
-)
+])

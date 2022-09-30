@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { unit } from '../monads/writer'
 import { TreeNode, Genera, Species } from "../utility/tree"
 import { real, complex, boolean } from "../primitives"
-import { Binary, binary, when, partialRight } from "../closures/binary"
+import { Binary, binary, partialRight } from "../closures/binary"
 import { deepEquals, isValue } from "../utility/deepEquals"
 import { isMultiplication, Multiplication, multiply } from './multiplication'
 import { isLogarithm, Logarithm } from '../functions/logarithmic'
@@ -26,7 +26,7 @@ export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
     ]
   },
   (l, r) => [boolean(l.value || !r.value), 'boolean exponentiation']
-)(
+)( when => [
   when([isValue(complex([0, 0])), isValue(real(-1))], [complex([Infinity, 0]), 'division by complex zero']),
   when([isValue(real(0)), isValue(real(-1))], [real(Infinity), 'division by zero']),
   when([isValue(real(-0)), isValue(real(-1))], [real(-Infinity), 'division by negative zero']),
@@ -49,7 +49,7 @@ export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
       'exponential distribution'
     ]
   )
-)
+])
 
 export const reciprocal = partialRight(raise)(real(-1))
 export const square = partialRight(raise)(real(2))

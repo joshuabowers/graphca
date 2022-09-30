@@ -3,7 +3,7 @@ import { Writer, unit } from "../monads/writer"
 import { TreeNode, Species } from "../utility/tree"
 import { Real, Complex, Boolean, real, isReal, isComplex, isPrimitive } from "../primitives"
 import { variable } from "../variable"
-import { Binary, binary, partialLeft, when, BinaryNodeMetaTuple } from "../closures/binary"
+import { Binary, binary, partialLeft, BinaryNodeMetaTuple } from "../closures/binary"
 import { 
   add, subtract, multiply, divide, double, raise, reciprocal
 } from "../arithmetic"
@@ -144,7 +144,7 @@ export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(Species.po
     calculatePolygamma(unit(l), unit(r)) as Writer<Boolean>, 
     'computed boolean polygamma'
   ]
-)(
+)( when => [
   when(
     (l, r) => isValue(real(0))(l) && isNegative(r),
     (_l, r) => [digammaReflection(unit(r)), 'digamma reflection for negative value']
@@ -171,6 +171,6 @@ export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(Species.po
       'polygamma recurrence for small value'
     ]
   )
-)
+])
 
 export const digamma = partialLeft(polygamma)(real(0))
