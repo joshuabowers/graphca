@@ -15,32 +15,35 @@ describe('real', () => {
   })
 
   it('returns a Writer<Real> for a real input', () => {
+    const output = {
+      clade: Clades.primitive, genus: undefined, species: Species.real, 
+      value: 5
+    }
     expect(real(real(5))).toEqual({
-      value: {
-        clade: Clades.primitive, genus: undefined, species: Species.real, 
-        value: 5
-      },
-      log: [{input: real(5).value, action: ''}]
+      value: output,
+      log: [{inputs: [real(5).value], output, action: ''}]
     })
   })
 
   it('returns a Writer<Real> for a complex input', () => {
+    const output = {
+      clade: Clades.primitive, genus: undefined, species: Species.real, 
+      value: 1
+    }
     expect(real(complex([1, 2]))).toEqual({
-      value: {
-        clade: Clades.primitive, genus: undefined, species: Species.real, 
-        value: 1
-      },
-      log: [{input: complex([1, 2]).value, action: 'cast to real'}]
+      value: output,
+      log: [{inputs: [complex([1, 2]).value], output, action: 'cast to real'}]
     })
   })
 
   it('returns a Writer<Real> for a boolean input', () => {
+    const output = {
+      clade: Clades.primitive, genus: undefined, species: Species.real, 
+      value: 1
+    }
     expect(real(boolean(true))).toEqual({
-      value: {
-        clade: Clades.primitive, genus: undefined, species: Species.real, 
-        value: 1
-      },
-      log: [{input: boolean(true).value, action: 'cast to real'}]
+      value: output,
+      log: [{inputs: [boolean(true).value], output, action: 'cast to real'}]
     })
   })
 })
