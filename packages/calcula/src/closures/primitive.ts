@@ -30,7 +30,7 @@ const primitiveMap = <T, U>(create: CreateFn<U, T>) =>
         const output = isWriter(value) ? value.value : value
         return ({
           value: output,
-          log: [...(isWriter(value) ? value.log : []), {input, output, action}]
+          log: [...(isWriter(value) ? value.log : []), {inputs: [input], output, action}]
         })
       })
 

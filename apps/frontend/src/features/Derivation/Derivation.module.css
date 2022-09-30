@@ -19,8 +19,12 @@
   height: 100%;
 }
 
-.input {
+.inputs {
   justify-self: end;
+}
+
+.inputs > :not(:last-child)::after {
+  content: ', '
 }
 
 .output::before {
@@ -40,6 +44,6 @@
   content: '-- '
 }
 
-.step, .output::before, .action::before {
-  color: rgba(255,255,255, 65%);
+.step, .output::before, .action::before, .inputs > :not(:last-child)::after {
+  color: rgba(255,255,255, 55%);
 }

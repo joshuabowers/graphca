@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
 import { TreeNode, Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary } from "../../closures/binary"
+import { BinaryNode, binary, when } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { Complement, isComplement } from './complement'
@@ -21,7 +21,7 @@ export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
     'complex disjunction'
   ],
   (l, r) => [boolean(l.value || r.value), 'boolean disjunction']
-)( when => [
+)(
   when(
     [_, isValue(boolean(false))],
     (l, _r) => [unit(l), 'disjunctive identity']
@@ -71,4 +71,4 @@ export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
     (_l, r) => isComplement(r),
     (l, r) => [converse(unit(l), r.expression), 'disjunctive converse implication']
   )
-])
+)

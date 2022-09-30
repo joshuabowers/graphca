@@ -1,5 +1,5 @@
 export interface Operation {
-  input: unknown,
+  inputs: unknown[],
   output: unknown,
   action: string
 }

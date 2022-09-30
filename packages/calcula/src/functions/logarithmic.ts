@@ -1,6 +1,6 @@
 import { Genera, Species, TreeNode } from "../utility/tree";
 import { real, complex, boolean, Complex } from "../primitives";
-import { Binary, binary, partialLeft } from "../closures/binary";
+import { Binary, binary, when, partialLeft } from "../closures/binary";
 import { divide } from '../arithmetic'
 import { Exponentiation, isExponentiation } from "../arithmetic/exponentiation";
 import { deepEquals } from "../utility/deepEquals";
@@ -21,12 +21,12 @@ export const [log, isLogarithm, $log] = binary<Logarithm>(Species.log, Genera.lo
     return [divide(lnComplex(r), lnComplex(l)), action]
   },
   (l, r) => [boolean(l.value || !r.value), 'computed boolean logarithm']
-)( when => [
+)(
   when<TreeNode, Exponentiation>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),
     (_l, r) => [r.right, 'inverse operation cancellation']
   )
-])
+)
 
 const fromLog = partialLeft(log)
 export const lb = fromLog(real(2))

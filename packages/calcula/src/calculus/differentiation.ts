@@ -55,7 +55,7 @@ export const when = <T extends TreeNode>(
       return ({
         value: output,
         log: [
-          {input, output, action},
+          {inputs: [input], output, action},
           ...(isWriter(result) ? result.log : [])
         ]
       })

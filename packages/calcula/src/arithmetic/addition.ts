@@ -35,7 +35,7 @@ import {
   Real, real, complex, boolean, isPrimitive, PrimitiveNode 
 } from "../primitives"
 import { 
-  Binary, binary, binaryFrom, identity, leftChild, rightChild 
+  Binary, binary, binaryFrom, when, identity, leftChild, rightChild 
 } from "../closures/binary"
 import { deepEquals, deepEqualsAt, isValue } from "../utility/deepEquals"
 import { multiply, double, negate, Multiplication, isMultiplication } from './multiplication'
@@ -52,7 +52,7 @@ export const [add, isAddition, $add] = binary<Addition>(Species.add, Genera.arit
     boolean((l.value || r.value) && !(l.value && r.value)), 
     'boolean addition'
   ]
-)( when => [
+)(
   when([
     any(Species.real, Species.complex, Species.boolean), 
     notAny(Species.real, Species.complex, Species.boolean)
@@ -104,6 +104,6 @@ export const [add, isAddition, $add] = binary<Addition>(Species.add, Genera.arit
       && deepEquals(l.value.right, r),
     (l, r) => [multiply(add(real(1), l.left), unit(r)), 'combined like terms']
   )
-])
+)
 
 export const subtract = binaryFrom(add)(undefined, r => negate(r))

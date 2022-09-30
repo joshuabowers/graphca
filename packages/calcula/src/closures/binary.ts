@@ -55,29 +55,27 @@ type CorrespondingFn<L, R> = (l: L, r: R) => Action<TreeNode>
 export type BinaryCreateFn<T extends BinaryNode> = 
   (l: Writer<TreeNode>, r: Writer<TreeNode>) => Action<T>
 
-const createWhen = <B extends BinaryNode>(create: BinaryCreateFn<B>) =>
-  <L extends TreeNode, R extends TreeNode>( //, O extends TreeNode
-    predicate: Test<L> | [Test<L>, Test<R>] | BinaryPredicate<L, R>, 
-    fn: Action<TreeNode> | CorrespondingFn<L, R>// | Action<O>
+export const when = <L extends TreeNode, R extends TreeNode>( 
+  predicate: Test<L> | [Test<L>, Test<R>] | BinaryPredicate<L, R>, 
+  fn: Action<TreeNode> | CorrespondingFn<L, R>
   ) =>
-    method(predicate, (l: Writer<L>, r: Writer<R>) =>
-      bind(l, x => 
-        bind(r, y => {
-          const [result, action] = typeof fn === 'function' ? fn(x, y) : fn
-          const input = create(l, r)[0]
-          const output = isWriter(result) ? result.value : result
-          return ({
-            value: output,
-            log: [
-              {input: isWriter(input) ? input.value : input, output, action},
-              ...(isWriter(result) ? result.log : [])
-            ]
-          })
+  method(predicate, (l: Writer<L>, r: Writer<R>) =>
+    bind(l, x => 
+      bind(r, y => {
+        const [result, action] = typeof fn === 'function' ? fn(x, y) : fn
+        const output = isWriter(result) ? result.value : result
+        return ({
+          value: output,
+          log: [
+            {inputs: [x, y], output, action},
+            ...(isWriter(result) ? result.log : [])
+          ]
         })
-      )
+      })
     )
+  )
 
-export type WhenFn = ReturnType<typeof createWhen>
+export type WhenFn = ReturnType<typeof when>
 export type EdgeCaseFns = (when: WhenFn) => (typeof method)[]
 
 const apply = <T, U>(fn: BinaryFn<T, U>) =>
@@ -104,7 +102,7 @@ export const binary = <T extends BinaryNode, R = void>(
     ({clade: Clades.binary, species, genus, left, right}) as T, 
     species.toLocaleLowerCase()
   ]
-  const when = createWhen(create)
+  // const when = createWhen(create)
   return (
     whenReal: BinaryCaseFn<Real, Real, Result<Real>>,
     whenComplex: BinaryCaseFn<Complex, Complex, Result<Complex>>,
@@ -118,9 +116,9 @@ export const binary = <T extends BinaryNode, R = void>(
       when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, 'not a number']),
       when([isTreeNode, isTreeNode], (l, r) => create(unit(l), unit(r)))
     )
-    return (edgeCases?: EdgeCaseFns): BinaryNodeMetaTuple<T, R> => {
+    return (...methods: (typeof method)[]): BinaryNodeMetaTuple<T, R> => {
       fn = fromMulti(
-        ...(edgeCases?.(when) ?? []),
+        ...methods,
         method([isReal, isComplex], apply(fn)(complex, identity)),
         method([isComplex, isReal], apply(fn)(identity, complex)),
         method([isReal, isBoolean], apply(fn)(identity, real)),

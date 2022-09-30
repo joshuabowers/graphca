@@ -2,7 +2,7 @@ import { unit } from "../monads/writer";
 import { Species } from "../utility/tree";
 import { ComplexInfinity } from '../primitives/complex';
 import { real, complex, boolean, isReal, isComplex } from '../primitives'
-import { Unary, unary, UnaryNodeMetaTuple } from "../closures/unary";
+import { Unary, unary, when, UnaryNodeMetaTuple } from "../closures/unary";
 import { add, subtract, multiply } from "../arithmetic";
 import { gamma } from './gamma';
 import { isValue } from "../utility/deepEquals";
@@ -15,7 +15,7 @@ export const [factorial, isFactorial, $factorial] = unary<Factorial>(Species.fac
   r => [multiply(unit(r), factorial(add(unit(r), real(-1)))), 'real factorial'],
   c => [multiply(unit(c), factorial(add(unit(c), complex([-1, 0])))), 'complex factorial'],
   _b => [boolean(true), 'boolean factorial']
-)( when => [
+)(
   when(
     t => isReal(t) && isNegativeInteger(t.value.value), 
     [ComplexInfinity, 'singularity'])
@@ -34,4 +34,4 @@ export const [factorial, isFactorial, $factorial] = unary<Factorial>(Species.fac
   ),
   when(isValue(real(0)), [real(1), 'degenerate case']),
   when(isValue(complex([0, 0])), [complex([1, 0]), 'degenerate case'])
-]) as UnaryNodeMetaTuple<Factorial, void> // ffs
+) as UnaryNodeMetaTuple<Factorial, void> // ffs

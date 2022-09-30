@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
 import { TreeNode, Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary } from "../../closures/binary"
+import { BinaryNode, binary, when } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { Complement, isComplement, not } from './complement'
@@ -18,7 +18,7 @@ export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Bool
   (l, r) => [not(and(unit(l), unit(r))), 'real alternative denial'],
   (l, r) => [not(and(unit(l), unit(r))), 'complex alternative denial'],
   (l, r) => [not(and(unit(l), unit(r))), 'boolean alternative denial']
-)( when => [
+)(
   when(
     [_, isValue(boolean(true))],
     (l, _r) => [not(unit(l)), 'alternative deniable complementation']
@@ -58,4 +58,4 @@ export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Bool
     (l, r) => isComplement(l) && deepEquals(l.value.expression, r),
     [boolean(true), 'alternative deniable annihilator']
   )
-])
+)

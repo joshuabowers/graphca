@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
 import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { Unary, unary } from "../../closures/unary"
+import { Unary, unary, when } from "../../closures/unary"
 import { Conjunction, and } from './conjunction'
 import { Disjunction, or } from './disjunction'
 import { ExclusiveDisjunction, xor } from './exclusiveDisjunction'
@@ -20,7 +20,7 @@ export const [not, isComplement, $not] = unary<Complement, Boolean>(
   r => [boolean(r.value === 0), 'real complement'],
   c => [boolean(c.a === 0 && c.b === 0), 'complex complement'],
   b => [boolean(!b.value), 'boolean complement']
-)( when => [
+)(
   // NOTE: Cannot use derived isSpecies guards as they are not defined
   // by this point.
   when<Complement>(
@@ -58,4 +58,4 @@ export const [not, isComplement, $not] = unary<Complement, Boolean>(
     isSpecies(Species.converse),
     v => [and(not(v.left), v.right), 'complement of converse implication']
   )
-])
+)
