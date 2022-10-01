@@ -23,7 +23,7 @@ export const expectCloseTo: ExpectCloseTo = multi(
 )
 
 type Input = TreeNode|Writer<TreeNode>|[Input, Input]
-export type Operation = [Input, string]
+export type Operation = [Input, TreeNode|Writer<TreeNode>, string]
 
 export const expectWriter = <
   Actual extends TreeNode, 
@@ -33,12 +33,13 @@ export const expectWriter = <
 ) => (expected: Expected, ...operations: Operation[]) => {
   expect(actual).toEqual({
     value: isWriter(expected) ? expected.value : expected,
-    log: operations.map(([input, action]) => ({
-      input: isWriter(input) 
-        ? input.value 
+    log: operations.map(([input, output, action]) => ({
+      inputs: isWriter(input) 
+        ? [input.value]
         : (Array.isArray(input) 
           ? input.map(i => isWriter(i) ? i.value : i)
-          : input), 
+          : [input]),
+      output: isWriter(output) ? output.value : output,
       action
     }))
   })

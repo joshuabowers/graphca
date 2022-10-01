@@ -100,7 +100,7 @@ describe('add', () => {
     it('returns a Writer<Real> for two real inputs', () => {
       expectWriter(add(real(1), real(2)))(
         real(3).value,
-        [[real(1).value, real(2).value], 'real addition']
+        [[real(1), real(2)], real(3), 'real addition']
       )
     })
   
@@ -108,7 +108,8 @@ describe('add', () => {
       expectWriter(add(complex([1, 2]), complex([3, 4])))(
         complex([4, 6]).value,
         [
-          [complex([1, 2]).value, complex([3, 4]).value],
+          [complex([1, 2]), complex([3, 4])],
+          complex([4, 6]),
           'complex addition'
         ]
       )
@@ -118,7 +119,7 @@ describe('add', () => {
       expectWriter(add(boolean(true), boolean(false)))(
         boolean(true).value,
         [
-          [boolean(true).value, boolean(false).value], 
+          [boolean(true), boolean(false)], boolean(true),
           'boolean addition'
         ]
       )
@@ -127,9 +128,10 @@ describe('add', () => {
     it('returns a complex for a [real, complex] pair', () => {
       expectWriter(add(real(5), complex([0, 5])))(
         complex([5, 5]).value,
-        [real(5).value, 'cast to complex'],
+        [real(5), complex([5, 0]), 'cast to complex'],
         [
-          [complex([5, 0]).value, complex([0, 5]).value],
+          [complex([5, 0]), complex([0, 5])],
+          complex([5, 5]),
           'complex addition'
         ]
       )
@@ -138,8 +140,8 @@ describe('add', () => {
     it('returns a real for a [real, boolean] pair', () => {
       expectWriter(add(real(9), boolean(true)))(
         real(10).value,
-        [boolean(true).value, 'cast to real'],
-        [[real(9).value, real(1).value], 'real addition']
+        [boolean(true), real(1), 'cast to real'],
+        [[real(9), real(1)], real(10), 'real addition']
       )
     })
   })
@@ -148,7 +150,8 @@ describe('add', () => {
     expectWriter(add(variable('x'), variable('y')))(
       $add(variable('x'), variable('y'))[0],
       [
-        [variable('x').value, variable('y').value],
+        [variable('x'), variable('y')],
+        $add(variable('x'), variable('y'))[0],
         'addition'
       ]
     )
@@ -157,14 +160,14 @@ describe('add', () => {
   it('returns NaN if the left operand is nil', () => {
     expectWriter(add(nil, real(5)))(
       nan.value,
-      [[nil.value, real(5).value], 'not a number']
+      [[nil, real(5)], nan, 'not a number']
     )
   })
 
   it('returns NaN if the right operand is nil', () => {
     expectWriter(add(variable('x'), nil))(
       nan.value,
-      [[variable('x').value, nil.value], 'not a number']
+      [[variable('x'), nil], nan, 'not a number']
     )
   })
 
@@ -172,15 +175,15 @@ describe('add', () => {
     it('returns the right operand if the left is zero', () => {
       expectWriter(add(real(0), variable('x')))(
         variable('x').value,
-        [[real(0).value, variable('x').value], 're-order operands'],
-        [[variable('x').value, real(0).value], 'additive identity']
+        [[real(0), variable('x')], variable('x'), 're-order operands'],
+        [[variable('x'), real(0)], variable('x'), 'additive identity']
       )
     })
   
     it('returns the left operand if the right is zero', () => {
       expectWriter(add(variable('x'), real(0)))(
         variable('x').value,
-        [[variable('x').value, real(0).value], 'additive identity']
+        [[variable('x'), real(0)], variable('x'), 'additive identity']
       )
     })  
   })
@@ -188,8 +191,8 @@ describe('add', () => {
   it('reorders primitives to the right', () => {
     expectWriter(add(real(5), variable('x')))(
       $add(variable('x'), real(5))[0],
-      [[real(5).value, variable('x').value], 're-order operands'],
-      [[variable('x').value, real(5).value], 'addition']
+      [[real(5), variable('x')], $add(variable('x'), real(5))[0], 're-order operands'],
+      [[variable('x'), real(5)], $add(variable('x'), real(5))[0], 'addition']
     )
   })
 
@@ -199,13 +202,14 @@ describe('add', () => {
         add(add(variable('x'), real(5)), real(10))
       )(
         $add(variable('x'), real(15))[0],
-        [[variable('x').value, real(5).value], 'addition'],
+        [[variable('x'), real(5)], $add(variable('x'), real(5))[0], 'addition'],
         [
-          [add(variable('x'), real(5)).value, real(10).value], 
+          [add(variable('x'), real(5)), real(10)], 
+          $add(variable('x'), real(15))[0],
           'combine primitives across nesting levels'
         ],
-        [[real(5).value, real(10).value], 'real addition'],
-        [[variable('x').value, real(15).value], 'addition']
+        [[real(5), real(10)], real(15), 'real addition'],
+        [[variable('x'), real(15)], $add(variable('x'), real(15))[0], 'addition']
       )  
     })
 
@@ -214,15 +218,16 @@ describe('add', () => {
         add(real(5), add(real(10), variable('x')))
       )(
         $add(variable('x'), real(15))[0],
-        [[real(10).value, variable('x').value], 're-order operands'],
-        [[variable('x').value, real(10).value], 'addition'],
-        [[real(5).value, add(variable('x'), real(10)).value], 're-order operands'],
+        [[real(10), variable('x')], $add(variable('x'), real(10))[0], 're-order operands'],
+        [[variable('x'), real(10)], $add(variable('x'), real(10))[0], 'addition'],
+        [[real(5), add(variable('x'), real(10))], $add(variable('x'), real(15))[0], 're-order operands'],
         [
-          [add(variable('x'), real(10)).value, real(5).value],
+          [add(variable('x'), real(10)), real(5)],
+          $add(variable('x'), real(15))[0],
           'combine primitives across nesting levels'
         ],
-        [[real(10).value, real(5).value], 'real addition'],
-        [[variable('x').value, real(15).value], 'addition']
+        [[real(10), real(5)], real(15), 'real addition'],
+        [[variable('x'), real(15)], $add(variable('x'), real(15))[0], 'addition']
       )
     })
 
@@ -231,14 +236,15 @@ describe('add', () => {
         add(add(variable('x'), real(1)), complex([0, 1]))
       )(
         $add(variable('x'), complex([1, 1]))[0],
-        [[variable('x').value, real(1).value], 'addition'],
+        [[variable('x'), real(1)], $add(variable('x'), real(1))[0], 'addition'],
         [
-          [add(variable('x'), real(1)).value, complex([0, 1]).value],
+          [add(variable('x'), real(1)), complex([0, 1])],
+          $add(variable('x'), complex([1, 1]))[0],
           'combine primitives across nesting levels'
         ],
-        [real(1).value, 'cast to complex'],
-        [[complex([1, 0]).value, complex([0, 1]).value], 'complex addition'],
-        [[variable('x').value, complex([1, 1]).value], 'addition']
+        [real(1), complex([1, 0]), 'cast to complex'],
+        [[complex([1, 0]), complex([0, 1])], complex([1, 1]), 'complex addition'],
+        [[variable('x'), complex([1, 1])], $add(variable('x'), complex([1, 1]))[0], 'addition']
       )
     })
   })
@@ -247,10 +253,11 @@ describe('add', () => {
     expectWriter(add(variable('x'), variable('x')))(
       double(variable('x')).value,
       [
-        [variable('x').value, variable('x').value], 
+        [variable('x'), variable('x')], 
+        double(variable('x')),
         'equivalence: replaced with double'
       ],
-      [[real(2).value, variable('x').value], 'multiplication']
+      [[real(2), variable('x')], double(variable('x')), 'multiplication']
     )
   })
 
@@ -260,14 +267,16 @@ describe('add', () => {
         add(add(variable('x'), variable('y')), variable('x'))
       )(
         add(double(variable('x')), variable('y')).value,
-        [[variable('x').value, variable('y').value], 'addition'],
+        [[variable('x'), variable('y')], $add(variable('x'), variable('y'))[0], 'addition'],
         [
-          [add(variable('x'), variable('y')).value, variable('x').value],
+          [add(variable('x'), variable('y')), variable('x')],
+          $add(double(variable('x')), variable('y'))[0],
           'combined like terms'
         ],
-        [[real(2).value, variable('x').value], 'multiplication'],
+        [[real(2), variable('x')], double(variable('x')), 'multiplication'],
         [
-          [multiply(real(2), variable('x')).value, variable('y').value],
+          [multiply(real(2), variable('x')), variable('y')],
+          $add(double(variable('x')), variable('y'))[0],
           'addition'
         ]
       )
@@ -278,13 +287,18 @@ describe('add', () => {
         add(add(variable('y'), variable('x')), variable('x'))
       )(
         add(double(variable('x')), variable('y')).value,
-        [[variable('y').value, variable('x').value], 'addition'],
+        [[variable('y'), variable('x')], $add(variable('y'), variable('x'))[0], 'addition'],
         [
-          [add(variable('y'), variable('x')).value, variable('x').value],
+          [add(variable('y'), variable('x')), variable('x')],
+          $add(double(variable('x')), variable('y'))[0],
           'combined like terms'
         ],
-        [[real(2).value, variable('x').value], 'multiplication'],
-        [[double(variable('x')).value, variable('y').value], 'addition']
+        [[real(2), variable('x')], double(variable('x')), 'multiplication'],
+        [
+          [double(variable('x')), variable('y')], 
+          $add(double(variable('x')), variable('y'))[0], 
+          'addition'
+        ]
       )
     })
 
@@ -293,13 +307,18 @@ describe('add', () => {
         add(variable('x'), add(variable('x'), variable('y')))
       )(
         add(double(variable('x')), variable('y')).value,
-        [[variable('x').value, variable('y').value], 'addition'],
+        [[variable('x'), variable('y')], $add(variable('x'), variable('y'))[0], 'addition'],
         [
-          [variable('x').value, add(variable('x'), variable('y')).value],
+          [variable('x'), add(variable('x'), variable('y'))],
+          $add(double(variable('x')), variable('y'))[0],
           'combined like terms'
         ],
-        [[real(2).value, variable('x').value], 'multiplication'],
-        [[double(variable('x')).value, variable('y').value], 'addition']
+        [[real(2), variable('x')], double(variable('x')), 'multiplication'],
+        [
+          [double(variable('x')), variable('y')], 
+          $add(double(variable('x')), variable('y'))[0],
+          'addition'
+        ]
       )
     })
 
@@ -308,13 +327,18 @@ describe('add', () => {
         add(variable('x'), add(variable('y'), variable('x')))
       )(
         add(double(variable('x')), variable('y')).value,
-        [[variable('y').value, variable('x').value], 'addition'],
+        [[variable('y'), variable('x')], $add(variable('y'), variable('x'))[0], 'addition'],
         [
-          [variable('x').value, add(variable('y'), variable('x')).value],
+          [variable('x'), add(variable('y'), variable('x'))],
+          $add(double(variable('x')), variable('y'))[0],
           'combined like terms'
         ],
-        [[real(2).value, variable('x').value], 'multiplication'],
-        [[double(variable('x')).value, variable('y').value], 'addition']
+        [[real(2), variable('x')], double(variable('x')), 'multiplication'],
+        [
+          [double(variable('x')), variable('y')], 
+          $add(double(variable('x')), variable('y'))[0],
+          'addition'
+        ]
       )
     })
   })
@@ -326,13 +350,14 @@ describe('add', () => {
         add(variable('x'), multiply(real(2), variable('x')))
       )(
         multiply(real(3), variable('x')).value,
-        [[real(2).value, variable('x').value], 'multiplication'],
+        [[real(2), variable('x')], double(variable('x')), 'multiplication'],
         [
-          [variable('x').value, multiply(real(2), variable('x')).value],
+          [variable('x'), multiply(real(2), variable('x'))],
+          multiply(real(3), variable('x')),
           'combined like terms'
         ],
-        [[real(1).value, real(2).value], 'real addition'],
-        [[real(3).value, variable('x').value], 'multiplication']
+        [[real(1), real(2)], real(3), 'real addition'],
+        [[real(3), variable('x')], multiply(real(3), variable('x')), 'multiplication']
       )
     })
 
@@ -342,13 +367,14 @@ describe('add', () => {
         add(multiply(real(2), variable('x')), variable('x')) 
       )(
         multiply(real(3), variable('x')).value,
-        [[real(2).value, variable('x').value], 'multiplication'],
+        [[real(2), variable('x')], double(variable('x')), 'multiplication'],
         [
-          [multiply(real(2), variable('x')).value, variable('x').value],
+          [multiply(real(2), variable('x')), variable('x')],
+          multiply(real(4), variable('x')),
           'combined like terms'
         ],
-        [[real(1).value, real(2).value], 'real addition'],
-        [[real(3).value, variable('x').value], 'multiplication']
+        [[real(1), real(2)], real(3), 'real addition'],
+        [[real(3), variable('x')], multiply(real(4), variable('x')), 'multiplication']
       )
     })
 
@@ -358,17 +384,18 @@ describe('add', () => {
         add(multiply(real(2), variable('x')), multiply(real(3), variable('x')))
       )(
         multiply(real(5), variable('x')).value,
-        [[real(2).value, variable('x').value], 'multiplication'],
-        [[real(3).value, variable('x').value], 'multiplication'],
+        [[real(2), variable('x')], double(variable('x')), 'multiplication'],
+        [[real(3), variable('x')], multiply(real(3), variable('x')), 'multiplication'],
         [
           [
-            multiply(real(2), variable('x')).value, 
-            multiply(real(3), variable('x')).value
+            multiply(real(2), variable('x')), 
+            multiply(real(3), variable('x'))
           ],
+          multiply(real(5), variable('x')),
           'combined like terms'
         ],
-        [[real(2).value, real(3).value], 'real addition'],
-        [[real(5).value, variable('x').value], 'multiplication']
+        [[real(2), real(3)], real(5), 'real addition'],
+        [[real(5), variable('x')], multiply(real(5), variable('x')), 'multiplication']
       )
     })
   })
@@ -378,9 +405,9 @@ describe('add', () => {
       add(variable('x'), add(variable('y'), add(real(5), real(-5))))
     )(
       add(variable('x'), variable('y')).value,
-      [[real(5).value, real(-5).value], 'real addition'],
-      [[variable('y').value, real(0).value], 'additive identity'],
-      [[variable('x').value, variable('y').value], 'addition']
+      [[real(5), real(-5)], real(0), 'real addition'],
+      [[variable('y'), real(0)], variable('y'), 'additive identity'],
+      [[variable('x'), variable('y')], $add(variable('x'), variable('y'))[0], 'addition']
     )
   })
 })
@@ -389,17 +416,18 @@ describe('subtract', () => {
   it('returns a Writer<Real> for two real inputs', () => {
     expectWriter(subtract(real(4), real(5)))(
       real(-1).value,
-      [[real(-1).value, real(5).value], 'real multiplication'],
-      [[real(4).value, real(-5).value], 'real addition']
+      [[real(-1), real(5)], real(-5), 'real multiplication'],
+      [[real(4), real(-5)], real(-1), 'real addition']
     )
   })
 
   it('returns a Writer<Addition> for variable inputs', () => {
     expectWriter(subtract(variable('x'), variable('y')))(
       add(variable('x'), multiply(real(-1), variable('y'))).value,
-      [[real(-1).value, variable('y').value], 'multiplication'],
+      [[real(-1), variable('y')], negate(variable('y')), 'multiplication'],
       [
-        [variable('x').value, multiply(real(-1), variable('y')).value],
+        [variable('x'), multiply(real(-1), variable('y'))],
+        $add(variable('x'), negate(variable('y')))[0],
         'addition'  
       ]
     )
@@ -410,9 +438,9 @@ describe('subtract', () => {
       subtract(real(0), variable('x'))
     )(
       negate(variable('x')).value,
-      [[real(-1).value, variable('x').value], 'multiplication'],
-      [[real(0).value, negate(variable('x')).value], 're-order operands'],
-      [[negate(variable('x')).value, real(0).value], 'additive identity']
+      [[real(-1), variable('x')], negate(variable('x')), 'multiplication'],
+      [[real(0), negate(variable('x'))], $add(negate(variable('x')), real(0))[0], 're-order operands'],
+      [[negate(variable('x')), real(0)], negate(variable('x')), 'additive identity']
     )
   })
 
@@ -421,13 +449,14 @@ describe('subtract', () => {
       subtract(variable('x'), variable('x'))
     )(
       real(0).value,
-      [[real(-1).value, variable('x').value], 'multiplication'],
+      [[real(-1), variable('x')], negate(variable('x')), 'multiplication'],
       [
-        [variable('x').value, negate(variable('x')).value],
+        [variable('x'), negate(variable('x'))],
+        real(0),
         'combined like terms'
       ],
-      [[real(1).value, real(-1).value], 'real addition'],
-      [[real(0).value, variable('x').value], 'zero absorption']
+      [[real(1), real(-1)], real(0), 'real addition'],
+      [[real(0), variable('x')], real(0), 'zero absorption']
     )
   })
 
@@ -436,9 +465,9 @@ describe('subtract', () => {
       subtract(complex([0, 1]), complex([0, 1]))
     )(
       complex([0, 0]).value,
-      [real(-1).value, 'cast to complex'],
-      [[complex([-1, 0]).value, complex([0, 1]).value], 'complex multiplication'],
-      [[complex([0, 1]).value, complex([-0, -1]).value], 'complex addition']
+      [real(-1), complex([-1, 0]), 'cast to complex'],
+      [[complex([-1, 0]), complex([0, 1])], complex([-0, -1]), 'complex multiplication'],
+      [[complex([0, 1]), complex([-0, -1])], complex([0, 0]), 'complex addition']
       // TODO: -0 is a bit odd.
     )
   })
@@ -448,9 +477,9 @@ describe('subtract', () => {
       subtract(complex([2, 1]), real(1))
     )(
       complex([1, 1]).value,
-      [[real(-1).value, real(1).value], 'real multiplication'],
-      [real(-1).value, 'cast to complex'],
-      [[complex([2, 1]).value, complex([-1, 0]).value], 'complex addition']
+      [[real(-1), real(1)], real(-1), 'real multiplication'],
+      [real(-1), complex([-1, 0]), 'cast to complex'],
+      [[complex([2, 1]), complex([-1, 0])], complex([1, 1]), 'complex addition']
     )
   })
 

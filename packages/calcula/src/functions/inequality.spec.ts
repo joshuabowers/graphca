@@ -12,38 +12,39 @@ describe('equals', () => {
   it('returns true for two equal reals', () => {
     expectWriter(equals(real(1), real(1)))(
       boolean(true).value,
-      [[real(1).value, real(1).value], 'real equality']
+      [[real(1), real(1)], boolean(true), 'real equality']
     )
   })
 
   it('returns true for two equal complexes', () => {
     expectWriter(equals(complex([1,1]), complex([1,1])))(
       boolean(true).value,
-      [[complex([1,1]).value, complex([1,1]).value], 'complex equality']
+      [[complex([1,1]), complex([1,1])], boolean(true), 'complex equality']
     )
   })
 
   it('returns true for two equal booleans', () => {
     expectWriter(equals(boolean(false), boolean(false)))(
       boolean(true).value,
-      [[boolean(false).value, boolean(false).value], 'boolean equality']
+      [[boolean(false), boolean(false)], boolean(true), 'boolean equality']
     )
   })
 
   it('returns false for unequal things', () => {
     expectWriter(equals(real(1), real(2)))(
       boolean(false).value,
-      [[real(1).value, real(2).value], 'real equality']
+      [[real(1), real(2)], boolean(false), 'real equality']
     )
   })
 
   it('returns an Equals for variable input', () => {
+    const output = {
+      clade: Clades.binary, genus: Genera.inequalities, species: Species.equals,
+      left: variable('x'), right: variable('y')
+    }
     expectWriter(equals(variable('x'), variable('y')))(
-      {
-        clade: Clades.binary, genus: Genera.inequalities, species: Species.equals,
-        left: variable('x'), right: variable('y')
-      } as Equality,
-      [[variable('x').value, variable('y').value], 'equality']
+      output as Equality,
+      [[variable('x'), variable('y')], output, 'equality']
     )
   })
 })
