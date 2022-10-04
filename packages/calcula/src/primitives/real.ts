@@ -8,9 +8,9 @@ export const real = primitive<number, {value: number}, Real>(
   value => ({value}),
   Species.real
 )(
-  _create => r => [r, ''],
-  create => c => [create(c.a), 'cast to real'],
-  create => b => [create(b.value ? 1 : 0), 'cast to real']
+  _create => r => [r, () => `${r.value}`, ''],
+  create => c => [create(c.a), () => `real(${c.a} + ${c.b})`, 'cast to real'],
+  create => b => [create(b.value ? 1 : 0), () => `real(${b.value})`, 'cast to real']
 )()
 
 export const isReal = isSpecies<Real>(Species.real)

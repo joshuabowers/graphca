@@ -1,6 +1,8 @@
+export type Rewrite = () => string
+
 export interface Operation {
   inputs: unknown[],
-  output: unknown,
+  rewrite: Rewrite,
   action: string
 }
 
@@ -10,7 +12,7 @@ export interface Writer<T> {
 }
 
 export type WriterFn<T, U = T> = (value: T) => Writer<U>
-export type Action<T> = [T|Writer<T>, string]
+export type Action<T> = [T|Writer<T>, Rewrite, string]
 export type CaseFn<I, O = I> = (input: I) => Action<O>
 
 export const unit = <T>(value: T): Writer<T> => ({value, log: []})

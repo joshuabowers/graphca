@@ -4,6 +4,7 @@ import { Binary, binary, when, partialLeft } from "../closures/binary";
 import { divide } from '../arithmetic'
 import { Exponentiation, isExponentiation } from "../arithmetic/exponentiation";
 import { deepEquals } from "../utility/deepEquals";
+import { rule } from "../utility/rule";
 
 export type Logarithm = Binary<Species.log, Genera.logarithmic>
 
@@ -13,18 +14,23 @@ const lnComplex = (c: Complex) => complex([
 ])
 
 export const [log, isLogarithm, $log] = binary<Logarithm>(Species.log, Genera.logarithmic)(
-  (l, r) => [real(Math.log(r.value) / Math.log(l.value)), 'computed real logarithm'],
+  (l, r) => [
+    real(Math.log(r.value) / Math.log(l.value)), 
+    rule`log(${l}, ${r})`,
+    'computed real logarithm'
+  ],
   (l, r) => {
     const n = lnComplex(r)
+    const logRule = rule`log(${l}, ${r})`
     const action = 'computed complex logarithm'
-    if(l.a === Math.E && l.b === 0){ return [n, action] }
-    return [divide(lnComplex(r), lnComplex(l)), action]
+    if(l.a === Math.E && l.b === 0){ return [n, logRule, action] }
+    return [divide(lnComplex(r), lnComplex(l)), logRule, action]
   },
-  (l, r) => [boolean(l.value || !r.value), 'computed boolean logarithm']
+  (l, r) => [boolean(l.value || !r.value), rule`log(${l}, ${r})`, 'computed boolean logarithm']
 )(
   when<TreeNode, Exponentiation>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),
-    (_l, r) => [r.right, 'inverse operation cancellation']
+    (_l, r) => [r.right, rule`${r.right}`, 'inverse operation cancellation']
   )
 )
 

@@ -88,8 +88,9 @@ export const differentiate: DifferentiateFn = multi(
   when(isVariable, [real(1), 'derivative of a variable']),
 
   // Arithmetic
-  when(isAddition, e => [
+  when(isAddition, e => [ 
     add(differentiate(e.left), differentiate(e.right)),
+    // rule`${Unicode.derivative}(${e.left}) + ${Unicode.derivative}(${e.right})`
     'derivative of an addition'
   ]),
   when(isMultiplication, e => [

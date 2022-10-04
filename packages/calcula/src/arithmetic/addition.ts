@@ -39,51 +39,69 @@ import {
 } from "../closures/binary"
 import { deepEquals, deepEqualsAt, isValue } from "../utility/deepEquals"
 import { multiply, double, negate, Multiplication, isMultiplication } from './multiplication'
+import { rule, Input, identityRule } from '../utility/rule'
 
 export type Addition = Binary<Species.add, Genera.arithmetic>
 type AdditionWithPrimitive = Addition & {
   readonly right: Writer<PrimitiveNode>
 }
 
+export const binaryInfixRule = (operator: string) =>
+  <L extends Input, R extends Input>(l: L, r: R) =>
+    rule`${l} ${operator} ${r}`
+
+export const binaryFnRule = (fnName: string) =>
+  <L extends Input, R extends Input>(l: L, r: R) =>
+    rule`${fnName}(${l}, ${r})`
+
+// export const addRule = <L extends Input, R extends Input>(l: L, r: R) => rule`${l} + ${r}`
+export const addRule = binaryInfixRule('+')
+
 export const [add, isAddition, $add] = binary<Addition>(Species.add, Genera.arithmetic)(
-  (l, r) => [real(l.value + r.value), 'real addition'],
-  (l, r) => [complex([l.a + r.a, l.b + r.b]), 'complex addition'],
+  (l, r) => [real(l.value + r.value), addRule(l, r), 'real addition'],
+  (l, r) => [
+    complex([l.a + r.a, l.b + r.b]), 
+    addRule(l, r),
+    'complex addition'
+  ],
   (l, r) => [
     boolean((l.value || r.value) && !(l.value && r.value)), 
+    addRule(l, r),
     'boolean addition'
   ]
 )(
   when([
     any(Species.real, Species.complex, Species.boolean), 
     notAny(Species.real, Species.complex, Species.boolean)
-  ], (l, r) => [add(unit(r), unit(l)), 're-order operands']),
-  when<TreeNode, Real>([_, isValue(real(0))], (l, _r) => [l, 'additive identity']),
+  ], (l, r) => [add(unit(r), unit(l)), addRule(r, l), 're-order operands']),
+  when<TreeNode, Real>([_, isValue(real(0))], (l, _r) => [l, identityRule(l), 'additive identity']),
   when<AdditionWithPrimitive, PrimitiveNode>(
     (l, r) => isAddition(l) 
       && isPrimitive(l.value.right) 
       && isPrimitive(r), 
     (l, r) => [
       add(l.left, add(l.right, unit(r))), 
+      rule`${l.left} + (${l.right} + ${r})`,
       'combine primitives across nesting levels'
     ]),
   when(deepEquals, (l, _r) => [
-    double(unit(l)), 'equivalence: replaced with double'
+    double(unit(l)), rule`2 * ${l}`, 'equivalence: replaced with double'
   ]),
   when<Addition, TreeNode>(
     (l, r) => isAddition(l) && deepEquals(l.value.left, r),
-    (l, _r) => [add(double(l.left), l.right), 'combined like terms']
+    (l, _r) => [add(double(l.left), l.right), rule`2 * ${l.left} + ${l.right}`, 'combined like terms']
   ),
   when<Addition, TreeNode>(
     (l, r) => isAddition(l) && deepEquals(l.value.right, r),
-    (l, _r) => [add(double(l.right), l.left), 'combined like terms']
+    (l, _r) => [add(double(l.right), l.left), rule`2 * ${l.right} + ${l.left}`, 'combined like terms']
   ),
   when<TreeNode, Addition>(
     (l, r) => isAddition(r) && deepEquals(l, r.value.left),
-    (_l, r) => [add(double(r.left), r.right), 'combined like terms']
+    (_l, r) => [add(double(r.left), r.right), rule`2 * ${r.left} + ${r.right}`, 'combined like terms']
   ),
   when<TreeNode, Addition>(
     (l, r) => isAddition(r) && deepEquals(l, r.value.right),
-    (_l, r) => [add(double(r.right), r.left), 'combined like terms']
+    (_l, r) => [add(double(r.right), r.left), rule`2 * ${r.right} + ${r.left}`, 'combined like terms']
   ),
   when<Multiplication, Multiplication>(
     (l, r) => isMultiplication(l) && isMultiplication(r)
@@ -91,18 +109,19 @@ export const [add, isAddition, $add] = binary<Addition>(Species.add, Genera.arit
       && deepEquals(l.value.right, r.value.right),
     (l, r) => [
       multiply(add(l.left, r.left), l.right), 
+      rule`(${l.left} + ${r.left}) * ${l.right}`,
       'combined like terms'
     ]
   ),
   when<TreeNode, Multiplication>(
     (l, r) => isMultiplication(r) && isPrimitive(r.value.left) 
       && deepEquals(l, r.value.right),
-    (l, r) => [multiply(add(real(1), r.left), unit(l)), 'combined like terms']
+    (l, r) => [multiply(add(real(1), r.left), unit(l)), rule`(${real(1)} + ${r.left}) * ${l}`, 'combined like terms']
   ),
   when<Multiplication, TreeNode>(
     (l, r) => isMultiplication(l) && isPrimitive(l.value.left) 
       && deepEquals(l.value.right, r),
-    (l, r) => [multiply(add(real(1), l.left), unit(r)), 'combined like terms']
+    (l, r) => [multiply(add(real(1), l.left), unit(r)), rule`(${real(1)} + ${l.left}) * ${r}`, 'combined like terms']
   )
 )
 

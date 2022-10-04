@@ -10,6 +10,7 @@ import {
   isReal, isComplex, isBoolean,
   real, complex, nan
 } from '../primitives'
+import { rule } from "../utility/rule"
 
 export type BinaryNode = TreeNode & {
   readonly clade: Clades.binary,
@@ -62,12 +63,11 @@ export const when = <L extends TreeNode, R extends TreeNode>(
   method(predicate, (l: Writer<L>, r: Writer<R>) =>
     bind(l, x => 
       bind(r, y => {
-        const [result, action] = typeof fn === 'function' ? fn(x, y) : fn
-        const output = isWriter(result) ? result.value : result
+        const [result, rewrite, action] = typeof fn === 'function' ? fn(x, y) : fn
         return ({
-          value: output,
+          value: isWriter(result) ? result.value : result,
           log: [
-            {inputs: [x, y], output, action},
+            {inputs: [x, y], rewrite, action},
             ...(isWriter(result) ? result.log : [])
           ]
         })
@@ -98,11 +98,10 @@ export const binary = <T extends BinaryNode, R = void>(
   species: Species, genus?: Genera
 ) => {
   type Result<U extends TreeNode> = R extends void ? U : (R extends TreeNode ? R : never)
-  const create = (left: Writer<TreeNode>, right: Writer<TreeNode>): Action<T> => [
-    ({clade: Clades.binary, species, genus, left, right}) as T, 
-    species.toLocaleLowerCase()
-  ]
-  // const when = createWhen(create)
+  const create = (left: Writer<TreeNode>, right: Writer<TreeNode>): Action<T> => {
+    const n = ({clade: Clades.binary, species, genus, left, right}) as T
+    return [n, rule`${n}`, species.toLocaleLowerCase()]
+  }
   return (
     whenReal: BinaryCaseFn<Real, Real, Result<Real>>,
     whenComplex: BinaryCaseFn<Complex, Complex, Result<Complex>>,
@@ -112,8 +111,8 @@ export const binary = <T extends BinaryNode, R = void>(
       when([isReal, isReal], whenReal),
       when([isComplex, isComplex], whenComplex),
       when([isBoolean, isBoolean], whenBoolean),
-      when<Nil|NaN, TreeNode>([eitherNilOrNaN, _], (_l, _r) => [nan, 'not a number']),
-      when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, 'not a number']),
+      when<Nil|NaN, TreeNode>([eitherNilOrNaN, _], (_l, _r) => [nan, rule`${nan}`, 'not a number']),
+      when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, rule`${nan}`, 'not a number']),
       when([isTreeNode, isTreeNode], (l, r) => create(unit(l), unit(r)))
     )
     return (...methods: (typeof method)[]): BinaryNodeMetaTuple<T, R> => {

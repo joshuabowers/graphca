@@ -26,11 +26,10 @@ const primitiveMap = <T, U>(create: CreateFn<U, T>) =>
   <I>(fn: CreateCase<T, U, I>) =>
     (writer: Writer<I>) =>
       bind(writer, input => {
-        const [value, action] = fn(create)(input)
-        const output = isWriter(value) ? value.value : value
+        const [value, rewrite, action] = fn(create)(input)
         return ({
-          value: output,
-          log: [...(isWriter(value) ? value.log : []), {inputs: [input], output, action}]
+          value: isWriter(value) ? value.value : value,
+          log: [...(isWriter(value) ? value.log : []), {inputs: [input], rewrite, action}]
         })
       })
 

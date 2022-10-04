@@ -6,6 +6,7 @@ import {
 } from "../utility/tree"
 import { Real, Complex, Boolean, Nil, NaN, nan } from "../primitives"
 import { CastFn } from "../utility/typings"
+import { rule } from "../utility/rule"
 
 export type UnaryNode = TreeNode & {
   readonly clade: Clades.unary,
@@ -42,12 +43,11 @@ export const when = <T extends TreeNode>(
 ) =>
   method(predicate, (t: Writer<T>) =>
     bind(t, input => {
-      const [result, action] = typeof fn === 'function' ? fn(input) : fn
-      const output = isWriter(result) ? result.value : result
+      const [result, rewrite, action] = typeof fn === 'function' ? fn(input) : fn
       return ({
-        value: output,
+        value: isWriter(result) ? result.value : result,
         log: [
-          {inputs: [input], output, action},
+          {inputs: [input], rewrite, action},
           ...(isWriter(result) ? result.log : [])
         ]
       })
@@ -60,15 +60,14 @@ export type EdgeCaseFns = (when: WhenFn) => (typeof method)[]
 const unaryMap = <T, U = T>(fn: CaseFn<T, U>) =>
   (writer: Writer<T>) =>
     bind(writer, input => {
-      const [value, action] = fn(input)
-      const output = isWriter(value) ? value.value : value
+      const [value, rewrite, action] = fn(input)
       return ({
-        value: output,
-        log: [...(isWriter(value) ? value.log : []), {inputs: [input], output, action}]
+        value: isWriter(value) ? value.value : value,
+        log: [...(isWriter(value) ? value.log : []), {inputs: [input], rewrite, action}]
       })
     })
 
-const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, 'not a number']
+const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, rule`${nan}`, 'not a number']
 
 export type UnaryNodeMetaTuple<T extends UnaryNode, R> = [
   UnaryFn<T, R>,
@@ -80,10 +79,10 @@ export const unary = <T extends UnaryNode, R = void>(
   species: Species, genus?: Genera
 ) => {
   type Result<U extends TreeNode> = R extends void ? U : R
-  const create = (expression: Writer<TreeNode>): Action<T> => [
-    ({clade: Clades.unary, genus, species, expression}) as T,
-    species.toLocaleLowerCase()
-  ]
+  const create = (expression: Writer<TreeNode>): Action<T> => {
+    const n = ({clade: Clades.unary, genus, species, expression}) as T
+    return [n, rule`${n}`, species.toLocaleLowerCase()]
+  }
   return (
     whenReal: CaseFn<Real, Result<Real>>,
     whenComplex: CaseFn<Complex, Result<Complex>>,
