@@ -1,4 +1,5 @@
-export type Rewrite = () => string
+export type StringifyFn = (writer: Writer<unknown>) => string
+export type Rewrite = (stringify: StringifyFn) => string
 
 export interface Operation {
   inputs: unknown[],
