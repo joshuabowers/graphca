@@ -36,6 +36,8 @@ import {
 import { isFactorial } from '../functions/factorial'
 import { isGamma } from '../functions/gamma'
 import { polygamma, digamma, Polygamma } from '../functions/polygamma'
+import { Unicode } from '../Unicode'
+import { Input, rule } from '../utility/rule'
 
 type DifferentiateFn = Multi
   & ((order: Writer<Real>, expression: Writer<TreeNode>) => Writer<TreeNode>)
@@ -50,17 +52,18 @@ export const when = <T extends TreeNode>(
 ) =>
   method(predicate, (t: Writer<T>) =>
     bind(t, input => {
-      const [result, action] = typeof fn === 'function' ? fn(input) : fn
-      const output = isWriter(result) ? result.value : result
+      const [result, rewrite, action] = typeof fn === 'function' ? fn(input) : fn
       return ({
-        value: output,
+        value: isWriter(result) ? result.value : result,
         log: [
-          {inputs: [input], output, action},
+          {inputs: [input], rewrite, action},
           ...(isWriter(result) ? result.log : [])
         ]
       })
     })
   )
+
+const d = Unicode.derivative
 
 const chain = (derivative: Writer<TreeNode>, argument: Writer<TreeNode>) =>
   multiply(derivative, differentiate(argument))
@@ -90,7 +93,7 @@ export const differentiate: DifferentiateFn = multi(
   // Arithmetic
   when(isAddition, e => [ 
     add(differentiate(e.left), differentiate(e.right)),
-    // rule`${Unicode.derivative}(${e.left}) + ${Unicode.derivative}(${e.right})`
+    rule`${d}(${e.left}) + ${d}(${e.right})`,
     'derivative of an addition'
   ]),
   when(isMultiplication, e => [
@@ -98,6 +101,7 @@ export const differentiate: DifferentiateFn = multi(
       multiply(differentiate(e.left), e.right),
       multiply(e.left, differentiate(e.right))
     ),
+    rule`(${d}(${e.left}) * ${e.right}) + (${e.left} * ${d}(${e.right}))`,
     'derivative of a multiplication'
   ]),
   when(isExponentiation, e => [
@@ -108,6 +112,7 @@ export const differentiate: DifferentiateFn = multi(
         multiply(differentiate(e.right), ln(e.left))
       )
     ),
+    rule`${e} * ((${d}(${e.left}) * (${e.right} / ${e.left})) + (${d}(${e.right}) * ln(${e.left})))`,
     'derivative of an exponentiation'
   ]),
 
@@ -116,36 +121,44 @@ export const differentiate: DifferentiateFn = multi(
     divide(
       differentiate(e.right), multiply(e.right, ln(e.left))
     ),
+    rule`${d}(${e.right}) / (${e.right} * ln(${e.left}))`,
     'derivative of a logarithm'
   ]),
   when(isAbsolute, e => [
     chain(divide(e.expression, unit(e)), e.expression),
+    rule`(${e.expression} / ${e}) * ${d}(${e.expression})`,
     'derivative of an absolute value'
   ]),
 
   // :: Trigonometric
   when(isCosine, e => [
     chain(negate(sin(e.expression)), e.expression),
+    rule`-sin(${e.expression}) * ${d}(${e.expression})`,
     'derivative of cosine'
   ]),
   when(isSine, e => [
     chain(cos(e.expression), e.expression),
+    rule`cos(${e.expression}) * ${d}(${e.expression})`,
     'derivative of sine'
   ]),
   when(isTangent, e => [
     chain(square(sec(e.expression)), e.expression),
+    rule`[sec(${e.expression})]^2 * ${d}(${e.expression})`,
     'derivative of tangent'
   ]),
   when(isSecant, e => [
     chain(multiply(sec(e.expression), tan(e.expression)), e.expression),
+    rule`(sec(${e.expression}) * tan(${e.expression})) * ${d}(${e.expression})`,
     'derivative of secant'
   ]),
   when(isCosecant, e => [
     chain(multiply(negate(csc(e.expression)), cot(e.expression)), e.expression),
+    rule`(-csc(${e.expression}) * cot(${e.expression})) * ${d}(${e.expression})`,
     'derivative of cosecant'
   ]),
   when(isCotangent, e => [
     chain(negate(square(csc(e.expression))), e.expression),
+    rule`-[csc(${e.expression})]^2 * ${d}(${e.expression})`,
     'derivative of cotangent'
   ]),
 
@@ -196,14 +209,17 @@ export const differentiate: DifferentiateFn = multi(
   // :: Hyperbolic
   when(isHyperbolicCosine, e => [
     chain(sinh(e.expression), e.expression),
+    rule`sinh(${e.expression}) * ${d}(${e.expression})`,
     'derivative of hyperbolic cosine'
   ]),
   when(isHyperbolicSine, e => [
     chain(cosh(e.expression), e.expression),
+    rule`cosh(${e.expression}) * ${d}(${e.expression})`,
     'derivative of hyperbolic sine'
   ]),
   when(isHyperbolicTangent, e => [
     chain(square(sech(e.expression)), e.expression),
+    rule`[sech(${e.expression})]^2 * ${d}(${e.expression})`,
     'derivative of hyperbolic tangent'
   ]),
   when(isHyperbolicSecant, e => [
@@ -211,6 +227,7 @@ export const differentiate: DifferentiateFn = multi(
       multiply(negate(tanh(e.expression)), sech(e.expression)), 
       e.expression
     ),
+    rule`(-tanh(${e.expression}) * sech(${e.expression})) * ${d}(${e.expression})`,
     'derivative of hyperbolic secant'
   ]),
   when(isHyperbolicCosecant, e => [
@@ -218,6 +235,7 @@ export const differentiate: DifferentiateFn = multi(
       multiply(negate(coth(e.expression)), csch(e.expression)),
       e.expression
     ),
+    rule`(-coth(${e.expression}) * csch(${e.expression})) * ${d}(${e.expression})`,
     'derivative of hyperbolic cosecant'
   ]),
   when(isHyperbolicCotangent, e => [
@@ -225,6 +243,7 @@ export const differentiate: DifferentiateFn = multi(
       negate(square(csch(e.expression))),
       e.expression
     ),
+    rule`-[csch(${e.expression})]^2 * ${d}(${e.expression})`,
     'derivative of hyperbolic cotangent'
   ]),
 
@@ -278,10 +297,12 @@ export const differentiate: DifferentiateFn = multi(
   // :: Factorial-likes
   when(isFactorial, e => [
     chain(multiply(unit(e), digamma(add(e.expression, real(1)))), e.expression),
+    rule`(${e} * ${Unicode.digamma}(${e.expression} + ${real(1)})) * ${d}(${e.expression})`,
     'derivative of factorial'
   ]),
   when(isGamma, e => [
     chain(multiply(unit(e), digamma(e.expression)), e.expression),
+    rule`(${e} * ${Unicode.digamma}(${e.expression})) * ${d}(${e.expression})`,
     'derivative of gamma'
   ]),
   // NOTE: while 'isPolygamma' is the more natural and consistent fit, here,
@@ -291,6 +312,7 @@ export const differentiate: DifferentiateFn = multi(
   // 'isSpecies'.
   when(isSpecies<Polygamma>(Species.polygamma), e => [
     chain(polygamma(add(e.left, real(1)), e.right), e.right),
+    rule`${Unicode.digamma}(${e.left} + ${real(1)}, ${e.right}) * ${d}(${e.right})`,
     'derivative of polygamma'
   ])
 )
