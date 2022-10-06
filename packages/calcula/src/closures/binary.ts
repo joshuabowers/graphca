@@ -10,7 +10,7 @@ import {
   isReal, isComplex, isBoolean,
   real, complex, nan
 } from '../primitives'
-import { rule } from "../utility/rule"
+import { rule, Input } from "../utility/rule"
 
 export type BinaryNode = TreeNode & {
   readonly clade: Clades.binary,
@@ -93,6 +93,14 @@ export type BinaryNodeMetaTuple<T extends BinaryNode, R> = [
   TreeNodeGuardFn<T>,
   BinaryCreateFn<T>
 ]
+
+export const binaryInfixRule = (operator: string) =>
+  <L extends Input, R extends Input>(l: L, r: R) =>
+    rule`${l} ${operator} ${r}`
+
+export const binaryFnRule = (fnName: string) =>
+  <L extends Input, R extends Input>(l: L, r: R) =>
+    rule`${fnName}(${l}, ${r})`
 
 export const binary = <T extends BinaryNode, R = void>(
   species: Species, genus?: Genera

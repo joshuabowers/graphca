@@ -35,24 +35,16 @@ import {
   Real, real, complex, boolean, isPrimitive, PrimitiveNode 
 } from "../primitives"
 import { 
-  Binary, binary, binaryFrom, when, identity, leftChild, rightChild 
+  Binary, binary, binaryFrom, when, binaryInfixRule 
 } from "../closures/binary"
 import { deepEquals, deepEqualsAt, isValue } from "../utility/deepEquals"
 import { multiply, double, negate, Multiplication, isMultiplication } from './multiplication'
-import { rule, Input, identityRule } from '../utility/rule'
+import { rule, identityRule } from '../utility/rule'
 
 export type Addition = Binary<Species.add, Genera.arithmetic>
 type AdditionWithPrimitive = Addition & {
   readonly right: Writer<PrimitiveNode>
 }
-
-export const binaryInfixRule = (operator: string) =>
-  <L extends Input, R extends Input>(l: L, r: R) =>
-    rule`${l} ${operator} ${r}`
-
-export const binaryFnRule = (fnName: string) =>
-  <L extends Input, R extends Input>(l: L, r: R) =>
-    rule`${fnName}(${l}, ${r})`
 
 // export const addRule = <L extends Input, R extends Input>(l: L, r: R) => rule`${l} + ${r}`
 export const addRule = binaryInfixRule('+')

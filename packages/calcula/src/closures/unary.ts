@@ -6,7 +6,7 @@ import {
 } from "../utility/tree"
 import { Real, Complex, Boolean, Nil, NaN, nan } from "../primitives"
 import { CastFn } from "../utility/typings"
-import { rule } from "../utility/rule"
+import { Input, rule } from "../utility/rule"
 
 export type UnaryNode = TreeNode & {
   readonly clade: Clades.unary,
@@ -74,6 +74,14 @@ export type UnaryNodeMetaTuple<T extends UnaryNode, R> = [
   TreeNodeGuardFn<T>,
   UnaryCreateFn<T>
 ]
+
+export const unaryFnRule = (name: string) =>
+  <E extends Input>(e: E) => 
+    rule`${name}(${e})`
+
+export const unaryPostfixRule = (operator: string) =>
+  <E extends Input>(e: E) =>
+    rule`(${e})${operator}`
 
 export const unary = <T extends UnaryNode, R = void>(
   species: Species, genus?: Genera

@@ -2,7 +2,7 @@ import { _ } from '@arrows/multimethod'
 import { Writer, unit } from "../../monads/writer"
 import { TreeNode, Genera, Species } from "../../utility/tree"
 import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when } from "../../closures/binary"
+import { BinaryNode, binary, when, binaryInfixRule } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { not } from './complement'
@@ -12,8 +12,7 @@ import { Unicode } from '../../Unicode'
 
 export type Implication = Connective<Species.implies>
 
-const impliesRule = <L extends TreeNode, R extends TreeNode>(l: L, r: R) => 
-  rule`${l} ${Unicode.implies} ${r}`
+export const impliesRule = binaryInfixRule(Unicode.implies)
 
 export const [implies, isImplication, $implies] = binary<Implication, Boolean>(
   Species.implies, Genera.connective
