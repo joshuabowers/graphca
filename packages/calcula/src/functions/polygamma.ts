@@ -3,7 +3,7 @@ import { Writer, unit } from "../monads/writer"
 import { TreeNode, Species } from "../utility/tree"
 import { Real, Complex, Boolean, real, isReal, isComplex, isPrimitive } from "../primitives"
 import { variable } from "../variable"
-import { Binary, binary, when, partialLeft } from "../closures/binary"
+import { Binary, binary, when, partialLeft, binaryFnRule } from "../closures/binary"
 import { 
   add, subtract, multiply, divide, double, raise, reciprocal
 } from "../arithmetic"
@@ -14,6 +14,8 @@ import { factorial } from "./factorial"
 import { isValue } from "../utility/deepEquals"
 import { differentiate } from "../calculus/differentiation"
 import { invoke } from "../invocation"
+import { Unicode } from "../Unicode"
+import { unaryFnRule } from "../closures/unary"
 
 export type Polygamma = Binary<Species.polygamma>
 
@@ -131,36 +133,43 @@ const digammaRecurrence = (e: Writer<TreeNode>) => {
   )
 }
 
+export const polygammaRule = binaryFnRule(Unicode.digamma)
+export const digammaRule = unaryFnRule(Unicode.digamma)
+
 export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(Species.polygamma)(
   (l, r) => [
     calculatePolygamma(unit(l), unit(r)) as Writer<Real>, 
+    polygammaRule(l, r),
     'computed real polygamma'
   ],
   (l, r) => [
     calculatePolygamma(unit(l), unit(r)) as Writer<Complex>, 
+    polygammaRule(l, r),
     'computed complex polygamma'
   ],
   (l, r) => [
     calculatePolygamma(unit(l), unit(r)) as Writer<Boolean>, 
+    polygammaRule(l, r),
     'computed boolean polygamma'
   ]
 )(
   when(
     (l, r) => isValue(real(0))(l) && isNegative(r),
-    (_l, r) => [digammaReflection(unit(r)), 'digamma reflection for negative value']
+    (_l, r) => [digammaReflection(unit(r)), digammaRule(r), 'digamma reflection for negative value']
   ),
   when(
     (l, r) => isValue(real(0))(l) && isSmall(r),
-    (_l, r) => [digammaRecurrence(unit(r)), 'digamma recurrence for small value']
+    (_l, r) => [digammaRecurrence(unit(r)), digammaRule(r), 'digamma recurrence for small value']
   ),
   when<Real, Real|Complex|Boolean>(
     (l, r) => isValue(real(0))(l) && isPrimitive(r),
-    (_l, r) => [calculateDigamma(unit(r)), 'computed digamma']
+    (_l, r) => [calculateDigamma(unit(r)), digammaRule(r), 'computed digamma']
   ),
   when(
     (l, r) => isReal(l) && isNegative(r),
     (l, r) => [
       polygammaReflection(unit(l), unit(r)), 
+      polygammaRule(l, r),
       'polygamma reflection for negative value'
     ]
   ),
@@ -168,6 +177,7 @@ export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(Species.po
     (l, r) => isReal(l) && isSmall(r),
     (l, r) => [
       polygammaRecurrence(unit(l), unit(r)), 
+      polygammaRule(l, r),
       'polygamma recurrence for small value'
     ]
   )

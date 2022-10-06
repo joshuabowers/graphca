@@ -2,12 +2,14 @@ import { Writer, unit } from "../monads/writer"
 import { Multi, multi, method } from "@arrows/multimethod"
 import { TreeNode, Species } from "../utility/tree"
 import { Real, Complex, real, boolean, isReal, isComplex } from "../primitives"
-import { Unary, unary, when } from "../closures/unary"
+import { Unary, unary, unaryFnRule, when } from "../closures/unary"
 import { 
   add, subtract, multiply, divide, negate, raise, sqrt 
 } from "../arithmetic"
 import { sin } from "./trigonometric"
 import { factorial } from "./factorial"
+import { Unicode } from "../Unicode"
+import { rule } from "../utility/rule"
 
 const isPIN = (n: number) => n > 0 && n <= 15 && Number.isInteger(n)
 
@@ -67,18 +69,20 @@ const calculateGamma = (input: Writer<Real|Complex>): Writer<TreeNode> => {
 
 export type Gamma = Unary<Species.gamma>
 
+export const gammaRule = unaryFnRule(Unicode.gamma)
+
 export const [gamma, isGamma, $gamma] = unary<Gamma>(Species.gamma)(
-  r => [calculateGamma(unit(r)) as Writer<Real>, 'computed real gamma'],
-  c => [calculateGamma(unit(c)) as Writer<Complex>, 'computed complex gamma'],
-  b => [boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>), 'computed boolean gamma']
+  r => [calculateGamma(unit(r)) as Writer<Real>, gammaRule(r), 'computed real gamma'],
+  c => [calculateGamma(unit(c)) as Writer<Complex>, gammaRule(c),  'computed complex gamma'],
+  b => [boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>), gammaRule(b), 'computed boolean gamma']
 )(
   when(
     isPositiveInteger, 
-    t => [factorial(subtract(unit(t), real(1))), 'computing gamma via factorial']
+    t => [factorial(subtract(unit(t), real(1))), rule`(${t} - ${real(1)})!`, 'computing gamma via factorial']
   ),
   when(
     t => (isReal(t) && t.value.value < 0.5)
       || (isComplex(t) && t.value.a < 0.5),
-    t => [gammaReflection(unit(t)), 'gamma reflection for small value']
+    t => [gammaReflection(unit(t)), gammaRule(t), 'gamma reflection for small value']
   )
 )

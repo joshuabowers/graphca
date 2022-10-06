@@ -1,6 +1,6 @@
 import { Genera, Species, TreeNode } from "../utility/tree";
 import { real, complex, boolean, Complex } from "../primitives";
-import { Binary, binary, when, partialLeft } from "../closures/binary";
+import { Binary, binary, when, partialLeft, binaryFnRule } from "../closures/binary";
 import { divide } from '../arithmetic'
 import { Exponentiation, isExponentiation } from "../arithmetic/exponentiation";
 import { deepEquals } from "../utility/deepEquals";
@@ -13,10 +13,12 @@ const lnComplex = (c: Complex) => complex([
   Math.atan2(c.b, c.a)
 ])
 
+export const logRule = binaryFnRule('log')
+
 export const [log, isLogarithm, $log] = binary<Logarithm>(Species.log, Genera.logarithmic)(
   (l, r) => [
     real(Math.log(r.value) / Math.log(l.value)), 
-    rule`log(${l}, ${r})`,
+    logRule(l, r),
     'computed real logarithm'
   ],
   (l, r) => {
@@ -26,7 +28,7 @@ export const [log, isLogarithm, $log] = binary<Logarithm>(Species.log, Genera.lo
     if(l.a === Math.E && l.b === 0){ return [n, logRule, action] }
     return [divide(lnComplex(r), lnComplex(l)), logRule, action]
   },
-  (l, r) => [boolean(l.value || !r.value), rule`log(${l}, ${r})`, 'computed boolean logarithm']
+  (l, r) => [boolean(l.value || !r.value), logRule(l, r), 'computed boolean logarithm']
 )(
   when<TreeNode, Exponentiation>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),
