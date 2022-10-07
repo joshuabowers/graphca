@@ -22,6 +22,10 @@ export const variable = (
 
 export type Scope = Map<string, Writer<Variable>>
 
+export const isScope = (v: unknown): v is Scope =>
+  typeof v === 'object' && v !== null
+  && ['get', 'set', 'has', 'delete'].every(m => m in v)
+
 type Entries = Iterable<readonly [string, Writer<Variable>]>
 
 export const scope = (entries: Entries = []): Scope => 

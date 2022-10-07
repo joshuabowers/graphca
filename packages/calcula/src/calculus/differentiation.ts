@@ -83,12 +83,12 @@ export const differentiate: DifferentiateFn = multi(
   ),
 
   // Primitives
-  when(isReal, [real(0), 'derivative of a real']),
-  when(isComplex, [complex([0, 0]), 'derivative of a complex number']),
-  when(isBoolean, [boolean(false), 'derivative of a boolean']),
-  when(isNil, [nan, 'derivative of nil']),
-  when(isNaN, [nan, 'derivative of NaN']),
-  when(isVariable, [real(1), 'derivative of a variable']),
+  when(isReal, [real(0), rule`${real(0)}`, 'derivative of a real']),
+  when(isComplex, [complex([0, 0]), rule`${complex([0, 0])}`, 'derivative of a complex number']),
+  when(isBoolean, [boolean(false), rule`${boolean(false)}`, 'derivative of a boolean']),
+  when(isNil, [nan, rule`${nan}`, 'derivative of nil']),
+  when(isNaN, [nan, rule`${nan}`, 'derivative of NaN']),
+  when(isVariable, [real(1), rule`${real(1)}`, 'derivative of a variable']),
 
   // Arithmetic
   when(isAddition, e => [ 
@@ -168,6 +168,7 @@ export const differentiate: DifferentiateFn = multi(
       differentiate(e.expression),
       sqrt(subtract(real(1), square(e.expression)))
     )),
+    rule`-[${d}(${e.expression}) / (${real(1)} - [${e.expression}]^2)^0.5]`,
     'derivative of arcus cosine'
   ]),
   when(isArcusSine, e => [
@@ -175,10 +176,12 @@ export const differentiate: DifferentiateFn = multi(
       reciprocal(sqrt(subtract(real(1), square(e.expression)))), 
       e.expression
     ),
+    rule`[(${real(1)} - [${e.expression}]^2)^0.5]^-1 * ${d}(${e.expression})`,
     'derivative of arcus sine'
   ]),
   when(isArcusTangent, e => [
     chain(reciprocal(add(real(1), square(e.expression))), e.expression),
+    rule`(${real(1)} + [${e.expression}]^2)^-1 * ${d}(${e.expression})`,
     'derivative of arcus tangent'
   ]),
   when(isArcusSecant, e => [
@@ -189,6 +192,7 @@ export const differentiate: DifferentiateFn = multi(
       )), 
       e.expression
     ),
+    rule`(abs(${e.expression}) * ([${e.expression}]^2 - ${real(1)})^0.5)^-1 * ${d}(${e.expression})`,
     'derivative of arcus secant'
   ]),
   when(isArcusCosecant, e => [
@@ -199,10 +203,12 @@ export const differentiate: DifferentiateFn = multi(
       )), 
       e.expression
     )),
+    rule`-[(abs(${e.expression}) * ([${e.expression}]^2 - ${real(1)})^0.5)^-1 * ${d}(${e.expression})]`,
     'derivative of arcus cosecant'
   ]),
   when(isArcusCotangent, e => [
     negate(chain(reciprocal(add(square(e.expression), real(1))), e.expression)),
+    rule`-[([${e.expression}]^2 + ${real(1)})^-1 * ${d}(${e.expression})]`,
     'derivative of arcus cotangent'
   ]),
 
@@ -253,6 +259,7 @@ export const differentiate: DifferentiateFn = multi(
       reciprocal(sqrt(subtract(square(e.expression), real(1)))),
       e.expression
     ),
+    rule`(([${e.expression}]^2 - ${real(1)})^0.5)^-1 * ${d}(${e.expression})`,
     'derivative of area hyperbolic cosine'
   ]),
   when(isAreaHyperbolicSine, e => [
@@ -260,6 +267,7 @@ export const differentiate: DifferentiateFn = multi(
       reciprocal(sqrt(add(real(1), square(e.expression)))),
       e.expression
     ),
+    rule`((${real(1)} + [${e.expression}]^2)^0.5)^-1 * ${d}(${e.expression})`,
     'derivative of area hyperbolic sine'
   ]),
   when(isAreaHyperbolicTangent, e => [
@@ -267,6 +275,7 @@ export const differentiate: DifferentiateFn = multi(
       reciprocal(subtract(real(1), square(e.expression))),
       e.expression
     ),
+    rule`(${real(1)} - [${e.expression}]^2)^-1 * ${d}(${e.expression})`,
     'derivative of area hyperbolic tangent'
   ]),
   when(isAreaHyperbolicSecant, e => [
@@ -277,6 +286,7 @@ export const differentiate: DifferentiateFn = multi(
       )),
       e.expression
     )),
+    rule`-[(${e.expression} * (${real(1)} - [${e.expression}]^2)^0.5)^-1 * ${d}(${e.expression})]`,
     'derivative of area hyperbolic secant'
   ]),
   when(isAreaHyperbolicCosecant, e => [
@@ -287,10 +297,12 @@ export const differentiate: DifferentiateFn = multi(
       )),
       e.expression
     )),
+    rule`-[(abs(${e.expression}) * (${real(1)} + [${e.expression}]^2)^0.5)^-1 * ${d}(${e.expression})]`,
     'derivative of area hyperbolic cosecant'
   ]),
   when(isAreaHyperbolicCotangent, e => [
     chain(reciprocal(subtract(real(1), square(e.expression))), e.expression),
+    rule`(${real(1)} - [${e.expression}]^2)^-1 * ${d}(${e.expression})`,
     'derivative of area hyperbolic cotangent'
   ]),
 

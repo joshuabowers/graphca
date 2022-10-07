@@ -54,6 +54,7 @@ import { factorial, isFactorial } from './functions/factorial'
 import { gamma, isGamma } from './functions/gamma'
 import { polygamma, isPolygamma } from './functions/polygamma'
 import { parameterize } from './utility/parameterization'
+import { rule } from './utility/rule'
 
 type EvaluableNode<T extends TreeNode> = R.Reader<Scope, W.Writer<T>>
 type EvaluateFn = Multi 
@@ -67,17 +68,19 @@ const guardFrom = <T extends TreeNode>(guard: TreeNodeGuardFn<T>) =>
   (expression: EvaluableNode<T>) => guard(expression(emptyScope))
 
 const constant = <T extends PrimitiveNode>(): CorrespondingFn<T> => 
-  _ => (n: T): W.Action<T> => [n, `invoked ${n.species}`]
+  _ => (n: T): W.Action<T> => [n, rule`${n}`, `invoked ${n.species}`]
 
 const binary = <T extends BinaryNode, R>(b: BinaryFn<T, R>): CorrespondingFn<T> =>
   scope => (e: BinaryNode): W.Action<T> => [
     b(evaluate(s => e.left)(scope), evaluate(s => e.right)(scope)), 
+    rule`[${e}](${scope})`,
     `invoked ${e.species}`
   ]
 
 const unary = <T extends UnaryNode, R>(u: UnaryFn<T, R>): CorrespondingFn<T> =>
   scope => (e: UnaryNode): W.Action<T> => [
     u(evaluate(s => e.expression)(scope)),
+    rule`[${e}](${scope})`,
     `invoked ${e.species}`
   ]
 
@@ -86,12 +89,11 @@ const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: CorrespondingFn
     guardFrom(guard),
     (reader: EvaluableNode<T>) => R.bind(reader)<W.Writer<TreeNode>>(
       writer => scope => W.bind(writer, input => {
-        const [result, action] = fn(scope)(input)
-        const output = W.isWriter(result) ? result.value : result
+        const [result, rewrite, action] = fn(scope)(input)
         return ({
-          value: output,
+          value: W.isWriter(result) ? result.value : result,
           log: [
-            {inputs: [input], output, action},
+            {inputs: [input], rewrite, action},
             ...(W.isWriter(result) ? result.log : [])
           ]
         })
@@ -106,6 +108,7 @@ const evaluate: EvaluateFn = multi(
 
   when(isVariable, scope => v => [
     scope.get(v.name)?.value.value ?? v, 
+    rule`${scope.get(v.name)?.value.value ?? v}`,
     `${scope.get(v.name)?.value.value ? 'substituting' : 'invoking'} variable ${v.name}`
   ]),
 
