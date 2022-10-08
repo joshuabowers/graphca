@@ -100,6 +100,12 @@ export enum Species {
   variable = 'Variable'
 }
 
+export enum Notation {
+  prefix,
+  infix,
+  postfix
+}
+
 export type TreeNode = {
   readonly clade: Clades,
   readonly genus?: Genera,

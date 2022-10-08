@@ -93,7 +93,7 @@ const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: CorrespondingFn
         return ({
           value: W.isWriter(result) ? result.value : result,
           log: [
-            {inputs: [input], rewrite, action},
+            {input: rule`(${input})(${scope})`, rewrite, action},
             ...(W.isWriter(result) ? result.log : [])
           ]
         })

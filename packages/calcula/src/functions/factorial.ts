@@ -1,9 +1,9 @@
 import { unit } from "../monads/writer";
-import { Species } from "../utility/tree";
+import { Species, Notation } from "../utility/tree";
 import { ComplexInfinity } from '../primitives/complex';
 import { real, complex, boolean, isReal, isComplex } from '../primitives'
 import { Unary, unary, when, UnaryNodeMetaTuple, unaryPostfixRule } from "../closures/unary";
-import { add, subtract, multiply } from "../arithmetic";
+import { add, multiply } from "../arithmetic";
 import { gamma } from './gamma';
 import { isValue } from "../utility/deepEquals";
 import { rule } from "../utility/rule";
@@ -15,7 +15,9 @@ export const factorialRule = unaryPostfixRule('!')
 
 const isNegativeInteger = (t: number) => t < 0 && Number.isInteger(t)
 
-export const [factorial, isFactorial, $factorial] = unary<Factorial>(Species.factorial)(
+export const [factorial, isFactorial, $factorial] = unary<Factorial>(
+  '!', Notation.postfix, Species.factorial
+)(
   r => [
     multiply(unit(r), factorial(add(unit(r), real(-1)))), 
     factorialRule(r),

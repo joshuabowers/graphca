@@ -2,6 +2,7 @@ import { method, multi, fromMulti, Multi } from '@arrows/multimethod'
 import { Writer, bind, unit, isWriter, Action } from '../monads/writer'
 import { CreateFn, CastFn } from '../utility/typings'
 import { TreeNode, Clades, Species, isClade } from '../utility/tree'
+import { rule } from '../utility/rule'
 
 export type PrimitiveNode = TreeNode & {
   readonly clade: Clades.primitive
@@ -23,13 +24,16 @@ type GuardFn<T> = (value: unknown) => value is T
 type CreateCase<T, U, I> = (create: CreateFn<U, T>) => (input: I) => Action<T>
 
 const primitiveMap = <T, U>(create: CreateFn<U, T>) =>
-  <I>(fn: CreateCase<T, U, I>) =>
+  <I extends TreeNode>(fn: CreateCase<T, U, I>) =>
     (writer: Writer<I>) =>
       bind(writer, input => {
         const [value, rewrite, action] = fn(create)(input)
         return ({
           value: isWriter(value) ? value.value : value,
-          log: [...(isWriter(value) ? value.log : []), {inputs: [input], rewrite, action}]
+          log: [
+            ...(isWriter(value) ? value.log : []), 
+            {input: rule`${input}`, rewrite, action}
+          ]
         })
       })
 

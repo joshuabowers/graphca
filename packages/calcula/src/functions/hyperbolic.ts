@@ -1,5 +1,5 @@
 import { unit } from "../monads/writer"
-import { Genera, Species, isGenus } from "../utility/tree"
+import { Genera, Species, Notation, isGenus } from "../utility/tree"
 import { real, complex } from "../primitives"
 import { UnaryNode, unary, unaryFnRule } from "../closures/unary"
 import { reciprocal } from "../arithmetic"
@@ -29,7 +29,7 @@ export const cschRule = unaryFnRule('csch')
 export const cothRule = unaryFnRule('coth')
 
 export const [cosh, isHyperbolicCosine, $cosh] = unary<HyperbolicCosine>(
-  Species.cosh, Genera.hyperbolic
+  'cosh', Notation.prefix, Species.cosh, Genera.hyperbolic
 )(
   r => [real(Math.cosh(r.value)), coshRule(r), 'computed real hyperbolic cosine'],
   c => [
@@ -44,7 +44,7 @@ export const [cosh, isHyperbolicCosine, $cosh] = unary<HyperbolicCosine>(
 )()
 
 export const [sinh, isHyperbolicSine, $sinh] = unary<HyperbolicSine>(
-  Species.sinh, Genera.hyperbolic
+  'sinh', Notation.prefix, Species.sinh, Genera.hyperbolic
 )(
   r => [real(Math.sinh(r.value)), sinhRule(r), 'computed real hyperbolic sine'],
   c => [
@@ -59,7 +59,7 @@ export const [sinh, isHyperbolicSine, $sinh] = unary<HyperbolicSine>(
 )()
 
 export const [tanh, isHyperbolicTangent, $tanh] = unary<HyperbolicTangent>(
-  Species.tanh, Genera.hyperbolic
+  'tanh', Notation.prefix, Species.tanh, Genera.hyperbolic
 )(
   r => [real(Math.tanh(r.value)), tanhRule(r), 'computed real hyperbolic tangent'],
   c => {
@@ -77,7 +77,7 @@ export const [tanh, isHyperbolicTangent, $tanh] = unary<HyperbolicTangent>(
 )()
 
 export const [sech, isHyperbolicSecant, $sech] = unary<HyperbolicSecant>(
-  Species.sech, Genera.hyperbolic
+  'sech', Notation.prefix, Species.sech, Genera.hyperbolic
 )(
   r => [reciprocal(cosh(unit(r))), sechRule(r), 'computed real hyperbolic secant'],
   c => [reciprocal(cosh(unit(c))), sechRule(c), 'computed complex hyperbolic secant'],
@@ -85,7 +85,7 @@ export const [sech, isHyperbolicSecant, $sech] = unary<HyperbolicSecant>(
 )()
 
 export const [csch, isHyperbolicCosecant, $csch] = unary<HyperbolicCosecant>(
-  Species.csch, Genera.hyperbolic 
+  'csch', Notation.prefix, Species.csch, Genera.hyperbolic 
 )(
   r => [reciprocal(sinh(unit(r))), cschRule(r), 'computed real hyperbolic cosecant'],
   c => [reciprocal(sinh(unit(c))), cschRule(c), 'computed complex hyperbolic cosecant'],
@@ -93,7 +93,7 @@ export const [csch, isHyperbolicCosecant, $csch] = unary<HyperbolicCosecant>(
 )()
 
 export const [coth, isHyperbolicCotangent, $coth] = unary<HyperbolicCotangent>(
-  Species.coth, Genera.hyperbolic
+  'coth', Notation.prefix, Species.coth, Genera.hyperbolic
 )(
   r => [reciprocal(tanh(unit(r))), cothRule(r), 'computed hyperbolic cotangent'],
   c => [reciprocal(tanh(unit(c))), cothRule(c), 'computed hyperbolic cotangent'],

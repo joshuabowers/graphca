@@ -1,6 +1,6 @@
 import { Writer, unit } from "../monads/writer"
 import { Multi, multi, method } from "@arrows/multimethod"
-import { TreeNode, Species } from "../utility/tree"
+import { TreeNode, Species, Notation } from "../utility/tree"
 import { Real, Complex, real, boolean, isReal, isComplex } from "../primitives"
 import { Unary, unary, unaryFnRule, when } from "../closures/unary"
 import { 
@@ -71,7 +71,9 @@ export type Gamma = Unary<Species.gamma>
 
 export const gammaRule = unaryFnRule(Unicode.gamma)
 
-export const [gamma, isGamma, $gamma] = unary<Gamma>(Species.gamma)(
+export const [gamma, isGamma, $gamma] = unary<Gamma>(
+  Unicode.gamma, Notation.prefix, Species.gamma
+)(
   r => [calculateGamma(unit(r)) as Writer<Real>, gammaRule(r), 'computed real gamma'],
   c => [calculateGamma(unit(c)) as Writer<Complex>, gammaRule(c),  'computed complex gamma'],
   b => [boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>), gammaRule(b), 'computed boolean gamma']

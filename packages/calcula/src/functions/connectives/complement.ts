@@ -1,7 +1,7 @@
 import { _ } from '@arrows/multimethod'
-import { Genera, Species, isSpecies } from "../../utility/tree"
+import { Genera, Species, Notation, isSpecies } from "../../utility/tree"
 import { Boolean, boolean } from "../../primitives"
-import { Unary, unary, unaryPostfixRule, when } from "../../closures/unary"
+import { Unary, unary, unaryFnRule, when } from "../../closures/unary"
 import { Conjunction, and, andRule } from './conjunction'
 import { Disjunction, or, orRule } from './disjunction'
 import { ExclusiveDisjunction, xor, xorRule } from './exclusiveDisjunction'
@@ -15,10 +15,10 @@ import { rule } from '../../utility/rule'
 
 export type Complement = Unary<Species.not, Genera.connective>
 
-export const notRule = unaryPostfixRule(Unicode.not)
+export const notRule = unaryFnRule(Unicode.not)
 
 export const [not, isComplement, $not] = unary<Complement, Boolean>(
-  Species.not, Genera.connective
+  Unicode.not, Notation.prefix, Species.not, Genera.connective
 )(
   r => [boolean(r.value === 0), notRule(r), 'real complement'],
   c => [boolean(c.a === 0 && c.b === 0), notRule(c), 'complex complement'],

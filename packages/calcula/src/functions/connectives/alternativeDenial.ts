@@ -1,8 +1,8 @@
 import { _ } from '@arrows/multimethod'
-import { Writer, unit } from "../../monads/writer"
-import { TreeNode, Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
-import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when, binaryInfixRule } from "../../closures/binary"
+import { unit } from "../../monads/writer"
+import { TreeNode, Genera, Species, Notation } from "../../utility/tree"
+import { Boolean, boolean } from "../../primitives"
+import { binary, when, binaryInfixRule } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { Complement, isComplement, not } from './complement'
@@ -17,7 +17,7 @@ export type AlternativeDenial = Connective<Species.nand>
 export const nandRule = binaryInfixRule(Unicode.nand)
 
 export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Boolean>(
-  Species.nand, Genera.connective
+  Unicode.nand, Notation.infix, Species.nand, Genera.connective
 )(
   (l, r) => [not(and(unit(l), unit(r))), nandRule(l, r), 'real alternative denial'],
   (l, r) => [not(and(unit(l), unit(r))), nandRule(l, r), 'complex alternative denial'],

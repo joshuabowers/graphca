@@ -29,7 +29,7 @@
 import { Writer, unit } from '../monads/writer'
 import { _ } from '@arrows/multimethod'
 import { 
-  TreeNode, Genera, Species, any, notAny 
+  TreeNode, Genera, Species, Notation, any, notAny 
 } from "../utility/tree"
 import { 
   Real, real, complex, boolean, isPrimitive, PrimitiveNode 
@@ -37,7 +37,7 @@ import {
 import { 
   Binary, binary, binaryFrom, when, binaryInfixRule 
 } from "../closures/binary"
-import { deepEquals, deepEqualsAt, isValue } from "../utility/deepEquals"
+import { deepEquals, isValue } from "../utility/deepEquals"
 import { multiply, double, negate, Multiplication, isMultiplication } from './multiplication'
 import { rule, identityRule } from '../utility/rule'
 
@@ -46,10 +46,11 @@ type AdditionWithPrimitive = Addition & {
   readonly right: Writer<PrimitiveNode>
 }
 
-// export const addRule = <L extends Input, R extends Input>(l: L, r: R) => rule`${l} + ${r}`
 export const addRule = binaryInfixRule('+')
 
-export const [add, isAddition, $add] = binary<Addition>(Species.add, Genera.arithmetic)(
+export const [add, isAddition, $add] = binary<Addition>(
+  '+', Notation.infix, Species.add, Genera.arithmetic
+)(
   (l, r) => [real(l.value + r.value), addRule(l, r), 'real addition'],
   (l, r) => [
     complex([l.a + r.a, l.b + r.b]), 

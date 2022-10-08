@@ -1,8 +1,8 @@
 import { _ } from '@arrows/multimethod'
-import { Writer, unit } from "../../monads/writer"
-import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
-import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when, binaryInfixRule } from "../../closures/binary"
+import { unit } from "../../monads/writer"
+import { Genera, Species, Notation } from "../../utility/tree"
+import { Boolean, boolean } from "../../primitives"
+import { binary, when, binaryInfixRule } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { not, notRule } from './complement'
@@ -16,7 +16,7 @@ export type ExclusiveDisjunction = Connective<Species.xor>
 export const xorRule = binaryInfixRule(Unicode.xor)
 
 export const [xor, isExclusiveDisjunction, $xor] = binary<ExclusiveDisjunction, Boolean>(
-  Species.xor, Genera.connective
+  Unicode.xor, Notation.infix, Species.xor, Genera.connective
 )(
   (l, r) => [
     and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 

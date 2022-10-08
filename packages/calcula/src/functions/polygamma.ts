@@ -1,6 +1,6 @@
 import { multi, method, _, Multi } from "@arrows/multimethod"
 import { Writer, unit } from "../monads/writer"
-import { TreeNode, Species } from "../utility/tree"
+import { TreeNode, Species, Notation } from "../utility/tree"
 import { Real, Complex, Boolean, real, isReal, isComplex, isPrimitive } from "../primitives"
 import { variable } from "../variable"
 import { Binary, binary, when, partialLeft, binaryFnRule } from "../closures/binary"
@@ -136,7 +136,9 @@ const digammaRecurrence = (e: Writer<TreeNode>) => {
 export const polygammaRule = binaryFnRule(Unicode.digamma)
 export const digammaRule = unaryFnRule(Unicode.digamma)
 
-export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(Species.polygamma)(
+export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(
+  Unicode.digamma, Notation.prefix, Species.polygamma
+)(
   (l, r) => [
     calculatePolygamma(unit(l), unit(r)) as Writer<Real>, 
     polygammaRule(l, r),

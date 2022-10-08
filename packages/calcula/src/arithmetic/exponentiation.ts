@@ -1,6 +1,6 @@
 import { _ } from '@arrows/multimethod'
 import { unit } from '../monads/writer'
-import { TreeNode, Genera, Species } from "../utility/tree"
+import { TreeNode, Genera, Species, Notation } from "../utility/tree"
 import { real, complex, boolean } from "../primitives"
 import { Binary, binary, when, partialRight } from "../closures/binary"
 import { deepEquals, isValue } from "../utility/deepEquals"
@@ -11,7 +11,7 @@ import { rule } from '../utility/rule'
 export type Exponentiation = Binary<Species.raise, Genera.arithmetic>
 
 export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
-  Species.raise, Genera.arithmetic
+  '^', Notation.infix, Species.raise, Genera.arithmetic
 )(
   (l, r) => [real(l.value ** r.value), rule`${l}^${r}`, 'real exponentiation'],
   (l, r) => {

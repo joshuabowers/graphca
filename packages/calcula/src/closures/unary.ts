@@ -1,10 +1,13 @@
 import { method, multi, fromMulti, Multi, _ } from "@arrows/multimethod"
-import { Writer, unit, bind, Action, CaseFn, isWriter } from "../monads/writer"
+import { Writer, unit, bind, Action, CaseFn, isWriter, Rewrite } from "../monads/writer"
 import { 
-  TreeNode, Clades, Genera, Species, 
-  isClade, isSpecies, TreeNodeGuardFn
+  TreeNode, Clades, Genera, Species, Notation,
+  isClade, isSpecies, isTreeNode, TreeNodeGuardFn
 } from "../utility/tree"
-import { Real, Complex, Boolean, Nil, NaN, nan } from "../primitives"
+import { 
+  Real, Complex, Boolean, Nil, NaN, nan,
+  isReal, isComplex, isBoolean, isNil, isNaN
+} from "../primitives"
 import { CastFn } from "../utility/typings"
 import { Input, rule } from "../utility/rule"
 
@@ -36,36 +39,28 @@ type CorrespondingFn<T> = (t: T) => Action<TreeNode>
 
 export type UnaryCreateFn<T extends UnaryNode> = 
   (e: Writer<TreeNode>) => Action<T>
+export type UnaryToString<I extends Input,> = (i: I) => Rewrite
 
 export const when = <T extends TreeNode>(
   predicate: Test<T>, 
   fn: Action<TreeNode> | CorrespondingFn<T>
 ) =>
-  method(predicate, (t: Writer<T>) =>
-    bind(t, input => {
-      const [result, rewrite, action] = typeof fn === 'function' ? fn(input) : fn
-      return ({
-        value: isWriter(result) ? result.value : result,
-        log: [
-          {inputs: [input], rewrite, action},
-          ...(isWriter(result) ? result.log : [])
-        ]
+  (toString: UnaryToString<T>) =>
+    method(predicate, (t: Writer<T>) =>
+      bind(t, input => {
+        const [result, rewrite, action] = typeof fn === 'function' ? fn(input) : fn
+        return ({
+          value: isWriter(result) ? result.value : result,
+          log: [
+            {input: toString(input), rewrite, action},
+            ...(isWriter(result) ? result.log : [])
+          ]
+        })
       })
-    })
-  )
+    )
 
 export type WhenFn = ReturnType<typeof when>
 export type EdgeCaseFns = (when: WhenFn) => (typeof method)[]
-
-const unaryMap = <T, U = T>(fn: CaseFn<T, U>) =>
-  (writer: Writer<T>) =>
-    bind(writer, input => {
-      const [value, rewrite, action] = fn(input)
-      return ({
-        value: isWriter(value) ? value.value : value,
-        log: [...(isWriter(value) ? value.log : []), {inputs: [input], rewrite, action}]
-      })
-    })
 
 const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, rule`${nan}`, 'not a number']
 
@@ -84,29 +79,30 @@ export const unaryPostfixRule = (operator: string) =>
     rule`(${e})${operator}`
 
 export const unary = <T extends UnaryNode, R = void>(
-  species: Species, genus?: Genera
+  name: string, notation: Notation, species: Species, genus?: Genera
 ) => {
-  type Result<U extends TreeNode> = R extends void ? U : R
+  type Result<U extends TreeNode> = R extends void ? U : (R extends TreeNode ? R : never)
   const create = (expression: Writer<TreeNode>): Action<T> => {
     const n = ({clade: Clades.unary, genus, species, expression}) as T
     return [n, rule`${n}`, species.toLocaleLowerCase()]
   }
+  if(notation === Notation.infix){ throw new Error(`Unknown unary infix operation: ${name}`)}
+  const toString = notation === Notation.prefix ? unaryFnRule(name) : unaryPostfixRule(name)
   return (
     whenReal: CaseFn<Real, Result<Real>>,
     whenComplex: CaseFn<Complex, Result<Complex>>,
     whenBoolean: CaseFn<Boolean, Result<Boolean>>
   ) => {
     const fn: UnaryFn<T, R> = multi(
-      (v: Writer<TreeNode>) => v.value.species,
-      method(Species.real, unaryMap(whenReal)),
-      method(Species.complex, unaryMap(whenComplex)),
-      method(Species.boolean, unaryMap(whenBoolean)),
-      method(Species.nil, unaryMap(whenNilOrNaN)),
-      method(Species.nan, unaryMap(whenNilOrNaN)),
-      method(unaryMap<TreeNode>(input => create(unit(input))))
+      when(isReal, whenReal)(toString),
+      when(isComplex, whenComplex)(toString),
+      when(isBoolean, whenBoolean)(toString),
+      when(isNil, whenNilOrNaN)(toString),
+      when(isNaN, whenNilOrNaN)(toString),
+      when(isTreeNode, n => create(unit(n)))(toString)
     )
-    return (...methods: (typeof method)[]): UnaryNodeMetaTuple<T, R> => [
-      methods.length > 0 ? fromMulti(...methods)(fn) : fn,
+    return (...methods: WhenFn[]): UnaryNodeMetaTuple<T, R> => [
+      methods.length > 0 ? fromMulti(...methods.map(m => m(toString)))(fn) : fn,
       isSpecies<T>(species),
       create
     ]

@@ -1,8 +1,8 @@
 import { _ } from '@arrows/multimethod'
-import { Writer, unit } from "../../monads/writer"
-import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
-import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when, binaryInfixRule } from "../../closures/binary"
+import { unit } from "../../monads/writer"
+import { Genera, Species, Notation } from "../../utility/tree"
+import { Boolean, boolean } from "../../primitives"
+import { binary, when, binaryInfixRule } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { not } from './complement'
@@ -16,7 +16,7 @@ export type Biconditional = Connective<Species.xnor>
 export const xnorRule = binaryInfixRule(Unicode.xnor)
 
 export const [xnor, isBiconditional, $xnor] = binary<Biconditional, Boolean>(
-  Species.xnor, Genera.connective
+  Unicode.xnor, Notation.infix, Species.xnor, Genera.connective
 )(
   (l, r) => [
     and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 

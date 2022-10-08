@@ -1,5 +1,5 @@
 import { Writer, unit } from "../monads/writer"
-import { TreeNode, Genera, Species } from "../utility/tree"
+import { TreeNode, Genera, Species, Notation } from "../utility/tree"
 import { BinaryNode, binary, binaryFnRule } from "../closures/binary"
 import { subtract, multiply, divide } from "../arithmetic"
 import { factorial } from "./factorial"
@@ -25,7 +25,7 @@ const calculatePermutation = <T extends TreeNode>(l: T, r: T): Writer<T> =>
   ) as unknown as Writer<T>
 
 export const [permute, isPermutation, $permute] = binary<Permutation>(
-  Species.permute, Genera.combinatorics
+  'P', Notation.prefix, Species.permute, Genera.combinatorics
 )(
   (l, r) => [calculatePermutation(l, r), permuteRule(l, r), 'computed real permutation'],
   (l, r) => [calculatePermutation(l, r), permuteRule(l, r), 'computed complex permutation'],
@@ -39,7 +39,7 @@ const calculateCombination = <T extends TreeNode>(l: T, r: T): Writer<T> =>
   ) as unknown as Writer<T>
 
 export const [combine, isCombination, $combine] = binary<Combination>(
-  Species.combine, Genera.combinatorics
+  'C', Notation.prefix, Species.combine, Genera.combinatorics
 )(
   (l, r) => [calculateCombination(l, r), combineRule(l, r), 'computed real combination'],
   (l, r) => [calculateCombination(l, r), combineRule(l, r), 'computed complex combination'],

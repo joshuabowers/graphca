@@ -20,15 +20,17 @@ export const Derivation = (props: DerivationProps) => {
   return (
     <div className={[styles.normal, props.show && styles.visible].join(' ')}>
       {
-        props.for.log.map(({inputs, rewrite, action}, i) => {
-          const Wis = inputs.map(W.unit)
+        props.for.log.map(({input, rewrite, action}, i) => {
+          // const Wis = inputs.map(W.unit)
+          const inputAsString = input(wrap)
           const output = rewrite(wrap)
-          console.log( Wis, output, action )
-          if(!areTreeNodes(Wis)){ throw new Error('Received non-TreeNode input') }
+          console.log( inputAsString, output, action )
+          // if(!areTreeNodes(Wis)){ throw new Error('Received non-TreeNode input') }
           return <React.Fragment key={i}>
             <span className={styles.step} />
             <span className={styles.inputs}>
-              { Wis.map((Wi, j) => <Expression node={Wi} key={j} />) }
+              {inputAsString}
+              {/* { Wis.map((Wi, j) => <Expression node={Wi} key={j} />) } */}
             </span>
             <span className={styles.output}>{output}</span>
             <span className={styles.action}>{action}</span>

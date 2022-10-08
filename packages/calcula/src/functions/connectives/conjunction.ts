@@ -1,8 +1,8 @@
 import { _ } from '@arrows/multimethod'
-import { Writer, unit } from "../../monads/writer"
-import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
-import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when, binaryInfixRule } from "../../closures/binary"
+import { unit } from "../../monads/writer"
+import { Genera, Species, Notation } from "../../utility/tree"
+import { Boolean, boolean } from "../../primitives"
+import { binary, when, binaryInfixRule } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { isComplement } from './complement'
@@ -15,7 +15,7 @@ export type Conjunction = Connective<Species.and>
 export const andRule = binaryInfixRule(Unicode.and)
 
 export const [and, isConjunction, $and] = binary<Conjunction, Boolean>(
-  Species.and, Genera.connective
+  Unicode.and, Notation.infix, Species.and, Genera.connective
 )(
   (l, r) => [boolean(l.value !== 0 && r.value !== 0), andRule(l, r), 'real conjunction'],
   (l, r) => [

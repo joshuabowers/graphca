@@ -1,5 +1,5 @@
 import { unit } from "../monads/writer"
-import { Genera, Species } from "../utility/tree"
+import { Genera, Species, Notation } from "../utility/tree"
 import { BinaryNode, binary } from "../closures/binary"
 import { Boolean, boolean } from '../primitives'
 import { abs } from "./absolute"
@@ -21,7 +21,7 @@ export type LessThanEquals = Inequality<Species.lessThanEquals>
 export type GreaterThanEquals = Inequality<Species.greaterThanEquals>
 
 export const [equals, isEquality, $equals] = binary<Equality, Boolean>(
-  Species.equals, Genera.inequalities
+  '===', Notation.infix, Species.equals, Genera.inequalities
 )(
   (l, r) => [boolean(l.value === r.value), rule`${l} === ${r}`, 'real equality'],
   (l, r) => [boolean(l.a === r.a && l.b === r.b), rule`${l} === ${r}`, 'complex equality'],
@@ -29,7 +29,7 @@ export const [equals, isEquality, $equals] = binary<Equality, Boolean>(
 )()
 
 export const [notEquals, isStrictInequality, $notEquals] = binary<StrictInequality, Boolean>(
-  Species.notEquals, Genera.inequalities
+  '!==', Notation.infix, Species.notEquals, Genera.inequalities
 )(
   (l, r) => [boolean(l.value !== r.value), rule`${l} !== ${r}`, 'real strict inequality'],
   (l, r) => [boolean(l.a !== r.a || l.b !== r.b), rule`${l} !== ${r}`, 'complex strict inequality'],
@@ -37,7 +37,7 @@ export const [notEquals, isStrictInequality, $notEquals] = binary<StrictInequali
 )()
 
 export const [lessThan, isLessThan, $lessThan] = binary<LessThan, Boolean>(
-  Species.lessThan, Genera.inequalities
+  '<', Notation.infix, Species.lessThan, Genera.inequalities
 )(
   (l, r) => [boolean(l.value < r.value), rule`${l} < ${r}`, 'real less than'],
   (l, r) => [boolean(abs(unit(l)).value.a < abs(unit(r)).value.a), rule`${l} < ${r}`, 'complex less than'],
@@ -45,7 +45,7 @@ export const [lessThan, isLessThan, $lessThan] = binary<LessThan, Boolean>(
 )()
 
 export const [greaterThan, isGreaterThan, $greaterThan] = binary<GreaterThan, Boolean>(
-  Species.greaterThan, Genera.inequalities
+  '>', Notation.infix, Species.greaterThan, Genera.inequalities
 )(
   (l, r) => [boolean(l.value > r.value), rule`${l} > ${r}`, 'real greater than'],
   (l, r) => [boolean(abs(unit(l)).value.a > abs(unit(r)).value.a), rule`${l} > ${r}`, 'complex greater than'],
@@ -53,15 +53,15 @@ export const [greaterThan, isGreaterThan, $greaterThan] = binary<GreaterThan, Bo
 )()
 
 export const [lessThanEquals, isLessThanEquals, $lessThanEquals] = binary<LessThanEquals, Boolean>(
-  Species.lessThanEquals, Genera.inequalities
+  '<=', Notation.infix, Species.lessThanEquals, Genera.inequalities
 )(
-  (l, r) => [boolean(l.value <= r.value), rule`${l} > ${r}`, 'real less than or equals'],
-  (l, r) => [boolean(abs(unit(l)).value.a <= abs(unit(r)).value.a), rule`${l} > ${r}`, 'complex less than or equals'],
-  (l, r) => [boolean(l.value <= r.value), rule`${l} > ${r}`, 'boolean less than or equals']
+  (l, r) => [boolean(l.value <= r.value), rule`${l} <= ${r}`, 'real less than or equals'],
+  (l, r) => [boolean(abs(unit(l)).value.a <= abs(unit(r)).value.a), rule`${l} <= ${r}`, 'complex less than or equals'],
+  (l, r) => [boolean(l.value <= r.value), rule`${l} <= ${r}`, 'boolean less than or equals']
 )()
 
 export const [greaterThanEquals, isGreaterThanEquals, $greaterThanEquals] = binary<GreaterThanEquals, Boolean>(
-  Species.greaterThanEquals, Genera.inequalities
+  '>=', Notation.infix, Species.greaterThanEquals, Genera.inequalities
 )(
   (l, r) => [boolean(l.value >= r.value), rule`${l} >= ${r}`, 'real greater than or equals'],
   (l, r) => [boolean(abs(unit(l)).value.a >= abs(unit(r)).value.a), rule`${l} >= ${r}`, 'complex greater than or equals'],

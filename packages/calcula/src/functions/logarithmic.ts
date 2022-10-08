@@ -1,4 +1,4 @@
-import { Genera, Species, TreeNode } from "../utility/tree";
+import { Genera, Species, Notation, TreeNode } from "../utility/tree";
 import { real, complex, boolean, Complex } from "../primitives";
 import { Binary, binary, when, partialLeft, binaryFnRule } from "../closures/binary";
 import { divide } from '../arithmetic'
@@ -15,7 +15,9 @@ const lnComplex = (c: Complex) => complex([
 
 export const logRule = binaryFnRule('log')
 
-export const [log, isLogarithm, $log] = binary<Logarithm>(Species.log, Genera.logarithmic)(
+export const [log, isLogarithm, $log] = binary<Logarithm>(
+  'log', Notation.prefix, Species.log, Genera.logarithmic
+)(
   (l, r) => [
     real(Math.log(r.value) / Math.log(l.value)), 
     logRule(l, r),

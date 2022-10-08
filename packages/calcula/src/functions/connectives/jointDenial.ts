@@ -1,8 +1,8 @@
 import { _ } from '@arrows/multimethod'
-import { Writer, unit } from "../../monads/writer"
-import { Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
-import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when, binaryInfixRule } from "../../closures/binary"
+import { unit } from "../../monads/writer"
+import { Genera, Species, Notation } from "../../utility/tree"
+import { Boolean, boolean } from "../../primitives"
+import { binary, when, binaryInfixRule } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { Complement, isComplement, not, notRule } from './complement'
@@ -16,7 +16,7 @@ export type JointDenial = Connective<Species.nor>
 export const norRule = binaryInfixRule(Unicode.nor)
 
 export const [nor, isJointDenial, $nor] = binary<JointDenial, Boolean>(
-  Species.nor, Genera.connective
+  Unicode.nor, Notation.infix, Species.nor, Genera.connective
 )(
   (l, r) => [not(or(unit(l), unit(r))), norRule(l, r), 'real joint denial'],
   (l, r) => [not(or(unit(l), unit(r))), norRule(l, r), 'complex joint denial'],

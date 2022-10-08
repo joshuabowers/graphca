@@ -1,8 +1,8 @@
 import { _ } from '@arrows/multimethod'
-import { Writer, unit } from "../../monads/writer"
-import { TreeNode, Clades, Genera, Species, isSpecies, isGenus } from "../../utility/tree"
-import { Real, Complex, Boolean, boolean } from "../../primitives"
-import { BinaryNode, binary, when, binaryInfixRule } from "../../closures/binary"
+import { unit } from "../../monads/writer"
+import { TreeNode, Genera, Species, Notation } from "../../utility/tree"
+import { Boolean, boolean } from "../../primitives"
+import { binary, when, binaryInfixRule } from "../../closures/binary"
 import { deepEquals, isValue } from "../../utility/deepEquals"
 import { Connective } from './connective'
 import { Complement, isComplement } from './complement'
@@ -17,7 +17,7 @@ export type Disjunction = Connective<Species.or>
 export const orRule = binaryInfixRule(Unicode.or)
 
 export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
-  Species.or, Genera.connective
+  Unicode.or, Notation.infix, Species.or, Genera.connective
 )(
   (l, r) => [boolean(l.value !== 0 || r.value !== 0), orRule(l, r), 'real disjunction'],
   (l, r) => [

@@ -1,6 +1,6 @@
 import { _ } from '@arrows/multimethod'
 import { Writer, unit } from '../monads/writer'
-import { TreeNode, Clades, Genera, Species } from '../utility/tree'
+import { TreeNode, Clades, Genera, Species, Notation } from '../utility/tree'
 import { Complex, real, complex, boolean, nan, isReal, isPrimitive, isComplex } from '../primitives'
 import { Binary, binary, when, partialLeft, binaryFrom } from '../closures/binary'
 import { add } from './addition'
@@ -24,7 +24,7 @@ const isImaginary = (v: Writer<TreeNode>): v is Writer<Complex> =>
   isComplex(v) && v.value.a === 0
 
 export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
-  Species.multiply, Genera.arithmetic
+  '*', Notation.infix, Species.multiply, Genera.arithmetic
 )(
   (l, r) => [real(l.value * r.value), rule`${l} * ${r}`, 'real multiplication'],
   (l, r) => [
