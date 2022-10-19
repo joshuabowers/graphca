@@ -17,9 +17,9 @@ export const impliesRule = binaryInfixRule(Unicode.implies)
 export const [implies, isImplication, $implies] = binary<Implication, Boolean>(
   Unicode.implies, Notation.infix, Species.implies, Genera.connective
 )(
-  (l, r) => [or(not(unit(l)), unit(r)), impliesRule(l, r), 'real implication'],
-  (l, r) => [or(not(unit(l)), unit(r)), impliesRule(l, r), 'complex implication'],
-  (l, r) => [or(not(unit(l)), unit(r)), impliesRule(l, r), 'boolean implication']
+  (l, r) => or(not(unit(l)), unit(r)),
+  (l, r) => or(not(unit(l)), unit(r)),
+  (l, r) => or(not(unit(l)), unit(r))
 )(
   when(
     [isValue(boolean(true)), _], 

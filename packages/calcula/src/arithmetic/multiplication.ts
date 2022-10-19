@@ -26,16 +26,12 @@ const isImaginary = (v: Writer<TreeNode>): v is Writer<Complex> =>
 export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
   '*', Notation.infix, Species.multiply, Genera.arithmetic
 )(
-  (l, r) => [real(l.value * r.value), rule`${l} * ${r}`, 'real multiplication'],
-  (l, r) => [
-    complex([
-      (l.a * r.a) - (l.b * r.b),
-      (l.a * r.b) + (l.b * r.a)
-    ]), 
-    rule`${l} * ${r}`,
-    'complex multiplication'
-  ],
-  (l, r) => [boolean(l.value && r.value), rule`${l} * ${r}`, 'boolean multiplication']
+  (l, r) => real(l.value * r.value),
+  (l, r) => complex([
+    (l.a * r.a) - (l.b * r.b),
+    (l.a * r.b) + (l.b * r.a)
+  ]),
+  (l, r) => boolean(l.value && r.value)
 )(
   when(
     [l => l.value.clade !== Clades.primitive, isPrimitive],

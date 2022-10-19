@@ -18,21 +18,9 @@ export const xorRule = binaryInfixRule(Unicode.xor)
 export const [xor, isExclusiveDisjunction, $xor] = binary<ExclusiveDisjunction, Boolean>(
   Unicode.xor, Notation.infix, Species.xor, Genera.connective
 )(
-  (l, r) => [
-    and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 
-    xorRule(l, r),
-    'real exclusive disjunction'
-  ],
-  (l, r) => [
-    and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 
-    xorRule(l, r),
-    'complex exclusive disjunction'
-  ],
-  (l, r) => [
-    and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 
-    xorRule(l, r),
-    'boolean exclusive disjunction'
-  ]
+  (l, r) => and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 
+  (l, r) => and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 
+  (l, r) => and(or(unit(l), unit(r)), not(and(unit(l), unit(r)))), 
 )(
   when(
     [isValue(boolean(false)), _], 

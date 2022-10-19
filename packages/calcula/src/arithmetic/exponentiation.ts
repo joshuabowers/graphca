@@ -13,21 +13,17 @@ export type Exponentiation = Binary<Species.raise, Genera.arithmetic>
 export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
   '^', Notation.infix, Species.raise, Genera.arithmetic
 )(
-  (l, r) => [real(l.value ** r.value), rule`${l}^${r}`, 'real exponentiation'],
+  (l, r) => real(l.value ** r.value),
   (l, r) => {
     const p = Math.hypot(l.a, l.b), arg = Math.atan2(l.b, l.a)
     const dLnP = r.b * Math.log(p), cArg = r.a * arg
     const multiplicand = (p ** r.a) * Math.exp(-r.b * arg)
-    return [
-      complex([
-        multiplicand * Math.cos(dLnP + cArg),
-        multiplicand * Math.sin(dLnP + cArg)
-      ]),
-      rule`${l}^${r}`,
-      'complex exponentiation'
-    ]
+    return complex([
+      multiplicand * Math.cos(dLnP + cArg),
+      multiplicand * Math.sin(dLnP + cArg)
+    ])
   },
-  (l, r) => [boolean(l.value || !r.value), rule`${l}^${r}`, 'boolean exponentiation']
+  (l, r) => boolean(l.value || !r.value)
 )(
   when(
     [isValue(complex([0, 0])), isValue(real(-1))], 

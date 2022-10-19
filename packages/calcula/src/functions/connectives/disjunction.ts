@@ -19,13 +19,9 @@ export const orRule = binaryInfixRule(Unicode.or)
 export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
   Unicode.or, Notation.infix, Species.or, Genera.connective
 )(
-  (l, r) => [boolean(l.value !== 0 || r.value !== 0), orRule(l, r), 'real disjunction'],
-  (l, r) => [
-    boolean(l.a !== 0 || l.b !== 0 || r.a !== 0 || r.b !== 0),
-    orRule(l, r),
-    'complex disjunction'
-  ],
-  (l, r) => [boolean(l.value || r.value), orRule(l, r), 'boolean disjunction']
+  (l, r) => boolean(l.value !== 0 || r.value !== 0),
+  (l, r) => boolean(l.a !== 0 || l.b !== 0 || r.a !== 0 || r.b !== 0),
+  (l, r) => boolean(l.value || r.value)
 )(
   when(
     [_, isValue(boolean(false))],

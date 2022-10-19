@@ -18,19 +18,13 @@ export const logRule = binaryFnRule('log')
 export const [log, isLogarithm, $log] = binary<Logarithm>(
   'log', Notation.prefix, Species.log, Genera.logarithmic
 )(
-  (l, r) => [
-    real(Math.log(r.value) / Math.log(l.value)), 
-    logRule(l, r),
-    'computed real logarithm'
-  ],
+  (l, r) => real(Math.log(r.value) / Math.log(l.value)), 
   (l, r) => {
     const n = lnComplex(r)
-    const logRule = rule`log(${l}, ${r})`
-    const action = 'computed complex logarithm'
-    if(l.a === Math.E && l.b === 0){ return [n, logRule, action] }
-    return [divide(lnComplex(r), lnComplex(l)), logRule, action]
+    if(l.a === Math.E && l.b === 0){ return n }
+    return divide(lnComplex(r), lnComplex(l))
   },
-  (l, r) => [boolean(l.value || !r.value), logRule(l, r), 'computed boolean logarithm']
+  (l, r) => boolean(l.value || !r.value)
 )(
   when<TreeNode, Exponentiation>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),

@@ -17,9 +17,9 @@ export const converseRule = binaryInfixRule(Unicode.converse)
 export const [converse, isConverseImplication, $converse] = binary<ConverseImplication, Boolean>(
   Unicode.converse, Notation.infix, Species.converse, Genera.connective
 )(
-  (l, r) => [or(unit(l), not(unit(r))), converseRule(l, r), 'real converse implication'],
-  (l, r) => [or(unit(l), not(unit(r))), converseRule(l, r), 'complex converse implication'],
-  (l, r) => [or(unit(l), not(unit(r))), converseRule(l, r), 'boolean converse implication']
+  (l, r) => or(unit(l), not(unit(r))),
+  (l, r) => or(unit(l), not(unit(r))),
+  (l, r) => or(unit(l), not(unit(r)))
 )(
   when(
     [isValue(boolean(true)), _], 

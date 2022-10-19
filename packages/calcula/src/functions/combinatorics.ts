@@ -27,9 +27,9 @@ const calculatePermutation = <T extends TreeNode>(l: T, r: T): Writer<T> =>
 export const [permute, isPermutation, $permute] = binary<Permutation>(
   'P', Notation.prefix, Species.permute, Genera.combinatorics
 )(
-  (l, r) => [calculatePermutation(l, r), permuteRule(l, r), 'computed real permutation'],
-  (l, r) => [calculatePermutation(l, r), permuteRule(l, r), 'computed complex permutation'],
-  (l, r) => [calculatePermutation(l, r), permuteRule(l, r), 'computed boolean permutation']
+  (l, r) => calculatePermutation(l, r), 
+  (l, r) => calculatePermutation(l, r), 
+  (l, r) => calculatePermutation(l, r), 
 )()
 
 const calculateCombination = <T extends TreeNode>(l: T, r: T): Writer<T> =>
@@ -41,7 +41,7 @@ const calculateCombination = <T extends TreeNode>(l: T, r: T): Writer<T> =>
 export const [combine, isCombination, $combine] = binary<Combination>(
   'C', Notation.prefix, Species.combine, Genera.combinatorics
 )(
-  (l, r) => [calculateCombination(l, r), combineRule(l, r), 'computed real combination'],
-  (l, r) => [calculateCombination(l, r), combineRule(l, r), 'computed complex combination'],
-  (l, r) => [calculateCombination(l, r), combineRule(l, r), 'computed boolean combination']
+  (l, r) => calculateCombination(l, r),
+  (l, r) => calculateCombination(l, r),
+  (l, r) => calculateCombination(l, r)
 )()

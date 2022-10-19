@@ -17,13 +17,9 @@ export const andRule = binaryInfixRule(Unicode.and)
 export const [and, isConjunction, $and] = binary<Conjunction, Boolean>(
   Unicode.and, Notation.infix, Species.and, Genera.connective
 )(
-  (l, r) => [boolean(l.value !== 0 && r.value !== 0), andRule(l, r), 'real conjunction'],
-  (l, r) => [
-    boolean((l.a !== 0 || l.b !== 0) && (r.a !== 0 || r.b !== 0)), 
-    andRule(l, r),
-    'complex conjunction'
-  ],
-  (l, r) => [boolean(l.value && r.value), andRule(l, r), 'boolean conjunction']
+  (l, r) => boolean(l.value !== 0 && r.value !== 0),
+  (l, r) => boolean((l.a !== 0 || l.b !== 0) && (r.a !== 0 || r.b !== 0)), 
+  (l, r) => boolean(l.value && r.value)
 )(
   when(
     [_, isValue(boolean(true))], 

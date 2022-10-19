@@ -139,21 +139,9 @@ export const digammaRule = unaryFnRule(Unicode.digamma)
 export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(
   Unicode.digamma, Notation.prefix, Species.polygamma
 )(
-  (l, r) => [
-    calculatePolygamma(unit(l), unit(r)) as Writer<Real>, 
-    polygammaRule(l, r),
-    'computed real polygamma'
-  ],
-  (l, r) => [
-    calculatePolygamma(unit(l), unit(r)) as Writer<Complex>, 
-    polygammaRule(l, r),
-    'computed complex polygamma'
-  ],
-  (l, r) => [
-    calculatePolygamma(unit(l), unit(r)) as Writer<Boolean>, 
-    polygammaRule(l, r),
-    'computed boolean polygamma'
-  ]
+  (l, r) => calculatePolygamma(unit(l), unit(r)) as Writer<Real>, 
+  (l, r) => calculatePolygamma(unit(l), unit(r)) as Writer<Complex>, 
+  (l, r) => calculatePolygamma(unit(l), unit(r)) as Writer<Boolean>, 
 )(
   when(
     (l, r) => isValue(real(0))(l) && isNegative(r),

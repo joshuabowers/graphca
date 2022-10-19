@@ -70,7 +70,6 @@ export const when = <L extends TreeNode, R extends TreeNode>(
           return ({
             value: isWriter(result) ? result.value : result,
             log: [
-              // {inputs: [x, y], rewrite, action},
               {input: toString(x, y), rewrite, action},
               ...(isWriter(result) ? result.log : [])
             ]
@@ -106,15 +105,7 @@ export const binaryFnRule = (fnName: string) =>
   <L extends Input, R extends Input>(l: L, r: R) =>
     rule`${fnName}(${l}, ${r})`
 
-// Test configuration for novel primitive handlers
-// type Apply<T> = (l: T, r: T) => Writer<T>
-// type Handlers = <T>(
-//   r: Apply<T|Real>, c?: Apply<Complex>, b?: Apply<Boolean>
-// ) => void
-// const foo: Handlers = (r, c, b) => {
-//   const applied = [r, c ?? ((l, r_) => complex(r(l, r_)))]
-// }
-// foo((l, r) => [l, r], (l, r) => complex([l.a + r.a, l.b + r.b]))
+export type Apply<I extends TreeNode, O extends TreeNode> = (l: I, r: I) => Writer<O>
 
 export const binary = <T extends BinaryNode, R = void>(
   name: string, notation: Notation, species: Species, genus?: Genera
@@ -127,14 +118,25 @@ export const binary = <T extends BinaryNode, R = void>(
   if(notation === Notation.postfix){ throw new Error(`Unknown binary postfix operation: ${name}`) }
   const toString = notation === Notation.infix ? binaryInfixRule(name) : binaryFnRule(name)
   return (
-    whenReal: BinaryCaseFn<Real, Real, Result<Real>>,
-    whenComplex: BinaryCaseFn<Complex, Complex, Result<Complex>>,
-    whenBoolean: BinaryCaseFn<Boolean, Boolean, Result<Boolean>>
+    whenReal: Apply<Real, Result<Real>>,
+    whenComplex: Apply<Complex, Result<Complex>>,
+    whenBoolean: Apply<Boolean, Result<Boolean>>
   ) => {
+    const applied = <V extends TreeNode, W extends TreeNode>(
+      fn: Apply<V, W>, kind: Species
+    ) => 
+      (l: V, r: V): Action<W> => {
+        const result = fn(l, r)
+        return [
+          result, 
+          rule`${result}`, 
+          `${kind.toLocaleLowerCase()} ${species.toLocaleLowerCase()}`
+        ]
+      }
     let fn: BinaryFn<T, R> = multi(
-      when([isReal, isReal], whenReal)(toString),
-      when([isComplex, isComplex], whenComplex)(toString),
-      when([isBoolean, isBoolean], whenBoolean)(toString),
+      when([isReal, isReal], applied(whenReal, Species.real))(toString),
+      when([isComplex, isComplex], applied(whenComplex, Species.complex))(toString),
+      when([isBoolean, isBoolean], applied(whenBoolean, Species.boolean))(toString),
       when<Nil|NaN, TreeNode>([eitherNilOrNaN, _], (_l, _r) => [nan, rule`${nan}`, 'not a number'])(toString),
       when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, rule`${nan}`, 'not a number'])(toString),
       when([isTreeNode, isTreeNode], (l, r) => create(unit(l), unit(r)))(toString)

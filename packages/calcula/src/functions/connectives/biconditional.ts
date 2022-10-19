@@ -18,21 +18,9 @@ export const xnorRule = binaryInfixRule(Unicode.xnor)
 export const [xnor, isBiconditional, $xnor] = binary<Biconditional, Boolean>(
   Unicode.xnor, Notation.infix, Species.xnor, Genera.connective
 )(
-  (l, r) => [
-    and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 
-    xnorRule(l, r),
-    'real biconditional'
-  ],
-  (l, r) => [
-    and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 
-    xnorRule(l, r),
-    'complex biconditional'
-  ],
-  (l, r) => [
-    and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 
-    xnorRule(l, r),
-    'boolean biconditional'
-  ]
+  (l, r) => and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 
+  (l, r) => and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 
+  (l, r) => and(implies(unit(l), unit(r)), implies(unit(r), unit(l))), 
 )(
   when(
     [isValue(boolean(true)), _],

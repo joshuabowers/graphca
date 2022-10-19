@@ -51,17 +51,9 @@ export const addRule = binaryInfixRule('+')
 export const [add, isAddition, $add] = binary<Addition>(
   '+', Notation.infix, Species.add, Genera.arithmetic
 )(
-  (l, r) => [real(l.value + r.value), addRule(l, r), 'real addition'],
-  (l, r) => [
-    complex([l.a + r.a, l.b + r.b]), 
-    addRule(l, r),
-    'complex addition'
-  ],
-  (l, r) => [
-    boolean((l.value || r.value) && !(l.value && r.value)), 
-    addRule(l, r),
-    'boolean addition'
-  ]
+  (l, r) => real(l.value + r.value),
+  (l, r) => complex([l.a + r.a, l.b + r.b]), 
+  (l, r) => boolean((l.value || r.value) && !(l.value && r.value)), 
 )(
   when([
     any(Species.real, Species.complex, Species.boolean), 

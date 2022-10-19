@@ -19,9 +19,9 @@ export const nandRule = binaryInfixRule(Unicode.nand)
 export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Boolean>(
   Unicode.nand, Notation.infix, Species.nand, Genera.connective
 )(
-  (l, r) => [not(and(unit(l), unit(r))), nandRule(l, r), 'real alternative denial'],
-  (l, r) => [not(and(unit(l), unit(r))), nandRule(l, r), 'complex alternative denial'],
-  (l, r) => [not(and(unit(l), unit(r))), nandRule(l, r), 'boolean alternative denial']
+  (l, r) => not(and(unit(l), unit(r))),
+  (l, r) => not(and(unit(l), unit(r))),
+  (l, r) => not(and(unit(l), unit(r)))
 )(
   when(
     [_, isValue(boolean(true))],

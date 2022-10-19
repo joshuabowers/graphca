@@ -18,9 +18,9 @@ export const norRule = binaryInfixRule(Unicode.nor)
 export const [nor, isJointDenial, $nor] = binary<JointDenial, Boolean>(
   Unicode.nor, Notation.infix, Species.nor, Genera.connective
 )(
-  (l, r) => [not(or(unit(l), unit(r))), norRule(l, r), 'real joint denial'],
-  (l, r) => [not(or(unit(l), unit(r))), norRule(l, r), 'complex joint denial'],
-  (l, r) => [not(or(unit(l), unit(r))), norRule(l, r), 'boolean joint denial']
+  (l, r) => not(or(unit(l), unit(r))),
+  (l, r) => not(or(unit(l), unit(r))),
+  (l, r) => not(or(unit(l), unit(r)))
 )(
   when(
     [_, isValue(boolean(true))],
