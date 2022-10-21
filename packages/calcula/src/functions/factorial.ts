@@ -18,17 +18,9 @@ const isNegativeInteger = (t: number) => t < 0 && Number.isInteger(t)
 export const [factorial, isFactorial, $factorial] = unary<Factorial>(
   '!', Notation.postfix, Species.factorial
 )(
-  r => [
-    multiply(unit(r), factorial(add(unit(r), real(-1)))), 
-    factorialRule(r),
-    'real factorial'
-  ],
-  c => [
-    multiply(unit(c), factorial(add(unit(c), complex([-1, 0])))), 
-    factorialRule(c),
-    'complex factorial'
-  ],
-  _b => [boolean(true), factorialRule(_b), 'boolean factorial']
+  r => multiply(unit(r), factorial(add(unit(r), real(-1)))), 
+  c => multiply(unit(c), factorial(add(unit(c), complex([-1, 0])))), 
+  _b => boolean(true),
 )(
   when(
     t => isReal(t) && isNegativeInteger(t.value.value), 

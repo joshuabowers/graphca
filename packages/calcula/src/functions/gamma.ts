@@ -74,9 +74,9 @@ export const gammaRule = unaryFnRule(Unicode.gamma)
 export const [gamma, isGamma, $gamma] = unary<Gamma>(
   Unicode.gamma, Notation.prefix, Species.gamma
 )(
-  r => [calculateGamma(unit(r)) as Writer<Real>, gammaRule(r), 'computed real gamma'],
-  c => [calculateGamma(unit(c)) as Writer<Complex>, gammaRule(c),  'computed complex gamma'],
-  b => [boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>), gammaRule(b), 'computed boolean gamma']
+  r => calculateGamma(unit(r)) as Writer<Real>,
+  c => calculateGamma(unit(c)) as Writer<Complex>, 
+  b => boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>)
 )(
   when(
     isPositiveInteger, 

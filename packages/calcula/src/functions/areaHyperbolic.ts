@@ -1,6 +1,6 @@
 import { unit } from "../monads/writer"
 import { Genera, Species, Notation, isGenus } from "../utility/tree"
-import { real } from "../primitives"
+import { boolean, real } from "../primitives"
 import { UnaryNode, unary, unaryFnRule } from "../closures/unary"
 import { 
   add, subtract, multiply, divide, square, sqrt, reciprocal 
@@ -34,74 +34,62 @@ export const acothRule = unaryFnRule('acoth')
 export const [acosh, isAreaHyperbolicCosine, $acosh] = unary<AreaHyperbolicCosine>(
   'acosh', Notation.prefix, Species.acosh, Genera.areaHyperbolic
 )(
-  r => [real(Math.acosh(r.value)), acoshRule(r), 'computed real area hyperbolic cosine'],
-  c => [
-    ln(add(
-      unit(c), 
-      multiply(
-        sqrt(add(unit(c), real(1))),
-        sqrt(subtract(unit(c), real(1)))
-      )
-    )),
-    acoshRule(c),
-    'computed complex area hyperbolic cosine'
-  ],
-  b => [b, acoshRule(b), 'computed boolean area hyperbolic cosine']
+  r => real(Math.acosh(r.value)),
+  c => ln(add(
+    unit(c), 
+    multiply(
+      sqrt(add(unit(c), real(1))),
+      sqrt(subtract(unit(c), real(1)))
+    )
+  )),
+  b => boolean(acosh(real(unit(b))))
 )()
 
 export const [asinh, isAreaHyperbolicSine, $asinh] = unary<AreaHyperbolicSine>(
   'asinh', Notation.prefix, Species.asinh, Genera.areaHyperbolic
 )(
-  r => [real(Math.asinh(r.value)), asinhRule(r), 'computed real area hyperbolic sine'],
-  c => [
-    ln(add(
-      sqrt(add(square(unit(c)), real(1))),
-      unit(c)
-    )),
-    asinhRule(c),
-    'computed complex area hyperbolic sine'
-  ],
-  b => [b, asinhRule(b), 'computed boolean area hyperbolic sine']
+  r => real(Math.asinh(r.value)), 
+  c => ln(add(
+    sqrt(add(square(unit(c)), real(1))),
+    unit(c)
+  )),
+  b => boolean(asinh(real(unit(b))))
 )()
 
 export const [atanh, isAreaHyperbolicTangent, $atanh] = unary<AreaHyperbolicTangent>(
   'atanh', Notation.prefix, Species.atanh, Genera.areaHyperbolic
 )(
-  r => [real(Math.atanh(r.value)), atanhRule(r), 'computed real hyperbolic tangent'],
-  c => [
-    multiply(
-      real(0.5),
-      ln(divide(
-        add(real(1), unit(c)),
-        subtract(real(1), unit(c))
-      ))
-    ),
-    atanhRule(c),
-    'computed complex area hyperbolic tangent'
-  ],
-  b => [b, atanhRule(b), 'computed boolean area hyperbolic tangent']
+  r => real(Math.atanh(r.value)), 
+  c => multiply(
+    real(0.5),
+    ln(divide(
+      add(real(1), unit(c)),
+      subtract(real(1), unit(c))
+    ))
+  ),
+  b => boolean(atanh(real(unit(b))))
 )()
 
 export const [asech, isAreaHyperbolicSecant, $asech] = unary<AreaHyperbolicSecant>(
   'asech', Notation.prefix, Species.asech, Genera.areaHyperbolic
 )(
-  r => [acosh(reciprocal(unit(r))), asechRule(r), 'computed real area hyperbolic secant'],
-  c => [acosh(reciprocal(unit(c))), asechRule(c), 'computed complex area hyperbolic secant'],
-  b => [acosh(reciprocal(unit(b))), asechRule(b), 'computed boolean area hyperbolic secant']
+  r => acosh(reciprocal(unit(r))),
+  c => acosh(reciprocal(unit(c))),
+  b => acosh(reciprocal(unit(b)))
 )()
 
 export const [acsch, isAreaHyperbolicCosecant, $acsch] = unary<AreaHyperbolicCosecant>(
   'acsch', Notation.prefix, Species.acsch, Genera.areaHyperbolic
 )(
-  r => [asinh(reciprocal(unit(r))), acschRule(r), 'computed real area hyperbolic cosecant'],
-  c => [asinh(reciprocal(unit(c))), acschRule(c), 'computed complex area hyperbolic cosecant'],
-  b => [asinh(reciprocal(unit(b))), acschRule(b), 'computed boolean area hyperbolic cosecant']
+  r => asinh(reciprocal(unit(r))),
+  c => asinh(reciprocal(unit(c))),
+  b => asinh(reciprocal(unit(b)))
 )()
 
 export const [acoth, isAreaHyperbolicCotangent, $acoth] = unary<AreaHyperbolicCotangent>(
   'acoth', Notation.prefix, Species.acoth, Genera.areaHyperbolic
 )(
-  r => [atanh(reciprocal(unit(r))), atanhRule(r), 'computed real area hyperbolic cotangent'],
-  c => [atanh(reciprocal(unit(c))), atanhRule(c), 'computed complex area hyperbolic cotangent'],
-  b => [atanh(reciprocal(unit(b))), atanhRule(b), 'computed boolean area hyperbolic cotangent']
+  r => atanh(reciprocal(unit(r))),
+  c => atanh(reciprocal(unit(c))),
+  b => atanh(reciprocal(unit(b)))
 )()

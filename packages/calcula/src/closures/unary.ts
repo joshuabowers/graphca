@@ -78,6 +78,8 @@ export const unaryPostfixRule = (operator: string) =>
   <E extends Input>(e: E) =>
     rule`(${e})${operator}`
 
+export type Handle<I extends TreeNode, O extends TreeNode> = (i: I) => Writer<O>
+
 export const unary = <T extends UnaryNode, R = void>(
   name: string, notation: Notation, species: Species, genus?: Genera
 ) => {
@@ -89,14 +91,25 @@ export const unary = <T extends UnaryNode, R = void>(
   if(notation === Notation.infix){ throw new Error(`Unknown unary infix operation: ${name}`)}
   const toString = notation === Notation.prefix ? unaryFnRule(name) : unaryPostfixRule(name)
   return (
-    whenReal: CaseFn<Real, Result<Real>>,
-    whenComplex: CaseFn<Complex, Result<Complex>>,
-    whenBoolean: CaseFn<Boolean, Result<Boolean>>
+    whenReal: Handle<Real, Result<Real>>,
+    whenComplex: Handle<Complex, Result<Complex>>, 
+    whenBoolean: Handle<Boolean, Result<Boolean>>
   ) => {
+    const handled = <V extends TreeNode, W extends TreeNode>(
+      fn: Handle<V, W>, kind: Species
+    ) => 
+      (i: V): Action<W> => {
+        const result = fn(i)
+        return [
+          result, 
+          rule`${result}`, 
+          `${kind.toLocaleLowerCase()} ${species.toLocaleLowerCase()}`
+        ]
+      }
     const fn: UnaryFn<T, R> = multi(
-      when(isReal, whenReal)(toString),
-      when(isComplex, whenComplex)(toString),
-      when(isBoolean, whenBoolean)(toString),
+      when(isReal, handled(whenReal, Species.real))(toString),
+      when(isComplex, handled(whenComplex, Species.complex))(toString),
+      when(isBoolean, handled(whenBoolean, Species.boolean))(toString),
       when(isNil, whenNilOrNaN)(toString),
       when(isNaN, whenNilOrNaN)(toString),
       when(isTreeNode, n => create(unit(n)))(toString)

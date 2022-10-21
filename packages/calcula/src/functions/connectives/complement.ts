@@ -20,9 +20,9 @@ export const notRule = unaryFnRule(Unicode.not)
 export const [not, isComplement, $not] = unary<Complement, Boolean>(
   Unicode.not, Notation.prefix, Species.not, Genera.connective
 )(
-  r => [boolean(r.value === 0), notRule(r), 'real complement'],
-  c => [boolean(c.a === 0 && c.b === 0), notRule(c), 'complex complement'],
-  b => [boolean(!b.value), notRule(b), 'boolean complement']
+  r => boolean(r.value === 0),
+  c => boolean(c.a === 0 && c.b === 0), 
+  b => boolean(!b.value) 
 )(
   // NOTE: Cannot use derived isSpecies guards as they are not defined
   // by this point.
