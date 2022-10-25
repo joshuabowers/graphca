@@ -40,7 +40,7 @@ export type StringifyFn = (expression: Writer<TreeNode>) => string
 
 export const stringify: StringifyFn = multi(
   when(isReal, r => r.value.value.toString()),
-  when(isComplex, c => `${c.value.a}${c.value.b > 0 ? '+' : ''}${c.value.b}${Unicode.i}`),
+  when(isComplex, c => `${c.value.a}${c.value.b >= 0 ? '+' : ''}${c.value.b}${Unicode.i}`),
   when(isBoolean, b => b.value.value.toString()),
   when(isVariable, v => v.value.name),
   when(isAddition, binaryInfix('+')),

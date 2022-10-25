@@ -8,9 +8,10 @@ export const boolean = primitive<boolean, {value: boolean}, Boolean>(
   value => ({value}),
   Species.boolean
 )(
-  create => r => [create(r.value !== 0), () => `boolean(${r.value})`, 'cast to boolean'],
-  create => c => [create(c.a !== 0 || c.b !== 0), () => `boolean(${c.a} + ${c.b})`, 'cast to boolean'],
-  _create => b => [b, () => `${b.value}`, '']
+  r => r.value !== 0,
+  c => c.a !== 0 || c.b !== 0,
+  b => b.value
 )()
 
 export const isBoolean = isSpecies<Boolean>(Species.boolean)
+

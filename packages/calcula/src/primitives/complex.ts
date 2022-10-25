@@ -8,9 +8,9 @@ export const complex = primitive<[number, number], {a: number, b: number}, Compl
   ([a, b]) => ({a, b}),
   Species.complex
 )(
-  create => r => [create([r.value, 0]), () => `complex(${r.value})`, 'cast to complex'],
-  _create => c => [c, () => `${c.a} + ${c.b}`, ''],
-  create => b => [create([b.value ? 1 : 0, 0]), () => `complex(${b.value})`, 'cast to complex']
+  r => [r.value, 0],
+  c => [c.a, c.b],
+  b => [b.value ? 1 : 0, 0]
 )()
 
 export const isComplex = isSpecies<Complex>(Species.complex)

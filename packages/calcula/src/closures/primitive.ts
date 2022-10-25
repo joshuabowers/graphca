@@ -1,5 +1,5 @@
 import { method, multi, fromMulti, Multi } from '@arrows/multimethod'
-import { Writer, bind, unit, isWriter, Action } from '../monads/writer'
+import { Writer, bind } from '../monads/writer'
 import { CreateFn, CastFn } from '../utility/typings'
 import { TreeNode, Clades, Species, isClade } from '../utility/tree'
 import { rule } from '../utility/rule'
@@ -21,21 +21,6 @@ export type Nil = Primitive<Species.nil, {}>
 export type NaN = Primitive<Species.nan, {value: number}>
 
 type GuardFn<T> = (value: unknown) => value is T
-type CreateCase<T, U, I> = (create: CreateFn<U, T>) => (input: I) => Action<T>
-
-const primitiveMap = <T, U>(create: CreateFn<U, T>) =>
-  <I extends TreeNode>(fn: CreateCase<T, U, I>) =>
-    (writer: Writer<I>) =>
-      bind(writer, input => {
-        const [value, rewrite, action] = fn(create)(input)
-        return ({
-          value: isWriter(value) ? value.value : value,
-          log: [
-            ...(isWriter(value) ? value.log : []), 
-            {input: rule`${input}`, rewrite, action}
-          ]
-        })
-      })
 
 export type PrimitiveFn<T, U> = Multi
   & CastFn<U, T>
@@ -48,24 +33,50 @@ export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
   paramsMap: ((u: Params) => Fields),
   species: Species
 ) => {
+  type HandleFn<P extends PrimitiveNode> = (p: P) => Params
   const create: CreateFn<Params, T> = (params: Params): T =>
     ({
       clade: Clades.primitive,
       species,
       ...paramsMap(params)
     }) as T
-  const pMap = primitiveMap(create)
+  const handle = <P extends PrimitiveNode>(fn: HandleFn<P>) =>
+    (writer: Writer<P>) =>
+      bind(writer, input => {
+        const params = fn(input)
+        const value = create(params)
+        const action =  species === input.species
+          ? `copied ${input.species}`
+          : `cast to ${species} from ${input.species}`
+        return ({
+          value,
+          log: [{input: rule`${input}`, rewrite: rule`${value}`, action}]
+        })
+      })
   return (
-    whenReal: CreateCase<T, Params, Real>,
-    whenComplex: CreateCase<T, Params, Complex>,
-    whenBoolean: CreateCase<T, Params, Boolean>
+    whenReal: HandleFn<Real>,
+    whenComplex: HandleFn<Complex>,
+    whenBoolean: HandleFn<Boolean>
   ) => {
     const fn: PrimitiveFn<T, Params> = multi(
       (v: Writer<TreeNode>) => v?.value?.species,
-      method(guard, (n: Params) => unit(create(n))),
-      method(Species.real, pMap(whenReal)),
-      method(Species.complex, pMap(whenComplex)),
-      method(Species.boolean, pMap(whenBoolean))
+      method(
+        guard, 
+        (n: Params): Writer<T> => {
+          const value = create(n)
+          return ({
+            value, 
+            log: [{
+              input: rule`${value}`,
+              rewrite: rule`${value}`,
+              action: 'given primitive'
+            }]
+          })
+        }
+      ),
+      method(Species.real, handle(whenReal)),
+      method(Species.complex, handle(whenComplex)),
+      method(Species.boolean, handle(whenBoolean))
     )
     return (
       ...methods: (typeof method)[]
