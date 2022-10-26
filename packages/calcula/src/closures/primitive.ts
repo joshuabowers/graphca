@@ -1,7 +1,7 @@
 import { method, multi, fromMulti, Multi } from '@arrows/multimethod'
 import { Writer, bind } from '../monads/writer'
 import { CreateFn, CastFn } from '../utility/typings'
-import { TreeNode, Clades, Species, isClade } from '../utility/tree'
+import { TreeNode, Clades, Species, isClade, TreeNodeGuardFn, isSpecies } from '../utility/tree'
 import { rule } from '../utility/rule'
 
 export type PrimitiveNode = TreeNode & {
@@ -27,6 +27,12 @@ export type PrimitiveFn<T, U> = Multi
   & CastFn<Writer<Real>, T>
   & CastFn<Writer<Complex>, T>
   & CastFn<Writer<Boolean>, T>
+
+export type PrimitiveMetaTuple<T extends PrimitiveNode, U> = [
+  PrimitiveFn<T, U>,
+  TreeNodeGuardFn<T>,
+  CreateFn<U, T>
+]
 
 export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
   guard: GuardFn<Params>,
@@ -80,6 +86,10 @@ export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
     )
     return (
       ...methods: (typeof method)[]
-    ): typeof fn => methods.length > 0 ? fromMulti(...methods)(fn) : fn
+    ): PrimitiveMetaTuple<T, Params> => [
+      methods.length > 0 ? fromMulti(...methods)(fn) : fn,
+      isSpecies<T>(species),
+      create
+    ]
   }  
 }

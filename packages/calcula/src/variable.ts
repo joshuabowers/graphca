@@ -1,6 +1,6 @@
 import { Writer, unit } from './monads/writer'
 import { TreeNode, Clades, Species, isSpecies } from './utility/tree'
-import { isNil, nil } from './primitives'
+import { isNil, nil } from './primitives/nil'
 
 export type Variable = TreeNode & {
   readonly clade: Clades.variadic,

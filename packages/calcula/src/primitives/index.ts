@@ -1,3 +1,4 @@
+import { isPrimitive, PrimitiveNode } from '../closures/primitive'
 import { Real, real, isReal, EulerMascheroni } from './real'
 import { Complex, complex, isComplex, ComplexInfinity } from './complex'
 import { Boolean, boolean, isBoolean } from './boolean'
@@ -12,5 +13,5 @@ export type PrimitiveFns =
 
 export { real, complex, boolean, nil, nan }
 export { isReal, isComplex, isBoolean, isNil, isNaN }
-export { isPrimitive, PrimitiveNode } from '../closures/primitive'
+export { isPrimitive, PrimitiveNode }
 export { EulerMascheroni, ComplexInfinity }
