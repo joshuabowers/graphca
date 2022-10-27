@@ -36,10 +36,18 @@ const unary = (name: string) =>
   (e: Writer<UnaryNode>) =>
     `${name}(${stringify(e.value.expression)})`
 
+type NumericFn = Multi & ((value: number) => string)
+
+const numeric: NumericFn = multi(
+  method(Math.E, Unicode.e),
+  method(Math.PI, Unicode.pi),
+  method((value: number) => value.toString())
+)
+
 export type StringifyFn = (expression: Writer<TreeNode>) => string
 
 export const stringify: StringifyFn = multi(
-  when(isReal, r => r.value.value.toString()),
+  when(isReal, r => numeric(r.value.value)), //r.value.value.toString()),
   when(isComplex, c => `${c.value.a}${c.value.b >= 0 ? '+' : ''}${c.value.b}${Unicode.i}`),
   when(isBoolean, b => b.value.value.toString()),
   when(isVariable, v => v.value.name),
