@@ -147,23 +147,23 @@ describe('raise', () => {
     )
   })
 
-  it.skip('converts a base multiplication into a product of exponentiations', () => {
-    // expectWriter(
-    //   raise(multiply(variable('x'), variable('y')), variable('z'))
-    // )(
-    //   multiply(
-    //     raise(variable('x'), variable('z')), 
-    //     raise(variable('y'), variable('z'))
-    //   ),
-    //   [[variable('x'), variable('y')], 'multiplication'],
-    //   [[multiply(variable('x'), variable('y')), variable('z')], 'exponential distribution'],
-    //   [[variable('x'), variable('z')], 'exponentiation'],
-    //   [[variable('y'), variable('z')], 'exponentiation'],
-    //   [
-    //     [raise(variable('x'), variable('z')), raise(variable('y'), variable('z'))],
-    //     'multiplication'
-    //   ]
-    // )
+  it('converts a base multiplication into a product of exponentiations', () => {
+    expectWriterTreeNode(
+      raise(multiply(variable('x'), variable('y')), variable('z')),
+      multiply(
+        raise(variable('x'), variable('z')),
+        raise(variable('y'), variable('z'))
+      )
+    )(
+      ['x', 'x', 'given variable'],
+      ['y', 'y', 'given variable'],
+      ['x * y', '(x*y)', 'multiplication'],
+      ['z', 'z', 'given variable'],
+      ['(x*y) ^ z', '(x^z) * (y^z)', 'exponential distribution'],
+      ['x ^ z', '(x^z)', 'exponentiation'],
+      ['y ^ z', '(y^z)', 'exponentiation'],
+      ['(x^z) * (y^z)', '((x^z)*(y^z))', 'multiplication']
+    )
   })
   
   it('creates an Exponentiation when given non-constants', () => {
@@ -179,23 +179,29 @@ describe('raise', () => {
 })
 
 describe('reciprocal', () => {
-  it.skip('raises its argument to the power of -1', () => {
-    // expectWriter(
-    //   reciprocal(variable('x'))
-    // )(
-    //   raise(variable('x'), real(-1)),
-    //   [[variable('x'), real(-1)], 'exponentiation']
-    // )
+  it('raises its argument to the power of -1', () => {
+    expectWriterTreeNode(
+      reciprocal(variable('x')),
+      raise(variable('x'), real(-1))
+    )(
+      ['x', 'x', 'given variable'],
+      ['-1', '-1', 'given primitive'],
+      ['x ^ -1', '(x^-1)', 'exponentiation']
+    )
   })
 
-  it.skip('raises complex 1 to -1 correctly', () => {
-    // expectWriter(
-    //   reciprocal(complex([1, 0]))
-    // )(
-    //   complex([1, 0]),
-    //   [real(-1), 'cast to complex'],
-    //   [[complex([1, 0]), complex([-1, 0])], 'complex exponentiation']
-    // )
+  it('raises complex 1 to -1 correctly', () => {
+    const c1 = `1+0${Unicode.i}`
+    expectWriterTreeNode(
+      reciprocal(complex([1, 0])),
+      complex([1, 0])
+    )(
+      [c1, c1, 'given primitive'],
+      ['-1', '-1', 'given primitive'],
+      ['-1', `-1+0${Unicode.i}`, 'cast to Complex from Real'],
+      [`${c1} ^ -1+0${Unicode.i}`, c1, 'complex exponentiation'],
+      [c1, c1, 'given primitive']
+    )
   })
 
   it('calculates a complex reciprocal correctly', () => {
@@ -208,13 +214,15 @@ describe('reciprocal', () => {
 })
 
 describe('square', () => {
-  it.skip('raises its argument to the power of 2', () => {
-    // expectWriter(
-    //   square(variable('x'))
-    // )(
-    //   raise(variable('x'), real(2)),
-    //   [[variable('x'), real(2)], 'exponentiation']
-    // )
+  it('raises its argument to the power of 2', () => {
+    expectWriterTreeNode(
+      square(variable('x')),
+      raise(variable('x'), real(2))
+    )(
+      ['x', 'x', 'given variable'],
+      ['2', '2', 'given primitive'],
+      ['x ^ 2', '(x^2)', 'exponentiation']
+    )
   })
 
   it('calculates the proper square of a complex number', () => {
@@ -223,13 +231,15 @@ describe('square', () => {
 })
 
 describe('sqrt', () => {
-  it.skip('raises its argument to the power of 0.5', () => {
-    // expectWriter(
-    //   sqrt(variable('x'))
-    // )(
-    //   raise(variable('x'), real(0.5)),
-    //   [[variable('x'), real(0.5)], 'exponentiation']
-    // )
+  it('raises its argument to the power of 0.5', () => {
+    expectWriterTreeNode(
+      sqrt(variable('x')),
+      raise(variable('x'), real(0.5))
+    )(
+      ['x', 'x', 'given variable'],
+      ['0.5', '0.5', 'given primitive'],
+      ['x ^ 0.5', '(x^0.5)', 'exponentiation']
+    )
   })
 
   it('calculates the proper sqrt of a complex number', () => {
