@@ -1,53 +1,45 @@
 import { Clades, Species } from '../utility/tree'
 import { real } from './real'
 import { boolean } from './boolean'
-import { complex } from './complex'
+import { complex, $complex } from './complex'
+import { Unicode } from '../Unicode'
+import { expectWriterTreeNode } from '../utility/expectations'
+
+describe('$complex', () => {
+  it('returns a Complex for a numeric pair parameter', () => {
+    expect($complex([1, 2])).toEqual({
+      clade: Clades.primitive, genus: undefined, species: Species.complex, 
+      a: 1, b: 2      
+    })
+  })
+})
 
 describe('complex', () => {
   it('returns a Writer<Complex> for a number pair input', () => {
-    expect(complex([1, 2])).toEqual({
-      value: {
-        clade: Clades.primitive, genus: undefined, species: Species.complex, 
-        a: 1, b: 2
-      },
-      log: []
-    })
+    expectWriterTreeNode(complex([1, 2]), $complex([1, 2]))(
+      [`1+2${Unicode.i}`, `1+2${Unicode.i}`, 'given primitive']
+    )
   })
 
   it('returns a Writer<Complex> for a real input', () => {
-    const output = {
-      clade: Clades.primitive, genus: undefined, species: Species.complex, 
-      a: 5, b: 0
-    }
-    expect(complex(real(5))).toEqual({
-      value: output,
-      log: [{
-        inputs: [real(5).value], 
-        output,
-        action: 'cast to complex'
-      }]
-    })
+    expectWriterTreeNode(complex(real(5)), $complex([5, 0]))(
+      ['5', '5', 'given primitive'],
+      ['5', `5+0${Unicode.i}`, 'cast to Complex from Real']
+    )
   })
 
   it('returns a Writer<Complex> for a complex input', () => {
-    const output = {
-      clade: Clades.primitive, genus: undefined, species: Species.complex, 
-      a: 1, b: 2
-    }
-    expect(complex(complex([1, 2]))).toEqual({
-      value: output,
-      log: [{inputs: [complex([1, 2]).value], output, action: ''}]
-    })
+    const s = `1+2${Unicode.i}`
+    expectWriterTreeNode(complex(complex([1, 2])), $complex([1, 2]))(
+      [s, s, 'given primitive'],
+      [s, s, 'copied Complex']
+    )
   })
 
   it('returns a Writer<Complex> for a boolean input', () => {
-    const output = {
-      clade: Clades.primitive, genus: undefined, species: Species.complex, 
-      a: 1, b: 0
-    }
-    expect(complex(boolean(true))).toEqual({
-      value: output,
-      log: [{inputs: [boolean(true).value], output, action: 'cast to complex'}]
-    })
+    expectWriterTreeNode(complex(boolean(true)), complex([1, 0]))(
+      ['true', 'true', 'given primitive'],
+      ['true', `1+0${Unicode.i}`, 'cast to Complex from Boolean']
+    )
   })
 })

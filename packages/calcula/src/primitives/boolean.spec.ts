@@ -1,49 +1,45 @@
 import { Clades, Species } from '../utility/tree'
 import { real } from './real'
 import { complex } from './complex'
-import { boolean } from './boolean'
+import { boolean, $boolean } from './boolean'
+import { Unicode } from '../Unicode'
+import { expectWriterTreeNode } from '../utility/expectations'
+
+describe('$boolean', () => {
+  it('returns a Boolean for a system boolean parameter', () => {
+    expect($boolean(true)).toEqual({
+      clade: Clades.primitive, genus: undefined, species: Species.boolean, 
+      value: true
+    })
+  })
+})
 
 describe('boolean', () => {
   it('returns a Writer<Boolean> for a system boolean input', () => {
-    expect(boolean(true)).toEqual({
-      value: {
-        clade: Clades.primitive, genus: undefined, species: Species.boolean, 
-        value: true
-      },
-      log: []
-    })
+    expectWriterTreeNode(boolean(true), $boolean(true))(
+      ['true', 'true', 'given primitive']
+    )
   })
 
   it('returns a Writer<Boolean> for a real input', () => {
-    const output = {
-      clade: Clades.primitive, genus: undefined, species: Species.boolean, 
-      value: true
-    }
-    expect(boolean(real(5))).toEqual({
-      value: output,
-      log: [{inputs: [real(5).value], output, action: 'cast to boolean'}]
-    })
+    expectWriterTreeNode(boolean(real(5)), $boolean(true))(
+      ['5', '5', 'given primitive'],
+      ['5', 'true', 'cast to Boolean from Real']
+    )
   })
 
   it('returns a Writer<Boolean> for a complex input', () => {
-    const output = {
-      clade: Clades.primitive, genus: undefined, species: Species.boolean, 
-      value: true
-    }
-    expect(boolean(complex([1, 2]))).toEqual({
-      value: output,
-      log: [{inputs: [complex([1, 2]).value], output, action: 'cast to boolean'}]
-    })
+    const s = `1+2${Unicode.i}`
+    expectWriterTreeNode(boolean(complex([1, 2])), $boolean(true))(
+      [s, s, 'given primitive'],
+      [s, 'true', 'cast to Boolean from Complex']
+    )
   })
 
   it('returns a Writer<Boolean> for a boolean input', () => {
-    const output = {
-      clade: Clades.primitive, genus: undefined, species: Species.boolean, 
-      value: false
-    }
-    expect(boolean(boolean(false))).toEqual({
-      value: output,
-      log: [{inputs: [boolean(false).value], output, action: ''}]
-    })
+    expectWriterTreeNode(boolean(boolean(false)), $boolean(false))(
+      ['false', 'false', 'given primitive'],
+      ['false', 'false', 'copied Boolean']
+    )
   })
 })
