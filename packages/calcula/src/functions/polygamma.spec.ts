@@ -1,10 +1,23 @@
-import { expectCloseTo, expectWriter } from '../utility/expectations'
-import { Clades, Genera, Species } from '../utility/tree'
+import { unit } from '../monads/writer'
+import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+import { Clades, Species } from '../utility/tree'
 import { EulerMascheroni } from '../primitives/real'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
 import { negate } from '../arithmetic'
-import { Polygamma, polygamma, digamma } from './polygamma'
+import { polygamma, digamma, $polygamma } from './polygamma'
+import { Unicode } from '../Unicode'
+
+describe('$polygamma', () => {
+  it('generates a Polygamma for two TreeNode inputs', () => {
+    expect(
+      $polygamma(unit(variable('x').value), unit(variable('y').value))[0]
+    ).toEqual({
+      clade: Clades.binary, genus: undefined, species: Species.polygamma,
+      left: unit(variable('x').value), right: unit(variable('y').value)
+    })
+  })
+})
 
 describe('polygamma', () => {
   describe('for large inputs', () => {
@@ -50,12 +63,13 @@ describe('polygamma', () => {
   })
 
   it('generates a polygamma node of a given order on an expression', () => {
-    expectWriter(polygamma(variable('x'), variable('y')))(
-      {
-        clade: Clades.binary, genus: undefined, species: Species.polygamma,
-        left: variable('x'), right: variable('y')
-      } as Polygamma,
-      [[variable('x').value, variable('y').value], 'polygamma']
+    expectWriterTreeNode(
+      polygamma(variable('x'), variable('y')),
+      $polygamma(unit(variable('x').value), unit(variable('y').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['y', 'y', 'given variable'],
+      [`${Unicode.digamma}(x, y)`, `${Unicode.digamma}(x,y)`, 'polygamma']
     )
   })
 })
@@ -96,12 +110,13 @@ describe('digamma', () => {
   })
 
   it('generates a polygamma node of order 0 on an expression', () => {
-    expectWriter(digamma(variable('x')))(
-      {
-        clade: Clades.binary, genus: undefined, species: Species.polygamma,
-        left: real(0), right: variable('x')
-      } as Polygamma,
-      [[real(0).value, variable('x').value], 'polygamma']
+    expectWriterTreeNode(
+      digamma(variable('x')),
+      $polygamma(unit(real(0).value), unit(variable('x').value))[0]
+    )(
+      ['0', '0', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      [`${Unicode.digamma}(0, x)`, `${Unicode.digamma}(0,x)`, 'polygamma']
     )
   })
 })
