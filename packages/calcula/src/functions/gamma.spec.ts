@@ -1,8 +1,17 @@
-import { expectCloseTo, expectWriter } from '../utility/expectations'
+import { unit } from '../monads/writer'
+import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
 import { Clades, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
-import { Gamma, gamma } from './gamma'
+import { gamma, $gamma } from './gamma'
+import { Unicode } from '../Unicode'
+
+describe('$gamma', () => {
+  expect($gamma(unit(variable('x').value))[0]).toEqual({
+    clade: Clades.unary, genus: undefined, species: Species.gamma,
+    expression: unit(variable('x').value)
+  })
+})
 
 describe('gamma', () => {
   it('calculates the value of the gamma function for reals', () => {
@@ -22,12 +31,12 @@ describe('gamma', () => {
   })
 
   it('generates a Gamma node for unbound variables', () => {
-    expectWriter(gamma(variable('x')))(
-      {
-        clade: Clades.unary, genus: undefined, species: Species.gamma,
-        expression: variable('x')
-      } as Gamma,
-      [variable('x').value, 'gamma']
+    expectWriterTreeNode(
+      gamma(variable('x')),
+      $gamma(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      [`${Unicode.gamma}(x)`, `${Unicode.gamma}(x)`, 'gamma']
     )
   })
 })
