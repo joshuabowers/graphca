@@ -79,9 +79,11 @@ export const unaryPostfixRule = (operator: string) =>
     rule`(${e})${operator}`
 
 export type Handle<I extends TreeNode, O extends TreeNode> = (i: I) => Writer<O>
+export type HandlerRewriteFn = (i: Input) => Rewrite
 
 export const unary = <T extends UnaryNode, R = void>(
-  name: string, notation: Notation, species: Species, genus?: Genera
+  name: string, notation: Notation, species: Species, genus?: Genera,
+  handlerRewrite?: HandlerRewriteFn
 ) => {
   type Result<U extends TreeNode> = R extends void ? U : (R extends TreeNode ? R : never)
   const create = (expression: Writer<TreeNode>): Action<T> => {
@@ -102,7 +104,7 @@ export const unary = <T extends UnaryNode, R = void>(
         const result = fn(i)
         return [
           result, 
-          rule`${result}`, 
+          handlerRewrite ? handlerRewrite(i) : rule`${result}`, 
           `${kind.toLocaleLowerCase()} ${species.toLocaleLowerCase()}`
         ]
       }

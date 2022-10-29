@@ -3,6 +3,7 @@ import { Genera, Species, Notation, isGenus } from "../utility/tree"
 import { real, complex, boolean } from "../primitives"
 import { UnaryNode, unary, unaryFnRule } from "../closures/unary"
 import { reciprocal } from "../arithmetic"
+import { rule } from "../utility/rule"
 
 export type TrigonometricNode = UnaryNode & {
   readonly genus: Genera.trigonometric
@@ -65,7 +66,8 @@ export const [tan, isTangent, $tan] = unary<Tangent>(
 )()
 
 export const [sec, isSecant, $sec] = unary<Secant>(
-  'sec', Notation.prefix, Species.sec, Genera.trigonometric
+  'sec', Notation.prefix, Species.sec, Genera.trigonometric,
+  t => rule`cos(${t}) ^ -1`
 )(
   r => reciprocal(cos(unit(r))),
   c => reciprocal(cos(unit(c))),
@@ -73,7 +75,8 @@ export const [sec, isSecant, $sec] = unary<Secant>(
 )()
 
 export const [csc, isCosecant, $csc] = unary<Cosecant>(
-  'csc', Notation.prefix, Species.csc, Genera.trigonometric
+  'csc', Notation.prefix, Species.csc, Genera.trigonometric,
+  t => rule`sin(${t}) ^ -1`
 )(
   r => reciprocal(sin(unit(r))),
   c => reciprocal(sin(unit(c))),
@@ -81,7 +84,8 @@ export const [csc, isCosecant, $csc] = unary<Cosecant>(
 )()
 
 export const [cot, isCotangent, $cot] = unary<Cotangent>(
-  'cot', Notation.prefix, Species.cot, Genera.trigonometric
+  'cot', Notation.prefix, Species.cot, Genera.trigonometric,
+  t => rule`tan(${t}) ^ -1`
 )(
   r => reciprocal(tan(unit(r))),
   c => reciprocal(tan(unit(c))),

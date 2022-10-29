@@ -1,17 +1,32 @@
-import { expectCloseTo, expectWriter } from '../utility/expectations'
+import { unit } from '../monads/writer'
+import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
-import { 
-  Cosine, Sine, Tangent, Secant, Cosecant, Cotangent,
-  cos, sin, tan, sec, csc, cot 
+import {
+  cos, sin, tan, sec, csc, cot,
+  $cos, $sin, $tan, $sec, $csc, $cot
 } from './trigonometric'
+
+describe('$cos', () => {
+  it('generates a Cosine for a TreeNode input', () => {
+    expect($cos(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.trigonometric, species: Species.cos,
+      expression: unit(variable('x').value)
+    })
+  })
+})
 
 describe('cos', () => {
   it('returns the appropriate real value when given real', () => {
-    expectWriter(cos(real(0.5)))(
-      real(Math.cos(0.5)).value,
-      [real(0.5).value, 'computed real cosine']
+    const v = Math.cos(0.5).toString()
+    expectWriterTreeNode(
+      cos(real(0.5)),
+      real(Math.cos(0.5))
+    )(
+      ['0.5', '0.5', 'given primitive'],
+      ['cos(0.5)', v, 'real cosine'],
+      [v, v, 'given primitive']
     )
   })
 
@@ -20,21 +35,35 @@ describe('cos', () => {
   })
 
   it('returns an expression when given non-constant', () => {
-    expectWriter(cos(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.trigonometric, species: Species.cos,
-        expression: variable('x')
-      } as Cosine,
-      [variable('x').value, 'cosine']
+    expectWriterTreeNode(
+      cos(variable('x')),
+      $cos(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['cos(x)', 'cos(x)', 'cosine']
     )
+  })
+})
+
+describe('$sin', () => {
+  it('generates a Sine for a TreeNode input', () => {
+    expect($sin(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.trigonometric, species: Species.sin,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
 describe('sin', () => {
   it('returns the appropriate real value when given real', () => {
-    expectWriter(sin(real(0.5)))(
-      real(Math.sin(0.5)).value,
-      [real(0.5).value, 'computed real sine']
+    const v = Math.sin(0.5).toString()
+    expectWriterTreeNode(
+      sin(real(0.5)),
+      real(Math.sin(0.5))
+    )(
+      ['0.5', '0.5', 'given primitive'],
+      ['sin(0.5)', v, 'real sine'],
+      [v, v, 'given primitive']
     )
   })
 
@@ -43,21 +72,35 @@ describe('sin', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriter(sin(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.trigonometric, species: Species.sin,
-        expression: variable('x')
-      } as Sine,
-      [variable('x').value, 'sine']
+    expectWriterTreeNode(
+      sin(variable('x')),
+      $sin(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['sin(x)', 'sin(x)', 'sine']
     )
+  })
+})
+
+describe('$tan', () => {
+  it('generates a Tangent for a TreeNode input', () => {
+    expect($tan(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.trigonometric, species: Species.tan,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
 describe('tan', () => {
   it('returns the appropriate real value when given real', () => {
-    expectWriter(tan(real(0.5)))(
-      real(Math.tan(0.5)).value,
-      [real(0.5).value, 'computed real tangent']
+    const v = Math.tan(0.5).toString()
+    expectWriterTreeNode(
+      tan(real(0.5)),
+      real(Math.tan(0.5))
+    )(
+      ['0.5', '0.5', 'given primitive'],
+      ['tan(0.5)', v, 'real tangent'],
+      [v, v, 'given primitive']
     )
   })
 
@@ -66,25 +109,42 @@ describe('tan', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriter(tan(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.trigonometric, species: Species.tan,
-        expression: variable('x')
-      } as Tangent,
-      [variable('x').value, 'tangent']
+    expectWriterTreeNode(
+      tan(variable('x')),
+      $tan(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['tan(x)', 'tan(x)', 'tangent']
     )
   })
 })
 
+describe('$sec', () => {
+  it('generates a Secant for a TreeNode input', () => {
+    expect($sec(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.trigonometric, species: Species.sec,
+      expression: unit(variable('x').value)
+    })
+  })
+})
+
+
 describe('sec', () => {
   it('returns the appropriate real value when given real', () => {
-    expectWriter(sec(real(0.5)))(
-      real(1 / Math.cos(0.5)).value,
-      [real(0.5).value, 'computed real cosine'],
-      [[real(Math.cos(0.5)).value, real(-1).value], 'real exponentiation'],
-      [real(0.5).value, 'computed real secant']
-    ) // Hmm... This last log entry seems incorrect. Should probably be
-    // the result of the middle operation.
+    const v = (1 / Math.cos(0.5)).toString()
+    const w = Math.cos(0.5).toString()
+    expectWriterTreeNode(
+      sec(real(0.5)),
+      real(1 / Math.cos(0.5))
+    )(
+      ['0.5', '0.5', 'given primitive'],
+      ['sec(0.5)', 'cos(0.5) ^ -1', 'real secant'],
+      ['cos(0.5)', w, 'real cosine'],
+      [w, w, 'given primitive'],
+      ['-1', '-1', 'given primitive'],
+      [`${w} ^ -1`, v, 'real exponentiation'],
+      [v, v, 'given primitive']
+    )
   })
 
   it('returns a complex value when given complex', () => {
@@ -92,23 +152,41 @@ describe('sec', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriter(sec(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.trigonometric, species: Species.sec,
-        expression: variable('x')
-      } as Secant,
-      [variable('x').value, 'secant']
+    expectWriterTreeNode(
+      sec(variable('x')),
+      $sec(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['sec(x)', 'sec(x)', 'secant']
     )
   })
 })
 
+describe('$csc', () => {
+  it('generates a Cosecant for a TreeNode input', () => {
+    expect($csc(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.trigonometric, species: Species.csc,
+      expression: unit(variable('x').value)
+    })
+  })
+})
+
+
 describe('csc', () => {
   it('returns the appropriate real value when given real', () => {
-    expectWriter(csc(real(0.5)))(
-      real(1 / Math.sin(0.5)).value,
-      [real(0.5).value, 'computed real sine'],
-      [[real(Math.sin(0.5)).value, real(-1).value], 'real exponentiation'],
-      [real(0.5).value, 'computed real cosecant']
+    const v = (1 / Math.sin(0.5)).toString()
+    const w = Math.sin(0.5).toString()
+    expectWriterTreeNode(
+      csc(real(0.5)),
+      real(1 / Math.sin(0.5))
+    )(
+      ['0.5', '0.5', 'given primitive'],
+      ['csc(0.5)', 'sin(0.5) ^ -1', 'real cosecant'],
+      ['sin(0.5)', w, 'real sine'],
+      [w, w, 'given primitive'],
+      ['-1', '-1', 'given primitive'],
+      [`${w} ^ -1`, v, 'real exponentiation'],
+      [v, v, 'given primitive']
     )
   })
 
@@ -117,23 +195,40 @@ describe('csc', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriter(csc(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.trigonometric, species: Species.csc,
-        expression: variable('x')
-      } as Cosecant,
-      [variable('x').value, 'cosecant']
+    expectWriterTreeNode(
+      csc(variable('x')),
+      $csc(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['csc(x)', 'csc(x)', 'cosecant']
     )
+  })
+})
+
+describe('$cot', () => {
+  it('generates a Cotangent for a TreeNode input', () => {
+    expect($cot(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.trigonometric, species: Species.cot,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
 describe('cot', () => {
   it('returns the appropriate real value when given real', () => {
-    expectWriter(cot(real(0.5)))(
-      real(1 / Math.tan(0.5)).value,
-      [real(0.5).value, 'computed real tangent'],
-      [[real(Math.tan(0.5)).value, real(-1).value], 'real exponentiation'],
-      [real(0.5).value, 'computed real cotangent']
+    const v = (1 / Math.tan(0.5)).toString()
+    const w = Math.tan(0.5).toString()
+    expectWriterTreeNode(
+      cot(real(0.5)),
+      real(1 / Math.tan(0.5))
+    )(
+      ['0.5', '0.5', 'given primitive'],
+      ['cot(0.5)', 'tan(0.5) ^ -1', 'real cotangent'],
+      ['tan(0.5)', w, 'real tangent'],
+      [w, w, 'given primitive'],
+      ['-1', '-1', 'given primitive'],
+      [`${w} ^ -1`, v, 'real exponentiation'],
+      [v, v, 'given primitive']
     )
   })
 
@@ -142,12 +237,12 @@ describe('cot', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriter(cot(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.trigonometric, species: Species.cot,
-        expression: variable('x')
-      } as Cotangent,
-      [variable('x').value, 'cotangent']
+    expectWriterTreeNode(
+      cot(variable('x')),
+      $cot(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['cot(x)', 'cot(x)', 'cotangent']
     )
   })
 })
