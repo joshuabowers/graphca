@@ -106,7 +106,6 @@ describe('$sech', () => {
 
 describe('sech', () => {
   it('calculates the hyperbolic secant of a real value', () => {
-    // expectCloseTo(sech(real(1)), real(0.648054273663), 10)
     const v = (1 / Math.cosh(1)).toString()
     const w = Math.cosh(1).toString()
     expectWriterTreeNode(
