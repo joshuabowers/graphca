@@ -1,12 +1,21 @@
+import { unit } from '../monads/writer'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
 import { 
-  ArcusCosine, ArcusSine, ArcusTangent,
-  ArcusSecant, ArcusCosecant, ArcusCotangent,
-  acos, asin, atan, asec, acsc, acot 
+  acos, asin, atan, asec, acsc, acot,
+  $acos, $asin, $atan, $asec, $acsc, $acot
 } from './arcus'
-import { expectCloseTo, expectWriter } from '../utility/expectations'
+import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+
+describe('$acos', () => {
+  it('generates an ArcusCosine for a TreeNode input', () => {
+    expect($acos(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.arcus, species: Species.acos,
+      expression: unit(variable('x').value)
+    })
+  })
+})
 
 describe('acos', () => {
   it('calculates the arcus cosine of a real number', () => {
@@ -18,13 +27,22 @@ describe('acos', () => {
   })
 
   it('generates an arcus cosine node for a variable expression', () => {
-    expectWriter(acos(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.arcus, species: Species.acos,
-        expression: variable('x')
-      } as ArcusCosine,
-      [variable('x').value, 'arcus cosine']
+    expectWriterTreeNode(
+      acos(variable('x')),
+      $acos(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['acos(x)', 'acos(x)', 'arcus cosine']
     )
+  })
+})
+
+describe('$asin', () => {
+  it('generates an ArcusSine for a TreeNode input', () => {
+    expect($asin(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.arcus, species: Species.asin,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
@@ -38,13 +56,22 @@ describe('asin', () => {
   })
 
   it('generates an arcus sine node for a variable expression', () => {
-    expectWriter(asin(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.arcus, species: Species.asin,
-        expression: variable('x')
-      } as ArcusSine,
-      [variable('x').value, 'arcus sine']
+    expectWriterTreeNode(
+      asin(variable('x')),
+      $asin(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['asin(x)', 'asin(x)', 'arcus sine']
     )
+  })
+})
+
+describe('$atan', () => {
+  it('generates an ArcusTangent for a TreeNode input', () => {
+    expect($atan(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.arcus, species: Species.atan,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
@@ -58,19 +85,40 @@ describe('atan', () => {
   })
 
   it('generates an arcus tangent node for a variable expression', () => {
-    expectWriter(atan(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.arcus, species: Species.atan,
-        expression: variable('x')
-      } as ArcusTangent,
-      [variable('x').value, 'arcus tangent']
+    expectWriterTreeNode(
+      atan(variable('x')),
+      $atan(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['atan(x)', 'atan(x)', 'arcus tangent']
     )
+  })
+})
+
+describe('$asec', () => {
+  it('generates an ArcusSecant for a TreeNode input', () => {
+    expect($asec(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.arcus, species: Species.asec,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
 describe('asec', () => {
   it('calculates the arcus secant of a real number', () => {
-    expectCloseTo(asec(real(2)), real(1.04719755119), 10)
+    const v = Math.acos(1 / 2).toString()
+    expectWriterTreeNode(
+      asec(real(2)),
+      real(Math.acos(1 / 2))
+    )(
+      ['2', '2', 'given primitive'],
+      ['asec(2)', 'acos(2 ^ -1)', 'real arcus secant'],
+      ['-1', '-1', 'given primitive'],
+      ['2 ^ -1', '0.5', 'real exponentiation'],
+      ['0.5', '0.5', 'given primitive'],
+      ['acos(0.5)', v, 'real arcus cosine'],
+      [v, v, 'given primitive']
+    )
   })
 
   it('calculates the arcus secant of a complex number', () => {
@@ -78,13 +126,22 @@ describe('asec', () => {
   })
 
   it('generates an arcus secant node for a variable expression', () => {
-    expectWriter(asec(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.arcus, species: Species.asec,
-        expression: variable('x')
-      } as ArcusSecant,
-      [variable('x').value, 'arcus secant']
+    expectWriterTreeNode(
+      asec(variable('x')),
+      $asec(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['asec(x)', 'asec(x)', 'arcus secant']
     )
+  })
+})
+
+describe('$acsc', () => {
+  it('generates an ArcusCosecant for a TreeNode input', () => {
+    expect($acsc(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.arcus, species: Species.acsc,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
@@ -98,13 +155,22 @@ describe('acsc', () => {
   })
 
   it('generates an arcus cosecant node for a variable expression', () => {
-    expectWriter(acsc(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.arcus, species: Species.acsc,
-        expression: variable('x')
-      } as ArcusCosecant,
-      [variable('x').value, 'arcus cosecant']
+    expectWriterTreeNode(
+      acsc(variable('x')),
+      $acsc(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['acsc(x)', 'acsc(x)', 'arcus cosecant']
     )
+  })
+})
+
+describe('$acot', () => {
+  it('generates an ArcusCotangent for a TreeNode input', () => {
+    expect($acot(unit(variable('x').value))[0]).toEqual({
+      clade: Clades.unary, genus: Genera.arcus, species: Species.acot,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
@@ -118,12 +184,12 @@ describe('acot', () => {
   })
 
   it('generates an arcus cotangent node for a variable expression', () => {
-    expectWriter(acot(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.arcus, species: Species.acot,
-        expression: variable('x')
-      } as ArcusCotangent,
-      [variable('x').value, 'arcus cotangent']
+    expectWriterTreeNode(
+      acot(variable('x')),
+      $acot(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['acot(x)', 'acot(x)', 'arcus cotangent']
     )
   })
 })

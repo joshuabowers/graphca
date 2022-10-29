@@ -6,6 +6,8 @@ import {
   add, subtract, multiply, divide, reciprocal, square, sqrt 
 } from "../arithmetic"
 import { ln } from "./logarithmic"
+import { rule } from "../utility/rule"
+import { Unicode } from "../Unicode"
 
 export type ArcusNode = UnaryNode & {
   readonly genus: Genera.arcus
@@ -69,7 +71,8 @@ export const [atan, isArcusTangent, $atan] = unary<ArcusTangent>(
 )()
 
 export const [asec, isArcusSecant, $asec] = unary<ArcusSecant>(
-  'asec', Notation.prefix, Species.asec, Genera.arcus
+  'asec', Notation.prefix, Species.asec, Genera.arcus,
+  t => rule`acos(${t} ^ -1)`
 )(
   r => acos(reciprocal(unit(r))),
   c => acos(reciprocal(unit(c))),
@@ -77,7 +80,8 @@ export const [asec, isArcusSecant, $asec] = unary<ArcusSecant>(
 )()
 
 export const [acsc, isArcusCosecant, $acsc] = unary<ArcusCosecant>(
-  'acsc', Notation.prefix, Species.acsc, Genera.arcus
+  'acsc', Notation.prefix, Species.acsc, Genera.arcus,
+  t => rule`asin(${t} ^ -1)`
 )(
   r => asin(reciprocal(unit(r))),
   c => asin(reciprocal(unit(c))),
@@ -85,9 +89,10 @@ export const [acsc, isArcusCosecant, $acsc] = unary<ArcusCosecant>(
 )()
 
 export const [acot, isArcusCotangent, $acot] = unary<ArcusCotangent>(
-  'acot', Notation.prefix, Species.acot, Genera.arcus
+  'acot', Notation.prefix, Species.acot, Genera.arcus,
+  t => rule`(${Unicode.pi} / 2) - atan(${t})`
 )(
   r => subtract(halfPi, atan(unit(r))), 
-  c => atan(reciprocal(unit(c))), 
+  c => subtract(halfPi, atan(unit(c))), // atan(reciprocal(unit(c))), 
   b => boolean(subtract(halfPi, atan(unit(b)))), 
 )()
