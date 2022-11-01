@@ -1,12 +1,23 @@
-import { expectCloseTo, expectWriter } from '../utility/expectations'
+import { unit } from '../monads/writer'
+import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
 import { 
-  AreaHyperbolicCosine, AreaHyperbolicSine, AreaHyperbolicTangent,
-  AreaHyperbolicSecant, AreaHyperbolicCosecant, AreaHyperbolicCotangent,
-  acosh, asinh, atanh, asech, acsch, acoth 
+  acosh, asinh, atanh, asech, acsch, acoth,
+  $acosh, $asinh, $atanh, $asech, $acsch, $acoth
 } from './areaHyperbolic'
+
+describe('$acosh', () => {
+  it('generates an AreaHyperbolicCosine for a TreeNode input', () => {
+    expect(
+      $acosh(unit(variable('x').value))[0]
+    ).toEqual({
+      clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acosh,
+      expression: unit(variable('x').value)
+    })
+  })
+})
 
 describe('acosh', () => {
   it('calculates the area hyperbolic cosine of a real value', () => {
@@ -18,13 +29,24 @@ describe('acosh', () => {
   })
 
   it('generates an AreaHyperbolicCosine node of a variable expression', () => {
-    expectWriter(acosh(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acosh,
-        expression: variable('x')
-      } as AreaHyperbolicCosine,
-      [variable('x').value, 'area hyperbolic cosine']
+    expectWriterTreeNode(
+      acosh(variable('x')),
+      $acosh(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['acosh(x)', 'acosh(x)', 'area hyperbolic cosine']
     )
+  })
+})
+
+describe('$asinh', () => {
+  it('generates an AreaHyperbolicSine for a TreeNode input', () => {
+    expect(
+      $asinh(unit(variable('x').value))[0]
+    ).toEqual({
+      clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.asinh,
+      expression: unit(variable('x').value)
+    })  
   })
 })
 
@@ -38,13 +60,24 @@ describe('asinh', () => {
   })
 
   it('generates an AreaHyperbolicSine node of a variable expression', () => {
-    expectWriter(asinh(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.asinh,
-        expression: variable('x')
-      } as AreaHyperbolicSine,
-      [variable('x').value, 'area hyperbolic sine']
+    expectWriterTreeNode(
+      asinh(variable('x')),
+      $asinh(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['asinh(x)', 'asinh(x)', 'area hyperbolic sine']
     )
+  })
+})
+
+describe('$atanh', () => {
+  it('generates an AreaHyperbolicTangent for a TreeNode input', () => {
+    expect(
+      $atanh(unit(variable('x').value))[0]
+    ).toEqual({
+      clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.atanh,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
@@ -58,19 +91,42 @@ describe('atanh', () => {
   })
 
   it('generates an AreaHyperbolicTangent node of a variable expression', () => {
-    expectWriter(atanh(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.atanh,
-        expression: variable('x')
-      } as AreaHyperbolicTangent,
-      [variable('x').value, 'area hyperbolic tangent']
+    expectWriterTreeNode(
+      atanh(variable('x')),
+      $atanh(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['atanh(x)', 'atanh(x)', 'area hyperbolic tangent']
     )
+  })
+})
+
+describe('$asech', () => {
+  it('generates an AreaHyperbolicSecant for a TreeNode input', () => {
+    expect(
+      $asech(unit(variable('x').value))[0]
+    ).toEqual({
+      clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.asech,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
 describe('asech', () => {
   it('calculates the area hyperbolic secant of a real value', () => {
-    expectCloseTo(asech(real(1)), real(0), 10)
+    const v = Math.acosh(1 / 2).toString()
+    expectWriterTreeNode(
+      asech(real(2)),
+      real(Math.acosh(1 / 2))
+    )(
+      ['2', '2', 'given primitive'],
+      ['asech(2)', 'acosh(2 ^ -1)', 'real area hyperbolic secant'],
+      ['-1', '-1', 'given primitive'],
+      ['2 ^ -1', '0.5', 'real exponentiation'],
+      ['0.5', '0.5', 'given primitive'],
+      ['acosh(0.5)', v, 'real area hyperbolic cosine'],
+      [v, v, 'given primitive']
+    )
   })
 
   it('calculates the area hyperbolic secant of a complex number', () => {
@@ -78,13 +134,24 @@ describe('asech', () => {
   })
 
   it('generates an AreaHyperbolicSecant node of a variable expression', () => {
-    expectWriter(asech(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.asech,
-        expression: variable('x')
-      } as AreaHyperbolicSecant,
-      [variable('x').value, 'area hyperbolic secant']
+    expectWriterTreeNode(
+      asech(variable('x')),
+      $asech(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['asech(x)', 'asech(x)', 'area hyperbolic secant']
     )
+  })
+})
+
+describe('$acsch', () => {
+  it('generates an AreaHyperbolicCosecant for a TreeNode input', () => {
+    expect(
+      $acsch(unit(variable('x').value))[0]
+    ).toEqual({
+      clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acsch,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
@@ -98,13 +165,24 @@ describe('acsch', () => {
   })
 
   it('generates an AreaHyperbolicCosecant node of a variable expression', () => {
-    expectWriter(acsch(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acsch,
-        expression: variable('x')
-      } as AreaHyperbolicCosecant,
-      [variable('x').value, 'area hyperbolic cosecant']
+    expectWriterTreeNode(
+      acsch(variable('x')),
+      $acsch(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['acsch(x)', 'acsch(x)', 'area hyperbolic cosecant']
     )
+  })
+})
+
+describe('$acoth', () => {
+  it('generates an AreaHyperbolicCotangent for a TreeNode input', () => {
+    expect(
+      $acoth(unit(variable('x').value))[0]
+    ).toEqual({
+      clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acoth,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
@@ -118,12 +196,12 @@ describe('acoth', () => {
   })
 
   it('generates an AreaHyperbolicCotangent node of a variable expression', () => {
-    expectWriter(acoth(variable('x')))(
-      {
-        clade: Clades.unary, genus: Genera.areaHyperbolic, species: Species.acoth,
-        expression: variable('x')
-      } as AreaHyperbolicCotangent,
-      [variable('x').value, 'area hyperbolic cotangent']
+    expectWriterTreeNode(
+      acoth(variable('x')),
+      $acoth(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['acoth(x)', 'acoth(x)', 'area hyperbolic cotangent']
     )
   })
 })

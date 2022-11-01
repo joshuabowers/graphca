@@ -6,6 +6,7 @@ import {
   add, subtract, multiply, divide, square, sqrt, reciprocal 
 } from "../arithmetic"
 import { ln } from "./logarithmic"
+import { rule } from "../utility/rule"
 
 export type AreaHyperbolicNode = UnaryNode & {
   readonly genus: Genera.areaHyperbolic
@@ -71,7 +72,8 @@ export const [atanh, isAreaHyperbolicTangent, $atanh] = unary<AreaHyperbolicTang
 )()
 
 export const [asech, isAreaHyperbolicSecant, $asech] = unary<AreaHyperbolicSecant>(
-  'asech', Notation.prefix, Species.asech, Genera.areaHyperbolic
+  'asech', Notation.prefix, Species.asech, Genera.areaHyperbolic,
+  t => rule`acosh(${t} ^ -1)`
 )(
   r => acosh(reciprocal(unit(r))),
   c => acosh(reciprocal(unit(c))),
@@ -79,7 +81,8 @@ export const [asech, isAreaHyperbolicSecant, $asech] = unary<AreaHyperbolicSecan
 )()
 
 export const [acsch, isAreaHyperbolicCosecant, $acsch] = unary<AreaHyperbolicCosecant>(
-  'acsch', Notation.prefix, Species.acsch, Genera.areaHyperbolic
+  'acsch', Notation.prefix, Species.acsch, Genera.areaHyperbolic,
+  t => rule`asinh(${t} ^ -1)`
 )(
   r => asinh(reciprocal(unit(r))),
   c => asinh(reciprocal(unit(c))),
@@ -87,7 +90,8 @@ export const [acsch, isAreaHyperbolicCosecant, $acsch] = unary<AreaHyperbolicCos
 )()
 
 export const [acoth, isAreaHyperbolicCotangent, $acoth] = unary<AreaHyperbolicCotangent>(
-  'acoth', Notation.prefix, Species.acoth, Genera.areaHyperbolic
+  'acoth', Notation.prefix, Species.acoth, Genera.areaHyperbolic,
+  t => rule`atanh(${t} ^ -1)`
 )(
   r => atanh(reciprocal(unit(r))),
   c => atanh(reciprocal(unit(c))),
