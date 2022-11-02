@@ -75,7 +75,7 @@ export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Bool
     (l, r) => isComplement(l) && isComplement(r),
     (l, r) => [
       or(l.expression, r.expression), 
-      rule`${l.expression} ${Unicode.or} ${l.expression}`,
+      rule`${l.expression} ${Unicode.or} ${r.expression}`,
       'De Morgan'
     ]
   ),
