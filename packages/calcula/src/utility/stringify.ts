@@ -17,7 +17,8 @@ import {
   isAreaHyperbolicCosine, isAreaHyperbolicSine, isAreaHyperbolicTangent,
   isAreaHyperbolicSecant, isAreaHyperbolicCosecant, isAreaHyperbolicCotangent,
   isFactorial, isGamma, isPolygamma, isAbsolute,
-  isComplement, isAlternativeDenial, isImplication, isDisjunction
+  isComplement, isAlternativeDenial, isImplication, isDisjunction,
+  isBiconditional
 } from '../functions'
 
 type ToString<T extends TreeNode> = (expression: Writer<T>) => string
@@ -99,5 +100,6 @@ export const stringify: StringifyFn = multi(
   when(isDisjunction, binaryInfix(Unicode.or)),
   when(isImplication, binaryInfix(Unicode.implies)),
   when(isAlternativeDenial, binaryInfix(Unicode.nand)),
+  when(isBiconditional, binaryInfix(Unicode.xnor)),
   when(isTreeNode, e => `Unhandled expression type: '${e.value.species}'`)
 )
