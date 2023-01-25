@@ -1,92 +1,171 @@
-import { expectWriter } from '../../utility/expectations'
+import { unit } from '../../monads/writer'
+import { expectWriterTreeNode } from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
-import { real, complex, boolean } from '../../primitives'
+import { boolean } from '../../primitives'
 import { variable } from '../../variable'
 import { not } from './complement'
-import { ConverseImplication, converse } from './converseImplication'
+import { converse, $converse } from './converseImplication'
+import { Unicode } from '../../Unicode'
+
+describe('$converse', () => {
+  it('generates a ConverseImplication for a pair of TreeNode inputs', () => {
+    expect(
+      $converse(unit(variable('x').value), unit(variable('y').value))[0]
+    ).toEqual({
+      clade: Clades.binary, genus: Genera.connective, species: Species.converse,
+      left: unit(variable('x').value), right: unit(variable('y').value)
+    })
+  })
+})
 
 describe('converse', () => {
   it('returns true when given two true things', () => {
-    expectWriter(
-      converse(boolean(true), boolean(true))
+    expectWriterTreeNode(
+      converse(boolean(true), boolean(true)),
+      boolean(true)
     )(
-      boolean(true),
-      [[boolean(true), boolean(true)], 'converse implication annihilator']
+      ['true', 'true', 'given primitive'],
+      ['true', 'true', 'given primitive'],
+      [
+        `true ${Unicode.converse} true`, 
+        'true', 
+        'converse implication annihilator'
+      ],
+      ['true', 'true', 'given primitive']
     )
   })
 
   it('returns false if the left argument is false', () => {
-    expectWriter(
-      converse(boolean(false), boolean(true))
+    expectWriterTreeNode(
+      converse(boolean(false), boolean(true)),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(false), boolean(true)], 'converse implication identity']
+      ['false', 'false', 'given primitive'],
+      ['true', 'true', 'given primitive'],
+      [
+        `false ${Unicode.converse} true`,
+        'false',
+        'converse implication identity'
+      ]
     )
   })
 
   it('returns true if the right argument is false', () => {
-    expectWriter(
-      converse(boolean(true), boolean(false))
+    expectWriterTreeNode(
+      converse(boolean(true), boolean(false)),
+      boolean(true)
     )(
-      boolean(true),
-      [[boolean(true), boolean(false)], 'converse implication annihilator']
+      ['true', 'true', 'given primitive'],
+      ['false', 'false', 'given primitive'],
+      [
+        `true ${Unicode.converse} false`,
+        'true',
+        'converse implication annihilator'
+      ],
+      ['true', 'true', 'given primitive']
     )
   })
 
   it('returns true if both arguments are false', () => {
-    expectWriter(
-      converse(boolean(false), boolean(false))
+    expectWriterTreeNode(
+      converse(boolean(false), boolean(false)),
+      boolean(true)
     )(
-      boolean(true),
-      [[boolean(false), boolean(false)], 'converse implication complementation'],
-      [boolean(false), 'boolean complement']
+      ['false', 'false', 'given primitive'],
+      ['false', 'false', 'given primitive'],
+      [
+        `false ${Unicode.converse} false`,
+        `${Unicode.not}(false)`,
+        'converse implication complementation'
+      ],
+      [
+        `${Unicode.not}(false)`,
+        'true',
+        'boolean complement'
+      ],
+      ['true', 'true', 'given primitive']
     )
   })
 
   it('returns true if the left operand is true', () => {
-    expectWriter(
-      converse(boolean(true), variable('x'))
+    expectWriterTreeNode(
+      converse(boolean(true), variable('x')),
+      boolean(true)
     )(
-      boolean(true),
-      [[boolean(true), variable('x')], 'converse implication annihilator']
+      ['true', 'true', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      [
+        `true ${Unicode.converse} x`,
+        'true',
+        'converse implication annihilator'
+      ],
+      ['true', 'true', 'given primitive']
     )
   })
 
   it('returns the left operand if the right is true', () => {
-    expectWriter(
-      converse(variable('x'), boolean(true))
+    expectWriterTreeNode(
+      converse(variable('x'), boolean(true)),
+      variable('x')
     )(
-      variable('x'),
-      [[variable('x'), boolean(true)], 'converse implication identity']
+      ['x', 'x', 'given variable'],
+      ['true', 'true', 'given primitive'],
+      [
+        `x ${Unicode.converse} true`,
+        'x',
+        'converse implication identity'
+      ]
     )
   })
 
   it('returns the complement of the right if the left is false', () => {
-    expectWriter(
-      converse(boolean(false), variable('x'))
+    expectWriterTreeNode(
+      converse(boolean(false), variable('x')),
+      not(variable('x'))
     )(
-      not(variable('x')),
-      [[boolean(false), variable('x')], 'converse implication complementation'],
-      [variable('x'), 'complement']
+      ['false', 'false', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      [
+        `false ${Unicode.converse} x`,
+        `${Unicode.not}(x)`,
+        'converse implication complementation'
+      ],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ]
     )
   })
 
   it('returns true if the right operand is false', () => {
-    expectWriter(
-      converse(variable('x'), boolean(false))
+    expectWriterTreeNode(
+      converse(variable('x'), boolean(false)),
+      boolean(true)
     )(
-      boolean(true),
-      [[variable('x'), boolean(false)], 'converse implication annihilator']
+      ['x', 'x', 'given variable'],
+      ['false', 'false', 'given primitive'],
+      [
+        `x ${Unicode.converse} false`,
+        'true',
+        'converse implication annihilator'
+      ],
+      ['true', 'true', 'given primitive']
     )
   })
 
   it('returns a ConverseImplication on variable input', () => {
-    expectWriter(converse(variable('x'), variable('y')))(
-      {
-        clade: Clades.binary, genus: Genera.connective, species: Species.converse,
-        left: variable('x'), right: variable('y')
-      } as ConverseImplication,
-      [[variable('x').value, variable('y').value], 'converse implication']
+    expectWriterTreeNode(
+      converse(variable('x'), variable('y')),
+      $converse(unit(variable('x').value), unit(variable('y').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['y', 'y', 'given variable'],
+      [
+        `x ${Unicode.converse} y`,
+        `(x${Unicode.converse}y)`,
+        'converse implication'
+      ]
     )
   })
 })
