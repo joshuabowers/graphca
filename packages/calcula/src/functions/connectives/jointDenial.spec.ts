@@ -1,136 +1,270 @@
-import { expectWriter } from '../../utility/expectations'
+import { unit } from '../../monads/writer'
+import { expectWriterTreeNode } from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
-import { real, complex, boolean } from '../../primitives'
+import { boolean } from '../../primitives'
 import { variable } from '../../variable'
 import { not } from './complement'
 import { and } from './conjunction'
-import { JointDenial, nor } from './jointDenial'
+import { nor, $nor } from './jointDenial'
+import { Unicode } from '../../Unicode'
+
+describe('$nor', () => {
+  it('generates a Joint Denial for a pair of TreeNode inputs', () => {
+    expect(
+      $nor(unit(variable('x').value), unit(variable('y').value))[0]
+    ).toEqual({
+      clade: Clades.binary, genus: Genera.connective, species: Species.nor,
+      left: unit(variable('x').value), right: unit(variable('y').value)
+    })
+  })
+})
 
 describe('nor', () => {
   it('returns false when given two true things', () => {
-    expectWriter(
-      nor(boolean(true), boolean(true))
+    expectWriterTreeNode(
+      nor(boolean(true), boolean(true)),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(true), boolean(true)], 'joint denial annihilator']
+      ['true', 'true', 'given primitive'],
+      ['true', 'true', 'given primitive'],
+      [
+        `true ${Unicode.nor} true`,
+        `false`,
+        'joint denial annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns false if the left argument is false', () => {
-    expectWriter(
-      nor(boolean(false), boolean(true))
+    expectWriterTreeNode(
+      nor(boolean(false), boolean(true)),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(false), boolean(true)], 'joint denial annihilator']
+      ['false', 'false', 'given primitive'],
+      ['true', 'true', 'given primitive'],
+      [
+        `false ${Unicode.nor} true`,
+        'false',
+        'joint denial annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns false if the right argument is false', () => {
-    expectWriter(
-      nor(boolean(true), boolean(false))
+    expectWriterTreeNode(
+      nor(boolean(true), boolean(false)),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(true), boolean(false)], 'joint denial annihilator']
+      ['true', 'true', 'given primitive'],
+      ['false', 'false', 'given primitive'],
+      [
+        `true ${Unicode.nor} false`,
+        'false',
+        'joint denial annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns true if both arguments are false', () => {
-    expectWriter(
-      nor(boolean(false), boolean(false))
+    expectWriterTreeNode(
+      nor(boolean(false), boolean(false)),
+      boolean(true)
     )(
-      boolean(true),
-      [[boolean(false), boolean(false)], 'joint denial complementation'],
-      [boolean(false), 'boolean complement']
+      ['false', 'false', 'given primitive'],
+      ['false', 'false', 'given primitive'],
+      [
+        `false ${Unicode.nor} false`,
+        `${Unicode.not}(false)`,
+        'joint denial complementation'
+      ],
+      [
+        `${Unicode.not}(false)`,
+        'true',
+        'boolean complement'
+      ],
+      ['true', 'true', 'given primitive']
     )
   })
 
   it('returns the complement of the left operand if the right is false', () => {
-    expectWriter(
-      nor(variable('x'), boolean(false))
+    expectWriterTreeNode(
+      nor(variable('x'), boolean(false)),
+      not(variable('x'))
     )(
-      not(variable('x')),
-      [[variable('x'), boolean(false)], 'joint denial complementation'],
-      [variable('x'), 'complement']
+      ['x', 'x', 'given variable'],
+      ['false', 'false', 'given primitive'],
+      [
+        `x ${Unicode.nor} false`,
+        `${Unicode.not}(x)`,
+        'joint denial complementation'
+      ],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ]
     )
   })
 
   it('returns the complement of the right operand if the left is false', () => {
-    expectWriter(
-      nor(boolean(false), variable('x'))
+    expectWriterTreeNode(
+      nor(boolean(false), variable('x')),
+      not(variable('x'))
     )(
-      not(variable('x')),
-      [[boolean(false), variable('x')], 'joint denial complementation'],
-      [variable('x'), 'complement']
+      ['false', 'false', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      [
+        `false ${Unicode.nor} x`,
+        `${Unicode.not}(x)`,
+        'joint denial complementation'
+      ],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ]
     )
   })
 
   it('returns false if the right operand is true', () => {
-    expectWriter(
-      nor(variable('x'), boolean(true))
+    expectWriterTreeNode(
+      nor(variable('x'), boolean(true)),
+      boolean(false)
     )(
-      boolean(false),
-      [[variable('x'), boolean(true)], 'joint denial annihilator']
+      ['x', 'x', 'given variable'],
+      ['true', 'true', 'given primitive'],
+      [
+        `x ${Unicode.nor} true`,
+        'false',
+        'joint denial annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns false if the left operand is true', () => {
-    expectWriter(
-      nor(boolean(true), variable('x'))
+    expectWriterTreeNode(
+      nor(boolean(true), variable('x')),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(true), variable('x')], 'joint denial annihilator']
+      ['true', 'true', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      [
+        `true ${Unicode.nor} x`,
+        'false',
+        'joint denial annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns the complement of the left operand if left is equivalent to right', () => {
-    expectWriter(
-      nor(variable('x'), variable('x'))
+    expectWriterTreeNode(
+      nor(variable('x'), variable('x')),
+      not(variable('x'))
     )(
-      not(variable('x')),
-      [[variable('x'), variable('x')], 'joint denial complementation'],
-      [variable('x'), 'complement']
+      ['x', 'x', 'given variable'],
+      ['x', 'x', 'given variable'],
+      [
+        `x ${Unicode.nor} x`,
+        `${Unicode.not}(x)`,
+        'joint denial complementation'
+      ],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ]
     )
   })
 
   it('returns a conjunction of mutually complemented operands', () => {
-    expectWriter(
-      nor(not(variable('x')), not(variable('y')))
+    expectWriterTreeNode(
+      nor(not(variable('x')), not(variable('y'))),
+      and(variable('x'), variable('y'))
     )(
-      and(variable('x'), variable('y')),
-      [variable('x'), 'complement'],
-      [variable('y'), 'complement'],
-      [[not(variable('x')), not(variable('y'))], 'De Morgan'],
-      [[variable('x'), variable('y')], 'conjunction']
+      ['x', 'x', 'given variable'],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ],
+      ['y', 'y', 'given variable'],
+      [
+        `${Unicode.not}(y)`,
+        `${Unicode.not}(y)`,
+        'complement'
+      ],
+      [
+        `${Unicode.not}(x) ${Unicode.nor} ${Unicode.not}(y)`,
+        `x ${Unicode.and} y`,
+        'De Morgan'
+      ],
+      [
+        `x ${Unicode.and} y`,
+        `(x${Unicode.and}y)`,
+        'conjunction'
+      ]
     )
   })
 
   it('returns false if the right operand is the complement of the left', () => {
-    expectWriter(
-      nor(variable('x'), not(variable('x')))
+    expectWriterTreeNode(
+      nor(variable('x'), not(variable('x'))),
+      boolean(false)
     )(
-      boolean(false),
-      [variable('x'), 'complement'],
-      [[variable('x'), not(variable('x'))], 'joint denial annihilator']
+      ['x', 'x', 'given variable'],
+      ['x', 'x', 'given variable'],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ],
+      [
+        `x ${Unicode.nor} ${Unicode.not}(x)`,
+        'false',
+        'joint denial annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns false if the left operand is the complement of the right', () => {
-    expectWriter(
-      nor(not(variable('x')), variable('x'))
+    expectWriterTreeNode(
+      nor(not(variable('x')), variable('x')),
+      boolean(false)
     )(
-      boolean(false),
-      [variable('x'), 'complement'],
-      [[not(variable('x')), variable('x')], 'joint denial annihilator']
+      ['x', 'x', 'given variable'],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ],
+      ['x', 'x', 'given variable'],
+      [
+        `${Unicode.not}(x) ${Unicode.nor} x`,
+        'false',
+        'joint denial annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns a JointDenial on variable input', () => {
-    expectWriter(nor(variable('x'), variable('y')))(
-      {
-        clade: Clades.binary, genus: Genera.connective, species: Species.nor,
-        left: variable('x'), right: variable('y')
-      } as JointDenial,
-      [[variable('x').value, variable('y').value], 'joint denial']
+    expectWriterTreeNode(
+      nor(variable('x'), variable('y')),
+      $nor(unit(variable('x').value), unit(variable('y').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['y', 'y', 'given variable'],
+      [
+        `x ${Unicode.nor} y`,
+        `(x${Unicode.nor}y)`,
+        'joint denial'
+      ]
     )
   })
 })
