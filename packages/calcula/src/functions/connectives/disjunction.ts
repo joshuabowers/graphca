@@ -79,7 +79,7 @@ export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
     (_l, r) => isComplement(r),
     (l, r) => [
       converse(unit(l), r.expression), 
-      converseRule(l, r), 
+      converseRule(l, r.expression), 
       'disjunctive converse implication'
     ]
   )
