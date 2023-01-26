@@ -54,7 +54,7 @@ export const [not, isComplement, $not] = unary<Complement, Boolean>(
     isSpecies(Species.implies),
     v => [
       and(v.left, not(v.right)), 
-      rule`${v.left} ${Unicode.and} (${v.right})${Unicode.not}`, 
+      rule`${v.left} ${Unicode.and} ${Unicode.not}(${v.right})`, 
       'complement of implication'
     ]
   ),
@@ -66,7 +66,7 @@ export const [not, isComplement, $not] = unary<Complement, Boolean>(
     isSpecies(Species.converse),
     v => [
       and(not(v.left), v.right), 
-      rule`(${v.left})${Unicode.not} ${Unicode.and} ${v.right}`,
+      rule`${Unicode.not}(${v.left}) ${Unicode.and} ${v.right}`,
       'complement of converse implication'
     ]
   )
