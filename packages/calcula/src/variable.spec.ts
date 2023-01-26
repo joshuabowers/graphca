@@ -7,7 +7,7 @@ describe(assign, () => {
     const actual = assign('x', real(5), scope())
     expect(isWriter<Variable>(actual)).toBeTruthy()
     expect(actual.value.name).toEqual('x')
-    expect(actual.value.value).toEqual(real(5))
+    expect(actual.value.value.value).toEqual(real(5).value)
   })
 
   it('has, as a side effect, the updating of the supplied scope', () => {
