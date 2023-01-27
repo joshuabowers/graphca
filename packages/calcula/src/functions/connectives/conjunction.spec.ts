@@ -1,108 +1,192 @@
-import { expectWriter } from '../../utility/expectations'
+import { unit } from '../../monads/writer'
+import { expectWriterTreeNode } from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { real, complex, boolean } from '../../primitives'
 import { variable } from '../../variable'
 import { not } from './complement'
 import { or } from './disjunction'
-import { Conjunction, and } from './conjunction'
+import { and, $and } from './conjunction'
+import { Unicode } from '../../Unicode'
+
+describe('$and', () => {
+  it('generates a Conjunction for a pair of TreeNode inputs', () => {
+    expect(
+      $and(unit(variable('x').value), unit(variable('y').value))[0]
+    ).toEqual({
+      clade: Clades.binary, genus: Genera.connective, species: Species.and,
+      left: unit(variable('x').value), right: unit(variable('y').value)
+    })
+  })
+})
 
 describe('and', () => {
   it('returns true when given two true things', () => {
-    expectWriter(
-      and(boolean(true), boolean(true))
+    expectWriterTreeNode(
+      and(boolean(true), boolean(true)),
+      boolean(true)
     )(
-      boolean(true),
-      [[boolean(true), boolean(true)], 'conjunctive identity']
+      ['true', 'true', 'given primitive'],
+      ['true', 'true', 'given primitive'],
+      [
+        `true ${Unicode.and} true`,
+        'true',
+        'conjunctive identity'
+      ]
     )
   })
 
   it('returns false if the left argument is false', () => {
-    expectWriter(
-      and(boolean(false), boolean(true))
+    expectWriterTreeNode(
+      and(boolean(false), boolean(true)),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(false), boolean(true)], 'conjunctive identity']
+      ['false', 'false', 'given primitive'],
+      ['true', 'true', 'given primitive'],
+      [
+        `false ${Unicode.and} true`,
+        'false',
+        'conjunctive identity'
+      ]
     )
   })
 
   it('returns false if the right argument is false', () => {
-    expectWriter(
-      and(boolean(true), boolean(false))
+    expectWriterTreeNode(
+      and(boolean(true), boolean(false)),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(true), boolean(false)], 'conjunctive identity']
+      ['true', 'true', 'given primitive'],
+      ['false', 'false', 'given primitive'],
+      [
+        `true ${Unicode.and} false`,
+        'false',
+        'conjunctive identity'
+      ]
     )
   })
 
   it('returns false if both arguments are false', () => {
-    expectWriter(
-      and(boolean(false), boolean(false))
+    expectWriterTreeNode(
+      and(boolean(false), boolean(false)),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(false), boolean(false)], 'conjunctive annihilator']
+      ['false', 'false', 'given primitive'],
+      ['false', 'false', 'given primitive'],
+      [
+        `false ${Unicode.and} false`,
+        'false',
+        'conjunctive annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('casts reals to booleans, where 0 is false, non-zero is true', () => {
-    expectWriter(
-      and(real(5), real(0))
+    expectWriterTreeNode(
+      and(real(5), real(0)),
+      boolean(false)
     )(
-      boolean(false),
-      [[real(5), real(0)], 'real conjunction']
+      ['5', '5', 'given primitive'],
+      ['0', '0', 'given primitive'],
+      [
+        `5 ${Unicode.and} 0`,
+        'false',
+        'real conjunction'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('casts complexes to booleans, 0 => false, non-0 => true', () => {
-    expectWriter(
-      and(complex([5,0]), complex([0,0]))
+    expectWriterTreeNode(
+      and(complex([5,0]), complex([0,0])),
+      boolean(false)
     )(
-      boolean(false),
-      [[complex([5, 0]), complex([0, 0])], 'complex conjunction']
+      [`5+0${Unicode.i}`, `5+0${Unicode.i}`, 'given primitive'],
+      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
+      [
+        `5+0${Unicode.i} ${Unicode.and} 0+0${Unicode.i}`,
+        'false',
+        'complex conjunction'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns the left operand if the right is true', () => {
-    expectWriter(
-      and(variable('x'), boolean(true))
+    expectWriterTreeNode(
+      and(variable('x'), boolean(true)),
+      variable('x')
     )(
-      variable('x'),
-      [[variable('x'), boolean(true)], 'conjunctive identity']
+      ['x', 'x', 'given variable'],
+      ['true', 'true', 'given primitive'],
+      [
+        `x ${Unicode.and} true`,
+        'x',
+        'conjunctive identity'
+      ]
     )
   })
 
   it('returns the right operand if the left is true', () => {
-    expectWriter(
-      and(boolean(true), variable('x'))
+    expectWriterTreeNode(
+      and(boolean(true), variable('x')),
+      variable('x')
     )(
-      variable('x'),
-      [[boolean(true), variable('x')], 'conjunctive identity']
+      ['true', 'true', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      [
+        `true ${Unicode.and} x`,
+        'x',
+        'conjunctive identity'
+      ]
     )
   })
 
   it('returns the false if the right operand is false', () => {
-    expectWriter(
-      and(variable('x'), boolean(false))
+    expectWriterTreeNode(
+      and(variable('x'), boolean(false)),
+      boolean(false)
     )(
-      boolean(false),
-      [[variable('x'), boolean(false)], 'conjunctive annihilator']
+      ['x', 'x', 'given variable'],
+      ['false', 'false', 'given primitive'],
+      [
+        `x ${Unicode.and} false`,
+        'false',
+        'conjunctive annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns false if the left operand is false', () => {
-    expectWriter(
-      and(boolean(false), variable('x'))
+    expectWriterTreeNode(
+      and(boolean(false), variable('x')),
+      boolean(false)
     )(
-      boolean(false),
-      [[boolean(false), variable('x')], 'conjunctive annihilator']
+      ['false', 'false', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      [
+        `false ${Unicode.and} x`,
+        'false',
+        'conjunctive annihilator'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns the left operand if left equivalent to right', () => {
-    expectWriter(
-      and(variable('x'), variable('x'))
+    expectWriterTreeNode(
+      and(variable('x'), variable('x')),
+      variable('x')
     )(
-      variable('x'),
-      [[variable('x'), variable('x')], 'conjunctive idempotency']
+      ['x', 'x', 'given variable'],
+      ['x', 'x', 'given variable'],
+      [
+        `x ${Unicode.and} x`,
+        'x',
+        'conjunctive idempotency'
+      ]
     )
   })
 
@@ -114,66 +198,137 @@ describe('and', () => {
   // T | F | T      | T              | T       | F       | T
   // T | T | T      | T              | T       | T       | T
   it('returns the left operand if the right is a Disjunction of the left', () => {
-    expectWriter(
-      and(variable('x'), or(variable('x'), variable('y')))
+    expectWriterTreeNode(
+      and(variable('x'), or(variable('x'), variable('y'))),
+      variable('x')
     )(
-      variable('x'),
-      [[variable('x'), variable('y')], 'disjunction'],
-      [[variable('x'), or(variable('x'), variable('y'))], 'conjunctive absorption']
+      ['x', 'x', 'given variable'],
+      ['x', 'x', 'given variable'],
+      ['y', 'y', 'given variable'],
+      [
+        `x ${Unicode.or} y`,
+        `(x${Unicode.or}y)`,
+        'disjunction'
+      ],
+      [
+        `x ${Unicode.and} (x${Unicode.or}y)`,
+        'x',
+        'conjunctive absorption'
+      ]
     )
-    expectWriter(
-      and(variable('x'), or(variable('y'), variable('x')))
+    expectWriterTreeNode(
+      and(variable('x'), or(variable('y'), variable('x'))),
+      variable('x')
     )(
-      variable('x'),
-      [[variable('y'), variable('x')], 'disjunction'],
-      [[variable('x'), or(variable('y'), variable('x'))], 'conjunctive absorption']
+      ['x', 'x', 'given variable'],
+      ['y', 'y', 'given variable'],
+      ['x', 'x', 'given variable'],
+      [
+        `y ${Unicode.or} x`,
+        `(y${Unicode.or}x)`,
+        'disjunction'
+      ],
+      [
+        `x ${Unicode.and} (y${Unicode.or}x)`,
+        'x',
+        'conjunctive absorption'
+      ]
     )
   })
 
   it('returns the right operand if the left is a Disjunction of the right', () => {
-    expectWriter(
-      and(or(variable('x'), variable('y')), variable('x'))
+    expectWriterTreeNode(
+      and(or(variable('x'), variable('y')), variable('x')),
+      variable('x')
     )(
-      variable('x'),
-      [[variable('x'), variable('y')], 'disjunction'],
-      [[or(variable('x'), variable('y')), variable('x')], 'conjunctive absorption']
+      ['x', 'x', 'given variable'],
+      ['y', 'y', 'given variable'],
+      [
+        `x ${Unicode.or} y`,
+        `(x${Unicode.or}y)`,
+        'disjunction'
+      ],
+      ['x', 'x', 'given variable'],
+      [
+        `(x${Unicode.or}y) ${Unicode.and} x`,
+        'x',
+        'conjunctive absorption'
+      ]
     )
-    expectWriter(
-      and(or(variable('y'), variable('x')), variable('x'))
+    expectWriterTreeNode(
+      and(or(variable('y'), variable('x')), variable('x')),
+      variable('x')
     )(
-      variable('x'),
-      [[variable('y'), variable('x')], 'disjunction'],
-      [[or(variable('y'), variable('x')), variable('x')], 'conjunctive absorption']
+      ['y', 'y', 'given variable'],
+      ['x', 'x', 'given variable'],
+      [
+        `y ${Unicode.or} x`,
+        `(y${Unicode.or}x)`,
+        'disjunction'
+      ],
+      ['x', 'x', 'given variable'],
+      [
+        `(y${Unicode.or}x) ${Unicode.and} x`,
+        'x',
+        'conjunctive absorption'
+      ]
     )
   })
 
   it('returns false if the right operand is the negation of the left', () => {
-    expectWriter(
-      and(variable('x'), not(variable('x')))
+    expectWriterTreeNode(
+      and(variable('x'), not(variable('x'))),
+      boolean(false)
     )(
-      boolean(false),
-      [variable('x'), 'complement'],
-      [[variable('x'), not(variable('x'))], 'contradiction']
+      ['x', 'x', 'given variable'],
+      ['x', 'x', 'given variable'],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ],
+      [
+        `x ${Unicode.and} ${Unicode.not}(x)`,
+        'false',
+        'contradiction'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns false if the left operand is the negation of the right', () => {
-    expectWriter(
-      and(not(variable('x')), variable('x'))
+    expectWriterTreeNode(
+      and(not(variable('x')), variable('x')),
+      boolean(false)
     )(
-      boolean(false),
-      [variable('x'), 'complement'],
-      [[not(variable('x')), variable('x')], 'contradiction']
+      ['x', 'x', 'given variable'],
+      [
+        `${Unicode.not}(x)`,
+        `${Unicode.not}(x)`,
+        'complement'
+      ],
+      ['x', 'x', 'given variable'],
+      [
+        `${Unicode.not}(x) ${Unicode.and} x`,
+        'false',
+        'contradiction'
+      ],
+      ['false', 'false', 'given primitive']
     )
   })
 
   it('returns a Conjunction on variable input', () => {
-    expectWriter(and(variable('x'), variable('y')))(
-      {
-        clade: Clades.binary, genus: Genera.connective, species: Species.and,
-        left: variable('x'), right: variable('y')
-      } as Conjunction,
-      [[variable('x').value, variable('y').value], 'conjunction']
+    expectWriterTreeNode(
+      and(variable('x'), variable('y')),
+      $and(unit(variable('x').value), unit(variable('y').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['y', 'y', 'given variable'],
+      [
+        `x ${Unicode.and} y`,
+        `(x${Unicode.and}y)`,
+        'conjunction'
+      ]
     )
   })
 })
