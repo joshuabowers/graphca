@@ -67,7 +67,7 @@ export const [add, isAddition, $add] = binary<Addition>(
     (l, r) => [
       add(l.left, add(l.right, unit(r))), 
       rule`${l.left} + (${l.right} + ${r})`,
-      'combine primitives across nesting levels'
+      'additive associativity'
     ]),
   when(deepEquals, (l, _r) => [
     double(unit(l)), rule`2 * ${l}`, 'equivalence: replaced with double'
