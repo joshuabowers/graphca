@@ -1,4 +1,5 @@
-import { Species } from "../utility/tree"
+import { Writer } from "../monads/writer"
+import { Species, TreeNode } from "../utility/tree"
 import { Complex, primitive } from "../closures/primitive"
 import { isNumberTuple } from "../utility/valuePredicates"
 export { Complex }
@@ -15,3 +16,6 @@ export const [complex, isComplex, $complex] =
 )()
 
 export const ComplexInfinity = complex([Infinity, NaN])
+
+export const isComplexInfinity = (v: Writer<TreeNode>): boolean =>
+  isComplex(v) && !Number.isFinite(v.value.a) && Number.isNaN(v.value.b)

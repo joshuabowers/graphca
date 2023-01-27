@@ -16,7 +16,8 @@ export const factorialRule = unaryPostfixRule('!')
 const isNegativeInteger = (t: number) => t < 0 && Number.isInteger(t)
 
 export const [factorial, isFactorial, $factorial] = unary<Factorial>(
-  '!', Notation.postfix, Species.factorial
+  '!', Notation.postfix, Species.factorial, undefined, 
+  (i) => rule`${i} * (${i} - 1)!`
 )(
   r => multiply(unit(r), factorial(add(unit(r), real(-1)))), 
   c => multiply(unit(c), factorial(add(unit(c), complex([-1, 0])))), 

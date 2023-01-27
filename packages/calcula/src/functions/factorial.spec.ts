@@ -1,96 +1,124 @@
-import { expectCloseTo, expectWriter } from '../utility/expectations'
+import { unit } from '../monads/writer';
+import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
 import { Clades, Species } from '../utility/tree';
 import { ComplexInfinity } from '../primitives/complex';
 import { real, complex } from '../primitives';
 import { variable } from '../variable';
 import { factorial, $factorial } from "./factorial";
 import { gamma } from './gamma'
+import { Unicode } from '../Unicode'
 
 describe('$factorial', () => {
-  it('returns an Action<Factorial> without logic', () => {
-    expect($factorial(variable('x'))).toEqual([
-      {
-        clade: Clades.unary, genus: undefined, species: Species.factorial,
-        expression: variable('x')
-      },
-      'factorial'
-    ])
+  it('generates a Factorial for a TreeNode input', () => {
+    expect(
+      $factorial(unit(variable('x').value))[0]
+    ).toEqual({
+      clade: Clades.unary, genus: undefined, species: Species.factorial,
+      expression: unit(variable('x').value)
+    })
   })
 })
 
 describe('factorial', () => {
   it('returns 1 for an input of 0', () => {
-    expectWriter(
-      factorial(real(0))
+    expectWriterTreeNode(
+      factorial(real(0)),
+      real(1)
     )(
-      real(1).value,
-      [real(0).value, 'degenerate case']
+      ['0', '0', 'given primitive'],
+      ['(0)!', '1', 'degenerate case'],
+      ['1', '1', 'given primitive']
     )
   })
 
   it('returns the factorial for positive integers', () => {
-    expectWriter(
-      factorial(real(5))
+    expectWriterTreeNode(
+      factorial(real(2)),
+      real(2)
     )(
-      real(120).value,
-      [[real(5).value, real(-1).value], 'real addition'],
-      [[real(4).value, real(-1).value], 'real addition'],
-      [[real(3).value, real(-1).value], 'real addition'],
-      [[real(2).value, real(-1).value], 'real addition'],
-      [[real(1).value, real(-1).value], 'real addition'],
-      [real(0).value, 'degenerate case'],
-      [[real(1).value, real(1).value], 'multiplicative identity'],
-      [real(1).value, 'real factorial'],
-      [[real(2).value, real(1).value], 'real multiplication'],
-      [real(2).value, 'real factorial'],
-      [[real(3).value, real(2).value], 'real multiplication'],
-      [real(3).value, 'real factorial'],
-      [[real(4).value, real(6).value], 'real multiplication'],
-      [real(4).value, 'real factorial'],
-      [[real(5).value, real(24).value], 'real multiplication'],
-      [real(5).value, 'real factorial']
+      ['2', '2', 'given primitive'],
+      ['(2)!', '2 * (2 - 1)!', 'real factorial'],
+      ['-1', '-1', 'given primitive'],
+      ['2 + -1', '1', 'real addition'],
+      ['1', '1', 'given primitive'],
+      ['(1)!', '1 * (1 - 1)!', 'real factorial'],
+      ['-1', '-1', 'given primitive'],
+      ['1 + -1', '0', 'real addition'],
+      ['0', '0', 'given primitive'],
+      ['(0)!', '1', 'degenerate case'],
+      ['1', '1', 'given primitive'],
+      ['1 * 1', '1', 'multiplicative identity'],
+      ['2 * 1', '2', 'real multiplication'],
+      ['2', '2', 'given primitive']
     )
   })
 
   it('returns complex 1 for an input of complex 0', () => {
-    expectWriter(
-      factorial(complex([0, 0]))
+    expectWriterTreeNode(
+      factorial(complex([0, 0])),
+      complex([1, 0])
     )(
-      complex([1, 0]).value,
-      [complex([0, 0]).value, 'degenerate case']
+      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
+      [`(0+0${Unicode.i})!`, `1+0${Unicode.i}`, 'degenerate case'],
+      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive']
     )
   })
 
   it('returns the factorial for a integer complex', () => {
-    expectWriter(
-      factorial(complex([5, 0]))
+    expectWriterTreeNode(
+      factorial(complex([2, 0])),
+      complex([2, 0])
     )(
-      complex([120, 0]).value,
-      [[complex([5, 0]).value, complex([-1, 0]).value], 'complex addition'],
-      [[complex([4, 0]).value, complex([-1, 0]).value], 'complex addition'],
-      [[complex([3, 0]).value, complex([-1, 0]).value], 'complex addition'],
-      [[complex([2, 0]).value, complex([-1, 0]).value], 'complex addition'],
-      [[complex([1, 0]).value, complex([-1, 0]).value], 'complex addition'],
-      [complex([0, 0]).value, 'degenerate case'],
-      [[complex([1, 0]).value, complex([1, 0]).value], 'complex multiplication'],
-      [complex([1, 0]).value, 'complex factorial'],
-      [[complex([2, 0]).value, complex([1, 0]).value], 'complex multiplication'],
-      [complex([2, 0]).value, 'complex factorial'],
-      [[complex([3, 0]).value, complex([2, 0]).value], 'complex multiplication'],
-      [complex([3, 0]).value, 'complex factorial'],
-      [[complex([4, 0]).value, complex([6, 0]).value], 'complex multiplication'],
-      [complex([4, 0]).value, 'complex factorial'],
-      [[complex([5, 0]).value, complex([24, 0]).value], 'complex multiplication'],
-      [complex([5, 0]).value, 'complex factorial']
+      [`2+0${Unicode.i}`, `2+0${Unicode.i}`, 'given primitive'],
+      [
+        `(2+0${Unicode.i})!`, 
+        `2+0${Unicode.i} * (2+0${Unicode.i} - 1)!`, 
+        'complex factorial'
+      ],
+      [`-1+0${Unicode.i}`, `-1+0${Unicode.i}`, 'given primitive'],
+      [
+        `2+0${Unicode.i} + -1+0${Unicode.i}`, 
+        `1+0${Unicode.i}`, 
+        'complex addition'
+      ],
+      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive'],
+      [
+        `(1+0${Unicode.i})!`, 
+        `1+0${Unicode.i} * (1+0${Unicode.i} - 1)!`,
+        'complex factorial'
+      ],
+      [`-1+0${Unicode.i}`, `-1+0${Unicode.i}`, 'given primitive'],
+      [
+        `1+0${Unicode.i} + -1+0${Unicode.i}`, 
+        `0+0${Unicode.i}`, 
+        'complex addition'
+      ],
+      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
+      [`(0+0${Unicode.i})!`, `1+0${Unicode.i}`, 'degenerate case'],
+      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive'],
+      [
+        `1+0${Unicode.i} * 1+0${Unicode.i}`, 
+        `1+0${Unicode.i}`, 
+        'complex multiplication'
+      ],
+      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive'],
+      [
+        `2+0${Unicode.i} * 1+0${Unicode.i}`, 
+        `2+0${Unicode.i}`, 
+        'complex multiplication'
+      ],
+      [`2+0${Unicode.i}`, `2+0${Unicode.i}`, 'given primitive']
     )
   })
 
   it('returns complex infinity for non-positive integer reals', () => {
-    expectWriter(
-      factorial(real(-5))
+    expectWriterTreeNode(
+      factorial(real(-5)),
+      ComplexInfinity
     )(
-      ComplexInfinity.value,
-      [real(-5).value, 'singularity']
+      ['-5', '-5', 'given primitive'],
+      ['(-5)!', `${Unicode.complexInfinity}`, 'singularity'],
+      [`${Unicode.complexInfinity}`, `${Unicode.complexInfinity}`, 'given primitive']
     )
   })
 
@@ -103,11 +131,12 @@ describe('factorial', () => {
   })
 
   it('returns a Factorial node for unbound variables', () => {
-    expectWriter(
-      factorial(variable('x'))
+    expectWriterTreeNode(
+      factorial(variable('x')),
+      $factorial(unit(variable('x').value))[0]
     )(
-      $factorial(variable('x'))[0],
-      [variable('x').value, 'factorial']
+      ['x', 'x', 'given variable'],
+      ['(x)!', '(x)!', 'factorial']
     )
   })
 })

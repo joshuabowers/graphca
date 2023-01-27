@@ -2,7 +2,7 @@ import { method, multi, Multi } from '@arrows/multimethod'
 import { Unicode } from '../Unicode'
 import { Writer } from '../monads/writer'
 import { TreeNode, TreeNodeGuardFn, isTreeNode } from './tree'
-import { isReal, isComplex, isBoolean } from '../primitives'
+import { isReal, isComplex, isBoolean, isComplexInfinity } from '../primitives'
 import { isVariable } from '../variable'
 import { UnaryNode } from '../closures/unary'
 import { BinaryNode } from '../closures/binary'
@@ -55,7 +55,7 @@ export const stringify: StringifyFn = multi(
   when(isReal, r => numeric(r.value.value)), //r.value.value.toString()),
   when(
     isComplex, 
-    c => `${
+    c => isComplexInfinity(c) ? Unicode.complexInfinity : `${
       numeric(c.value.a)
     }${c.value.b >= 0 ? '+' : ''}${
       numeric(c.value.b)
