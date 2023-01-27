@@ -39,11 +39,11 @@ describe('stringify', () => {
     })
   
     it('converts multiplications to strings', () => {
-      expect(stringify(multiply(variable('x'), real(2)))).toEqual(`(2${Unicode.multiplication}x)`)
+      expect(stringify(multiply(variable('x'), real(2)))).toEqual(`(2*x)`)
     })
   
     it('converts divisions to strings', () => {
-      expect(stringify(divide(real(2), variable('x')))).toEqual(`(2${Unicode.multiplication}(x^-1))`)
+      expect(stringify(divide(real(2), variable('x')))).toEqual(`(2*(x^-1))`)
     })
   
     it('converts exponentiations to strings', () => {
