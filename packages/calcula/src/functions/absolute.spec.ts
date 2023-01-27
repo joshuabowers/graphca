@@ -1,44 +1,79 @@
+import { unit } from '../monads/writer';
+import { expectWriterTreeNode } from '../utility/expectations';
 import { Clades, Species } from '../utility/tree';
-import { real, complex, boolean, nil, nan } from '../primitives'
+import { real, complex, boolean, nil, nan } from '../primitives';
 import { variable } from "../variable";
-import { abs } from "./absolute";
+import { abs, $abs } from "./absolute";
+import { Unicode } from '../Unicode';
+
+describe('$abs', () => {
+  it('generates an Absolute for a TreeNode input', () => {
+    expect(
+      $abs(unit(variable('x').value))[0]
+    ).toEqual({
+      clade: Clades.unary, genus: undefined, species: Species.abs,
+      expression: unit(variable('x').value)
+    })
+  })
+})
 
 describe('abs', () => {
   it('returns a Writer<Real> for a real input', () => {
-    expect(abs(real(-5))).toEqual({
-      value: real(5).value,
-      log: [{input: real(-5).value, action: 'absolute value'}]
-    })
+    expectWriterTreeNode(
+      abs(real(-5)),
+      real(5)
+    )(
+      ['-5', '-5', 'given primitive'],
+      ['abs(-5)', '5', 'real absolute'],
+      ['5', '5', 'given primitive']
+    )
   })
 
   it('returns a Writer<Complex> for a complex input', () => {
-    expect(abs(complex([1, 2]))).toEqual({
-      value: complex([2.23606797749979, 0]).value,
-      log: [{input: complex([1,2]).value, action: 'absolute value'}]
-    })
+    expectWriterTreeNode(
+      abs(complex([1, 2])),
+      complex([2.23606797749979, 0])
+    )(
+      [`1+2${Unicode.i}`, `1+2${Unicode.i}`, 'given primitive'],
+      [
+        `abs(1+2${Unicode.i})`, 
+        `2.23606797749979+0${Unicode.i}`, 
+        'complex absolute'
+      ],
+      [
+        `2.23606797749979+0${Unicode.i}`, 
+        `2.23606797749979+0${Unicode.i}`, 
+        'given primitive'
+      ]
+    )
   })
 
   it('returns a Writer<Boolean> for a boolean input', () => {
-    expect(abs(boolean(true))).toEqual({
-      value: boolean(true).value,
-      log: [{input: boolean(true).value, action: 'absolute value'}]
-    })
+    expectWriterTreeNode(
+      abs(boolean(true)),
+      boolean(true)
+    )(
+      ['true', 'true', 'given primitive'],
+      ['abs(true)', 'true', 'boolean absolute'],
+    )
   })
 
   it('returns a Writer<Absolute> for variable input', () => {
-    expect(abs(variable('x'))).toEqual({
-      value: {
-        clade: Clades.unary, genus: undefined, species: Species.abs, 
-        expression: variable('x')
-      },
-      log: [{input: variable('x').value, action: 'absolute'}]
-    })
+    expectWriterTreeNode(
+      abs(variable('x')),
+      $abs(unit(variable('x').value))[0]
+    )(
+      ['x', 'x', 'given variable'],
+      ['abs(x)', 'abs(x)', 'absolute']
+    )
   })
 
   it('returns a NaN for Nil input', () => {
-    expect(abs(nil)).toEqual({
-      value: nan.value,
-      log: [{input: nil.value, action: 'not a number'}]
-    })
+    expectWriterTreeNode(
+      abs(nil),
+      nan
+    )(
+      ['abs(nil)', 'NaN', 'not a number']
+    )
   })
 })
