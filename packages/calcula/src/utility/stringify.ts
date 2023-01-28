@@ -21,7 +21,9 @@ import {
   isFactorial, isGamma, isPolygamma, isAbsolute,
   isComplement, isConjunction, isDisjunction, isExclusiveDisjunction,
   isImplication, isAlternativeDenial, isJointDenial, isBiconditional,
-  isConverseImplication
+  isConverseImplication,
+  isEquality, isStrictInequality, isLessThan, isGreaterThan,
+  isLessThanEquals, isGreaterThanEquals
 } from '../functions'
 
 type ToString<T extends TreeNode> = (expression: Writer<T>) => string
@@ -110,5 +112,11 @@ export const stringify: StringifyFn = multi(
   when(isJointDenial, binaryInfix(Unicode.nor)),
   when(isBiconditional, binaryInfix(Unicode.xnor)),
   when(isConverseImplication, binaryInfix(Unicode.converse)),
+  when(isEquality, binaryInfix('===')),
+  when(isStrictInequality, binaryInfix('!==')),
+  when(isLessThan, binaryInfix('<')),
+  when(isGreaterThan, binaryInfix('>')),
+  when(isLessThanEquals, binaryInfix('<=')),
+  when(isGreaterThanEquals, binaryInfix('>=')),
   when(isTreeNode, e => `Unhandled expression type: '${e.value.species}'`)
 )
