@@ -208,7 +208,7 @@ describe('add', () => {
       )(
         ['0', '0', 'given primitive'],
         ['x', 'x', 'given variable'],
-        ['0 + x', 'x + 0', 're-order operands'],
+        ['0 + x', 'x + 0', 'reorder operands'],
         ['x + 0', 'x', 'additive identity']
       )
     })
@@ -232,7 +232,7 @@ describe('add', () => {
     )(
       ['5', '5', 'given primitive'],
       ['x', 'x', 'given variable'],
-      ['5 + x', 'x + 5', 're-order operands'],
+      ['5 + x', 'x + 5', 'reorder operands'],
       ['x + 5', '(x+5)', 'addition']
     )
   })
@@ -262,9 +262,9 @@ describe('add', () => {
         ['5', '5', 'given primitive'],
         ['10', '10', 'given primitive'],
         ['x', 'x', 'given variable'],
-        ['10 + x', 'x + 10', 're-order operands'],
+        ['10 + x', 'x + 10', 'reorder operands'],
         ['x + 10', '(x+10)', 'addition'],
-        ['5 + (x+10)', '(x+10) + 5', 're-order operands'],
+        ['5 + (x+10)', '(x+10) + 5', 'reorder operands'],
         ['(x+10) + 5', 'x + (10 + 5)', 'additive associativity'],
         ['10 + 5', '15', 'real addition'],
         ['15', '15', 'given primitive'],
@@ -485,7 +485,7 @@ describe('subtract', () => {
       ['-1', '-1', 'given primitive'],
       ['x', 'x', 'given variable'],
       ['-1 * x', '(-1*x)', 'multiplication'],
-      ['0 + (-1*x)', '(-1*x) + 0', 're-order operands'],
+      ['0 + (-1*x)', '(-1*x) + 0', 'reorder operands'],
       ['(-1*x) + 0', '(-1*x)', 'additive identity']
     )
   })

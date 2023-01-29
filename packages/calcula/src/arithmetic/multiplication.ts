@@ -39,19 +39,19 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
   ),
   when<Complex, Complex>(
     [isComplexWrapped, isComplexWrapped], 
-    (l, r) => [complex([l.a * r.a, 0]), rule`${l} * ${r}`, 'complex multiplication']
+    (l, r) => [complex([l.a * r.a, 0]), rule`${complex([l.a * r.a, 0])}`, 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isComplexWrapped, isImaginary],
-    (l, r) => [complex([0, l.a * r.b]), rule`${l} * ${r}`, 'complex multiplication']
+    (l, r) => [complex([0, l.a * r.b]), rule`${complex([0, l.a * r.b])}`, 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isImaginary, isComplexWrapped],
-    (l, r) => [complex([0, l.b * r.a]), rule`${l} * ${r}`, 'complex multiplication']
+    (l, r) => [complex([0, l.b * r.a]), rule`${complex([0, l.b * r.a])}`, 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isComplex, isComplexWrapped],
-    (l, r) => [complex([l.a * r.a, 0]), rule`${l} * ${r}`, 'complex multiplication']
+    (l, r) => [complex([l.a * r.a, 0]), rule`${complex([l.a * r.a, 0])}`, 'complex multiplication']
   ),
   when([isValue(real(0)), isValue(real(Infinity))], [nan, rule`${nan}`, 'incalculable']),
   when([isValue(real(Infinity)), isValue(real(0))], [nan, rule`${nan}`, 'incalculable']),
@@ -66,7 +66,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => [
       multiply(multiply(unit(l), r.left), r.right),
       rule`(${l} * ${r.left}) * ${r.right}`,
-      'primitive coalescence'
+      'multiplicative associativity'
     ]
   ),
   when(deepEquals, (l, _r) => [square(unit(l)), rule`${l}^2`, 'equivalence: replaced with square']),

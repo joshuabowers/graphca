@@ -58,7 +58,7 @@ export const [add, isAddition, $add] = binary<Addition>(
   when([
     any(Species.real, Species.complex, Species.boolean), 
     notAny(Species.real, Species.complex, Species.boolean)
-  ], (l, r) => [add(unit(r), unit(l)), addRule(r, l), 're-order operands']),
+  ], (l, r) => [add(unit(r), unit(l)), addRule(r, l), 'reorder operands']),
   when<TreeNode, Real>([_, isValue(real(0))], (l, _r) => [l, identityRule(l), 'additive identity']),
   when<AdditionWithPrimitive, PrimitiveNode>(
     (l, r) => isAddition(l) 
