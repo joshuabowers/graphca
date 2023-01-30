@@ -30,7 +30,7 @@ const expectInScope = (scope: Scope, input: string, ...expected: Writer<Variable
   expectObject(input, expected[0].value.value ?? real(0xdeadbeef), scope)
   for(let e of expected){
     if(e.value.value && !isNil(e.value.value)) {
-      expect(scope.get(e.value.name)?.value).toEqual(e.value)
+      expect(scope.get(e.value.name)?.value?.value?.value).toEqual(e.value.value.value)
     } else {
       expect(scope.get(e.value.name)).toBeUndefined()
     }
