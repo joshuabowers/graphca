@@ -69,7 +69,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       'multiplicative associativity'
     ]
   ),
-  when(deepEquals, (l, _r) => [square(unit(l)), rule`${l}^2`, 'equivalence: replaced with square']),
+  when(deepEquals, (l, _r) => [square(unit(l)), rule`${l} ^ 2`, 'equivalence: replaced with square']),
   when<Multiplication, Multiplication>(
     (l, r) => isMultiplication(l) && isMultiplication(r)
       && deepEquals(l.value.left, r.value.left),
@@ -231,7 +231,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.left, r.value.left),
     (l, r) => [
       raise(l.left, add(l.right, r.right)), 
-      rule`${l.left}^(${l.right} + ${r.right})`,
+      rule`${l.left} ^ (${l.right} + ${r.right})`,
       'combined like terms'
     ]
   ),
@@ -415,7 +415,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),
     (l, r) => [
       raise(unit(l), add(real(1), r.right)), 
-      rule`${l}^(${real(1)} + ${r.right})`,
+      rule`${l} ^ (${real(1)} + ${r.right})`,
       'combined like terms'
     ]
   ),
@@ -423,7 +423,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => isExponentiation(l) && deepEquals(l.value.left, r),
     (l, r) => [
       raise(unit(r), add(real(1), l.right)), 
-      rule`${r}^(${real(1)} + ${l.right})`,
+      rule`${r} ^ (${real(1)} + ${l.right})`,
       'combined like terms'
     ]
   )

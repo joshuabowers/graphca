@@ -337,57 +337,69 @@ describe('multiply', () => {
   })
 
   describe('when dealing with equivalent subtrees', () => {
-    it.skip('squares the left if the right is equivalent', () => {
-      // expectWriter(
-      //   multiply(variable('x'), variable('x'))
-      // )(
-      //   square(variable('x')).value,
-      //   [
-      //     [variable('x').value, variable('x').value], 
-      //     'equivalence: replaced with square'
-      //   ],
-      //   [[variable('x').value, real(2).value], 'exponentiation']
-      // )
+    it('squares the left if the right is equivalent', () => {
+      expectWriterTreeNode(
+        multiply(variable('x'), variable('x')),
+        square(variable('x'))
+      )(
+        ['x', 'x', 'given variable'],
+        ['x', 'x', 'given variable'],
+        ['x * x', 'x ^ 2', 'equivalence: replaced with square'],
+        ['2', '2', 'given primitive'],
+        ['x ^ 2', '(x^2)', 'exponentiation']
+      )
     })
 
-    it.skip('adds to the power when multiplying by the base from the left', () => {
-      // expectWriter(
-      //   multiply(variable('x'), square(variable('x')))
-      // )(
-      //   raise(variable('x'), real(3)).value,
-      //   [[variable('x').value, real(2).value], 'exponentiation'],
-      //   [[variable('x').value, square(variable('x')).value], 'combined like terms'],
-      //   [[real(1).value, real(2).value], 'real addition'],
-      //   [[variable('x').value, real(3).value], 'exponentiation']
-      // )
+    it('adds to the power when multiplying by the base from the left', () => {
+      expectWriterTreeNode(
+        multiply(variable('x'), square(variable('x'))),
+        raise(variable('x'), real(3))
+      )(
+        ['x', 'x', 'given variable'],
+        ['x', 'x', 'given variable'],
+        ['2', '2', 'given primitive'],
+        ['x ^ 2', '(x^2)', 'exponentiation'],
+        ['x * (x^2)', 'x ^ (1 + 2)', 'combined like terms'],
+        ['1', '1', 'given primitive'],
+        ['1 + 2', '3', 'real addition'],
+        ['3', '3', 'given primitive'],
+        ['x ^ 3', '(x^3)', 'exponentiation']
+      )
     })
 
-    it.skip('adds to the power when multiplying by the base from the right', () => {
-      // expectWriter(
-      //   multiply(square(variable('x')), variable('x'))
-      // )(
-      //   raise(variable('x'), real(3)).value,
-      //   [[variable('x').value, real(2).value], 'exponentiation'],
-      //   [[square(variable('x')).value, variable('x').value], 'combined like terms'],
-      //   [[real(1).value, real(2).value], 'real addition'],
-      //   [[variable('x').value, real(3).value], 'exponentiation']
-      // )
+    it('adds to the power when multiplying by the base from the right', () => {
+      expectWriterTreeNode(
+        multiply(square(variable('x')), variable('x')),
+        raise(variable('x'), real(3))
+      )(
+        ['x', 'x', 'given variable'],
+        ['2', '2', 'given primitive'],
+        ['x ^ 2', '(x^2)', 'exponentiation'],
+        ['x', 'x', 'given variable'],
+        ['(x^2) * x', 'x ^ (1 + 2)', 'combined like terms'],
+        ['1', '1', 'given primitive'],
+        ['1 + 2', '3', 'real addition'],
+        ['3', '3', 'given primitive'],
+        ['x ^ 3', '(x^3)', 'exponentiation']
+      )
     })
 
-    it.skip('combines equivalently-based powers together', () => {
-      // expectWriter(
-      //   multiply(square(variable('x')), raise(variable('x'), real(3)))
-      // )(
-      //   raise(variable('x'), real(5)).value,
-      //   [[variable('x').value, real(2).value], 'exponentiation'],
-      //   [[variable('x').value, real(3).value], 'exponentiation'],
-      //   [
-      //     [square(variable('x')).value, raise(variable('x'), real(3)).value],
-      //     'combined like terms'
-      //   ],
-      //   [[real(2).value, real(3).value], 'real addition'],
-      //   [[variable('x').value, real(5).value], 'exponentiation']
-      // )
+    it('combines equivalently-based powers together', () => {
+      expectWriterTreeNode(
+        multiply(square(variable('x')), raise(variable('x'), real(3))),
+        raise(variable('x'), real(5))
+      )(
+        ['x', 'x', 'given variable'],
+        ['2', '2', 'given primitive'],
+        ['x ^ 2', '(x^2)', 'exponentiation'],
+        ['x', 'x', 'given variable'],
+        ['3', '3', 'given primitive'],
+        ['x ^ 3', '(x^3)', 'exponentiation'],
+        ['(x^2) * (x^3)', 'x ^ (2 + 3)', 'combined like terms'],
+        ['2 + 3', '5', 'real addition'],
+        ['5', '5', 'given primitive'],
+        ['x ^ 5', '(x^5)', 'exponentiation']
+      )
     })
   })
 
@@ -587,75 +599,98 @@ describe('multiply', () => {
 })
 
 describe('negate', () => {
-  it.skip('returns a Writer<Multiplication> for variable inputs', () => {
-    // expectWriter(
-    //   negate(variable('x'))
-    // )(
-    //   multiply(real(-1), variable('x')).value,
-    //   [[real(-1).value, variable('x').value], 'multiplication']
-    // )
+  it('returns a Writer<Multiplication> for variable inputs', () => {
+    expectWriterTreeNode(
+      negate(variable('x')),
+      multiply(real(-1), variable('x'))
+    )(
+      ['-1', '-1', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      ['-1 * x', '(-1*x)', 'multiplication']
+    )
   })
 
-  it.skip('results in a real with negative value, when real', () => {
-    // expectWriter(
-    //   negate(real(1))
-    // )(
-    //   real(-1),
-    //   [[real(-1), real(1)], 'real multiplication']
-    // )
+  it('results in a real with negative value, when real', () => {
+    expectWriterTreeNode(
+      negate(real(1)),
+      real(-1)
+    )(
+      ['-1', '-1', 'given primitive'],
+      ['1', '1', 'given primitive'],
+      ['-1 * 1', '-1', 'real multiplication'],
+      ['-1', '-1', 'given primitive']
+    )
   })
 })
 
 describe('double', () => {
-  it.skip('returns a Writer<Real> for real inputs', () => {
-    // expectWriter(
-    //   double(real(5))
-    // )(
-    //   real(10).value,
-    //   [[real(2).value, real(5).value], 'real multiplication']
-    // )
+  it('returns a Writer<Real> for real inputs', () => {
+    expectWriterTreeNode(
+      double(real(5)),
+      real(10)
+    )(
+      ['2', '2', 'given primitive'],
+      ['5', '5', 'given primitive'],
+      ['2 * 5', '10', 'real multiplication'],
+      ['10', '10', 'given primitive']
+    )
   })
 
-  it.skip('returns a Writer<Multiplication for variable inputs', () => {
-    // expectWriter(
-    //   double(variable('x'))
-    // )(
-    //   multiply(real(2), variable('x')).value,
-    //   [[real(2).value, variable('x').value], 'multiplication']
-    // )
+  it('returns a Writer<Multiplication for variable inputs', () => {
+    expectWriterTreeNode(
+      double(variable('x')),
+      multiply(real(2), variable('x'))
+    )(
+      ['2', '2', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      ['2 * x', '(2*x)', 'multiplication']
+    )
   })
 })
 
 describe('divide', () => {
-  it.skip('results in a division of the two real arguments', () => {
-    // expectWriter(
-    //   divide(real(10), real(5))
-    // )(
-    //   real(2),
-    //   [[real(5), real(-1)], 'real exponentiation'],
-    //   [[real(10), real(0.2)], 'real multiplication']
-    // )
+  it('results in a division of the two real arguments', () => {
+    expectWriterTreeNode(
+      divide(real(10), real(5)),
+      real(2)
+    )(
+      ['10', '10', 'given primitive'],
+      ['5', '5', 'given primitive'],
+      ['-1', '-1', 'given primitive'],
+      ['5 ^ -1', '0.2', 'real exponentiation'],
+      ['0.2', '0.2', 'given primitive'],
+      ['10 * 0.2', '2', 'real multiplication'],
+      ['2', '2', 'given primitive']
+    )
   })
 
-  it.skip('is the multiplication of the numerator by the reciprocal of the denominator', () => {
-    // expectWriter(
-    //   divide(real(2), variable('x'))
-    // )(
-    //   multiply(real(2), reciprocal(variable('x'))),
-    //   [[variable('x'), real(-1)], 'exponentiation'],
-    //   [[real(2), reciprocal(variable('x'))], 'multiplication']
-    // )
+  it('is the multiplication of the numerator by the reciprocal of the denominator', () => {
+    expectWriterTreeNode(
+      divide(real(2), variable('x')),
+      multiply(real(2), reciprocal(variable('x')))
+    )(
+      ['2', '2', 'given primitive'],
+      ['x', 'x', 'given variable'],
+      ['-1', '-1', 'given primitive'],
+      ['x ^ -1', '(x^-1)', 'exponentiation'],
+      ['2 * (x^-1)', '(2*(x^-1))', 'multiplication']
+    )
   })
 
-  it.skip('handles division by zero correctly', () => {
-    // expectWriter(
-    //   divide(variable('x'), real(0))
-    // )(
-    //   real(Infinity),
-    //   [[real(0), real(-1)], 'division by zero'],
-    //   [[variable('x'), real(Infinity)], 'reorder operands'],
-    //   [[real(Infinity), variable('x')], 'infinite absorption']
-    // )
+  it('handles division by zero correctly', () => {
+    expectWriterTreeNode(
+      divide(variable('x'), real(0)),
+      real(Infinity)
+    )(
+      ['x', 'x', 'given variable'],
+      ['0', '0', 'given primitive'],
+      ['-1', '-1', 'given primitive'],
+      ['0 ^ -1', Unicode.infinity, 'division by zero'],
+      [Unicode.infinity, Unicode.infinity, 'given primitive'],
+      [`x * ${Unicode.infinity}`, `${Unicode.infinity} * x`, 'reorder operands'],
+      [`${Unicode.infinity} * x`, Unicode.infinity, 'infinite absorption'],
+      [Unicode.infinity, Unicode.infinity, 'given primitive'],
+    )
   })
 
   it('properly calculates real / complex division', () => {
