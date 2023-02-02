@@ -2,7 +2,7 @@ import { method, multi, fromMulti, Multi } from '@arrows/multimethod'
 import { Writer, bind } from '../monads/writer'
 import { CreateFn, CastFn } from '../utility/typings'
 import { TreeNode, Clades, Species, isClade, TreeNodeGuardFn, isSpecies } from '../utility/tree'
-import { rule } from '../utility/rule'
+import { rule, process, resolve } from '../utility/rule'
 
 export type PrimitiveNode = TreeNode & {
   readonly clade: Clades.primitive
@@ -73,9 +73,9 @@ export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
           return ({
             value, 
             log: [{
-              input: rule`${value}`,
-              rewrite: rule`${value}`,
-              action: 'given primitive'
+              input: process`${value}`,
+              rewrite: resolve`${value}`,
+              action: `created ${species.toLocaleLowerCase()}`
             }]
           })
         }

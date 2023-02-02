@@ -45,7 +45,7 @@ export const Terminal = (props: TerminalProps) => {
             <li key={item.enteredAt}>{item.content}{parsings[key]}</li>
           )
         }
-        <li ref={currentRef}>{currentLine}</li>
+        <li ref={currentRef}>{currentLine}<span className={styles.caret}>|</span></li>
       </ol>
     </div>
   )

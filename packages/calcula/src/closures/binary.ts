@@ -11,7 +11,7 @@ import {
   isReal, isComplex, isBoolean,
   real, complex, nan
 } from '../primitives'
-import { rule, Input } from "../utility/rule"
+import { rule, Input, process, resolve } from "../utility/rule"
 
 export type BinaryNode = TreeNode & {
   readonly clade: Clades.binary,
@@ -99,11 +99,11 @@ export type BinaryNodeMetaTuple<T extends BinaryNode, R> = [
 
 export const binaryInfixRule = (operator: string) =>
   <L extends Input, R extends Input>(l: L, r: R) =>
-    rule`${l} ${operator} ${r}`
+    process`${l} ${operator} ${r}`
 
 export const binaryFnRule = (fnName: string) =>
   <L extends Input, R extends Input>(l: L, r: R) =>
-    rule`${fnName}(${l}, ${r})`
+    process`${fnName}(${l}, ${r})`
 
 export type Handle<I extends TreeNode, O extends TreeNode> = (l: I, r: I) => Writer<O>
 
@@ -113,7 +113,7 @@ export const binary = <T extends BinaryNode, R = void>(
   type Result<U extends TreeNode> = R extends void ? U : (R extends TreeNode ? R : never)
   const create = (left: Writer<TreeNode>, right: Writer<TreeNode>): Action<T> => {
     const n = ({clade: Clades.binary, species, genus, left, right}) as T
-    return [n, rule`${n}`, species.toLocaleLowerCase()]
+    return [n, resolve`${n}`, species.toLocaleLowerCase()]
   }
   if(notation === Notation.postfix){ throw new Error(`Unknown binary postfix operation: ${name}`) }
   const toString = notation === Notation.infix ? binaryInfixRule(name) : binaryFnRule(name)
@@ -129,7 +129,7 @@ export const binary = <T extends BinaryNode, R = void>(
         const result = fn(l, r)
         return [
           result, 
-          rule`${result}`, 
+          process`${result}`, 
           `${kind.toLocaleLowerCase()} ${species.toLocaleLowerCase()}`
         ]
       }
@@ -137,8 +137,8 @@ export const binary = <T extends BinaryNode, R = void>(
       when([isReal, isReal], handled(whenReal, Species.real))(toString),
       when([isComplex, isComplex], handled(whenComplex, Species.complex))(toString),
       when([isBoolean, isBoolean], handled(whenBoolean, Species.boolean))(toString),
-      when<Nil|NaN, TreeNode>([eitherNilOrNaN, _], (_l, _r) => [nan, rule`${nan}`, 'not a number'])(toString),
-      when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, rule`${nan}`, 'not a number'])(toString),
+      when<Nil|NaN, TreeNode>([eitherNilOrNaN, _], (_l, _r) => [nan, resolve`${nan}`, 'not a number'])(toString),
+      when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, resolve`${nan}`, 'not a number'])(toString),
       when([isTreeNode, isTreeNode], (l, r) => create(unit(l), unit(r)))(toString)
     )
     return (...methods: WhenFn[]): BinaryNodeMetaTuple<T, R> => {

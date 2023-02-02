@@ -1,3 +1,12 @@
+@keyframes flash {
+  from {
+    opacity: 0.25;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+
 .normal {
   align-self: end;
   overflow: scroll;
@@ -20,4 +29,9 @@
 
 .history > li:last-child {
   list-style-type: '\03bb. '
+}
+
+.history .caret {
+  font-variant-ligatures: no-common-ligatures;
+  animation: 1s linear infinite alternate-reverse flash;
 }

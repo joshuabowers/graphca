@@ -9,7 +9,7 @@ import {
   isReal, isComplex, isBoolean, isNil, isNaN
 } from "../primitives"
 import { CastFn } from "../utility/typings"
-import { Input, rule } from "../utility/rule"
+import { Input, rule, process, resolve } from "../utility/rule"
 
 export type UnaryNode = TreeNode & {
   readonly clade: Clades.unary,
@@ -62,7 +62,7 @@ export const when = <T extends TreeNode>(
 export type WhenFn = ReturnType<typeof when>
 export type EdgeCaseFns = (when: WhenFn) => (typeof method)[]
 
-const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, rule`${nan}`, 'not a number']
+const whenNilOrNaN: CaseFn<Nil | NaN> = _input => [nan.value, resolve`${nan}`, 'not a number']
 
 export type UnaryNodeMetaTuple<T extends UnaryNode, R> = [
   UnaryFn<T, R>,
@@ -72,11 +72,11 @@ export type UnaryNodeMetaTuple<T extends UnaryNode, R> = [
 
 export const unaryFnRule = (name: string) =>
   <E extends Input>(e: E) => 
-    rule`${name}(${e})`
+    process`${name}(${e})`
 
 export const unaryPostfixRule = (operator: string) =>
   <E extends Input>(e: E) =>
-    rule`(${e})${operator}`
+    process`(${e})${operator}`
 
 export type Handle<I extends TreeNode, O extends TreeNode> = (i: I) => Writer<O>
 export type HandlerRewriteFn = (i: Input) => Rewrite
@@ -88,7 +88,7 @@ export const unary = <T extends UnaryNode, R = void>(
   type Result<U extends TreeNode> = R extends void ? U : (R extends TreeNode ? R : never)
   const create = (expression: Writer<TreeNode>): Action<T> => {
     const n = ({clade: Clades.unary, genus, species, expression}) as T
-    return [n, rule`${n}`, species.toLocaleLowerCase()]
+    return [n, resolve`${n}`, species.toLocaleLowerCase()]
   }
   if(notation === Notation.infix){ throw new Error(`Unknown unary infix operation: ${name}`)}
   const toString = notation === Notation.prefix ? unaryFnRule(name) : unaryPostfixRule(name)
@@ -104,7 +104,7 @@ export const unary = <T extends UnaryNode, R = void>(
         const result = fn(i)
         return [
           result, 
-          handlerRewrite ? handlerRewrite(i) : rule`${result}`, 
+          handlerRewrite ? handlerRewrite(i) : process`${result}`, 
           `${kind.toLocaleLowerCase()} ${species.toLocaleLowerCase()}`
         ]
       }

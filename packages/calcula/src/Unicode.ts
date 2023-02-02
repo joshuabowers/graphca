@@ -39,5 +39,6 @@ export enum Unicode {
   implies = "\u{2192}",
   nor = "\u{2193}",
   xor = "\u{2295}",
-  xnor = "\u{2194}"
+  xnor = "\u{2194}",
+  process = "|"
 }

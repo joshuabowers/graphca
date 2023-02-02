@@ -1,7 +1,7 @@
 import { Writer, unit } from './monads/writer'
 import { TreeNode, Clades, Species, isSpecies } from './utility/tree'
 import { isNil, nil } from './primitives/nil'
-import { rule } from './utility/rule'
+import { rule, process, resolve } from './utility/rule'
 
 export type Variable = TreeNode & {
   readonly clade: Clades.variadic,
@@ -22,16 +22,12 @@ export const variable = (
       name, value
     },
     log: [{
-      input: rule`${name}`, 
-      rewrite: isNil(value) ? rule`${name}` : rule`${value}`,
-      action: isNil(value) ? 'given variable' : 'given variable with value'
+      input: process`${name}`, 
+      rewrite: isNil(value) ? resolve`${name}` : process`${value}`,
+      action: isNil(value) 
+        ? 'referenced variable' : 'referenced variable with value'
     }] 
   })
-  // unit({
-  //   clade: Clades.variadic,
-  //   species: Species.variable,
-  //   name, value
-  // })
 
 export type Scope = Map<string, Writer<Variable>>
 

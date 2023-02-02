@@ -1,6 +1,7 @@
 import { Writer, unit, isWriter } from '../monads/writer'
 import { TreeNode } from './tree'
 import { Scope, isScope, scope } from '../variable'
+import { Unicode } from '../Unicode'
 // import { stringify } from './stringify'
 
 export type Input = string | TreeNode | Writer<TreeNode> | Scope
@@ -23,3 +24,11 @@ export const rule = (strings: TemplateStringsArray, ...nodes: Input[]) =>
   }
 
 export const identityRule = <T extends Input>(t: T) => rule`${t}`
+
+export const process = (strings: TemplateStringsArray, ...nodes: Input[]) =>
+  (stringify: StringifyFn) =>
+    Unicode.process + rule(strings, ...nodes)(stringify)
+
+export const resolve = (strings: TemplateStringsArray, ...nodes: Input[]) =>
+  (stringify: StringifyFn) =>
+    rule(strings, ...nodes)(stringify) + Unicode.process
