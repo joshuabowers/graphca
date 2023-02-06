@@ -1,5 +1,8 @@
 import { unit } from '../monads/writer'
-import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+import { 
+  expectCloseTo, expectWriterTreeNode,
+  realOps, complexOps, variableOps, addOps, multiplyOps, raiseOps
+} from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { ComplexInfinity } from '../primitives/complex'
 import { real, complex, nan } from '../primitives'
@@ -26,10 +29,12 @@ describe('multiply', () => {
         multiply(real(2), real(3)),
         real(6)
       )(
-        ['2', '2', 'given primitive'],
-        ['3', '3', 'given primitive'],
-        ['2 * 3', '6', 'real multiplication'],
-        ['6', '6', 'given primitive']
+        ...multiplyOps(
+          'real multiplication',
+          realOps('2'),
+          realOps('3'),
+          realOps('6')
+        )
       )
     })
 
@@ -38,14 +43,12 @@ describe('multiply', () => {
         multiply(complex([2,3]), complex([3,4])),
         complex([-6,17])
       )(
-        [`2+3${Unicode.i}`, `2+3${Unicode.i}`, 'given primitive'],
-        [`3+4${Unicode.i}`, `3+4${Unicode.i}`, 'given primitive'],
-        [
-          `2+3${Unicode.i} * 3+4${Unicode.i}`,
-          `-6+17${Unicode.i}`,
-          'complex multiplication'
-        ],
-        [`-6+17${Unicode.i}`, `-6+17${Unicode.i}`, 'given primitive']
+        ...multiplyOps(
+          'complex multiplication',
+          complexOps('2', '3'),
+          complexOps('3', '4'),
+          complexOps('-6', '17')
+        )
       )
     })
 
@@ -54,15 +57,15 @@ describe('multiply', () => {
         multiply(complex([2,3]), real(5)),
         complex([10,15])
       )(
-        [`2+3${Unicode.i}`, `2+3${Unicode.i}`, 'given primitive'],
-        ['5', '5', 'given primitive'],
-        ['5', `5+0${Unicode.i}`, 'cast to Complex from Real'],
-        [
-          `2+3${Unicode.i} * 5+0${Unicode.i}`,
-          `10+15${Unicode.i}`,
-          'complex multiplication'
-        ],
-        [`10+15${Unicode.i}`, `10+15${Unicode.i}`, 'given primitive']
+        ...multiplyOps(
+          'complex multiplication',
+          complexOps('2', '3'),
+          [
+            ...realOps('5'),
+            [`5+0${Unicode.i}`, 'cast to Complex from Real']
+          ],
+          complexOps('10', '15')
+        )
       )
     })
 
@@ -71,18 +74,12 @@ describe('multiply', () => {
         multiply(ComplexInfinity, complex([1,0])),
         complex([Infinity, 0])
       )(
-        [Unicode.complexInfinity, Unicode.complexInfinity, 'given primitive'],
-        [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive'],
-        [
-          `${Unicode.complexInfinity} * 1+0${Unicode.i}`,
-          `${Unicode.infinity}+0${Unicode.i}`,
-          'complex multiplication'
-        ],
-        [
-          `${Unicode.infinity}+0${Unicode.i}`,
-          `${Unicode.infinity}+0${Unicode.i}`,
-          'given primitive'
-        ]
+        ...multiplyOps(
+          'complex multiplication',
+          complexOps(Unicode.infinity, 'NaN'),
+          complexOps('1', '0'),
+          complexOps(Unicode.infinity, '0')
+        )
       )
     })
 
@@ -91,22 +88,12 @@ describe('multiply', () => {
         multiply(complex([Infinity, 0]), complex([0, 3])),
         complex([0, Infinity])
       )(
-        [
-          `${Unicode.infinity}+0${Unicode.i}`, 
-          `${Unicode.infinity}+0${Unicode.i}`, 
-          'given primitive'
-        ],
-        [`0+3${Unicode.i}`, `0+3${Unicode.i}`, 'given primitive'],
-        [
-          `${Unicode.infinity}+0${Unicode.i} * 0+3${Unicode.i}`,
-          `0+${Unicode.infinity}${Unicode.i}`,
-          'complex multiplication'
-        ],
-        [
-          `0+${Unicode.infinity}${Unicode.i}`,
-          `0+${Unicode.infinity}${Unicode.i}`,
-          'given primitive'
-        ]
+        ...multiplyOps(
+          'complex multiplication',
+          complexOps(Unicode.infinity, '0'),
+          complexOps('0', '3'),
+          complexOps('0', Unicode.infinity)
+        )
       )
     })
 
@@ -115,22 +102,12 @@ describe('multiply', () => {
         multiply(complex([0, 3]), complex([Infinity, 0])),
         complex([0, Infinity])
       )(
-        [`0+3${Unicode.i}`, `0+3${Unicode.i}`, 'given primitive'],
-        [
-          `${Unicode.infinity}+0${Unicode.i}`, 
-          `${Unicode.infinity}+0${Unicode.i}`, 
-          'given primitive'
-        ],
-        [
-          `0+3${Unicode.i} * ${Unicode.infinity}+0${Unicode.i}`,
-          `0+${Unicode.infinity}${Unicode.i}`,
-          'complex multiplication'
-        ],
-        [
-          `0+${Unicode.infinity}${Unicode.i}`,
-          `0+${Unicode.infinity}${Unicode.i}`,
-          'given primitive'
-        ]
+        ...multiplyOps(
+          'complex multiplication',
+          complexOps('0', '3'),
+          complexOps(Unicode.infinity, '0'),
+          complexOps('0', Unicode.infinity)
+        )
       )
     })
   })
@@ -139,32 +116,38 @@ describe('multiply', () => {
     it('reorders a real right multiplicand to the left', () => {
       expectWriterTreeNode(
         multiply(variable('x'), real(5)),
-        $multiply(unit(real(5).value), unit(variable('x').value))[0]
+        $multiply(real(5), variable('x'))[0]
       )(
-        ['x', 'x', 'given variable'],
-        ['5', '5', 'given primitive'],
-        ['x * 5', '5 * x', 'reorder operands'],
-        ['5 * x', '(5*x)', 'multiplication']
+        ...multiplyOps(
+          'reorder operands',
+          variableOps('x'),
+          realOps('5'),
+          multiplyOps(
+            'created multiplication',
+            realOps('5'),
+            variableOps('x'),
+            []
+          )
+        )
       )
     })
 
     it('reorder a complex right multiplicand to the left', () => {
       expectWriterTreeNode(
         multiply(variable('x'), complex([0, 1])),
-        $multiply(unit(complex([0, 1]).value), unit(variable('x').value))[0]
+        $multiply(complex([0, 1]), variable('x'))[0]
       )(
-        ['x', 'x', 'given variable'],
-        [`0+1${Unicode.i}`, `0+1${Unicode.i}`, 'given primitive'],
-        [
-          `x * 0+1${Unicode.i}`,
-          `0+1${Unicode.i} * x`,
-          'reorder operands'
-        ],
-        [
-          `0+1${Unicode.i} * x`,
-          `(0+1${Unicode.i}*x)`,
-          'multiplication'
-        ]
+        ...multiplyOps(
+          'reorder operands',
+          variableOps('x'),
+          complexOps('0', '1'),
+          multiplyOps(
+            'created multiplication',
+            complexOps('0', '1'),
+            variableOps('x'),
+            []
+          )
+        )
       )
     })
   })
@@ -175,13 +158,12 @@ describe('multiply', () => {
         multiply(real(0), real(Infinity)),
         nan
       )(
-        ['0', '0', 'given primitive'],
-        [Unicode.infinity, Unicode.infinity, 'given primitive'],
-        [
-          `0 * ${Unicode.infinity}`,
-          'NaN',
-          'incalculable'
-        ]
+        ...multiplyOps(
+          'incalculable',
+          realOps('0'),
+          realOps(Unicode.infinity),
+          [['NaN', 'not a number']]
+        )
       )
     })
 
@@ -190,10 +172,12 @@ describe('multiply', () => {
         multiply(real(0), variable('x')),
         real(0)
       )(
-        ['0', '0', 'given primitive'],
-        ['x', 'x', 'given variable'],
-        ['0 * x', '0', 'zero absorption'],
-        ['0', '0', 'given primitive']
+        ...multiplyOps(
+          'zero absorption',
+          realOps('0'),
+          variableOps('x'),
+          realOps('0')
+        )
       )
     })
 
@@ -202,11 +186,17 @@ describe('multiply', () => {
         multiply(variable('x'), real(0)),
         real(0)
       )(
-        ['x', 'x', 'given variable'],
-        ['0', '0', 'given primitive'],
-        ['x * 0', '0 * x', 'reorder operands'],
-        ['0 * x', '0', 'zero absorption'],
-        ['0', '0', 'given primitive']
+        ...multiplyOps(
+          'reorder operands',
+          variableOps('x'),
+          realOps('0'),
+          multiplyOps(
+            'zero absorption',
+            realOps('0'),
+            variableOps('x'),
+            realOps('0')
+          )
+        )
       )
     })
 
@@ -215,10 +205,12 @@ describe('multiply', () => {
         multiply(real(Infinity), variable('x')),
         real(Infinity)
       )(
-        [Unicode.infinity, Unicode.infinity, 'given primitive'],
-        ['x', 'x', 'given variable'],
-        [`${Unicode.infinity} * x`, Unicode.infinity, 'infinite absorption'],
-        [Unicode.infinity, Unicode.infinity, 'given primitive']
+        ...multiplyOps(
+          'infinite absorption',
+          realOps(Unicode.infinity),
+          variableOps('x'),
+          realOps(Unicode.infinity)
+        )
       )
     })
 
@@ -227,15 +219,17 @@ describe('multiply', () => {
         multiply(variable('x'), real(Infinity)),
         real(Infinity)
       )(
-        ['x', 'x', 'given variable'],
-        [Unicode.infinity, Unicode.infinity, 'given primitive'],
-        [
-          `x * ${Unicode.infinity}`, 
-          `${Unicode.infinity} * x`,
-          'reorder operands'
-        ],
-        [`${Unicode.infinity} * x`, Unicode.infinity, 'infinite absorption'],
-        [Unicode.infinity, Unicode.infinity, 'given primitive']
+        ...multiplyOps(
+          'reorder operands',
+          variableOps('x'),
+          realOps(Unicode.infinity),
+          multiplyOps(
+            'infinite absorption',
+            realOps(Unicode.infinity),
+            variableOps('x'),
+            realOps(Unicode.infinity)
+          )
+        )
       )
     })
 
@@ -244,14 +238,12 @@ describe('multiply', () => {
         multiply(real(-Infinity), variable('x')),
         real(-Infinity)
       )(
-        [`-${Unicode.infinity}`, `-${Unicode.infinity}`, 'given primitive'],
-        ['x', 'x', 'given variable'],
-        [
-          `-${Unicode.infinity} * x`,
-          `-${Unicode.infinity}`,
-          'infinite absorption'
-        ],
-        [`-${Unicode.infinity}`, `-${Unicode.infinity}`, 'given primitive'],
+        ...multiplyOps(
+          'infinite absorption',
+          realOps(`-${Unicode.infinity}`),
+          variableOps('x'),
+          realOps(`-${Unicode.infinity}`)
+        )
       )
     })
 
@@ -260,19 +252,17 @@ describe('multiply', () => {
         multiply(variable('x'), real(-Infinity)),
         real(-Infinity)
       )(
-        ['x', 'x', 'given variable'],
-        [`-${Unicode.infinity}`, `-${Unicode.infinity}`, 'given primitive'],
-        [
-          `x * -${Unicode.infinity}`,
-          `-${Unicode.infinity} * x`,
-          'reorder operands'
-        ],
-        [
-          `-${Unicode.infinity} * x`,
-          `-${Unicode.infinity}`,
-          'infinite absorption'
-        ],
-        [`-${Unicode.infinity}`, `-${Unicode.infinity}`, 'given primitive'],
+        ...multiplyOps(
+          'reorder operands',
+          variableOps('x'),
+          realOps(`-${Unicode.infinity}`),
+          multiplyOps(
+            'infinite absorption',
+            realOps(`-${Unicode.infinity}`),
+            variableOps('x'),
+            realOps(`-${Unicode.infinity}`)
+          )
+        )
       )
     })
 
@@ -281,9 +271,12 @@ describe('multiply', () => {
         multiply(real(1), variable('x')),
         variable('x')
       )(
-        ['1', '1', 'given primitive'],
-        ['x', 'x', 'given variable'],
-        ['1 * x', 'x', 'multiplicative identity']
+        ...multiplyOps(
+          'multiplicative identity',
+          realOps('1'),
+          variableOps('x'),
+          variableOps('x')
+        )
       )
     })
 
@@ -292,10 +285,17 @@ describe('multiply', () => {
         multiply(variable('x'), real(1)),
         variable('x')
       )(
-        ['x', 'x', 'given variable'],
-        ['1', '1', 'given primitive'],
-        ['x * 1', '1 * x', 'reorder operands'],
-        ['1 * x', 'x', 'multiplicative identity']
+        ...multiplyOps(
+          'reorder operands',
+          variableOps('x'),
+          realOps('1'),
+          multiplyOps(
+            'multiplicative identity',
+            realOps('1'),
+            variableOps('x'),
+            variableOps('x')
+          )
+        )
       )
     })
   })
@@ -306,32 +306,35 @@ describe('multiply', () => {
         multiply(real(5), multiply(variable('x'), complex([1, 1]))),
         multiply(complex([5, 5]), variable('x'))
       )(
-        ['5', '5', 'given primitive'],
-        ['x', 'x', 'given variable'],
-        [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-        [`x * 1+1${Unicode.i}`, `1+1${Unicode.i} * x`, 'reorder operands'],
-        [
-          `1+1${Unicode.i} * x`,
-          `(1+1${Unicode.i}*x)`,
-          'multiplication'
-        ],
-        [
-          `5 * (1+1${Unicode.i}*x)`, 
-          `(5 * 1+1${Unicode.i}) * x`,
-          'multiplicative associativity'
-        ],
-        ['5', `5+0${Unicode.i}`, 'cast to Complex from Real'],
-        [
-          `5+0${Unicode.i} * 1+1${Unicode.i}`,
-          `5+5${Unicode.i}`,
-          'complex multiplication'
-        ],
-        [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-        [
-          `5+5${Unicode.i} * x`,
-          `(5+5${Unicode.i}*x)`,
-          'multiplication'
-        ]
+        ...multiplyOps(
+          'multiplicative associativity',
+          realOps('5'),
+          multiplyOps(
+            'reorder operands',
+            variableOps('x'),
+            complexOps('1', '1'),
+            multiplyOps(
+              'created multiplication',
+              complexOps('1', '1'),
+              variableOps('x'),
+              []
+            )
+          ),
+          multiplyOps(
+            'created multiplication',
+            multiplyOps(
+              'complex multiplication',
+              [
+                ...realOps('5'),
+                [`5+0${Unicode.i}`, 'cast to Complex from Real']
+              ],
+              complexOps('1', '1'),
+              complexOps('5', '5')
+            ),
+            variableOps('x'),
+            []
+          )
+        )
       )
     })
   })
@@ -342,11 +345,17 @@ describe('multiply', () => {
         multiply(variable('x'), variable('x')),
         square(variable('x'))
       )(
-        ['x', 'x', 'given variable'],
-        ['x', 'x', 'given variable'],
-        ['x * x', 'x ^ 2', 'equivalence: replaced with square'],
-        ['2', '2', 'given primitive'],
-        ['x ^ 2', '(x^2)', 'exponentiation']
+        ...multiplyOps(
+          'equivalence: replaced with square',
+          variableOps('x'),
+          variableOps('x'),
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            realOps('2'),
+            []
+          )
+        )
       )
     })
 
@@ -355,15 +364,27 @@ describe('multiply', () => {
         multiply(variable('x'), square(variable('x'))),
         raise(variable('x'), real(3))
       )(
-        ['x', 'x', 'given variable'],
-        ['x', 'x', 'given variable'],
-        ['2', '2', 'given primitive'],
-        ['x ^ 2', '(x^2)', 'exponentiation'],
-        ['x * (x^2)', 'x ^ (1 + 2)', 'combined like terms'],
-        ['1', '1', 'given primitive'],
-        ['1 + 2', '3', 'real addition'],
-        ['3', '3', 'given primitive'],
-        ['x ^ 3', '(x^3)', 'exponentiation']
+        ...multiplyOps(
+          'combined like terms',
+          variableOps('x'),
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            realOps('2'),
+            []
+          ),
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            addOps(
+              'real addition',
+              realOps('1'),
+              realOps('2'),
+              realOps('3')
+            ),
+            []
+          )
+        )
       )
     })
 
@@ -372,15 +393,27 @@ describe('multiply', () => {
         multiply(square(variable('x')), variable('x')),
         raise(variable('x'), real(3))
       )(
-        ['x', 'x', 'given variable'],
-        ['2', '2', 'given primitive'],
-        ['x ^ 2', '(x^2)', 'exponentiation'],
-        ['x', 'x', 'given variable'],
-        ['(x^2) * x', 'x ^ (1 + 2)', 'combined like terms'],
-        ['1', '1', 'given primitive'],
-        ['1 + 2', '3', 'real addition'],
-        ['3', '3', 'given primitive'],
-        ['x ^ 3', '(x^3)', 'exponentiation']
+        ...multiplyOps(
+          'combined like terms',
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            realOps('2'),
+            []
+          ),
+          variableOps('x'),
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            addOps(
+              'real addition',
+              realOps('1'),
+              realOps('2'),
+              realOps('3')
+            ),
+            []
+          )
+        )
       )
     })
 
@@ -389,16 +422,32 @@ describe('multiply', () => {
         multiply(square(variable('x')), raise(variable('x'), real(3))),
         raise(variable('x'), real(5))
       )(
-        ['x', 'x', 'given variable'],
-        ['2', '2', 'given primitive'],
-        ['x ^ 2', '(x^2)', 'exponentiation'],
-        ['x', 'x', 'given variable'],
-        ['3', '3', 'given primitive'],
-        ['x ^ 3', '(x^3)', 'exponentiation'],
-        ['(x^2) * (x^3)', 'x ^ (2 + 3)', 'combined like terms'],
-        ['2 + 3', '5', 'real addition'],
-        ['5', '5', 'given primitive'],
-        ['x ^ 5', '(x^5)', 'exponentiation']
+        ...multiplyOps(
+          'combined like terms',
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            realOps('2'),
+            []
+          ),
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            realOps('3'),
+            []
+          ),
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            addOps(
+              'real addition',
+              realOps('2'),
+              realOps('3'),
+              realOps('5')
+            ),
+            []
+          )
+        )
       )
     })
   })
@@ -604,9 +653,12 @@ describe('negate', () => {
       negate(variable('x')),
       multiply(real(-1), variable('x'))
     )(
-      ['-1', '-1', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['-1 * x', '(-1*x)', 'multiplication']
+      ...multiplyOps(
+        'created multiplication',
+        realOps('-1'),
+        variableOps('x'),
+        []
+      )
     )
   })
 
@@ -615,10 +667,12 @@ describe('negate', () => {
       negate(real(1)),
       real(-1)
     )(
-      ['-1', '-1', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['-1 * 1', '-1', 'real multiplication'],
-      ['-1', '-1', 'given primitive']
+      ...multiplyOps(
+        'real multiplication',
+        realOps('-1'),
+        realOps('1'),
+        realOps('-1')
+      )
     )
   })
 })
@@ -629,10 +683,12 @@ describe('double', () => {
       double(real(5)),
       real(10)
     )(
-      ['2', '2', 'given primitive'],
-      ['5', '5', 'given primitive'],
-      ['2 * 5', '10', 'real multiplication'],
-      ['10', '10', 'given primitive']
+      ...multiplyOps(
+        'real multiplication',
+        realOps('2'),
+        realOps('5'),
+        realOps('10')
+      )
     )
   })
 
@@ -641,9 +697,12 @@ describe('double', () => {
       double(variable('x')),
       multiply(real(2), variable('x'))
     )(
-      ['2', '2', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['2 * x', '(2*x)', 'multiplication']
+      ...multiplyOps(
+        'created multiplication',
+        realOps('2'),
+        variableOps('x'),
+        []
+      )
     )
   })
 })
@@ -654,13 +713,17 @@ describe('divide', () => {
       divide(real(10), real(5)),
       real(2)
     )(
-      ['10', '10', 'given primitive'],
-      ['5', '5', 'given primitive'],
-      ['-1', '-1', 'given primitive'],
-      ['5 ^ -1', '0.2', 'real exponentiation'],
-      ['0.2', '0.2', 'given primitive'],
-      ['10 * 0.2', '2', 'real multiplication'],
-      ['2', '2', 'given primitive']
+      ...multiplyOps(
+        'real multiplication',
+        realOps('10'),
+        raiseOps(
+          'real exponentiation',
+          realOps('5'),
+          realOps('-1'),
+          realOps('0.2')
+        ),
+        realOps('2')
+      )
     )
   })
 
@@ -669,11 +732,17 @@ describe('divide', () => {
       divide(real(2), variable('x')),
       multiply(real(2), reciprocal(variable('x')))
     )(
-      ['2', '2', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['-1', '-1', 'given primitive'],
-      ['x ^ -1', '(x^-1)', 'exponentiation'],
-      ['2 * (x^-1)', '(2*(x^-1))', 'multiplication']
+      ...multiplyOps(
+        'created multiplication',
+        realOps('2'),
+        raiseOps(
+          'created exponentiation',
+          variableOps('x'),
+          realOps('-1'),
+          []
+        ),
+        []
+      )
     )
   })
 
@@ -682,14 +751,22 @@ describe('divide', () => {
       divide(variable('x'), real(0)),
       real(Infinity)
     )(
-      ['x', 'x', 'given variable'],
-      ['0', '0', 'given primitive'],
-      ['-1', '-1', 'given primitive'],
-      ['0 ^ -1', Unicode.infinity, 'division by zero'],
-      [Unicode.infinity, Unicode.infinity, 'given primitive'],
-      [`x * ${Unicode.infinity}`, `${Unicode.infinity} * x`, 'reorder operands'],
-      [`${Unicode.infinity} * x`, Unicode.infinity, 'infinite absorption'],
-      [Unicode.infinity, Unicode.infinity, 'given primitive'],
+      ...multiplyOps(
+        'reorder operands',
+        variableOps('x'),
+        raiseOps(
+          'division by zero',
+          realOps('0'),
+          realOps('-1'),
+          realOps(Unicode.infinity)
+        ),
+        multiplyOps(
+          'infinite absorption',
+          realOps(Unicode.infinity),
+          variableOps('x'),
+          realOps(Unicode.infinity)
+        )
+      )
     )
   })
 

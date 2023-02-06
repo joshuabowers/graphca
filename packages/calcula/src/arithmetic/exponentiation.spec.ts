@@ -5,7 +5,10 @@ import { multiply } from './multiplication'
 import { raise, reciprocal, square, sqrt, $raise } from './exponentiation'
 import { log, lb, ln, lg } from '../functions/logarithmic'
 import { Unicode } from '../Unicode'
-import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+import { 
+  expectCloseTo, expectWriterTreeNode,
+  realOps, variableOps, raiseOps, logOps, complexOps, multiplyOps
+} from '../utility/expectations'
 
 describe('raise', () => {
   it('computes the value of a real raised to a real', () => {
@@ -37,10 +40,12 @@ describe('raise', () => {
       raise(real(0), variable('x')),
       real(0)
     )(
-      ['0', '0', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['0 ^ x', '0', 'powers of 0'],
-      ['0', '0', 'given primitive']
+      ...raiseOps(
+        'powers of 0',
+        realOps('0'),
+        variableOps('x'),
+        realOps('0')
+      )
     )
   })
 
@@ -49,10 +54,12 @@ describe('raise', () => {
       raise(variable('x'), real(0)),
       real(1)
     )(
-      ['x', 'x', 'given variable'],
-      ['0', '0', 'given primitive'],
-      ['x ^ 0', '1', 'exponent of 0'],
-      ['1', '1', 'given primitive']
+      ...raiseOps(
+        'exponent of 0',
+        variableOps('x'),
+        realOps('0'),
+        realOps('1')
+      )
     )
   })
 
@@ -61,10 +68,12 @@ describe('raise', () => {
       raise(real(1), variable('x')),
       real(1)
     )(
-      ['1', '1', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['1 ^ x', '1', 'powers of 1'],
-      ['1', '1', 'given primitive']
+      ...raiseOps(
+        'powers of 1',
+        realOps('1'),
+        variableOps('x'),
+        realOps('1')
+      )
     )
   })
 
@@ -73,9 +82,12 @@ describe('raise', () => {
       raise(variable('x'), real(1)),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['1', '1', 'given primitive'],
-      ['x ^ 1', 'x', 'exponent of 1']
+      ...raiseOps(
+        'exponent of 1',
+        variableOps('x'),
+        realOps('1'),
+        variableOps('x')
+      )
     )
   })
 
@@ -84,11 +96,17 @@ describe('raise', () => {
       raise(real(2), lb(variable('x'))),
       variable('x')
     )(
-      ['2', '2', 'given primitive'], // Exponent base
-      ['2', '2', 'given primitive'], // Logarithm base
-      ['x', 'x', 'given variable'],
-      ['log(2, x)', 'log(2,x)', 'logarithm'],
-      ['2 ^ log(2,x)', 'x', 'inverse function cancellation']
+      ...raiseOps(
+        'inverse function cancellation',
+        realOps('2'),
+        logOps(
+          'created logarithm',
+          realOps('2'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 
@@ -97,11 +115,22 @@ describe('raise', () => {
       raise(real(Math.E), ln(variable('x'))),
       variable('x')
     )(
-      [Unicode.e, Unicode.e, 'given primitive'],
-      [Unicode.e, Unicode.e, 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [`log(${Unicode.e}, x)`, `log(${Unicode.e},x)`, 'logarithm'],
-      [`${Unicode.e} ^ log(${Unicode.e},x)`, 'x', 'inverse function cancellation']
+      ...raiseOps(
+        'inverse function cancellation',
+        realOps(Unicode.e),
+        logOps(
+          'created logarithm',
+          realOps(Unicode.e),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
+      // [Unicode.e, Unicode.e, 'given primitive'],
+      // [Unicode.e, Unicode.e, 'given primitive'],
+      // ['x', 'x', 'given variable'],
+      // [`log(${Unicode.e}, x)`, `log(${Unicode.e},x)`, 'logarithm'],
+      // [`${Unicode.e} ^ log(${Unicode.e},x)`, 'x', 'inverse function cancellation']
     )
   })
 
@@ -110,11 +139,17 @@ describe('raise', () => {
       raise(real(10), lg(variable('x'))),
       variable('x')
     )(
-      ['10', '10', 'given primitive'],
-      ['10', '10', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['log(10, x)', 'log(10,x)', 'logarithm'],
-      ['10 ^ log(10,x)', 'x', 'inverse function cancellation']
+      ...raiseOps(
+        'inverse function cancellation',
+        realOps('10'),
+        logOps(
+          'created logarithm',
+          realOps('10'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
   
@@ -124,11 +159,17 @@ describe('raise', () => {
       raise(complex([0, 1]), log(complex([0, 1]), variable('x'))),
       variable('x')
     )(
-      [i, i, 'given primitive'],
-      [i, i, 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [`log(${i}, x)`, `log(${i},x)`, 'logarithm'],
-      [`${i} ^ log(${i},x)`, 'x', 'inverse function cancellation']
+      ...raiseOps(
+        'inverse function cancellation',
+        complexOps('0', '1'),
+        logOps(
+          'created logarithm',
+          complexOps('0', '1'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 
@@ -137,13 +178,27 @@ describe('raise', () => {
       raise(raise(variable('x'), variable('y')), variable('z')),
       raise(variable('x'), multiply(variable('y'), variable('z')))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x ^ y', '(x^y)', 'exponentiation'],
-      ['z', 'z', 'given variable'],
-      ['(x^y) ^ z', 'x^(y * z)', 'exponential product'],
-      ['y * z', '(y*z)', 'multiplication'],
-      ['x ^ (y*z)', '(x^(y*z))', 'exponentiation']
+      ...raiseOps(
+        'exponential product',
+        raiseOps(
+          'created exponentiation',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        variableOps('z'),
+        raiseOps(
+          'created exponentiation',
+          variableOps('x'),
+          multiplyOps(
+            'created multiplication',
+            variableOps('y'),
+            variableOps('z'),
+            []
+          ),
+          []
+        )
+      )
     )
   })
 
@@ -155,25 +210,46 @@ describe('raise', () => {
         raise(variable('y'), variable('z'))
       )
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x * y', '(x*y)', 'multiplication'],
-      ['z', 'z', 'given variable'],
-      ['(x*y) ^ z', '(x^z) * (y^z)', 'exponential distribution'],
-      ['x ^ z', '(x^z)', 'exponentiation'],
-      ['y ^ z', '(y^z)', 'exponentiation'],
-      ['(x^z) * (y^z)', '((x^z)*(y^z))', 'multiplication']
+      ...raiseOps(
+        'exponential distribution',
+        multiplyOps(
+          'created multiplication',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        variableOps('z'),
+        multiplyOps(
+          'created multiplication',
+          raiseOps(
+            'created exponentiation',
+            variableOps('x'),
+            variableOps('z'),
+            []
+          ),
+          raiseOps(
+            'created exponentiation',
+            variableOps('y'),
+            variableOps('z'),
+            []
+          ),
+          []
+        )
+      )
     )
   })
   
   it('creates an Exponentiation when given non-constants', () => {
     expectWriterTreeNode(
       raise(variable('x'), real(3)),
-      $raise(unit(variable('x').value), unit(real(3).value))[0]
+      $raise(variable('x'), real(3))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['3', '3', 'given primitive'],
-      ['x ^ 3', '(x^3)', 'exponentiation']
+      ...raiseOps(
+        'created exponentiation',
+        variableOps('x'),
+        realOps('3'),
+        []
+      )
     )
   })
 })
@@ -184,23 +260,29 @@ describe('reciprocal', () => {
       reciprocal(variable('x')),
       raise(variable('x'), real(-1))
     )(
-      ['x', 'x', 'given variable'],
-      ['-1', '-1', 'given primitive'],
-      ['x ^ -1', '(x^-1)', 'exponentiation']
+      ...raiseOps(
+        'created exponentiation',
+        variableOps('x'),
+        realOps('-1'),
+        []
+      )
     )
   })
 
   it('raises complex 1 to -1 correctly', () => {
-    const c1 = `1+0${Unicode.i}`
     expectWriterTreeNode(
       reciprocal(complex([1, 0])),
       complex([1, 0])
     )(
-      [c1, c1, 'given primitive'],
-      ['-1', '-1', 'given primitive'],
-      ['-1', `-1+0${Unicode.i}`, 'cast to Complex from Real'],
-      [`${c1} ^ -1+0${Unicode.i}`, c1, 'complex exponentiation'],
-      [c1, c1, 'given primitive']
+      ...raiseOps(
+        'complex exponentiation',
+        complexOps('1', '0'),
+        [
+          ...realOps('-1'),
+          [`-1+0${Unicode.i}`, 'cast to Complex from Real']
+        ],
+        complexOps('1', '0')
+      )
     )
   })
 
@@ -219,9 +301,12 @@ describe('square', () => {
       square(variable('x')),
       raise(variable('x'), real(2))
     )(
-      ['x', 'x', 'given variable'],
-      ['2', '2', 'given primitive'],
-      ['x ^ 2', '(x^2)', 'exponentiation']
+      ...raiseOps(
+        'created exponentiation',
+        variableOps('x'),
+        realOps('2'),
+        []
+      )
     )
   })
 
@@ -236,9 +321,12 @@ describe('sqrt', () => {
       sqrt(variable('x')),
       raise(variable('x'), real(0.5))
     )(
-      ['x', 'x', 'given variable'],
-      ['0.5', '0.5', 'given primitive'],
-      ['x ^ 0.5', '(x^0.5)', 'exponentiation']
+      ...raiseOps(
+        'created exponentiation',
+        variableOps('x'),
+        realOps('0.5'),
+        []
+      )
     )
   })
 

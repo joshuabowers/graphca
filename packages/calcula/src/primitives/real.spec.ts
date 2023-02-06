@@ -41,4 +41,30 @@ describe('real', () => {
       ['1', 'cast to Real from Boolean']
     )
   })
+
+  describe('of special values', () => {
+    it('correctly logs e', () => {
+      expectWriterTreeNode(real(Math.E), $real(Math.E))(
+        [Unicode.e, 'created real']
+      )
+    })
+
+    it('correctly logs pi', () => {
+      expectWriterTreeNode(real(Math.PI), $real(Math.PI))(
+        [Unicode.pi, 'created real']
+      )
+    })
+
+    it('correctly logs positive infinity', () => {
+      expectWriterTreeNode(real(Infinity), $real(Infinity))(
+        [Unicode.infinity, 'created real']
+      )
+    })
+
+    it('correctly logs negative infinity', () => {
+      expectWriterTreeNode(real(-Infinity), $real(-Infinity))(
+        [`-${Unicode.infinity}`, 'created real']
+      )
+    })
+  })
 })

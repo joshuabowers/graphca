@@ -3,6 +3,7 @@ import { Operation } from "../utility/operation"
 import { Species, TreeNode } from "../utility/tree"
 import { Complex, primitive } from "../closures/primitive"
 import { isNumberTuple } from "../utility/valuePredicates"
+import { numeric } from "../utility/numeric"
 import { Unicode } from "../Unicode"
 export { Complex }
 
@@ -11,7 +12,7 @@ export const [complex, isComplex, $complex] =
   isNumberTuple,
   ([a, b]) => ({a, b}),
   Species.complex,
-  c => `${c.a}+${c.b}${Unicode.i}` // TODO: Make more robust
+  c => `${numeric(c.a)}+${numeric(c.b)}${Unicode.i}` // TODO: Make more robust
 )(
   r => [r.value, 0],
   c => [c.a, c.b],

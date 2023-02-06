@@ -56,9 +56,9 @@ export const expression = (name: string, notation: Notation, left: string, right
 }
 
 export const binaryOps = (
-  name: string, notation: Notation, species: Species, action: string,
-  left: Op[], right: Op[], result: Op[]
-): Op[] => [
+  name: string, notation: Notation, species: Species
+) =>
+  (action: string, left: Op[], right: Op[], result: Op[]): Op[] => [
   [expression(name, notation, left[0][0], right[0][0]), `identified ${species.toLocaleLowerCase()}`],
   [expression(name, notation, '|'+left[0][0], right[0][0]), 'processing left operand'],
   ...left,
@@ -69,8 +69,7 @@ export const binaryOps = (
   ...result
 ]
 
-export const addOps = (action: string, left: Op[], right: Op[], result: Op[]) =>
-  binaryOps('+', Notation.infix, Species.add, action, left, right, result)
-
-export const multiplyOps = (action: string, left: Op[], right: Op[], result: Op[]) =>
-  binaryOps('*', Notation.infix, Species.multiply, action, left, right, result)
+export const addOps = binaryOps('+', Notation.infix, Species.add)
+export const multiplyOps = binaryOps('*', Notation.infix, Species.multiply)
+export const raiseOps = binaryOps('^', Notation.infix, Species.raise)
+export const logOps = binaryOps('log', Notation.prefix, Species.log)

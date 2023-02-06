@@ -1,6 +1,7 @@
 import { Species } from '../utility/tree'
 import { Real, primitive } from '../closures/primitive'
 import { isNumber } from '../utility/valuePredicates'
+import { numeric } from '../utility/numeric'
 export { Real }
 
 export const [real, isReal, $real] = 
@@ -8,7 +9,7 @@ export const [real, isReal, $real] =
   isNumber,
   value => ({value}),
   Species.real,
-  r => r.value.toString()
+  r => numeric(r.value)
 )(
   r => r.value,
   c => c.a,
