@@ -1,7 +1,7 @@
 import { unit } from "../monads/writer"
 import { Genera, Species, Notation, isGenus } from "../utility/tree"
 import { real, complex, boolean } from "../primitives"
-import { UnaryNode, unary, unaryFnRule } from "../closures/unary"
+import { UnaryNode, unary } from "../closures/unary"
 import { 
   add, subtract, multiply, divide, reciprocal, square, sqrt 
 } from "../arithmetic"
@@ -26,12 +26,12 @@ export type ArcusCosecant = Arcus<Species.acsc>
 export type ArcusSecant = Arcus<Species.asec>
 export type ArcusCotangent = Arcus<Species.acot>
 
-export const acosRule = unaryFnRule('acos')
-export const asinRule = unaryFnRule('asin')
-export const atanRule = unaryFnRule('atan')
-export const asecRule = unaryFnRule('asec')
-export const acscRule = unaryFnRule('acsc')
-export const acotRule = unaryFnRule('acot')
+// export const acosRule = unaryFnRule('acos')
+// export const asinRule = unaryFnRule('asin')
+// export const atanRule = unaryFnRule('atan')
+// export const asecRule = unaryFnRule('asec')
+// export const acscRule = unaryFnRule('acsc')
+// export const acotRule = unaryFnRule('acot')
 
 const i = complex([0, 1])
 const halfPi = real(Math.PI/2)
@@ -72,7 +72,7 @@ export const [atan, isArcusTangent, $atan] = unary<ArcusTangent>(
 
 export const [asec, isArcusSecant, $asec] = unary<ArcusSecant>(
   'asec', Notation.prefix, Species.asec, Genera.arcus,
-  t => rule`acos(${t} ^ -1)`
+  // t => rule`acos(${t} ^ -1)`
 )(
   r => acos(reciprocal(unit(r))),
   c => acos(reciprocal(unit(c))),
@@ -81,7 +81,7 @@ export const [asec, isArcusSecant, $asec] = unary<ArcusSecant>(
 
 export const [acsc, isArcusCosecant, $acsc] = unary<ArcusCosecant>(
   'acsc', Notation.prefix, Species.acsc, Genera.arcus,
-  t => rule`asin(${t} ^ -1)`
+  // t => rule`asin(${t} ^ -1)`
 )(
   r => asin(reciprocal(unit(r))),
   c => asin(reciprocal(unit(c))),
@@ -90,7 +90,7 @@ export const [acsc, isArcusCosecant, $acsc] = unary<ArcusCosecant>(
 
 export const [acot, isArcusCotangent, $acot] = unary<ArcusCotangent>(
   'acot', Notation.prefix, Species.acot, Genera.arcus,
-  t => rule`(${Unicode.pi} / 2) - atan(${t})`
+  // t => rule`(${Unicode.pi} / 2) - atan(${t})`
 )(
   r => subtract(halfPi, atan(unit(r))), 
   c => subtract(halfPi, atan(unit(c))), // atan(reciprocal(unit(c))), 

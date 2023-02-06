@@ -1,5 +1,6 @@
 import { method, multi, Multi } from '@arrows/multimethod'
 import { Writer } from '../monads/writer'
+import { Operation } from './operation'
 import { TreeNode, Species, isSpecies, TreeNodeGuardFn } from './tree'
 import { Real, Complex, Boolean, Nil, NaN } from '../primitives'
 import { UnaryNode, isUnary } from '../closures/unary'
@@ -7,7 +8,7 @@ import { BinaryNode, isBinary } from '../closures/binary'
 import { Variable } from '../variable'
 
 export const areSpeciesEqual = <T extends TreeNode, U extends TreeNode>(
-  t: Writer<T>, u: Writer<U>
+  t: Writer<T, Operation>, u: Writer<U, Operation>
 ) => t.value.species === u.value.species
 
 type CaseOfPredicate<T extends TreeNode> = (left: T, right: T) => boolean
@@ -16,13 +17,13 @@ const caseOf = <T extends TreeNode>(species: Species | TreeNodeGuardFn<T>) => {
   return (fn: CaseOfPredicate<T> | boolean) =>
     method(
       is ? [is, is] : [species, species], 
-      (l: Writer<T>, r: Writer<T>) => 
+      (l: Writer<T, Operation>, r: Writer<T, Operation>) => 
         areSpeciesEqual(l, r) && (typeof fn === 'boolean' ? fn : fn(l.value, r.value)
       )
     )
 }
 
-export type EqualsFn<T extends TreeNode> = (left: Writer<T>, right: Writer<T>) => boolean
+export type EqualsFn<T extends TreeNode> = (left: Writer<T, Operation>, right: Writer<T, Operation>) => boolean
 export type DeepEqualsFn = Multi
   & EqualsFn<Real>
   & EqualsFn<Complex>
@@ -40,7 +41,7 @@ export const deepEquals: DeepEqualsFn = multi(
   caseOf<Boolean>(Species.boolean)((l, r) => l.value === r.value),
   caseOf<Nil>(Species.nil)(true),
   caseOf<NaN>(Species.nan)(false),
-  caseOf<Variable>(Species.variable)((l, r) => l.name === r.name && deepEquals(l.value, r.value)),
+  caseOf<Variable>(Species.variable)((l, r) => l.name === r.name && deepEquals(l.binding, r.binding)),
   caseOf<UnaryNode>(isUnary)((l, r) => deepEquals(l.expression, r.expression)),
   caseOf<BinaryNode>(isBinary)(
     (l, r) => deepEquals(l.left, r.left) && deepEquals(l.right, r.right)
@@ -48,14 +49,14 @@ export const deepEquals: DeepEqualsFn = multi(
   method(false)
 )
 
-export const isValue = <T extends TreeNode>(expected: Writer<T>) =>
-  <U extends TreeNode>(actual: Writer<U>) =>
+export const isValue = <T extends TreeNode>(expected: Writer<T, Operation>) =>
+  <U extends TreeNode>(actual: Writer<U, Operation>) =>
     deepEquals(expected, actual)
 
 export type WalkFn<T extends TreeNode, R extends TreeNode = T> = 
-  (t: Writer<T>) => Writer<R>
+  (t: Writer<T, Operation>) => Writer<R, Operation>
 
 export const deepEqualsAt = <L extends TreeNode, R extends TreeNode>(
   leftWalk: WalkFn<L, TreeNode>,
   rightWalk: WalkFn<R, TreeNode>
-) => (l: Writer<L>, r: Writer<R>) => deepEquals(leftWalk(l), rightWalk(r))
+) => (l: Writer<L, Operation>, r: Writer<R, Operation>) => deepEquals(leftWalk(l), rightWalk(r))

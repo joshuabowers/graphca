@@ -24,9 +24,12 @@ describe('cos', () => {
       cos(real(0.5)),
       real(Math.cos(0.5))
     )(
-      ['0.5', '0.5', 'given primitive'],
-      ['cos(0.5)', v, 'real cosine'],
-      [v, v, 'given primitive']
+      ['cos(0.5)', 'identified cosine'],
+      ['cos(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['cos(0.5|)', 'processed argument'],
+      ['cos(0.5)', 'real cosine'],
+      [v, 'created real']
     )
   })
 
@@ -39,8 +42,11 @@ describe('cos', () => {
       cos(variable('x')),
       $cos(unit(variable('x').value))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['cos(x)', 'cos(x)', 'cosine']
+      ['cos(x)', 'identified cosine'],
+      ['cos(|x)', 'processing argument'],
+      ['x', 'referenced variable'],
+      ['cos(x|)', 'processed argument'],
+      ['cos(x)', 'created cosine']
     )
   })
 })
@@ -61,9 +67,12 @@ describe('sin', () => {
       sin(real(0.5)),
       real(Math.sin(0.5))
     )(
-      ['0.5', '0.5', 'given primitive'],
-      ['sin(0.5)', v, 'real sine'],
-      [v, v, 'given primitive']
+      ['sin(0.5)', 'identified sine'],
+      ['sin(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['sin(0.5|)', 'processed argument'],
+      ['sin(0.5)', 'real sine'],
+      [v, 'created real']
     )
   })
 
@@ -76,8 +85,11 @@ describe('sin', () => {
       sin(variable('x')),
       $sin(unit(variable('x').value))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['sin(x)', 'sin(x)', 'sine']
+      ['sin(x)', 'identified sine'],
+      ['sin(|x)', 'processing argument'],
+      ['x', 'referenced variable'],
+      ['sin(x|)', 'processed argument'],
+      ['sin(x)', 'created sine']
     )
   })
 })
@@ -98,9 +110,12 @@ describe('tan', () => {
       tan(real(0.5)),
       real(Math.tan(0.5))
     )(
-      ['0.5', '0.5', 'given primitive'],
-      ['tan(0.5)', v, 'real tangent'],
-      [v, v, 'given primitive']
+      ['tan(0.5)', 'identified tangent'],
+      ['tan(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['tan(0.5|)', 'processed argument'],
+      ['tan(0.5)', 'real tangent'],
+      [v, 'created real']
     )
   })
 
@@ -113,8 +128,11 @@ describe('tan', () => {
       tan(variable('x')),
       $tan(unit(variable('x').value))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['tan(x)', 'tan(x)', 'tangent']
+      ['tan(x)', 'identified tangent'],
+      ['tan(|x)', 'processing argument'],
+      ['x', 'referenced variable'],
+      ['tan(x|)', 'processed argument'],
+      ['tan(x)', 'created tangent']
     )
   })
 })
@@ -137,13 +155,24 @@ describe('sec', () => {
       sec(real(0.5)),
       real(1 / Math.cos(0.5))
     )(
-      ['0.5', '0.5', 'given primitive'],
-      ['sec(0.5)', 'cos(0.5) ^ -1', 'real secant'],
-      ['cos(0.5)', w, 'real cosine'],
-      [w, w, 'given primitive'],
-      ['-1', '-1', 'given primitive'],
-      [`${w} ^ -1`, v, 'real exponentiation'],
-      [v, v, 'given primitive']
+      ['sec(0.5)', 'identified secant'],
+      ['sec(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['sec(0.5|)', 'processed argument'],
+      ['sec(0.5)', 'real secant'],
+      ['(cos(0.5)^-1)', 'identified exponentiation'],
+      ['(|cos(0.5)^-1)', 'processing left operand'],
+      ['cos(0.5)', 'identified cosine'],
+      ['cos(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['cos(0.5|)', 'processed argument'],
+      ['cos(0.5)', 'real cosine'],
+      [w, 'created real'],
+      [`(${w}^|-1)`, 'processed left operand; processing right operand'],
+      ['-1', 'created real'],
+      [`(${w}^-1|)`, 'processed right operand'],
+      [`(${w}^-1)`, 'real exponentiation'],
+      [v, 'created real']
     )
   })
 
@@ -156,8 +185,11 @@ describe('sec', () => {
       sec(variable('x')),
       $sec(unit(variable('x').value))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['sec(x)', 'sec(x)', 'secant']
+      ['sec(x)', 'identified secant'],
+      ['sec(|x)', 'processing argument'],
+      ['x', 'referenced variable'],
+      ['sec(x|)', 'processed argument'],
+      ['sec(x)', 'created secant']
     )
   })
 })
@@ -180,13 +212,24 @@ describe('csc', () => {
       csc(real(0.5)),
       real(1 / Math.sin(0.5))
     )(
-      ['0.5', '0.5', 'given primitive'],
-      ['csc(0.5)', 'sin(0.5) ^ -1', 'real cosecant'],
-      ['sin(0.5)', w, 'real sine'],
-      [w, w, 'given primitive'],
-      ['-1', '-1', 'given primitive'],
-      [`${w} ^ -1`, v, 'real exponentiation'],
-      [v, v, 'given primitive']
+      ['csc(0.5)', 'identified cosecant'],
+      ['csc(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['csc(0.5|)', 'processed argument'],
+      ['csc(0.5)', 'real cosecant'],
+      ['(sin(0.5)^-1)', 'identified exponentiation'],
+      ['(|sin(0.5)^-1)', 'processing left operand'],
+      ['sin(0.5)', 'identified sine'],
+      ['sin(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['sin(0.5|)', 'processed argument'],
+      ['sin(0.5)', 'real sine'],
+      [w, 'created real'],
+      [`(${w}^|-1)`, 'processed left operand; processing right operand'],
+      ['-1', 'created real'],
+      [`(${w}^-1|)`, 'processed right operand'],
+      [`(${w}^-1)`, 'real exponentiation'],
+      [v, 'created real']
     )
   })
 
@@ -199,8 +242,11 @@ describe('csc', () => {
       csc(variable('x')),
       $csc(unit(variable('x').value))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['csc(x)', 'csc(x)', 'cosecant']
+      ['csc(x)', 'identified cosecant'],
+      ['csc(|x)', 'processing argument'],
+      ['x', 'referenced variable'],
+      ['csc(x|)', 'processed argument'],
+      ['csc(x)', 'created cosecant']
     )
   })
 })
@@ -222,13 +268,24 @@ describe('cot', () => {
       cot(real(0.5)),
       real(1 / Math.tan(0.5))
     )(
-      ['0.5', '0.5', 'given primitive'],
-      ['cot(0.5)', 'tan(0.5) ^ -1', 'real cotangent'],
-      ['tan(0.5)', w, 'real tangent'],
-      [w, w, 'given primitive'],
-      ['-1', '-1', 'given primitive'],
-      [`${w} ^ -1`, v, 'real exponentiation'],
-      [v, v, 'given primitive']
+      ['cot(0.5)', 'identified cotangent'],
+      ['cot(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['cot(0.5|)', 'processed argument'],
+      ['cot(0.5)', 'real cotangent'],
+      ['(tan(0.5)^-1)', 'identified exponentiation'],
+      ['(|tan(0.5)^-1)', 'processing left operand'],
+      ['tan(0.5)', 'identified tangent'],
+      ['tan(|0.5)', 'processing argument'],
+      ['0.5', 'created real'],
+      ['tan(0.5|)', 'processed argument'],
+      ['tan(0.5)', 'real tangent'],
+      [w, 'created real'],
+      [`(${w}^|-1)`, 'processed left operand; processing right operand'],
+      ['-1', 'created real'],
+      [`(${w}^-1|)`, 'processed right operand'],
+      [`(${w}^-1)`, 'real exponentiation'],
+      [v, 'created real']
     )
   })
 
@@ -241,8 +298,11 @@ describe('cot', () => {
       cot(variable('x')),
       $cot(unit(variable('x').value))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['cot(x)', 'cot(x)', 'cotangent']
+      ['cot(x)', 'identified cotangent'],
+      ['cot(|x)', 'processing argument'],
+      ['x', 'referenced variable'],
+      ['cot(x|)', 'processed argument'],
+      ['cot(x)', 'created cotangent']
     )
   })
 })

@@ -56,7 +56,7 @@ export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Bool
     ]
   ),
   when<TreeNode, AlternativeDenial>(
-    (l, r) => isAlternativeDenial(r) && deepEquals(l, r.value.left),
+    (l, r) => isAlternativeDenial(r) && deepEquals(l, r.result.left),
     (l, r) => [
       implies(unit(l), r.right), 
       rule`${l} ${Unicode.implies} ${r.right}`,
@@ -64,7 +64,7 @@ export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Bool
     ]
   ),
   when<TreeNode, AlternativeDenial>(
-    (l, r) => isAlternativeDenial(r) && deepEquals(l, r.value.right),
+    (l, r) => isAlternativeDenial(r) && deepEquals(l, r.result.right),
     (l, r) => [
       implies(unit(l), r.left), 
       rule`${l} ${Unicode.implies} ${r.left}`,
@@ -80,11 +80,11 @@ export const [nand, isAlternativeDenial, $nand] = binary<AlternativeDenial, Bool
     ]
   ),
   when(
-    (l, r) => isComplement(r) && deepEquals(l, r.value.expression),
+    (l, r) => isComplement(r) && deepEquals(l, r.result.expression),
     [boolean(true), rule`${boolean(true)}`, 'alternative deniable annihilator']
   ),
   when(
-    (l, r) => isComplement(l) && deepEquals(l.value.expression, r),
+    (l, r) => isComplement(l) && deepEquals(l.result.expression, r),
     [boolean(true), rule`${boolean(true)}`, 'alternative deniable annihilator']
   )
 )

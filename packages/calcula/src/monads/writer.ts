@@ -1,32 +1,30 @@
-export type StringifyFn = (writer: Writer<unknown>) => string
-export type Rewrite = (stringify: StringifyFn) => string
-
-export interface Operation {
-  // inputs: unknown[],
-  input: Rewrite,
-  rewrite: Rewrite,
-  action: string
-}
-
-export interface Writer<T> {
-  value: T,
+export interface Writer<Value, Operation> {
+  value: Value,
   log: Operation[]
 }
 
-export type WriterFn<T, U = T> = (value: T) => Writer<U>
-export type Action<T> = [T|Writer<T>, Rewrite, string]
-export type CaseFn<I, O = I> = (input: I) => Action<O>
+export type WriterFn<V, O, N = V> = (result: V) => Writer<N, O>
 
-export const unit = <T>(value: T): Writer<T> => ({value, log: []})
+export const unit = <V, O>(result: V): Writer<V, O> => ({value: result, log: []})
 
-export const bind = <T, U = T>(writer: Writer<T>, transform: WriterFn<T, U>): Writer<U> => {
-  const {value, log} = writer
-  const {value: result, log: updates} = transform(value)
+export const bind = <V, O, N = V>(
+  writer: Writer<V, O>, 
+  transform: WriterFn<V, O, N>
+): Writer<N, O> => {
+  const {value: current, log} = writer
+  const {value: result, log: updates} = transform(current)
   return {value: result, log: [...log, ...updates]}
 }
 
-export const pipe = <T>(writer: Writer<T>, ...transforms: WriterFn<T>[]): Writer<T> =>
+export const pipe = <V, O>(writer: Writer<V, O>, ...transforms: WriterFn<V, O>[]): Writer<V, O> =>
   transforms.reduce(bind, writer)
 
-export const isWriter = <T>(obj: unknown): obj is Writer<T> =>
+export const isWriter = <V, O>(obj: unknown): obj is Writer<V, O> =>
   typeof obj === 'object' && ('value' in (obj ?? {})) && ('log' in (obj ?? {}))
+
+export const writer = <V, O>(
+  value: V|Writer<V, O>, ...operations: O[]
+): Writer<V, O> => 
+  isWriter(value) 
+    ? ({value: value.value, log: [...operations, ...value.log]})
+    : ({value, log: [...operations]})

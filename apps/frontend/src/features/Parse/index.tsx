@@ -25,8 +25,8 @@ export const Parse = (props: ParseProps) => {
     const isPlotted = plotted.find(item => item.enteredAt === props.enteredAt)
     const canPlot = !(isNil(output)
       || isBoolean(output)
-      || (isReal(output) && !Number.isFinite(output.value.value))
-      || (isComplex(output) && (!Number.isFinite(output.value.a) || !Number.isFinite(output.value.b))))
+      || (isReal(output) && !Number.isFinite(output.result.value))
+      || (isComplex(output) && (!Number.isFinite(output.result.a) || !Number.isFinite(output.result.b))))
     const showDerivation = useAppSelector(state => state.terminal.history.find(item => item.enteredAt === props.enteredAt)?.showDerivation || false)
 
     const plot = {expression: asString, enteredAt: props.enteredAt}

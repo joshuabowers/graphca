@@ -19,7 +19,7 @@ import { unaryFnRule } from "../closures/unary"
 
 export type Polygamma = Binary<Species.polygamma>
 
-const isNegative = (e: Writer<TreeNode>) => isReal(e) && e.value.value < 0
+const isNegative = (e: Writer<TreeNode>) => isReal(e) && e.result.value < 0
 
 type IsSmallFn = Multi 
   & ((r: Writer<Real>) => boolean) 
@@ -28,8 +28,8 @@ type IsSmallFn = Multi
 
 // 10 is arbitrary, but inputs around that comport with Wolfram-Alpha
 const isSmall: IsSmallFn = multi(
-  method(isReal, (r: Writer<Real>) => r.value.value < 10),
-  method(isComplex, (c: Writer<Complex>) => abs(c).value.a < 10),
+  method(isReal, (r: Writer<Real>) => r.result.value < 10),
+  method(isComplex, (c: Writer<Complex>) => abs(c).result.a < 10),
   method(false)
 )
 
@@ -88,7 +88,7 @@ const calculatePolygamma = (
 
 const polygammaReflection = (m: Writer<TreeNode>, z: Writer<TreeNode>) => {
   const pi = real(Math.PI)
-  const order = real(isReal(m) ? m.value.value : isComplex(m) ? m.value.a : 0)
+  const order = real(isReal(m) ? m.result.value : isComplex(m) ? m.result.a : 0)
   const d = differentiate(order, cot(multiply(pi, variable('x'))))
   return subtract(
     multiply(

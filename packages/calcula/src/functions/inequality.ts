@@ -40,7 +40,7 @@ export const [lessThan, isLessThan, $lessThan] = binary<LessThan, Boolean>(
   '<', Notation.infix, Species.lessThan, Genera.inequalities
 )(
   (l, r) => boolean(l.value < r.value),
-  (l, r) => boolean(abs(unit(l)).value.a < abs(unit(r)).value.a),
+  (l, r) => boolean(abs(unit(l)).result.a < abs(unit(r)).result.a),
   (l, r) => boolean(l.value < r.value)
 )()
 
@@ -48,7 +48,7 @@ export const [greaterThan, isGreaterThan, $greaterThan] = binary<GreaterThan, Bo
   '>', Notation.infix, Species.greaterThan, Genera.inequalities
 )(
   (l, r) => boolean(l.value > r.value),
-  (l, r) => boolean(abs(unit(l)).value.a > abs(unit(r)).value.a),
+  (l, r) => boolean(abs(unit(l)).result.a > abs(unit(r)).result.a),
   (l, r) => boolean(l.value > r.value)
 )()
 
@@ -56,7 +56,7 @@ export const [lessThanEquals, isLessThanEquals, $lessThanEquals] = binary<LessTh
   '<=', Notation.infix, Species.lessThanEquals, Genera.inequalities
 )(
   (l, r) => boolean(l.value <= r.value),
-  (l, r) => boolean(abs(unit(l)).value.a <= abs(unit(r)).value.a),
+  (l, r) => boolean(abs(unit(l)).result.a <= abs(unit(r)).result.a),
   (l, r) => boolean(l.value <= r.value)
 )()
 
@@ -64,6 +64,6 @@ export const [greaterThanEquals, isGreaterThanEquals, $greaterThanEquals] = bina
   '>=', Notation.infix, Species.greaterThanEquals, Genera.inequalities
 )(
   (l, r) => boolean(l.value >= r.value),
-  (l, r) => boolean(abs(unit(l)).value.a >= abs(unit(r)).value.a),
+  (l, r) => boolean(abs(unit(l)).result.a >= abs(unit(r)).result.a),
   (l, r) => boolean(l.value >= r.value)
 )()

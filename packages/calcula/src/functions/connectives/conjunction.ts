@@ -42,27 +42,27 @@ export const [and, isConjunction, $and] = binary<Conjunction, Boolean>(
     (l, _r) => [unit(l), rule`${l}`, 'conjunctive idempotency']
   ),
   when(
-    (l, r) => isDisjunction(r) && deepEquals(l, r.value.left),
+    (l, r) => isDisjunction(r) && deepEquals(l, r.result.left),
     (l, _r) => [unit(l), rule`${l}`, 'conjunctive absorption']
   ),
   when(
-    (l, r) => isDisjunction(r) && deepEquals(l, r.value.right),
+    (l, r) => isDisjunction(r) && deepEquals(l, r.result.right),
     (l, _r) => [unit(l), rule`${l}`, 'conjunctive absorption']
   ),
   when(
-    (l, r) => isDisjunction(l) && deepEquals(l.value.left, r),
+    (l, r) => isDisjunction(l) && deepEquals(l.result.left, r),
     (_l, r) => [unit(r), rule`${r}`, 'conjunctive absorption']
   ),
   when(
-    (l, r) => isDisjunction(l) && deepEquals(l.value.right, r),
+    (l, r) => isDisjunction(l) && deepEquals(l.result.right, r),
     (_l, r) => [unit(r), rule`${r}`, 'conjunctive absorption']
   ),
   when(
-    (l, r) => isComplement(r) && deepEquals(l, r.value.expression),
+    (l, r) => isComplement(r) && deepEquals(l, r.result.expression),
     [boolean(false), rule`${boolean(false)}`, 'contradiction']
   ),
   when(
-    (l, r) => isComplement(l) && deepEquals(l.value.expression, r),
+    (l, r) => isComplement(l) && deepEquals(l.result.expression, r),
     [boolean(false), rule`${boolean(false)}`, 'contradiction']
   )
 )

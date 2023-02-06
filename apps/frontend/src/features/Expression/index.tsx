@@ -26,7 +26,7 @@ type ComponentizeFn = Multi & ((expression: W.Writer<TreeNode>) => JSX.Element)
 
 const when = <T extends TreeNode>(
   guard: TreeNodeGuardFn<T>, fn: AsComponent<T> | AsBoolean<T>
-) => method(guard, (e: W.Writer<T>) => fn(e.value))
+) => method(guard, (e: W.Writer<T>) => fn(e.result))
 
 const specialNumbers = new Map([
   [Number.POSITIVE_INFINITY.toString(), Unicode.infinity],

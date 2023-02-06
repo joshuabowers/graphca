@@ -44,27 +44,27 @@ export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
     (l, _r) => [unit(l), rule`${l}`, 'disjunctive idempotency']
   ),
   when(
-    (l, r) => isConjunction(r) && deepEquals(l, r.value.left),
+    (l, r) => isConjunction(r) && deepEquals(l, r.result.left),
     (l, _r) => [unit(l), rule`${l}`, 'disjunctive absorption']
   ),
   when(
-    (l, r) => isConjunction(r) && deepEquals(l, r.value.right),
+    (l, r) => isConjunction(r) && deepEquals(l, r.result.right),
     (l, _r) => [unit(l), rule`${l}`, 'disjunctive absorption']
   ),
   when(
-    (l, r) => isConjunction(l) && deepEquals(l.value.left, r),
+    (l, r) => isConjunction(l) && deepEquals(l.result.left, r),
     (_l, r) => [unit(r), rule`${r}`, 'disjunctive absorption']
   ),
   when(
-    (l, r) => isConjunction(l) && deepEquals(l.value.right, r),
+    (l, r) => isConjunction(l) && deepEquals(l.result.right, r),
     (_l, r) => [unit(r), rule`${r}`, 'disjunctive absorption']
   ),
   when(
-    (l, r) => isComplement(r) && deepEquals(l, r.value.expression),
+    (l, r) => isComplement(r) && deepEquals(l, r.result.expression),
     [boolean(true), rule`${boolean(true)}`, 'disjunctive complementation']
   ),
   when(
-    (l, r) => isComplement(l) && deepEquals(l.value.expression, r),
+    (l, r) => isComplement(l) && deepEquals(l.result.expression, r),
     [boolean(true), rule`${boolean(true)}`, 'disjunctive complementation']
   ),
   when<Complement, TreeNode>(

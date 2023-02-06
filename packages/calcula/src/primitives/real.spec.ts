@@ -17,28 +17,28 @@ describe('$real', () => {
 describe('real', () => {
   it('returns a Writer<Real> for a number input', () => {
     expectWriterTreeNode(real(5), $real(5))(
-      ['5', '5', 'given primitive']
+      ['5', 'created real']
     )
   })
 
   it('returns a Writer<Real> for a real input', () => {
     expectWriterTreeNode(real(real(5)), $real(5))(
-      ['5', '5', 'given primitive'],
-      ['5', '5', 'copied Real']
+      ['5', 'created real'],
+      ['5', 'copied Real']
     )
   })
 
   it('returns a Writer<Real> for a complex input', () => {
     expectWriterTreeNode(real(complex([1, 2])), $real(1))(
-      [`1+2${Unicode.i}`, `1+2${Unicode.i}`, 'given primitive'],
-      [`1+2${Unicode.i}`, '1', 'cast to Real from Complex']
+      [`1+2${Unicode.i}`, 'created complex'],
+      ['1', 'cast to Real from Complex']
     )
   })
 
   it('returns a Writer<Real> for a boolean input', () => {
     expectWriterTreeNode(real(boolean(true)), $real(1))(
-      ['true', 'true', 'given primitive'],
-      ['true', '1', 'cast to Real from Boolean']
+      ['true', 'created boolean'],
+      ['1', 'cast to Real from Boolean']
     )
   })
 })

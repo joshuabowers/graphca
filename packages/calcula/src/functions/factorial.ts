@@ -24,15 +24,15 @@ export const [factorial, isFactorial, $factorial] = unary<Factorial>(
   _b => boolean(true),
 )(
   when(
-    t => isReal(t) && isNegativeInteger(t.value.value), 
+    t => isReal(t) && isNegativeInteger(t.result.value), 
     [ComplexInfinity, rule`${ComplexInfinity}`, 'singularity'])
   ,
   when(
-    t => isComplex(t) && isNegativeInteger(t.value.a) && t.value.b === 0, 
+    t => isComplex(t) && isNegativeInteger(t.result.a) && t.result.b === 0, 
     [ComplexInfinity, rule`${ComplexInfinity}`, 'singularity']
   ),
   when(
-    t => isReal(t) && !Number.isInteger(t.value.value),
+    t => isReal(t) && !Number.isInteger(t.result.value),
     r => [
       gamma(add(unit(r), real(1))), 
       rule`${Unicode.gamma}(${r} + ${real(1)})`, 
@@ -40,7 +40,7 @@ export const [factorial, isFactorial, $factorial] = unary<Factorial>(
     ]
   ),
   when(
-    t => isComplex(t) && (t.value.b !== 0 || !Number.isInteger(t.value.a)),
+    t => isComplex(t) && (t.result.b !== 0 || !Number.isInteger(t.result.a)),
     c => [
       gamma(add(unit(c), complex([1, 0]))), 
       rule`${Unicode.gamma}(${c} + ${complex([1, 0])})`,

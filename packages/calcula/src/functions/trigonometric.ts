@@ -1,7 +1,7 @@
 import { unit } from "../monads/writer"
 import { Genera, Species, Notation, isGenus } from "../utility/tree"
 import { real, complex, boolean } from "../primitives"
-import { UnaryNode, unary, unaryFnRule } from "../closures/unary"
+import { UnaryNode, unary } from "../closures/unary"
 import { reciprocal } from "../arithmetic"
 import { rule } from "../utility/rule"
 
@@ -21,13 +21,6 @@ export type Tangent = Trigonometric<Species.tan>
 export type Cosecant = Trigonometric<Species.csc>
 export type Secant = Trigonometric<Species.sec>
 export type Cotangent = Trigonometric<Species.cot>
-
-export const cosRule = unaryFnRule('cos')
-export const sinRule = unaryFnRule('sin')
-export const tanRule = unaryFnRule('tan')
-export const secRule = unaryFnRule('sec')
-export const cscRule = unaryFnRule('csc')
-export const cotRule = unaryFnRule('cot')
 
 export const [sin, isSine, $sin] = unary<Sine>(
   'sin', Notation.prefix, Species.sin, Genera.trigonometric
@@ -67,27 +60,24 @@ export const [tan, isTangent, $tan] = unary<Tangent>(
 
 export const [sec, isSecant, $sec] = unary<Secant>(
   'sec', Notation.prefix, Species.sec, Genera.trigonometric,
-  t => rule`cos(${t}) ^ -1`
 )(
-  r => reciprocal(cos(unit(r))),
-  c => reciprocal(cos(unit(c))),
-  b => reciprocal(cos(unit(b)))
+  r => reciprocal(cos(real(r.value))),
+  c => reciprocal(cos(complex([c.a, c.b]))),
+  b => reciprocal(cos(boolean(b.value)))
 )()
 
 export const [csc, isCosecant, $csc] = unary<Cosecant>(
   'csc', Notation.prefix, Species.csc, Genera.trigonometric,
-  t => rule`sin(${t}) ^ -1`
 )(
-  r => reciprocal(sin(unit(r))),
-  c => reciprocal(sin(unit(c))),
-  b => reciprocal(sin(unit(b)))
+  r => reciprocal(sin(real(r.value))),
+  c => reciprocal(sin(complex([c.a, c.b]))),
+  b => reciprocal(sin(boolean(b.value)))
 )()
 
 export const [cot, isCotangent, $cot] = unary<Cotangent>(
   'cot', Notation.prefix, Species.cot, Genera.trigonometric,
-  t => rule`tan(${t}) ^ -1`
 )(
-  r => reciprocal(tan(unit(r))),
-  c => reciprocal(tan(unit(c))),
-  b => reciprocal(tan(unit(b)))
+  r => reciprocal(tan(real(r.value))),
+  c => reciprocal(tan(complex([c.a, c.b]))),
+  b => reciprocal(tan(boolean(b.value)))
 )()

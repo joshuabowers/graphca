@@ -1,13 +1,12 @@
-import { Writer, unit } from '../monads/writer'
+import { Writer, writer } from '../monads/writer'
+import { Operation, operation } from '../utility/operation'
 import { Species, Clades, isSpecies } from '../utility/tree'
-// import { $kind } from '../utility/ASTNode'
 import { NaN } from "../closures/primitive"
 export { NaN }
 
-export const nan: Writer<NaN> = unit({
-  clade: Clades.primitive,
-  species: Species.nan,
-  value: NaN
-})
+export const nan: Writer<NaN, Operation> = writer(
+  {clade: Clades.primitive, species: Species.nan, value: NaN},
+  operation(['NaN'], 'not a number')
+)
 
 export const isNaN = isSpecies<NaN>(Species.nan)

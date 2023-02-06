@@ -1,5 +1,6 @@
 import { _ } from '@arrows/multimethod'
 import { Writer, unit } from '../monads/writer'
+import { Operation } from '../utility/operation'
 import { TreeNode, Clades, Genera, Species, Notation } from '../utility/tree'
 import { Complex, real, complex, boolean, nan, isReal, isPrimitive, isComplex } from '../primitives'
 import { Binary, binary, when, partialLeft, binaryFrom } from '../closures/binary'
@@ -12,74 +13,74 @@ import { identityRule, rule } from '../utility/rule'
 
 export type Multiplication = Binary<Species.multiply, Genera.arithmetic>
 type MultiplicationOfLeftExponential = Multiplication & {
-  readonly left: Writer<Exponentiation>
+  readonly left: Writer<Exponentiation, Operation>
 }
 type MultiplicationOfRightExponential = Multiplication & {
-  readonly right: Writer<Exponentiation>
+  readonly right: Writer<Exponentiation, Operation>
 }
 
-const isComplexWrapped = (v: Writer<TreeNode>): v is Writer<Complex> => 
+const isComplexWrapped = (v: Writer<TreeNode, Operation>): v is Writer<Complex, Operation> => 
   isComplex(v) && v.value.b === 0
-const isImaginary = (v: Writer<TreeNode>): v is Writer<Complex> => 
+const isImaginary = (v: Writer<TreeNode, Operation>): v is Writer<Complex, Operation> => 
   isComplex(v) && v.value.a === 0
 
 export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
   '*', Notation.infix, Species.multiply, Genera.arithmetic
 )(
-  (l, r) => real(l.value * r.value),
+  (l, r) => real(l.value.value * r.value.value),
   (l, r) => complex([
-    (l.a * r.a) - (l.b * r.b),
-    (l.a * r.b) + (l.b * r.a)
+    (l.value.a * r.value.a) - (l.value.b * r.value.b),
+    (l.value.a * r.value.b) + (l.value.b * r.value.a)
   ]),
-  (l, r) => boolean(l.value && r.value)
+  (l, r) => boolean(l.value.value && r.value.value)
 )(
   when(
     [l => l.value.clade !== Clades.primitive, isPrimitive],
-    (l, r) => [multiply(unit(r), unit(l)), rule`${r} * ${l}`, 'reorder operands']
+    (l, r) => [multiply(r, l), 'reorder operands']
   ),
   when<Complex, Complex>(
     [isComplexWrapped, isComplexWrapped], 
-    (l, r) => [complex([l.a * r.a, 0]), rule`${complex([l.a * r.a, 0])}`, 'complex multiplication']
+    (l, r) => [complex([l.value.a * r.value.a, 0]), 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isComplexWrapped, isImaginary],
-    (l, r) => [complex([0, l.a * r.b]), rule`${complex([0, l.a * r.b])}`, 'complex multiplication']
+    (l, r) => [complex([0, l.value.a * r.value.b]), 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isImaginary, isComplexWrapped],
-    (l, r) => [complex([0, l.b * r.a]), rule`${complex([0, l.b * r.a])}`, 'complex multiplication']
+    (l, r) => [complex([0, l.value.b * r.value.a]), 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isComplex, isComplexWrapped],
-    (l, r) => [complex([l.a * r.a, 0]), rule`${complex([l.a * r.a, 0])}`, 'complex multiplication']
+    (l, r) => [complex([l.value.a * r.value.a, 0]), 'complex multiplication']
   ),
-  when([isValue(real(0)), isValue(real(Infinity))], [nan, rule`${nan}`, 'incalculable']),
-  when([isValue(real(Infinity)), isValue(real(0))], [nan, rule`${nan}`, 'incalculable']),
-  when([isValue(real(0)), _], [real(0), rule`${real(0)}`, 'zero absorption']),
-  when([isValue(complex([0, 0])), _], [complex([0, 0]), rule`${complex([0,0])}`, 'zero absorption']),
-  when([isValue(real(1)), _], (_l, r) => [r, identityRule(r), 'multiplicative identity']),
-  when([isValue(complex([1, 0])), _], (_l, r) => [r, identityRule(r), 'multiplicative identity']),
-  when([isValue(real(Infinity)), _], [real(Infinity), rule`${real(Infinity)}`, 'infinite absorption']),
-  when([isValue(real(-Infinity)), _], [real(-Infinity), rule`${real(-Infinity)}`, 'infinite absorption']),
+  when([isValue(real(0)), isValue(real(Infinity))], [nan, 'incalculable']),
+  when([isValue(real(Infinity)), isValue(real(0))], [nan, 'incalculable']),
+  when([isValue(real(0)), _], [real(0), 'zero absorption']),
+  when([isValue(complex([0, 0])), _], [complex([0, 0]), 'zero absorption']),
+  when([isValue(real(1)), _], (_l, r) => [r, 'multiplicative identity']),
+  when([isValue(complex([1, 0])), _], (_l, r) => [r, 'multiplicative identity']),
+  when([isValue(real(Infinity)), _], [real(Infinity), 'infinite absorption']),
+  when([isValue(real(-Infinity)), _], [real(-Infinity), 'infinite absorption']),
   when<TreeNode, Multiplication>(
     (l, r) => isPrimitive(l) && isMultiplication(r) && isPrimitive(r.value.left),
     (l, r) => [
-      multiply(multiply(unit(l), r.left), r.right),
-      rule`(${l} * ${r.left}) * ${r.right}`,
+      multiply(multiply(l, r.value.left), r.value.right),
+      // rule`(${l} * ${r.value.left}) * ${r.value.right}`,
       'multiplicative associativity'
     ]
   ),
-  when(deepEquals, (l, _r) => [square(unit(l)), rule`${l} ^ 2`, 'equivalence: replaced with square']),
+  when(deepEquals, (l, _r) => [square(l), 'equivalence: replaced with square']),
   when<Multiplication, Multiplication>(
     (l, r) => isMultiplication(l) && isMultiplication(r)
       && deepEquals(l.value.left, r.value.left),
     (l, r) => [
       multiply(
-        multiply(l.left, r.left),
-        multiply(l.right, r.right)
+        multiply(l.value.left, r.value.left),
+        multiply(l.value.right, r.value.right)
       ),
-      rule`(${l.left} * ${r.left}) * (${l.right} * ${r.right})`,
-      'collecting equivalent left multiplicands'
+      // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
+      'collecting equivalent value.left multiplicands'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -87,11 +88,11 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.left, r.value.right),
     (l, r) => [
       multiply(
-        multiply(l.left, r.right),
-        multiply(l.right, r.left)
+        multiply(l.value.left, r.value.right),
+        multiply(l.value.right, r.value.left)
       ),
-      rule`(${l.left} * ${r.right}) * (${l.right} * ${r.left})`,
-      'collecting equivalent left/right multiplicands'
+      // rule`(${l.value.left} * ${r.value.right}) * (${l.value.right} * ${r.value.left})`,
+      'collecting equivalent value.left/value.right multiplicands'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -99,11 +100,11 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.right, r.value.left),
     (l, r) => [
       multiply(
-        multiply(l.right, r.left),
-        multiply(l.left, r.right)
+        multiply(l.value.right, r.value.left),
+        multiply(l.value.left, r.value.right)
       ),
-      rule`(${l.right} * ${r.left}) * (${l.left} * ${r.right})`,
-      'collecting equivalent right/left multiplicands'
+      // rule`(${l.value.right} * ${r.value.left}) * (${l.value.left} * ${r.value.right})`,
+      'collecting equivalent value.right/value.left multiplicands'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -111,47 +112,47 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.right, r.value.right),
     (l, r) => [
       multiply(
-        multiply(l.left, r.left),
-        multiply(l.right, r.right)
+        multiply(l.value.left, r.value.left),
+        multiply(l.value.right, r.value.right)
       ),
-      rule`(${l.left} * ${r.left}) * (${l.right} * ${r.right})`,
-      'collecting equivalent right multiplicands'
+      // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
+      'collecting equivalent value.right multiplicands'
     ]
   ),
   when<Multiplication, Multiplication>(
     (l, r) => isMultiplication(l) && isMultiplication(r)
       && deepEquals(l, r.value.left),
     (l, r) => [
-      multiply(square(unit(l)), r.right), 
-      rule`[${l}]^2 * ${r.right}`,
-      'equivalent: left operand and left child of right operand'
+      multiply(square(l), r.value.right), 
+      // rule`[${l}]^2 * ${r.value.right}`,
+      'equivalent: value.left operand and value.left child of value.right operand'
     ]
   ),
   when<Multiplication, Multiplication>(
     (l, r) => isMultiplication(l) && isMultiplication(r)
       && deepEquals(l, r.value.right),
     (l, r) => [
-      multiply(square(unit(l)), r.left), 
-      rule`[${l}]^2 * ${r.left}`,
-      'equivalent: left operand and right child of right operand'
+      multiply(square(l), r.value.left), 
+      // rule`[${l}]^2 * ${r.value.left}`,
+      'equivalent: value.left operand and value.right child of value.right operand'
     ]
   ),
   when<Multiplication, Multiplication>(
     (l, r) => isMultiplication(l) && isMultiplication(r)
       && deepEquals(l.value.left, r),
     (l, r) => [ 
-      multiply(square(unit(r)), l.right),
-      rule`[${r}]^2 * ${l.right}`,
-      'equivalent: left child of left operand and right operand'
+      multiply(square(r), l.value.right),
+      // rule`[${r}]^2 * ${l.value.right}`,
+      'equivalent: value.left child of value.left operand and value.right operand'
     ]
   ),
   when<Multiplication, Multiplication>(
     (l, r) => isMultiplication(l) && isMultiplication(r)
       && deepEquals(l.value.right, r),
     (l, r) => [
-      multiply(square(unit(r)), l.left),
-      rule`[${r}]^2 * ${l.left}`,
-      'equivalent: right child of left operand and right operand'
+      multiply(square(r), l.value.left),
+      // rule`[${r}]^2 * ${l.value.left}`,
+      'equivalent: value.right child of value.left operand and value.right operand'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -183,11 +184,11 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       )),
     (l, r) => [
       multiply(
-        multiply(l.left, r.left),
-        multiply(l.right, r.right)
+        multiply(l.value.left, r.value.left),
+        multiply(l.value.right, r.value.right)
       ),
-      rule`(${l.left} * ${r.left}) * (${l.right} * ${r.right})`,
-      'equivalent: left child of left multiplication and left child of right multiplication'
+      // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
+      'equivalent: value.left child of value.left multiplication and value.left child of value.right multiplication'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -219,19 +220,19 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       )),
     (l, r) => [
       multiply(
-        multiply(l.left, r.right),
-        multiply(l.right, r.left),
+        multiply(l.value.left, r.value.right),
+        multiply(l.value.right, r.value.left),
       ),
-      rule`(${l.left} * ${r.right}) * (${l.right} * ${r.left})`,
-      'equivalent: left child of left multiplication and right child of right multiplication'
+      // rule`(${l.value.left} * ${r.value.right}) * (${l.value.right} * ${r.value.left})`,
+      'equivalent: value.left child of value.left multiplication and value.right child of value.right multiplication'
     ]
   ),
   when<Exponentiation, Exponentiation>(
     (l, r) => isExponentiation(l) && isExponentiation(r) 
       && deepEquals(l.value.left, r.value.left),
     (l, r) => [
-      raise(l.left, add(l.right, r.right)), 
-      rule`${l.left} ^ (${l.right} + ${r.right})`,
+      raise(l.value.left, add(l.value.right, r.value.right)), 
+      // rule`${l.value.left} ^ (${l.value.right} + ${r.value.right})`,
       'combined like terms'
     ]
   ),
@@ -240,10 +241,10 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.left, r.value.left),
     (l, r) => [
       multiply(
-        r.right, raise(l.left, add(l.right, real(1)))
+        r.value.right, raise(l.value.left, add(l.value.right, real(1)))
       ),
-      rule`${r.right} * ${l.left}^(${l.right} + ${real(1)})`,
-      'equivalent: base of left exponentiation and left child of right'
+      // rule`${r.value.right} * ${l.value.left}^(${l.value.right} + ${real(1)})`,
+      'equivalent: base of value.left exponentiation and value.left child of value.right'
     ]
   ),
   when<Exponentiation, Multiplication>(
@@ -251,10 +252,10 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.left, r.value.right),
     (l, r) => [
       multiply(
-        r.left, raise(l.left, add(l.right, real(1)))
+        r.value.left, raise(l.value.left, add(l.value.right, real(1)))
       ),
-      rule`${r.left} * ${l.left}^(${l.right} + ${real(1)})`,
-      'equivalent: base of left exponentiation and right child of right'
+      // rule`${r.value.left} * ${l.value.left}^(${l.value.right} + ${real(1)})`,
+      'equivalent: base of value.left exponentiation and value.right child of value.right'
     ]
   ),
   when<Exponentiation, MultiplicationOfLeftExponential>(
@@ -262,11 +263,11 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && isExponentiation(r.value.left) && deepEquals(l.value.left, r.value.left.value.left),
     (l, r) => [
       multiply(
-        r.right,
-        raise(l.left, add(l.right, r.left.value.right))
+        r.value.right,
+        raise(l.value.left, add(l.value.right, r.value.left.value.right))
       ),
-      rule`${r.right} * ${l.left}^(${l.right} + ${r.left.value.right})`,
-      'equivalent: base of left exponentiation and base of left child exponentiation of right multiplication'
+      // rule`${r.value.right} * ${l.value.left}^(${l.value.right} + ${r.value.left.value.right})`,
+      'equivalent: base of value.left exponentiation and base of value.left child exponentiation of value.right multiplication'
     ]
   ),
   when<Exponentiation, MultiplicationOfRightExponential>(
@@ -274,11 +275,11 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && isExponentiation(r.value.right) && deepEquals(l.value.left, r.value.right.value.left),
     (l, r) => [
       multiply(
-        r.left,
-        raise(l.left, add(l.right, r.right.value.right))
+        r.value.left,
+        raise(l.value.left, add(l.value.right, r.value.right.value.right))
       ),
-      rule`${r.left} * ${l.left}^(${l.right} + ${r.right.value.right})`,
-      'equivalent: base of left exponentiation and base of right child exponentiation of right multiplication'
+      // rule`${r.value.left} * ${l.value.left}^(${l.value.right} + ${r.value.right.value.right})`,
+      'equivalent: base of value.left exponentiation and base of value.right child exponentiation of value.right multiplication'
     ]
   ),
   when<Multiplication, Exponentiation>(
@@ -286,10 +287,10 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.left, r.value.left),
     (l, r) => [
       multiply(
-        l.right, raise(r.left, add(r.right, real(1)))
+        l.value.right, raise(r.value.left, add(r.value.right, real(1)))
       ),
-      rule`${l.right} * ${r.left}^(${r.right} + ${real(1)})`,
-      'equivalent: left child of left and base of right exponentiation'
+      // rule`${l.value.right} * ${r.value.left}^(${r.value.right} + ${real(1)})`,
+      'equivalent: value.left child of value.left and base of value.right exponentiation'
     ]
   ),
   when<Multiplication, Exponentiation>(
@@ -297,10 +298,10 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.right, r.value.left),
     (l, r) => [
       multiply(
-        l.left, raise(r.left, add(r.right, real(1)))
+        l.value.left, raise(r.value.left, add(r.value.right, real(1)))
       ),
-      rule`${l.left} * ${r.left}^(${r.right} + ${real(1)})`,
-      'equivalent: right child of left and base of right exponentiation'
+      // rule`${l.value.left} * ${r.value.left}^(${r.value.right} + ${real(1)})`,
+      'equivalent: value.right child of value.left and base of value.right exponentiation'
     ]
   ),
   when<MultiplicationOfLeftExponential, Exponentiation>(
@@ -308,11 +309,11 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && isExponentiation(r) && deepEquals(l.value.left.value.left, r.value.left),
     (l, r) => [
       multiply(
-        l.right,
-        raise(r.left, add(l.left.value.right, r.right))
+        l.value.right,
+        raise(r.value.left, add(l.value.left.value.right, r.value.right))
       ),
-      rule`${l.right} * ${r.left}^(${l.left.value.right} + ${r.right})`,
-      'equivalent: base of left child exponentiation of left multiplication and base of right exponentiation'
+      // rule`${l.value.right} * ${r.value.left}^(${l.value.left.value.right} + ${r.value.right})`,
+      'equivalent: base of value.left child exponentiation of value.left multiplication and base of value.right exponentiation'
     ]
   ),
   when<MultiplicationOfRightExponential, Exponentiation>(
@@ -320,31 +321,31 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && isExponentiation(r) && deepEquals(l.value.right.value.left, r.value.left),
     (l, r) => [
       multiply(
-        l.left,
-        raise(r.left, add(l.right.value.right, r.right))
+        l.value.left,
+        raise(r.value.left, add(l.value.right.value.right, r.value.right))
       ),
-      rule`${l.left} * ${r.left}^(${l.right.value.right} + ${r.right})`,
-      'equivalent: base of right child exponentiation of left multiplication and base of right exponentiation'
+      // rule`${l.value.left} * ${r.value.left}^(${l.value.right.value.right} + ${r.value.right})`,
+      'equivalent: base of value.right child exponentiation of value.left multiplication and base of value.right exponentiation'
     ]
   ),
   when<TreeNode, Multiplication>(
     (l, r) => isMultiplication(r) && deepEquals(l, r.value.left),
     (l, r) => [
       multiply(
-        r.right, multiply(unit(l), r.left)
+        r.value.right, multiply(l, r.value.left)
       ),
-      rule`${r.right} * (${l} * ${r.left})`,
-      'equivalent: left operand and left child of right operand'
+      // rule`${r.value.right} * (${l} * ${r.value.left})`,
+      'equivalent: value.left operand and value.left child of value.right operand'
     ]
   ),
   when<TreeNode, Multiplication>(
     (l, r) => isMultiplication(r) && deepEquals(l, r.value.right),
     (l, r) => [
       multiply(
-        r.left, multiply(unit(l), r.right)
+        r.value.left, multiply(l, r.value.right)
       ),
-      rule`${r.left} * (${l} * ${r.right})`,
-      'equivalent: left operand and right child of right operand'
+      // rule`${r.value.left} * (${l} * ${r.value.right})`,
+      'equivalent: value.left operand and value.right child of value.right operand'
     ]
   ),
   when<TreeNode, MultiplicationOfLeftExponential>(
@@ -352,10 +353,10 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l, r.value.left.value.left),
     (l, r) => [
       multiply(
-        r.right, raise(unit(l), add(real(1), r.left.value.right))
+        r.value.right, raise(l, add(real(1), r.value.left.value.right))
       ),
-      rule`${r.right} * ${l}^(${real(1)} + ${r.left.value.right})`,
-      'equivalent: left operand and base of left child exponentiation of right multiplication'
+      // rule`${r.value.right} * ${l}^(${real(1)} + ${r.value.left.value.right})`,
+      'equivalent: value.left operand and base of value.left child exponentiation of value.right multiplication'
     ]
   ),
   when<TreeNode, MultiplicationOfRightExponential>(
@@ -363,30 +364,30 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l, r.value.right.value.left),
     (l, r) => [
       multiply(
-        r.left, raise(unit(l), add(real(1), r.right.value.right))
+        r.value.left, raise(l, add(real(1), r.value.right.value.right))
       ),
-      rule`${r.left} * ${l}^(${real(1)} + ${r.right.value.right})`,
-      'equivalent: left operand and base of right child exponentiation of right multiplication'
+      // rule`${r.value.left} * ${l}^(${real(1)} + ${r.value.right.value.right})`,
+      'equivalent: value.left operand and base of value.right child exponentiation of value.right multiplication'
     ]
   ),
   when<Multiplication, TreeNode>(
     (l, r) => isMultiplication(l) && deepEquals(l.value.left, r),
     (l, r) => [
       multiply(
-        l.right, multiply(unit(r), l.left)
+        l.value.right, multiply(r, l.value.left)
       ),
-      rule`${l.right} * (${r} * ${l.left})`,
-      'equivalent: left child of left operand and right operand'
+      // rule`${l.value.right} * (${r} * ${l.value.left})`,
+      'equivalent: value.left child of value.left operand and value.right operand'
     ]
   ),
   when<Multiplication, TreeNode>(
     (l, r) => isMultiplication(l) && deepEquals(l.value.right, r),
     (l, r) => [
       multiply(
-        l.left, multiply(unit(r), l.right)
+        l.value.left, multiply(r, l.value.right)
       ),
-      rule`${l.left} * (${r} * ${l.right})`,
-      'equivalent: right child of left operand and right operand'
+      // rule`${l.value.left} * (${r} * ${l.value.right})`,
+      'equivalent: value.right child of value.left operand and value.right operand'
     ]
   ),
   when<MultiplicationOfLeftExponential, TreeNode>(
@@ -394,10 +395,10 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.left.value.left, r),
     (l, r) => [
       multiply(
-        l.right, raise(unit(r), add(real(1), l.left.value.right))
+        l.value.right, raise(r, add(real(1), l.value.left.value.right))
       ),
-      rule`${l.right} * ${r}^(${real(1)} + ${l.left.value.right})`,
-      'equivalent: base of left child exponentiation of left multiplication and right operand'
+      // rule`${l.value.right} * ${r}^(${real(1)} + ${l.value.left.value.right})`,
+      'equivalent: base of value.left child exponentiation of value.left multiplication and value.right operand'
     ]
   ),
   when<MultiplicationOfRightExponential, TreeNode>(
@@ -405,25 +406,25 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.right.value.left, r),
     (l, r) => [
       multiply(
-        l.left, raise(unit(r), add(real(1), l.right.value.right))
+        l.value.left, raise(r, add(real(1), l.value.right.value.right))
       ),
-      rule`${l.left} * ${r}^(${real(1)} + ${l.right.value.right})`,
-      'equivalent: base of right child exponentiation of left multiplication and right operand'
+      // rule`${l.value.left} * ${r}^(${real(1)} + ${l.value.right.value.right})`,
+      'equivalent: base of value.right child exponentiation of value.left multiplication and value.right operand'
     ]
   ),
   when<TreeNode, Exponentiation>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),
     (l, r) => [
-      raise(unit(l), add(real(1), r.right)), 
-      rule`${l} ^ (${real(1)} + ${r.right})`,
+      raise(l, add(real(1), r.value.right)), 
+      // rule`${l} ^ (${real(1)} + ${r.value.right})`,
       'combined like terms'
     ]
   ),
   when<Exponentiation, TreeNode>(
     (l, r) => isExponentiation(l) && deepEquals(l.value.left, r),
     (l, r) => [
-      raise(unit(r), add(real(1), l.right)), 
-      rule`${r} ^ (${real(1)} + ${l.right})`,
+      raise(r, add(real(1), l.value.right)), 
+      // rule`${r} ^ (${real(1)} + ${l.value.right})`,
       'combined like terms'
     ]
   )

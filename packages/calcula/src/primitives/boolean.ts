@@ -7,7 +7,8 @@ export const [boolean, isBoolean, $boolean] =
   primitive<boolean, {value: boolean}, Boolean>(
   isSystemBoolean,
   value => ({value}),
-  Species.boolean
+  Species.boolean,
+  b => b.value.toString()
 )(
   r => r.value !== 0,
   c => c.a !== 0 || c.b !== 0,

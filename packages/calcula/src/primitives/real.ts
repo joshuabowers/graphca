@@ -7,7 +7,8 @@ export const [real, isReal, $real] =
   primitive<number, {value: number}, Real>(
   isNumber,
   value => ({value}),
-  Species.real
+  Species.real,
+  r => r.value.toString()
 )(
   r => r.value,
   c => c.a,

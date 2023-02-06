@@ -6,12 +6,12 @@ import { isBinary } from '../closures/binary'
 
 function *findVariables(expression: Writer<TreeNode>): IterableIterator<string>{
   if(isVariable(expression)){
-    yield expression.value.name
+    yield expression.result.name
   } else if(isUnary(expression)){
-    yield *findVariables(expression.value.expression)
+    yield *findVariables(expression.result.expression)
   } else if(isBinary(expression)){
-    yield *findVariables(expression.value.left)
-    yield *findVariables(expression.value.right)
+    yield *findVariables(expression.result.left)
+    yield *findVariables(expression.result.right)
   }
 }
 

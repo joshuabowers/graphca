@@ -18,8 +18,8 @@ function valuesBetween(expression: W.Writer<TreeNode>, min: number, max: number,
   let j = 0;
   for(let i = min; i < max; i += increment) {
     const y = valueAt(real(i))
-    if(!isReal(y)){ throw new Error(`Unexpected invocation result: ${y.value.species}`)}
-    r[j++] = new Vector3(i, y.value.value, 0)
+    if(!isReal(y)){ throw new Error(`Unexpected invocation result: ${y.result.species}`)}
+    r[j++] = new Vector3(i, y.result.value, 0)
   }
   return r
 }

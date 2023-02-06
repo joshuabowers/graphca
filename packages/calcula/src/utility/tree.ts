@@ -1,4 +1,5 @@
 import { isWriter, Writer } from "../monads/writer"
+import { Operation } from "./operation"
 
 export enum Clades {
   primitive = 'Primitive',  // Constants: 10, 4 - 5i, true
@@ -113,36 +114,36 @@ export type TreeNode = {
 }
 
 export type DerivedNode<T extends ((...args: any[]) => any)> = 
-  ReturnType<T> extends Writer<infer U> ? U : never
+  ReturnType<T> extends Writer<infer U, Operation> ? U : never
 
 export type TreeNodeGuardFn<T extends TreeNode> = 
-  (value: Writer<TreeNode>) => value is Writer<T>
+  (value: Writer<TreeNode, Operation>) => value is Writer<T, Operation>
 
 // values should be Writer<TreeNode>, narrowed to Writer<T>
 export const isClade = <T extends TreeNode>(clade: Clades) =>
-  (value: Writer<TreeNode>): value is Writer<T> =>
+  (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
     value?.value.clade === clade
 
 export const isGenus = <T extends TreeNode>(genus: Genera) =>
-  (value: Writer<TreeNode>): value is Writer<T> =>
+  (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
     value?.value.genus === genus
 
 export const isSpecies = <T extends TreeNode>(species: Species) =>
-  (value: Writer<TreeNode>): value is Writer<T> =>
+  (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
     value?.value.species === species
 
-export const isTreeNode = <T extends TreeNode>(value: unknown): value is Writer<T> =>
+export const isTreeNode = <T extends TreeNode>(value: unknown): value is Writer<T, Operation> =>
   isWriter(value) && typeof value.value === 'object' 
   && 'clade' in value.value! && 'species' in value.value!
 
 export const notAny = (...args: Species[]) => {
   const exclude = new Set(args)
-  return <T extends TreeNode>(t: Writer<T>) => 
+  return <T extends TreeNode>(t: Writer<T, Operation>) => 
     t.value && !exclude.has(t.value.species)
 }
 
 export const any = (...args: Species[]) => {
   const include = new Set(args)
-  return <T extends TreeNode>(t: Writer<T>) => 
+  return <T extends TreeNode>(t: Writer<T, Operation>) => 
     t.value && include.has(t.value.species)
 }

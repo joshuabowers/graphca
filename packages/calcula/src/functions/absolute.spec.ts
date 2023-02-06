@@ -23,9 +23,12 @@ describe('abs', () => {
       abs(real(-5)),
       real(5)
     )(
-      ['-5', '-5', 'given primitive'],
-      ['abs(-5)', '5', 'real absolute'],
-      ['5', '5', 'given primitive']
+      ['abs(-5)', 'identified absolute'],
+      ['abs(|-5)', 'processing argument'],
+      ['-5', 'created real'],
+      ['abs(-5|)', 'processed argument'],
+      ['abs(-5)', 'real absolute'],
+      ['5', 'created real']
     )
   })
 
@@ -34,17 +37,12 @@ describe('abs', () => {
       abs(complex([1, 2])),
       complex([2.23606797749979, 0])
     )(
-      [`1+2${Unicode.i}`, `1+2${Unicode.i}`, 'given primitive'],
-      [
-        `abs(1+2${Unicode.i})`, 
-        `2.23606797749979+0${Unicode.i}`, 
-        'complex absolute'
-      ],
-      [
-        `2.23606797749979+0${Unicode.i}`, 
-        `2.23606797749979+0${Unicode.i}`, 
-        'given primitive'
-      ]
+      [`abs(1+2${Unicode.i})`, 'identified absolute'],
+      [`abs(|1+2${Unicode.i})`, 'processing argument'],
+      [`1+2${Unicode.i}`, 'created complex'],
+      [`abs(1+2${Unicode.i}|)`, 'processed argument'],
+      [`abs(1+2${Unicode.i})`, 'complex absolute'],
+      [`2.23606797749979+0${Unicode.i}`, 'created complex']
     )
   })
 
@@ -53,8 +51,12 @@ describe('abs', () => {
       abs(boolean(true)),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['abs(true)', 'true', 'boolean absolute'],
+      ['abs(true)', 'identified absolute'],
+      ['abs(|true)', 'processing argument'],
+      ['true', 'created boolean'],
+      ['abs(true|)', 'processed argument'],
+      ['abs(true)', 'boolean absolute'],
+      ['true', 'created boolean']
     )
   })
 
@@ -63,8 +65,11 @@ describe('abs', () => {
       abs(variable('x')),
       $abs(unit(variable('x').value))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['abs(x)', 'abs(x)', 'absolute']
+      ['abs(x)', 'identified absolute'],
+      ['abs(|x)', 'processing argument'],
+      ['x', 'referenced variable'],
+      ['abs(x|)', 'processed argument'],
+      ['abs(x)', 'created absolute']
     )
   })
 
@@ -73,7 +78,12 @@ describe('abs', () => {
       abs(nil),
       nan
     )(
-      ['abs(nil)', 'NaN', 'not a number']
+      ['abs(nil)', 'identified absolute'],
+      ['abs(|nil)', 'processing argument'],
+      ['nil', 'nothing'],
+      ['abs(nil|)', 'processed argument'],
+      ['abs(nil)', 'not a number'],
+      ['NaN', 'not a number']
     )
   })
 })

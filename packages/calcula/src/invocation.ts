@@ -107,9 +107,9 @@ const evaluate: EvaluateFn = multi(
   when(isBoolean, constant<Boolean>()),
 
   when(isVariable, scope => v => [
-    scope.get(v.name)?.value.value ?? v, 
-    rule`${scope.get(v.name)?.value.value ?? v}`,
-    `${scope.get(v.name)?.value.value ? 'substituting' : 'invoking'} variable ${v.name}`
+    scope.get(v.name)?.result.value ?? v, 
+    rule`${scope.get(v.name)?.result.value ?? v}`,
+    `${scope.get(v.name)?.result.value ? 'substituting' : 'invoking'} variable ${v.name}`
   ]),
 
   when(isAddition, binary(add)),
