@@ -1,5 +1,6 @@
 import { multi, method } from '@arrows/multimethod'
 import { Writer } from '../monads/writer'
+import { Operation } from './operation'
 import { real, isReal, Real } from '../primitives'
 import { variable, isVariable, Variable } from '../variable'
 import { add, Addition, isAddition } from '../arithmetic'
@@ -8,9 +9,9 @@ import { Unicode } from '../Unicode'
 // import { stringify } from './stringify' 
 
 const stringify = multi(
-  method(isReal, (r: Writer<Real>) => r.value.value.toString()),
-  method(isVariable, (v: Writer<Variable>) => v.value.name),
-  method(isAddition, (a: Writer<Addition>) => `[${stringify(a.value.left)} + ${stringify(a.value.right)}]`)
+  method(isReal, (r: Writer<Real, Operation>) => r.value.value.toString()),
+  method(isVariable, (v: Writer<Variable, Operation>) => v.value.name),
+  method(isAddition, (a: Writer<Addition, Operation>) => `[${stringify(a.value.left)} + ${stringify(a.value.right)}]`)
 )
 
 describe('rule', () => {

@@ -1,10 +1,12 @@
 import { unit } from '../monads/writer'
-import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+import { 
+  expectCloseTo, expectWriterTreeNode,
+  variableOps, gammaOps
+} from '../utility/expectations'
 import { Clades, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
 import { gamma, $gamma } from './gamma'
-import { Unicode } from '../Unicode'
 
 describe('$gamma', () => {
   expect($gamma(unit(variable('x').value))[0]).toEqual({
@@ -33,10 +35,13 @@ describe('gamma', () => {
   it('generates a Gamma node for unbound variables', () => {
     expectWriterTreeNode(
       gamma(variable('x')),
-      $gamma(unit(variable('x').value))[0]
+      $gamma(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      [`${Unicode.gamma}(x)`, `${Unicode.gamma}(x)`, 'gamma']
+      ...gammaOps(
+        'created gamma',
+        variableOps('x'),
+        []
+      )
     )
   })
 })

@@ -63,7 +63,7 @@ describe('abs', () => {
   it('returns a Writer<Absolute> for variable input', () => {
     expectWriterTreeNode(
       abs(variable('x')),
-      $abs(unit(variable('x').value))[0]
+      $abs(variable('x'))[0]
     )(
       ['abs(x)', 'identified absolute'],
       ['abs(|x)', 'processing argument'],

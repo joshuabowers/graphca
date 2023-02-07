@@ -1,11 +1,11 @@
 import { method, multi, fromMulti, Multi, _ } from "@arrows/multimethod"
-import { Writer, writer, bind, unit, isWriter } from "../monads/writer"
+import { Writer, writer, curate } from "../monads/writer"
 import { Particle, Operation, operation, context, Action } from "../utility/operation"
 import { CaretPosition, embedCaret } from "../utility/caret"
 import { CastFn } from "../utility/typings"
 import { 
   TreeNode, Clades, Genera, Species, isClade, 
-  any, TreeNodeGuardFn, isSpecies, isTreeNode, Notation
+  eitherNilOrNaN, TreeNodeGuardFn, isSpecies, isTreeNode, Notation
 } from "../utility/tree"
 import { UnaryFn } from "./unary"
 import { 
@@ -65,9 +65,6 @@ export type BinaryCreateFn<T extends BinaryNode> =
 type ToParticlesFn = (
   position: CaretPosition, left: Particle[], right: Particle[]
 ) => Particle[]
-
-export const curate = <T, O>(input: Writer<T, O>) =>
-  writer(input.value, input.log[input.log.length-1])
 
 export const when = <L extends TreeNode, R extends TreeNode>( 
   predicate: Test<L> | [Test<L>, Test<R>] | BinaryPredicate<L, R>, 
@@ -133,8 +130,6 @@ const apply = <T, U>(fn: BinaryFn<T, U>) =>
   ) =>
     (l: Writer<L, Operation>, r: Writer<R, Operation>) =>
       fn(changeLeft(l), changeRight(r))
-
-const eitherNilOrNaN = any(Species.nil, Species.nan)
 
 export type BinaryNodeMetaTuple<T extends BinaryNode, R> = [
   BinaryFn<T, R>,

@@ -1,9 +1,10 @@
 import { multi, method, _, Multi } from "@arrows/multimethod"
 import { Writer, unit } from "../monads/writer"
+import { Operation } from "../utility/operation"
 import { TreeNode, Species, Notation } from "../utility/tree"
 import { Real, Complex, Boolean, real, isReal, isComplex, isPrimitive } from "../primitives"
 import { variable } from "../variable"
-import { Binary, binary, when, partialLeft, binaryFnRule } from "../closures/binary"
+import { Binary, binary, when, partialLeft } from "../closures/binary"
 import { 
   add, subtract, multiply, divide, double, raise, reciprocal
 } from "../arithmetic"
@@ -15,21 +16,21 @@ import { isValue } from "../utility/deepEquals"
 import { differentiate } from "../calculus/differentiation"
 import { invoke } from "../invocation"
 import { Unicode } from "../Unicode"
-import { unaryFnRule } from "../closures/unary"
 
 export type Polygamma = Binary<Species.polygamma>
 
-const isNegative = (e: Writer<TreeNode>) => isReal(e) && e.result.value < 0
+const isNegative = (e: Writer<TreeNode, Operation>) => 
+  isReal(e) && e.value.value < 0
 
 type IsSmallFn = Multi 
-  & ((r: Writer<Real>) => boolean) 
-  & ((c: Writer<Complex>) => boolean)
-  & ((v: Writer<TreeNode>) => boolean)
+  & ((r: Writer<Real, Operation>) => boolean) 
+  & ((c: Writer<Complex, Operation>) => boolean)
+  & ((v: Writer<TreeNode, Operation>) => boolean)
 
 // 10 is arbitrary, but inputs around that comport with Wolfram-Alpha
 const isSmall: IsSmallFn = multi(
-  method(isReal, (r: Writer<Real>) => r.result.value < 10),
-  method(isComplex, (c: Writer<Complex>) => abs(c).result.a < 10),
+  method(isReal, (r: Writer<Real, Operation>) => r.value.value < 10),
+  method(isComplex, (c: Writer<Complex, Operation>) => abs(c).value.a < 10),
   method(false)
 )
 
@@ -51,15 +52,15 @@ const bernoulli = [
   8615841276005/14322
 ].map((b, i) => [real(b), real(2*(i+1))])
 
-const sum = (fn: (b: Writer<Real>, k: Writer<Real>) => Writer<TreeNode>) => 
+const sum = (fn: (b: Writer<Real, Operation>, k: Writer<Real, Operation>) => Writer<TreeNode, Operation>) => 
   bernoulli.map(
     ([b, i]) => fn(b, i)
   ).reduce((p, c) => add(p, c), real(0))
 
 const calculatePolygamma = (
-  m: Writer<Real|Complex|Boolean>,
-  z: Writer<Real|Complex|Boolean>,
-): Writer<TreeNode> => {
+  m: Writer<Real|Complex|Boolean, Operation>,
+  z: Writer<Real|Complex|Boolean, Operation>,
+): Writer<TreeNode, Operation> => {
   return add(
     divide(
       multiply(
@@ -86,9 +87,9 @@ const calculatePolygamma = (
   )
 }
 
-const polygammaReflection = (m: Writer<TreeNode>, z: Writer<TreeNode>) => {
+const polygammaReflection = (m: Writer<TreeNode, Operation>, z: Writer<TreeNode, Operation>) => {
   const pi = real(Math.PI)
-  const order = real(isReal(m) ? m.result.value : isComplex(m) ? m.result.a : 0)
+  const order = real(isReal(m) ? m.value.value : isComplex(m) ? m.value.a : 0)
   const d = differentiate(order, cot(multiply(pi, variable('x'))))
   return subtract(
     multiply(
@@ -99,7 +100,7 @@ const polygammaReflection = (m: Writer<TreeNode>, z: Writer<TreeNode>) => {
   )
 }
 
-const polygammaRecurrence = (m: Writer<TreeNode>, z: Writer<TreeNode>) => {
+const polygammaRecurrence = (m: Writer<TreeNode, Operation>, z: Writer<TreeNode, Operation>) => {
   return subtract(
     polygamma(m, add(z, real(1))),
     divide(
@@ -109,7 +110,7 @@ const polygammaRecurrence = (m: Writer<TreeNode>, z: Writer<TreeNode>) => {
   )
 }
 
-const calculateDigamma = (z: Writer<Real|Complex|Boolean>): Writer<TreeNode> => {
+const calculateDigamma = (z: Writer<Real|Complex|Boolean, Operation>): Writer<TreeNode, Operation> => {
   return subtract(
     subtract(ln(z), divide(real(0.5), z)),
     sum(
@@ -118,7 +119,7 @@ const calculateDigamma = (z: Writer<Real|Complex|Boolean>): Writer<TreeNode> => 
   )
 }
 
-const digammaReflection = (e: Writer<TreeNode>) => {
+const digammaReflection = (e: Writer<TreeNode, Operation>) => {
   const pi = real(Math.PI)
   return subtract(
     digamma(subtract(real(1), e)),
@@ -126,48 +127,43 @@ const digammaReflection = (e: Writer<TreeNode>) => {
   )
 }
 
-const digammaRecurrence = (e: Writer<TreeNode>) => {
+const digammaRecurrence = (e: Writer<TreeNode, Operation>) => {
   return subtract(
     digamma(add(e, real(1))),
     reciprocal(e)
   )
 }
 
-export const polygammaRule = binaryFnRule(Unicode.digamma)
-export const digammaRule = unaryFnRule(Unicode.digamma)
-
 export const [polygamma, isPolygamma, $polygamma] = binary<Polygamma>(
   Unicode.digamma, Notation.prefix, Species.polygamma
 )(
-  (l, r) => calculatePolygamma(unit(l), unit(r)) as Writer<Real>, 
-  (l, r) => calculatePolygamma(unit(l), unit(r)) as Writer<Complex>, 
-  (l, r) => calculatePolygamma(unit(l), unit(r)) as Writer<Boolean>, 
+  (l, r) => calculatePolygamma(l, r) as Writer<Real, Operation>, 
+  (l, r) => calculatePolygamma(l, r) as Writer<Complex, Operation>, 
+  (l, r) => calculatePolygamma(l, r) as Writer<Boolean, Operation>, 
 )(
   when(
     (l, r) => isValue(real(0))(l) && isNegative(r),
-    (_l, r) => [digammaReflection(unit(r)), digammaRule(r), 'digamma reflection for negative value']
+    (_l, r) => [digammaReflection(r), 'digamma reflection for negative value']
   ),
   when(
     (l, r) => isValue(real(0))(l) && isSmall(r),
-    (_l, r) => [digammaRecurrence(unit(r)), digammaRule(r), 'digamma recurrence for small value']
+    (_l, r) => [digammaRecurrence(r), 'digamma recurrence for small value']
   ),
   when<Real, Real|Complex|Boolean>(
     (l, r) => isValue(real(0))(l) && isPrimitive(r),
-    (_l, r) => [calculateDigamma(unit(r)), digammaRule(r), 'computed digamma']
+    (_l, r) => [calculateDigamma(r), 'computed digamma']
   ),
   when(
     (l, r) => isReal(l) && isNegative(r),
     (l, r) => [
-      polygammaReflection(unit(l), unit(r)), 
-      polygammaRule(l, r),
+      polygammaReflection(l, r), 
       'polygamma reflection for negative value'
     ]
   ),
   when(
     (l, r) => isReal(l) && isSmall(r),
     (l, r) => [
-      polygammaRecurrence(unit(l), unit(r)), 
-      polygammaRule(l, r),
+      polygammaRecurrence(l, r), 
       'polygamma recurrence for small value'
     ]
   )

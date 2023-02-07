@@ -28,3 +28,6 @@ export const writer = <V, O>(
   isWriter(value) 
     ? ({value: value.value, log: [...operations, ...value.log]})
     : ({value, log: [...operations]})
+
+export const curate = <T, O>(input: Writer<T, O>) =>
+  writer(input.value, input.log[input.log.length-1])

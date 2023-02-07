@@ -1,5 +1,9 @@
 import { unit } from '../monads/writer';
-import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+import { 
+  expectCloseTo, expectWriterTreeNode,
+  realOps, complexOps, variableOps, addOps, multiplyOps,
+  factorialOps
+} from '../utility/expectations'
 import { Clades, Species } from '../utility/tree';
 import { ComplexInfinity } from '../primitives/complex';
 import { real, complex } from '../primitives';
@@ -25,9 +29,11 @@ describe('factorial', () => {
       factorial(real(0)),
       real(1)
     )(
-      ['0', '0', 'given primitive'],
-      ['(0)!', '1', 'degenerate case'],
-      ['1', '1', 'given primitive']
+      ...factorialOps(
+        'degenerate case',
+        realOps('0'),
+        realOps('1')
+      )
     )
   })
 
@@ -36,20 +42,39 @@ describe('factorial', () => {
       factorial(real(2)),
       real(2)
     )(
-      ['2', '2', 'given primitive'],
-      ['(2)!', '2 * (2 - 1)!', 'real factorial'],
-      ['-1', '-1', 'given primitive'],
-      ['2 + -1', '1', 'real addition'],
-      ['1', '1', 'given primitive'],
-      ['(1)!', '1 * (1 - 1)!', 'real factorial'],
-      ['-1', '-1', 'given primitive'],
-      ['1 + -1', '0', 'real addition'],
-      ['0', '0', 'given primitive'],
-      ['(0)!', '1', 'degenerate case'],
-      ['1', '1', 'given primitive'],
-      ['1 * 1', '1', 'multiplicative identity'],
-      ['2 * 1', '2', 'real multiplication'],
-      ['2', '2', 'given primitive']
+      ...factorialOps(
+        'real factorial',
+        realOps('2'),
+        multiplyOps(
+          'real multiplication',
+          realOps('2'),
+          factorialOps(
+            'real factorial',
+            addOps(
+              'real addition',
+              realOps('2'),
+              realOps('-1'),
+              realOps('1')
+            ),
+            multiplyOps(
+              'multiplicative identity',
+              realOps('1'),
+              factorialOps(
+                'degenerate case',
+                addOps(
+                  'real addition',
+                  realOps('1'),
+                  realOps('-1'),
+                  realOps('0')
+                ),
+                realOps('1')
+              ),
+              realOps('1')
+            )
+          ),
+          realOps('2')
+        )
+      )
     )
   })
 
@@ -58,9 +83,11 @@ describe('factorial', () => {
       factorial(complex([0, 0])),
       complex([1, 0])
     )(
-      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
-      [`(0+0${Unicode.i})!`, `1+0${Unicode.i}`, 'degenerate case'],
-      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive']
+      ...factorialOps(
+        'degenerate case',
+        complexOps('0', '0'),
+        complexOps('1', '0')
+      )
     )
   })
 
@@ -69,45 +96,39 @@ describe('factorial', () => {
       factorial(complex([2, 0])),
       complex([2, 0])
     )(
-      [`2+0${Unicode.i}`, `2+0${Unicode.i}`, 'given primitive'],
-      [
-        `(2+0${Unicode.i})!`, 
-        `2+0${Unicode.i} * (2+0${Unicode.i} - 1)!`, 
-        'complex factorial'
-      ],
-      [`-1+0${Unicode.i}`, `-1+0${Unicode.i}`, 'given primitive'],
-      [
-        `2+0${Unicode.i} + -1+0${Unicode.i}`, 
-        `1+0${Unicode.i}`, 
-        'complex addition'
-      ],
-      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive'],
-      [
-        `(1+0${Unicode.i})!`, 
-        `1+0${Unicode.i} * (1+0${Unicode.i} - 1)!`,
-        'complex factorial'
-      ],
-      [`-1+0${Unicode.i}`, `-1+0${Unicode.i}`, 'given primitive'],
-      [
-        `1+0${Unicode.i} + -1+0${Unicode.i}`, 
-        `0+0${Unicode.i}`, 
-        'complex addition'
-      ],
-      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
-      [`(0+0${Unicode.i})!`, `1+0${Unicode.i}`, 'degenerate case'],
-      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive'],
-      [
-        `1+0${Unicode.i} * 1+0${Unicode.i}`, 
-        `1+0${Unicode.i}`, 
-        'complex multiplication'
-      ],
-      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive'],
-      [
-        `2+0${Unicode.i} * 1+0${Unicode.i}`, 
-        `2+0${Unicode.i}`, 
-        'complex multiplication'
-      ],
-      [`2+0${Unicode.i}`, `2+0${Unicode.i}`, 'given primitive']
+      ...factorialOps(
+        'complex factorial',
+        complexOps('2', '0'),
+        multiplyOps(
+          'complex multiplication',
+          complexOps('2', '0'),
+          factorialOps(
+            'complex factorial',
+            addOps(
+              'complex addition',
+              complexOps('2', '0'),
+              complexOps('-1', '0'),
+              complexOps('1', '0')
+            ),
+            multiplyOps(
+              'complex multiplication',
+              complexOps('1', '0'),
+              factorialOps(
+                'degenerate case',
+                addOps(
+                  'complex addition',
+                  complexOps('1', '0'),
+                  complexOps('-1', '0'),
+                  complexOps('0', '0')
+                ),
+                complexOps('1', '0')
+              ),
+              complexOps('1', '0')
+            )
+          ),
+          complexOps('2', '0')
+        )
+      )
     )
   })
 
@@ -116,9 +137,11 @@ describe('factorial', () => {
       factorial(real(-5)),
       ComplexInfinity
     )(
-      ['-5', '-5', 'given primitive'],
-      ['(-5)!', `${Unicode.complexInfinity}`, 'singularity'],
-      [`${Unicode.complexInfinity}`, `${Unicode.complexInfinity}`, 'given primitive']
+      ...factorialOps(
+        'singularity',
+        realOps('-5'),
+        [[Unicode.complexInfinity, 'created complex']]
+      )
     )
   })
 
@@ -133,10 +156,13 @@ describe('factorial', () => {
   it('returns a Factorial node for unbound variables', () => {
     expectWriterTreeNode(
       factorial(variable('x')),
-      $factorial(unit(variable('x').value))[0]
+      $factorial(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['(x)!', '(x)!', 'factorial']
+      ...factorialOps(
+        'created factorial',
+        variableOps('x'),
+        []
+      )
     )
   })
 })

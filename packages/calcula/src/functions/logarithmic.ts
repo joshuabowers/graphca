@@ -4,7 +4,6 @@ import { Binary, binary, when, partialLeft } from "../closures/binary";
 import { divide } from '../arithmetic'
 import { Exponentiation, isExponentiation } from "../arithmetic/exponentiation";
 import { deepEquals } from "../utility/deepEquals";
-// import { rule } from "../utility/rule";
 
 export type Logarithm = Binary<Species.log, Genera.logarithmic>
 
@@ -12,8 +11,6 @@ const lnComplex = (c: Complex) => complex([
   Math.log(Math.hypot(c.a, c.b)),
   Math.atan2(c.b, c.a)
 ])
-
-// export const logRule = binaryFnRule('log')
 
 export const [log, isLogarithm, $log] = binary<Logarithm>(
   'log', Notation.prefix, Species.log, Genera.logarithmic

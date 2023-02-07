@@ -1,9 +1,7 @@
-import { unit } from "../monads/writer"
 import { Genera, Species, Notation, isGenus } from "../utility/tree"
 import { real, complex, boolean } from "../primitives"
-import { UnaryNode, unary, unaryFnRule } from "../closures/unary"
+import { UnaryNode, unary } from "../closures/unary"
 import { reciprocal } from "../arithmetic"
-import { rule } from "../utility/rule"
 
 export type HyperbolicNode = UnaryNode & {
   readonly genus: Genera.hyperbolic
@@ -22,72 +20,65 @@ export type HyperbolicCosecant = Hyperbolic<Species.csch>
 export type HyperbolicSecant = Hyperbolic<Species.sech>
 export type HyperbolicCotangent = Hyperbolic<Species.coth>
 
-export const coshRule = unaryFnRule('cosh')
-export const sinhRule = unaryFnRule('sinh')
-export const tanhRule = unaryFnRule('tanh')
-export const sechRule = unaryFnRule('sech')
-export const cschRule = unaryFnRule('csch')
-export const cothRule = unaryFnRule('coth')
-
 export const [cosh, isHyperbolicCosine, $cosh] = unary<HyperbolicCosine>(
   'cosh', Notation.prefix, Species.cosh, Genera.hyperbolic
 )(
-  r => real(Math.cosh(r.value)), 
+  r => real(Math.cosh(r.value.value)), 
   c => complex([
-    Math.cosh(c.a) * Math.cos(c.b),
-    Math.sinh(c.a) * Math.sin(c.b)
+    Math.cosh(c.value.a) * Math.cos(c.value.b),
+    Math.sinh(c.value.a) * Math.sin(c.value.b)
   ]),
-  b => boolean(cosh(real(unit(b))))
+  b => boolean(cosh(real(b)))
 )()
 
 export const [sinh, isHyperbolicSine, $sinh] = unary<HyperbolicSine>(
   'sinh', Notation.prefix, Species.sinh, Genera.hyperbolic
 )(
-  r => real(Math.sinh(r.value)),
+  r => real(Math.sinh(r.value.value)),
   c => complex([
-    Math.sinh(c.a) * Math.cos(c.b),
-    Math.cosh(c.a) * Math.sin(c.b)
+    Math.sinh(c.value.a) * Math.cos(c.value.b),
+    Math.cosh(c.value.a) * Math.sin(c.value.b)
   ]),
-  b => boolean(sinh(real(unit(b)))),
+  b => boolean(sinh(real(b))),
 )()
 
 export const [tanh, isHyperbolicTangent, $tanh] = unary<HyperbolicTangent>(
   'tanh', Notation.prefix, Species.tanh, Genera.hyperbolic
 )(
-  r => real(Math.tanh(r.value)),
+  r => real(Math.tanh(r.value.value)),
   c => {
-    const divisor = Math.cosh(2 * c.a) + Math.cos(2 * c.b)
+    const divisor = Math.cosh(2 * c.value.a) + Math.cos(2 * c.value.b)
     return complex([
-      Math.sinh(2 * c.a) / divisor,
-      Math.sin(2 * c.b) / divisor
+      Math.sinh(2 * c.value.a) / divisor,
+      Math.sin(2 * c.value.b) / divisor
     ])
   },
-  b => boolean(tanh(real(unit(b)))),
+  b => boolean(tanh(real(b))),
 )()
 
 export const [sech, isHyperbolicSecant, $sech] = unary<HyperbolicSecant>(
   'sech', Notation.prefix, Species.sech, Genera.hyperbolic,
-  t => rule`cosh(${t}) ^ -1`
+  // t => rule`cosh(${t}) ^ -1`
 )(
-  r => reciprocal(cosh(unit(r))),
-  c => reciprocal(cosh(unit(c))),
-  b => reciprocal(cosh(unit(b)))
+  r => reciprocal(cosh(r)),
+  c => reciprocal(cosh(c)),
+  b => reciprocal(cosh(b))
 )()
 
 export const [csch, isHyperbolicCosecant, $csch] = unary<HyperbolicCosecant>(
   'csch', Notation.prefix, Species.csch, Genera.hyperbolic,
-  t => rule`sinh(${t}) ^ -1`
+  // t => rule`sinh(${t}) ^ -1`
 )(
-  r => reciprocal(sinh(unit(r))),
-  c => reciprocal(sinh(unit(c))),
-  b => reciprocal(sinh(unit(b)))
+  r => reciprocal(sinh(r)),
+  c => reciprocal(sinh(c)),
+  b => reciprocal(sinh(b))
 )()
 
 export const [coth, isHyperbolicCotangent, $coth] = unary<HyperbolicCotangent>(
   'coth', Notation.prefix, Species.coth, Genera.hyperbolic,
-  t => rule`tanh(${t}) ^ -1`
+  // t => rule`tanh(${t}) ^ -1`
 )(
-  r => reciprocal(tanh(unit(r))),
-  c => reciprocal(tanh(unit(c))),
-  b => reciprocal(tanh(unit(b)))
+  r => reciprocal(tanh(r)),
+  c => reciprocal(tanh(c)),
+  b => reciprocal(tanh(b))
 )()

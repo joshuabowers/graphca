@@ -40,7 +40,7 @@ describe('cos', () => {
   it('returns an expression when given non-constant', () => {
     expectWriterTreeNode(
       cos(variable('x')),
-      $cos(unit(variable('x').value))[0]
+      $cos(variable('x'))[0]
     )(
       ['cos(x)', 'identified cosine'],
       ['cos(|x)', 'processing argument'],
@@ -83,7 +83,7 @@ describe('sin', () => {
   it('returns a expression when given non-constant', () => {
     expectWriterTreeNode(
       sin(variable('x')),
-      $sin(unit(variable('x').value))[0]
+      $sin(variable('x'))[0]
     )(
       ['sin(x)', 'identified sine'],
       ['sin(|x)', 'processing argument'],
@@ -126,7 +126,7 @@ describe('tan', () => {
   it('returns a expression when given non-constant', () => {
     expectWriterTreeNode(
       tan(variable('x')),
-      $tan(unit(variable('x').value))[0]
+      $tan(variable('x'))[0]
     )(
       ['tan(x)', 'identified tangent'],
       ['tan(|x)', 'processing argument'],
@@ -183,7 +183,7 @@ describe('sec', () => {
   it('returns a expression when given non-constant', () => {
     expectWriterTreeNode(
       sec(variable('x')),
-      $sec(unit(variable('x').value))[0]
+      $sec(variable('x'))[0]
     )(
       ['sec(x)', 'identified secant'],
       ['sec(|x)', 'processing argument'],
@@ -240,7 +240,7 @@ describe('csc', () => {
   it('returns a expression when given non-constant', () => {
     expectWriterTreeNode(
       csc(variable('x')),
-      $csc(unit(variable('x').value))[0]
+      $csc(variable('x'))[0]
     )(
       ['csc(x)', 'identified cosecant'],
       ['csc(|x)', 'processing argument'],
@@ -296,7 +296,7 @@ describe('cot', () => {
   it('returns a expression when given non-constant', () => {
     expectWriterTreeNode(
       cot(variable('x')),
-      $cot(unit(variable('x').value))[0]
+      $cot(variable('x'))[0]
     )(
       ['cot(x)', 'identified cotangent'],
       ['cot(|x)', 'processing argument'],

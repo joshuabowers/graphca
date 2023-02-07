@@ -1,5 +1,8 @@
 import { unit } from '../monads/writer';
-import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations';
+import { 
+  expectCloseTo, expectWriterTreeNode,
+  variableOps, permuteOps, combineOps
+} from '../utility/expectations';
 import { Clades, Genera, Species } from '../utility/tree';
 import { real, complex } from '../primitives';
 import { variable } from '../variable'
@@ -32,11 +35,14 @@ describe('permute', () => {
   it('generates a Permutation for unbound sub-expressions', () => {
     expectWriterTreeNode(
       permute(variable('n'), variable('r')),
-      $permute(unit(variable('n').value), unit(variable('r').value))[0]
+      $permute(variable('n'), variable('r'))[0]
     )(
-      ['n', 'n', 'given variable'],
-      ['r', 'r', 'given variable'],
-      ['P(n, r)', 'P(n,r)', 'permutation']
+      ...permuteOps(
+        'created permutation',
+        variableOps('n'),
+        variableOps('r'),
+        []
+      )
     )
   })
 })
@@ -68,11 +74,14 @@ describe('combine', () => {
   it('generates a Combination for unbound sub-expressions', () => {
     expectWriterTreeNode(
       combine(variable('n'), variable('r')),
-      $combine(unit(variable('n').value), unit(variable('r').value))[0]
+      $combine(variable('n'), variable('r'))[0]
     )(
-      ['n', 'n', 'given variable'],
-      ['r', 'r', 'given variable'],
-      ['C(n, r)', 'C(n,r)', 'combination']
+      ...combineOps(
+        'created combination',
+        variableOps('n'),
+        variableOps('r'),
+        []
+      )
     )
   })
 })

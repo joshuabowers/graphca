@@ -1,5 +1,8 @@
 import { unit } from '../monads/writer'
-import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+import { 
+  expectCloseTo, expectWriterTreeNode,
+  realOps, complexOps, variableOps, logOps, raiseOps
+} from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
@@ -24,10 +27,12 @@ describe('log', () => {
       log(real(16), real(256)),
       real(2)
     )(
-      ['16', '16', 'given primitive'],
-      ['256', '256', 'given primitive'],
-      ['log(16, 256)', '2', 'real logarithm'],
-      ['2', '2', 'given primitive']
+      ...logOps(
+        'real logarithm',
+        realOps('16'),
+        realOps('256'),
+        realOps('2')
+      )
     )
   })
 
@@ -46,11 +51,14 @@ describe('log', () => {
   it('returns an expression for unbound subtrees', () => {
     expectWriterTreeNode(
       log(variable('x'), variable('y')),
-      $log(unit(variable('x').value), unit(variable('y').value))[0]
+      $log(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['log(x, y)', 'log(x,y)', 'logarithm']
+      ...logOps(
+        'created logarithm',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 
@@ -59,11 +67,17 @@ describe('log', () => {
       log(real(16), raise(real(16), variable('x'))),
       variable('x')
     )(
-      ['16', '16', 'given primitive'],
-      ['16', '16', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['16 ^ x', '(16^x)', 'exponentiation'],
-      ['log(16, (16^x))', 'x', 'inverse operation cancellation']
+      ...logOps(
+        'inverse operation cancellation',
+        realOps('16'),
+        raiseOps(
+          'created exponentiation',
+          realOps('16'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 })
@@ -74,10 +88,12 @@ describe('lb', () => {
       lb(real(1024)),
       real(10)
     )(
-      ['2', '2', 'given primitive'],
-      ['1024', '1024', 'given primitive'],
-      ['log(2, 1024)', '10', 'real logarithm'],
-      ['10', '10', 'given primitive']
+      ...logOps(
+        'real logarithm',
+        realOps('2'),
+        realOps('1024'),
+        realOps('10')
+      )
     )
   })
 
@@ -86,31 +102,36 @@ describe('lb', () => {
       lb(raise(real(2), variable('x'))),
       variable('x')
     )(
-      ['2', '2', 'given primitive'],
-      ['2', '2', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['2 ^ x', '(2^x)', 'exponentiation'],
-      ['log(2, (2^x))', 'x', 'inverse operation cancellation']
+      ...logOps(
+        'inverse operation cancellation',
+        realOps('2'),
+        raiseOps(
+          'created exponentiation',
+          realOps('2'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 })
 
 describe('ln', () => {
   it('calculates the base e logarithm of complex 0', () => {
-    const cni = `-${Unicode.infinity}+0${Unicode.i}`
     expectWriterTreeNode(
       ln(complex([0, 0])),
       complex([-Infinity, 0])
     )(
-      [Unicode.e, Unicode.e, 'given primitive'],
-      [Unicode.e, `${Unicode.e}+0${Unicode.i}`, 'cast to Complex from Real'],
-      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
-      [
-        `log(${Unicode.e}+0${Unicode.i}, 0+0${Unicode.i})`, 
-        cni,
-        'complex logarithm'
-      ],
-      [cni, cni, 'given primitive']
+      ...logOps(
+        'complex logarithm',
+        [
+          ...realOps(Unicode.e),
+          [`${Unicode.e}+0${Unicode.i}`, 'cast to Complex from Real']
+        ],
+        complexOps('0','0'),
+        complexOps(`-${Unicode.infinity}`, '0')
+      )
     )
   })
 
@@ -123,11 +144,17 @@ describe('ln', () => {
       ln(raise(real(Math.E), variable('x'))),
       variable('x')
     )(
-      [Unicode.e, Unicode.e, 'given primitive'],
-      [Unicode.e, Unicode.e, 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [`${Unicode.e} ^ x`, `(${Unicode.e}^x)`, 'exponentiation'],
-      [`log(${Unicode.e}, (${Unicode.e}^x))`, 'x', 'inverse operation cancellation']
+      ...logOps(
+        'inverse operation cancellation',
+        realOps(Unicode.e),
+        raiseOps(
+          'created exponentiation',
+          realOps(Unicode.e),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 })
@@ -142,11 +169,17 @@ describe('lg', () => {
       lg(raise(real(10), variable('x'))),
       variable('x')
     )(
-      ['10', '10', 'given primitive'],
-      ['10', '10', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      ['10 ^ x', '(10^x)', 'exponentiation'],
-      ['log(10, (10^x))', 'x', 'inverse operation cancellation']
+      ...logOps(
+        'inverse operation cancellation',
+        realOps('10'),
+        raiseOps(
+          'created exponentiation',
+          realOps('10'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 })

@@ -1,5 +1,9 @@
 import { unit } from '../monads/writer'
-import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+import { 
+  expectCloseTo, expectWriterTreeNode,
+  realOps, variableOps, raiseOps,
+  acoshOps, asinhOps, atanhOps, asechOps, acschOps, acothOps
+} from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
@@ -31,10 +35,13 @@ describe('acosh', () => {
   it('generates an AreaHyperbolicCosine node of a variable expression', () => {
     expectWriterTreeNode(
       acosh(variable('x')),
-      $acosh(unit(variable('x').value))[0]
+      $acosh(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['acosh(x)', 'acosh(x)', 'area hyperbolic cosine']
+      ...acoshOps(
+        'created area hyperbolic cosine',
+        variableOps('x'),
+        []
+      )
     )
   })
 })
@@ -62,10 +69,13 @@ describe('asinh', () => {
   it('generates an AreaHyperbolicSine node of a variable expression', () => {
     expectWriterTreeNode(
       asinh(variable('x')),
-      $asinh(unit(variable('x').value))[0]
+      $asinh(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['asinh(x)', 'asinh(x)', 'area hyperbolic sine']
+      ...asinhOps(
+        'created area hyperbolic sine',
+        variableOps('x'),
+        []
+      )
     )
   })
 })
@@ -93,10 +103,13 @@ describe('atanh', () => {
   it('generates an AreaHyperbolicTangent node of a variable expression', () => {
     expectWriterTreeNode(
       atanh(variable('x')),
-      $atanh(unit(variable('x').value))[0]
+      $atanh(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['atanh(x)', 'atanh(x)', 'area hyperbolic tangent']
+      ...atanhOps(
+        'created area hyperbolic tangent',
+        variableOps('x'),
+        []
+      )
     )
   })
 })
@@ -119,13 +132,20 @@ describe('asech', () => {
       asech(real(2)),
       real(Math.acosh(1 / 2))
     )(
-      ['2', '2', 'given primitive'],
-      ['asech(2)', 'acosh(2 ^ -1)', 'real area hyperbolic secant'],
-      ['-1', '-1', 'given primitive'],
-      ['2 ^ -1', '0.5', 'real exponentiation'],
-      ['0.5', '0.5', 'given primitive'],
-      ['acosh(0.5)', v, 'real area hyperbolic cosine'],
-      [v, v, 'given primitive']
+      ...asechOps(
+        'real area hyperbolic secant',
+        realOps('2'),
+        acoshOps(
+          'real area hyperbolic cosine',
+          raiseOps(
+            'real exponentiation',
+            realOps('2'),
+            realOps('-1'),
+            realOps('0.5')
+          ),
+          realOps(v)
+        )
+      )
     )
   })
 
@@ -136,10 +156,13 @@ describe('asech', () => {
   it('generates an AreaHyperbolicSecant node of a variable expression', () => {
     expectWriterTreeNode(
       asech(variable('x')),
-      $asech(unit(variable('x').value))[0]
+      $asech(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['asech(x)', 'asech(x)', 'area hyperbolic secant']
+      ...asechOps(
+        'created area hyperbolic secant',
+        variableOps('x'),
+        []
+      )
     )
   })
 })
@@ -167,10 +190,13 @@ describe('acsch', () => {
   it('generates an AreaHyperbolicCosecant node of a variable expression', () => {
     expectWriterTreeNode(
       acsch(variable('x')),
-      $acsch(unit(variable('x').value))[0]
+      $acsch(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['acsch(x)', 'acsch(x)', 'area hyperbolic cosecant']
+      ...acschOps(
+        'created area hyperbolic cosecant',
+        variableOps('x'),
+        []
+      )
     )
   })
 })
@@ -198,10 +224,13 @@ describe('acoth', () => {
   it('generates an AreaHyperbolicCotangent node of a variable expression', () => {
     expectWriterTreeNode(
       acoth(variable('x')),
-      $acoth(unit(variable('x').value))[0]
+      $acoth(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['acoth(x)', 'acoth(x)', 'area hyperbolic cotangent']
+      ...acothOps(
+        'created area hyperbolic cotangent',
+        variableOps('x'),
+        []
+      )
     )
   })
 })

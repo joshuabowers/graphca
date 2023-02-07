@@ -1,5 +1,10 @@
 import { unit } from '../monads/writer'
-import { expectWriterTreeNode } from '../utility/expectations';
+import { 
+  expectWriterTreeNode,
+  realOps, complexOps, booleanOps, variableOps,
+  equalsOps, notEqualsOps, lessThanOps, 
+  greaterThanOps, lessThanEqualsOps, greaterThanEqualsOps
+} from '../utility/expectations';
 import { Clades, Genera, Species } from '../utility/tree';
 import { real, complex, boolean } from '../primitives';
 import { variable } from '../variable'
@@ -7,7 +12,6 @@ import {
   equals, notEquals, lessThan, greaterThan, lessThanEquals, greaterThanEquals, 
   $equals, $notEquals, $lessThan, $greaterThan, $lessThanEquals, $greaterThanEquals
 } from "./inequality";
-import { Unicode } from '../Unicode'
 
 describe('$equals', () => {
   it('generates an Equality for a pair of TreeNode inputs', () => {
@@ -26,10 +30,12 @@ describe('equals', () => {
       equals(real(1), real(1)),
       boolean(true)
     )(
-      ['1', '1', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['1 === 1', 'true', 'real equality'],
-      ['true', 'true', 'given primitive']
+      ...equalsOps(
+        'real equality',
+        realOps('1'),
+        realOps('1'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -38,14 +44,12 @@ describe('equals', () => {
       equals(complex([1,1]), complex([1,1])),
       boolean(true)
     )(
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [
-        `1+1${Unicode.i} === 1+1${Unicode.i}`,
-        'true',
-        'complex equality'
-      ],
-      ['true', 'true', 'given primitive']
+      ...equalsOps(
+        'complex equality',
+        complexOps('1', '1'),
+        complexOps('1', '1'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -54,10 +58,12 @@ describe('equals', () => {
       equals(boolean(false), boolean(false)),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      ['false === false', 'true', 'boolean equality'],
-      ['true', 'true', 'given primitive']
+      ...equalsOps(
+        'boolean equality',
+        booleanOps('false'),
+        booleanOps('false'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -66,21 +72,26 @@ describe('equals', () => {
       equals(real(1), real(2)),
       boolean(false)
     )(
-      ['1', '1', 'given primitive'],
-      ['2', '2', 'given primitive'],
-      ['1 === 2', 'false', 'real equality'],
-      ['false', 'false', 'given primitive']
+      ...equalsOps(
+        'real equality',
+        realOps('1'),
+        realOps('2'),
+        booleanOps('false')
+      )
     )
   })
 
   it('returns an Equals for variable input', () => {
     expectWriterTreeNode(
       equals(variable('x'), variable('y')),
-      $equals(unit(variable('x').value), unit(variable('y').value))[0]
+      $equals(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x === y', '(x===y)', 'equality']
+      ...equalsOps(
+        'created equality',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })
@@ -102,10 +113,12 @@ describe('notEquals', () => {
       notEquals(real(1), real(1)),
       boolean(false)
     )(
-      ['1', '1', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['1 !== 1', 'false', 'real inequality'],
-      ['false', 'false', 'given primitive']
+      ...notEqualsOps(
+        'real inequality',
+        realOps('1'),
+        realOps('1'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -114,14 +127,12 @@ describe('notEquals', () => {
       notEquals(complex([1,1]), complex([1,1])),
       boolean(false)
     )(
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [
-        `1+1${Unicode.i} !== 1+1${Unicode.i}`,
-        'false',
-        'complex inequality'
-      ],
-      ['false', 'false', 'given primitive']
+      ...notEqualsOps(
+        'complex inequality',
+        complexOps('1', '1'),
+        complexOps('1', '1'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -130,12 +141,13 @@ describe('notEquals', () => {
       notEquals(boolean(false), boolean(false)),
       boolean(false)
     )(
-      ['false', 'false', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      ['false !== false', 'false', 'boolean inequality'],
-      ['false', 'false', 'given primitive']
+      ...notEqualsOps(
+        'boolean inequality',
+        booleanOps('false'),
+        booleanOps('false'),
+        booleanOps('false')
+      )
     )
-    expect(notEquals(boolean(false), boolean(false)).value).toEqual(boolean(false).value)
   })
 
   it('returns true for unequal things', () => {
@@ -143,21 +155,26 @@ describe('notEquals', () => {
       notEquals(real(1), real(2)),
       boolean(true)
     )(
-      ['1', '1', 'given primitive'],
-      ['2', '2', 'given primitive'],
-      ['1 !== 2', 'true', 'real inequality'],
-      ['true', 'true', 'given primitive']
+      ...notEqualsOps(
+        'real inequality',
+        realOps('1'),
+        realOps('2'),
+        booleanOps('true')
+      )
     )
   })
 
   it('returns a NotEquals for variable input', () => {
     expectWriterTreeNode(
       notEquals(variable('x'), variable('y')),
-      $notEquals(unit(variable('x').value), unit(variable('y').value))[0]
+      $notEquals(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x !== y', '(x!==y)', 'inequality']
+      ...notEqualsOps(
+        'created inequality',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })
@@ -179,10 +196,12 @@ describe('lessThan', () => {
       lessThan(real(1), real(2)),
       boolean(true)
     )(
-      ['1', '1', 'given primitive'],
-      ['2', '2', 'given primitive'],
-      ['1 < 2', 'true', 'real less than'],
-      ['true', 'true', 'given primitive']
+      ...lessThanOps(
+        'real less than',
+        realOps('1'),
+        realOps('2'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -191,10 +210,12 @@ describe('lessThan', () => {
       lessThan(real(2), real(1)),
       boolean(false)
     )(
-      ['2', '2', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['2 < 1', 'false', 'real less than'],
-      ['false', 'false', 'given primitive']
+      ...lessThanOps(
+        'real less than',
+        realOps('2'),
+        realOps('1'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -203,10 +224,12 @@ describe('lessThan', () => {
       lessThan(real(1), real(1)),
       boolean(false)
     )(
-      ['1', '1', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['1 < 1', 'false', 'real less than'],
-      ['false', 'false', 'given primitive']
+      ...lessThanOps(
+        'real less than',
+        realOps('1'),
+        realOps('1'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -215,14 +238,12 @@ describe('lessThan', () => {
       lessThan(complex([1, 1]), complex([5, 5])),
       boolean(true)
     )(
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-      [
-        `1+1${Unicode.i} < 5+5${Unicode.i}`,
-        'true',
-        'complex less than'
-      ],
-      ['true', 'true', 'given primitive']
+      ...lessThanOps(
+        'complex less than',
+        complexOps('1', '1'),
+        complexOps('5', '5'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -231,25 +252,26 @@ describe('lessThan', () => {
       lessThan(complex([5, 5]), complex([1, 1])),
       boolean(false)
     )(
-      [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [
-        `5+5${Unicode.i} < 1+1${Unicode.i}`,
-        'false',
-        'complex less than'
-      ],
-      ['false', 'false', 'given primitive']
+      ...lessThanOps(
+        'complex less than',
+        complexOps('5', '5'),
+        complexOps('1', '1'),
+        booleanOps('false')
+      )
     )
   })
 
   it('returns a LessThan for variable input', () => {
     expectWriterTreeNode(
       lessThan(variable('x'), variable('y')),
-      $lessThan(unit(variable('x').value), unit(variable('y').value))[0]
+      $lessThan(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x < y', '(x<y)', 'less than']
+      ...lessThanOps(
+        'created less than',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })
@@ -271,10 +293,12 @@ describe('greaterThan', () => {
       greaterThan(real(1), real(2)),
       boolean(false)
     )(
-      ['1', '1', 'given primitive'],
-      ['2', '2', 'given primitive'],
-      ['1 > 2', 'false', 'real greater than'],
-      ['false', 'false', 'given primitive']
+      ...greaterThanOps(
+        'real greater than',
+        realOps('1'),
+        realOps('2'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -283,10 +307,12 @@ describe('greaterThan', () => {
       greaterThan(real(2), real(1)),
       boolean(true)
     )(
-      ['2', '2', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['2 > 1', 'true', 'real greater than'],
-      ['true', 'true', 'given primitive']
+      ...greaterThanOps(
+        'real greater than',
+        realOps('2'),
+        realOps('1'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -295,10 +321,12 @@ describe('greaterThan', () => {
       greaterThan(real(1), real(1)),
       boolean(false)
     )(
-      ['1', '1', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['1 > 1', 'false', 'real greater than'],
-      ['false', 'false', 'given primitive']
+      ...greaterThanOps(
+        'real greater than',
+        realOps('1'),
+        realOps('1'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -307,14 +335,12 @@ describe('greaterThan', () => {
       greaterThan(complex([1, 1]), complex([5, 5])),
       boolean(false)
     )(
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-      [
-        `1+1${Unicode.i} > 5+5${Unicode.i}`,
-        'false',
-        'complex greater than'
-      ],
-      ['false', 'false', 'given primitive']
+      ...greaterThanOps(
+        'complex greater than',
+        complexOps('1', '1'),
+        complexOps('5', '5'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -323,25 +349,26 @@ describe('greaterThan', () => {
       greaterThan(complex([5, 5]), complex([1, 1])),
       boolean(true)
     )(
-      [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [
-        `5+5${Unicode.i} > 1+1${Unicode.i}`,
-        'true',
-        'complex greater than'
-      ],
-      ['true', 'true', 'given primitive']
+      ...greaterThanOps(
+        'complex greater than',
+        complexOps('5', '5'),
+        complexOps('1', '1'),
+        booleanOps('true')
+      )
     )
   })
 
   it('returns a GreaterThan for variable input', () => {
     expectWriterTreeNode(
       greaterThan(variable('x'), variable('y')),
-      $greaterThan(unit(variable('x').value), unit(variable('y').value))[0]
+      $greaterThan(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x > y', '(x>y)', 'greater than']
+      ...greaterThanOps(
+        'created greater than',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })
@@ -363,10 +390,12 @@ describe('lessThanEquals', () => {
       lessThanEquals(real(1), real(2)),
       boolean(true)
     )(
-      ['1', '1', 'given primitive'],
-      ['2', '2', 'given primitive'],
-      ['1 <= 2', 'true', 'real less than equals'],
-      ['true', 'true', 'given primitive']
+      ...lessThanEqualsOps(
+        'real less than equals',
+        realOps('1'),
+        realOps('2'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -375,10 +404,12 @@ describe('lessThanEquals', () => {
       lessThanEquals(real(2), real(1)),
       boolean(false)
     )(
-      ['2', '2', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['2 <= 1', 'false', 'real less than equals'],
-      ['false', 'false', 'given primitive']
+      ...lessThanEqualsOps(
+        'real less than equals',
+        realOps('2'),
+        realOps('1'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -387,10 +418,12 @@ describe('lessThanEquals', () => {
       lessThanEquals(real(1), real(1)),
       boolean(true)
     )(
-      ['1', '1', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['1 <= 1', 'true', 'real less than equals'],
-      ['true', 'true', 'given primitive']
+      ...lessThanEqualsOps(
+        'real less than equals',
+        realOps('1'),
+        realOps('1'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -399,14 +432,12 @@ describe('lessThanEquals', () => {
       lessThanEquals(complex([1, 1]), complex([5, 5])),
       boolean(true)
     )(
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-      [
-        `1+1${Unicode.i} <= 5+5${Unicode.i}`,
-        'true',
-        'complex less than equals'
-      ],
-      ['true', 'true', 'given primitive']
+      ...lessThanEqualsOps(
+        'complex less than equals',
+        complexOps('1', '1'),
+        complexOps('5', '5'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -415,25 +446,26 @@ describe('lessThanEquals', () => {
       lessThanEquals(complex([5, 5]), complex([1, 1])),
       boolean(false)
     )(
-      [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [
-        `5+5${Unicode.i} <= 1+1${Unicode.i}`,
-        'false',
-        'complex less than equals'
-      ],
-      ['false', 'false', 'given primitive']
+      ...lessThanEqualsOps(
+        'complex less than equals',
+        complexOps('5', '5'),
+        complexOps('1', '1'),
+        booleanOps('false')
+      )
     )
   })
 
   it('returns a LessThanEquals for variable input', () => {
     expectWriterTreeNode(
       lessThanEquals(variable('x'), variable('y')),
-      $lessThanEquals(unit(variable('x').value), unit(variable('y').value))[0]
+      $lessThanEquals(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x <= y', '(x<=y)', 'less than equals']
+      ...lessThanEqualsOps(
+        'created less than equals',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })
@@ -455,10 +487,12 @@ describe('greaterThanEquals', () => {
       greaterThanEquals(real(1), real(2)),
       boolean(false)
     )(
-      ['1', '1', 'given primitive'],
-      ['2', '2', 'given primitive'],
-      ['1 >= 2', 'false', 'real greater than equals'],
-      ['false', 'false', 'given primitive']
+      ...greaterThanEqualsOps(
+        'real greater than equals',
+        realOps('1'),
+        realOps('2'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -467,10 +501,12 @@ describe('greaterThanEquals', () => {
       greaterThanEquals(real(2), real(1)),
       boolean(true)
     )(
-      ['2', '2', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['2 >= 1', 'true', 'real greater than equals'],
-      ['true', 'true', 'given primitive']
+      ...greaterThanEqualsOps(
+        'real greater than equals',
+        realOps('2'),
+        realOps('1'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -479,10 +515,12 @@ describe('greaterThanEquals', () => {
       greaterThanEquals(real(1), real(1)),
       boolean(true)
     )(
-      ['1', '1', 'given primitive'],
-      ['1', '1', 'given primitive'],
-      ['1 >= 1', 'true', 'real greater than equals'],
-      ['true', 'true', 'given primitive']
+      ...greaterThanEqualsOps(
+        'real greater than equals',
+        realOps('1'),
+        realOps('1'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -491,14 +529,12 @@ describe('greaterThanEquals', () => {
       greaterThanEquals(complex([1, 1]), complex([5, 5])),
       boolean(false)
     )(
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-      [
-        `1+1${Unicode.i} >= 5+5${Unicode.i}`,
-        'false',
-        'complex greater than equals'
-      ],
-      ['false', 'false', 'given primitive']
+      ...greaterThanEqualsOps(
+        'complex greater than equals',
+        complexOps('1', '1'),
+        complexOps('5', '5'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -507,25 +543,26 @@ describe('greaterThanEquals', () => {
       greaterThanEquals(complex([5, 5]), complex([1, 1])),
       boolean(true)
     )(
-      [`5+5${Unicode.i}`, `5+5${Unicode.i}`, 'given primitive'],
-      [`1+1${Unicode.i}`, `1+1${Unicode.i}`, 'given primitive'],
-      [
-        `5+5${Unicode.i} >= 1+1${Unicode.i}`,
-        'true',
-        'complex greater than equals'
-      ],
-      ['true', 'true', 'given primitive']
+      ...greaterThanEqualsOps(
+        'complex greater than equals',
+        complexOps('5', '5'),
+        complexOps('1', '1'),
+        booleanOps('true')
+      )
     )
   })
 
   it('returns a GreaterThanEquals for variable input', () => {
     expectWriterTreeNode(
       greaterThanEquals(variable('x'), variable('y')),
-      $greaterThanEquals(unit(variable('x').value), unit(variable('y').value))[0]
+      $greaterThanEquals(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x >= y', '(x>=y)', 'greater than equals']
+      ...greaterThanEqualsOps(
+        'created greater than equals',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })

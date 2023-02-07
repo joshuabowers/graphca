@@ -147,3 +147,5 @@ export const any = (...args: Species[]) => {
   return <T extends TreeNode>(t: Writer<T, Operation>) => 
     t.value && include.has(t.value.species)
 }
+
+export const eitherNilOrNaN = any(Species.nil, Species.nan)

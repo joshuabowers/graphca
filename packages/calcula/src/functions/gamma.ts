@@ -1,21 +1,21 @@
-import { Writer, unit } from "../monads/writer"
+import { Writer } from "../monads/writer"
+import { Operation } from "../utility/operation"
 import { Multi, multi, method } from "@arrows/multimethod"
 import { TreeNode, Species, Notation } from "../utility/tree"
 import { Real, Complex, real, boolean, isReal, isComplex } from "../primitives"
-import { Unary, unary, unaryFnRule, when } from "../closures/unary"
+import { Unary, unary, when } from "../closures/unary"
 import { 
   add, subtract, multiply, divide, negate, raise, sqrt 
 } from "../arithmetic"
 import { sin } from "./trigonometric"
 import { factorial } from "./factorial"
 import { Unicode } from "../Unicode"
-import { rule } from "../utility/rule"
 
 const isPIN = (n: number) => n > 0 && n <= 15 && Number.isInteger(n)
 
-const isPositiveInteger = (e: Writer<TreeNode>) =>
-  (isReal(e) && isPIN(e.result.value))
-  || (isComplex(e) && e.result.b === 0 && isPIN(e.result.a))
+const isPositiveInteger = (e: Writer<TreeNode, Operation>) =>
+  (isReal(e) && isPIN(e.value.value))
+  || (isComplex(e) && e.value.b === 0 && isPIN(e.value.a))
 
 
 export type Predicate<T extends TreeNode> = (t: T) => boolean
@@ -25,8 +25,8 @@ export type ConstantPredicate = Multi
   & Predicate<Complex>  
 
 const isSmall: ConstantPredicate = multi(
-  method(isReal, (r: Writer<Real>) => r.result.value < 0.5),
-  method(isComplex, (c: Writer<Complex>) => c.result.a < 0.5),
+  method(isReal, (r: Writer<Real, Operation>) => r.value.value < 0.5),
+  method(isComplex, (c: Writer<Complex, Operation>) => c.value.a < 0.5),
   method(false)
 )
 
@@ -44,18 +44,18 @@ const lanczos = {
 }
 
 const pi = real(Math.PI), sqrtTwicePi = sqrt(real(2 * Math.PI))
-const gammaReflection = (e: Writer<TreeNode>): Writer<TreeNode> =>
+const gammaReflection = (e: Writer<TreeNode, Operation>): Writer<TreeNode, Operation> =>
   divide(
     pi,
     multiply(sin(multiply(e, pi)), gamma(subtract(real(1), e)))
   )
 
-const calculateGamma = (input: Writer<Real|Complex>): Writer<TreeNode> => {
+const calculateGamma = (input: Writer<Real|Complex, Operation>): Writer<TreeNode, Operation> => {
   const one = real(1)
   const z = subtract(input, one)
   const x = lanczos.p.reduce(
     (s, v, i) => add(s, divide(real(v), add(z, add(real(i), one)))),
-    real(0.99999999999980993) as Writer<TreeNode>
+    real(0.99999999999980993) as Writer<TreeNode, Operation>
   )
   const t = subtract(add(z, real(lanczos.p.length)), real(0.5))
   return multiply(
@@ -69,22 +69,20 @@ const calculateGamma = (input: Writer<Real|Complex>): Writer<TreeNode> => {
 
 export type Gamma = Unary<Species.gamma>
 
-export const gammaRule = unaryFnRule(Unicode.gamma)
-
 export const [gamma, isGamma, $gamma] = unary<Gamma>(
   Unicode.gamma, Notation.prefix, Species.gamma
 )(
-  r => calculateGamma(unit(r)) as Writer<Real>,
-  c => calculateGamma(unit(c)) as Writer<Complex>, 
-  b => boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real>)
+  r => calculateGamma(r) as Writer<Real, Operation>,
+  c => calculateGamma(c) as Writer<Complex, Operation>, 
+  b => boolean(calculateGamma(real(b.value ? 1 : 0)) as Writer<Real, Operation>)
 )(
   when(
     isPositiveInteger, 
-    t => [factorial(subtract(unit(t), real(1))), rule`(${t} - ${real(1)})!`, 'computing gamma via factorial']
+    t => [factorial(subtract(t, real(1))), 'computing gamma via factorial']
   ),
   when(
-    t => (isReal(t) && t.result.value < 0.5)
-      || (isComplex(t) && t.result.a < 0.5),
-    t => [gammaReflection(unit(t)), gammaRule(t), 'gamma reflection for small value']
+    t => (isReal(t) && t.value.value < 0.5)
+      || (isComplex(t) && t.value.a < 0.5),
+    t => [gammaReflection(t), 'gamma reflection for small value']
   )
 )

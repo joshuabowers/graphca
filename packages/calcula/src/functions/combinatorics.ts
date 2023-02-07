@@ -1,6 +1,7 @@
-import { Writer, unit } from "../monads/writer"
+import { Writer } from "../monads/writer"
+import { Operation } from "../utility/operation"
 import { TreeNode, Genera, Species, Notation } from "../utility/tree"
-import { BinaryNode, binary, binaryFnRule } from "../closures/binary"
+import { BinaryNode, binary } from "../closures/binary"
 import { subtract, multiply, divide } from "../arithmetic"
 import { factorial } from "./factorial"
 
@@ -15,14 +16,13 @@ type Combinatorics<S extends Species> = CombinatoricsNode & {
 export type Permutation = Combinatorics<Species.permute>
 export type Combination = Combinatorics<Species.combine>
 
-export const permuteRule = binaryFnRule('P')
-export const combineRule = binaryFnRule('C')
-
-const calculatePermutation = <T extends TreeNode>(l: T, r: T): Writer<T> =>
+const calculatePermutation = <T extends TreeNode>(
+  l: Writer<T, Operation>, r: Writer<T, Operation>
+): Writer<T, Operation> =>
   divide(
-    factorial(unit(l)),
-    factorial(subtract(unit(l), unit(r)))
-  ) as unknown as Writer<T>
+    factorial(l),
+    factorial(subtract(l, r))
+  ) as unknown as Writer<T, Operation>
 
 export const [permute, isPermutation, $permute] = binary<Permutation>(
   'P', Notation.prefix, Species.permute, Genera.combinatorics
@@ -32,11 +32,13 @@ export const [permute, isPermutation, $permute] = binary<Permutation>(
   (l, r) => calculatePermutation(l, r), 
 )()
 
-const calculateCombination = <T extends TreeNode>(l: T, r: T): Writer<T> =>
+const calculateCombination = <T extends TreeNode>(
+  l: Writer<T, Operation>, r: Writer<T, Operation>
+): Writer<T, Operation> =>
   divide(
-    factorial(unit(l)),
-    multiply(factorial(unit(r)), factorial(subtract(unit(l), unit(r))))
-  ) as unknown as Writer<T>
+    factorial(l),
+    multiply(factorial(r), factorial(subtract(l, r)))
+  ) as unknown as Writer<T, Operation>
 
 export const [combine, isCombination, $combine] = binary<Combination>(
   'C', Notation.prefix, Species.combine, Genera.combinatorics
