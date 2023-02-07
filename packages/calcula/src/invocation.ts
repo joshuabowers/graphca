@@ -1,6 +1,7 @@
 import { multi, method, Multi } from '@arrows/multimethod'
 import * as R from './monads/reader'
 import * as W from './monads/writer'
+import { Particle, Operation, Action, operation, context } from './utility/operation'
 import { TreeNode, TreeNodeGuardFn, Species } from "./utility/tree"
 import { PrimitiveNode } from './primitives'
 import { UnaryNode, UnaryFn } from './closures/unary'
@@ -55,12 +56,13 @@ import { gamma, isGamma } from './functions/gamma'
 import { polygamma, isPolygamma } from './functions/polygamma'
 import { parameterize } from './utility/parameterization'
 import { rule } from './utility/rule'
+import { Unicode } from './Unicode'
 
-type EvaluableNode<T extends TreeNode> = R.Reader<Scope, W.Writer<T>>
+type EvaluableNode<T extends TreeNode> = R.Reader<Scope, W.Writer<T, Operation>>
 type EvaluateFn = Multi 
   & ((expression: EvaluableNode<TreeNode>) => EvaluableNode<TreeNode>)
 type CorrespondingFn<T extends TreeNode> = 
-  R.Reader<Scope, (node: T) => W.Action<TreeNode>>
+  R.Reader<Scope, (node: W.Writer<T, Operation>) => Action<TreeNode>>
 
 const emptyScope = createScope()
 
@@ -68,36 +70,51 @@ const guardFrom = <T extends TreeNode>(guard: TreeNodeGuardFn<T>) =>
   (expression: EvaluableNode<T>) => guard(expression(emptyScope))
 
 const constant = <T extends PrimitiveNode>(): CorrespondingFn<T> => 
-  _ => (n: T): W.Action<T> => [n, rule`${n}`, `invoked ${n.species}`]
+  _ => (n: W.Writer<T, Operation>): Action<T> => [n, `invoked ${n.value.species}`]
 
 const binary = <T extends BinaryNode, R>(b: BinaryFn<T, R>): CorrespondingFn<T> =>
-  scope => (e: BinaryNode): W.Action<T> => [
-    b(evaluate(s => e.left)(scope), evaluate(s => e.right)(scope)), 
-    rule`[${e}](${scope})`,
-    `invoked ${e.species}`
+  scope => (e: W.Writer<BinaryNode, Operation>): Action<T> => [
+    b(evaluate(s => e.value.left)(scope), evaluate(s => e.value.right)(scope)), 
+    // rule`[${e}](${scope})`,
+    `invoked ${e.value.species}`
   ]
 
 const unary = <T extends UnaryNode, R>(u: UnaryFn<T, R>): CorrespondingFn<T> =>
-  scope => (e: UnaryNode): W.Action<T> => [
-    u(evaluate(s => e.expression)(scope)),
-    rule`[${e}](${scope})`,
-    `invoked ${e.species}`
+  scope => (e: W.Writer<UnaryNode, Operation>): Action<T> => [
+    u(evaluate(s => e.value.expression)(scope)),
+    // rule`[${e}](${scope})`,
+    `invoked ${e.value.species}`
   ]
+
+const toParticles = (expression: Particle[]): Particle[] =>
+  [Unicode.derivative, '(', expression, ')']
 
 const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: CorrespondingFn<T>) =>
   method(
     guardFrom(guard),
-    (reader: EvaluableNode<T>) => R.bind(reader)<W.Writer<TreeNode>>(
-      writer => scope => W.bind(writer, input => {
-        const [result, rewrite, action] = fn(scope)(input)
-        return ({
-          value: W.isWriter(result) ? result.value : result,
-          log: [
-            {input: rule`(${input})(${scope})`, rewrite, action},
-            ...(W.isWriter(result) ? result.log : [])
-          ]
-        })
-      })
+    (reader: EvaluableNode<T>) => R.bind(reader)<W.Writer<TreeNode, Operation>>(
+      e => scope => {
+        const [result, action] = fn(scope)(W.curate(e))
+        return W.writer(
+          result,
+          operation(toParticles(context(e, 0)), 'identified differentiation'),
+          operation(toParticles(context(e, 0)), 'processing expression'),
+          ...e.log,
+          operation(toParticles(context(e, -1)), 'processed expression'),
+          operation(toParticles(context(e, -1)), action)
+        )
+      }
+      // W.bind(writer, input => {
+      //   const [result, action] = fn(scope)(input)
+      //   // This is going to need to change
+      //   return ({
+      //     value: W.isWriter(result) ? result.value : result,
+      //     log: [
+      //       {input: rule`(${input})(${scope})`, action},
+      //       ...(W.isWriter(result) ? result.log : [])
+      //     ]
+      //   })
+      // })
     )
   )
 
@@ -107,9 +124,9 @@ const evaluate: EvaluateFn = multi(
   when(isBoolean, constant<Boolean>()),
 
   when(isVariable, scope => v => [
-    scope.get(v.name)?.result.value ?? v, 
-    rule`${scope.get(v.name)?.result.value ?? v}`,
-    `${scope.get(v.name)?.result.value ? 'substituting' : 'invoking'} variable ${v.name}`
+    scope.get(v.value.name)?.value.binding ?? v, 
+    // rule`${scope.get(v.name)?.result.value ?? v}`,
+    `${scope.get(v.value.name)?.value.binding ? 'substituting' : 'invoking'} variable ${v.value.name}`
   ]),
 
   when(isAddition, binary(add)),
@@ -182,10 +199,10 @@ function* zip<T, U>(parameters: Set<T>, args: U[]) {
 
 export const invoke = (scope?: Scope) => {
   const inner = createScope(scope)
-  return (expression: W.Writer<TreeNode>) => {
+  return (expression: W.Writer<TreeNode, Operation>) => {
     const parameters = parameterize(expression)
-    const mExpression = R.unit<Scope, W.Writer<TreeNode>>(expression)
-    return (...args: W.Writer<TreeNode>[]): W.Writer<TreeNode> => {
+    const mExpression = R.unit<Scope, W.Writer<TreeNode, Operation>>(expression)
+    return (...args: W.Writer<TreeNode, Operation>[]): W.Writer<TreeNode, Operation> => {
       for(const [name, value] of zip(parameters, args)) {
         inner.set(name, variable(name, value))
       }
