@@ -1,6 +1,7 @@
 import { method, multi, Multi } from '@arrows/multimethod'
 import { Unicode } from '../Unicode'
 import { Writer } from '../monads/writer'
+import { Operation } from './operation'
 import { TreeNode, TreeNodeGuardFn, isTreeNode } from './tree'
 import { 
   isReal, isComplex, isBoolean, isComplexInfinity, isNil, isNaN
@@ -26,22 +27,22 @@ import {
   isLessThanEquals, isGreaterThanEquals
 } from '../functions'
 
-type ToString<T extends TreeNode> = (expression: Writer<T>) => string
+type ToString<T extends TreeNode> = (expression: Writer<T, Operation>) => string
 
 const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: ToString<T>) =>
   method(guard, fn)
 
 const binaryInfix = (operator: string) => 
-  (e: Writer<BinaryNode>) =>
-    `(${stringify(e.result.left)}${operator}${stringify(e.result.right)})`
+  (e: Writer<BinaryNode, Operation>) =>
+    `(${stringify(e.value.left)}${operator}${stringify(e.value.right)})`
 
 const binary = (name: string) =>
-  (e: Writer<BinaryNode>) =>
-    `${name}(${stringify(e.result.left)},${stringify(e.result.right)})`
+  (e: Writer<BinaryNode, Operation>) =>
+    `${name}(${stringify(e.value.left)},${stringify(e.value.right)})`
 
 const unary = (name: string) =>
-  (e: Writer<UnaryNode>) =>
-    `${name}(${stringify(e.result.expression)})`
+  (e: Writer<UnaryNode, Operation>) =>
+    `${name}(${stringify(e.value.expression)})`
 
 type NumericFn = Multi & ((value: number) => string)
 
@@ -53,22 +54,22 @@ const numeric: NumericFn = multi(
   method((value: number) => value.toString())
 )
 
-export type StringifyFn = (expression: Writer<TreeNode>) => string
+export type StringifyFn = (expression: Writer<TreeNode, Operation>) => string
 
 export const stringify: StringifyFn = multi(
-  when(isReal, r => numeric(r.result.value)), //r.value.value.toString()),
+  when(isReal, r => numeric(r.value.value)), //r.value.value.toString()),
   when(
     isComplex, 
     c => isComplexInfinity(c) ? Unicode.complexInfinity : `${
-      numeric(c.result.a)
-    }${c.result.b >= 0 ? '+' : ''}${
-      numeric(c.result.b)
+      numeric(c.value.a)
+    }${c.value.b >= 0 ? '+' : ''}${
+      numeric(c.value.b)
     }${Unicode.i}`
   ),
-  when(isBoolean, b => b.result.value.toString()),
+  when(isBoolean, b => b.value.value.toString()),
   when(isNil, _ => 'nil'),
   when(isNaN, _ => 'NaN'),
-  when(isVariable, v => v.result.name),
+  when(isVariable, v => v.value.name),
   when(isAddition, binaryInfix('+')),
   when(isMultiplication, binaryInfix('*')),
   when(isExponentiation, binaryInfix('^')),
@@ -99,7 +100,7 @@ export const stringify: StringifyFn = multi(
   when(isAreaHyperbolicSecant, unary('asech')),
   when(isAreaHyperbolicCosecant, unary('acsch')),
   when(isAreaHyperbolicCotangent, unary('acoth')),
-  when(isFactorial, f => `(${stringify(f.result.expression)})!`),
+  when(isFactorial, f => `(${stringify(f.value.expression)})!`),
   when(isGamma, unary(Unicode.gamma)),
   when(isPolygamma, binary(Unicode.digamma)),
   when(isAbsolute, unary('abs')),
@@ -118,5 +119,5 @@ export const stringify: StringifyFn = multi(
   when(isGreaterThan, binaryInfix('>')),
   when(isLessThanEquals, binaryInfix('<=')),
   when(isGreaterThanEquals, binaryInfix('>=')),
-  when(isTreeNode, e => `Unhandled expression type: '${e.result.species}'`)
+  when(isTreeNode, e => `Unhandled expression type: '${e.value.species}'`)
 )

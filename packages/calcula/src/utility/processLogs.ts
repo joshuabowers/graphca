@@ -20,7 +20,7 @@ type ParameterNameFn = Multi
  * ordinal case, implementation taken from:
  * https://codegolf.stackexchange.com/a/119563
  */
-const parameterName: ParameterNameFn = multi(
+export const parameterName: ParameterNameFn = multi(
   method([1, 1], 'argument'),
   method([1, 2], 'left operand'),
   method([2, 2], 'right operand'),

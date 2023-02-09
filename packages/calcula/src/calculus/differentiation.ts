@@ -1,5 +1,7 @@
 import { method, multi, Multi } from '@arrows/multimethod'
-import { Writer, Action, unit, bind, isWriter } from '../monads/writer'
+import { Writer, writer, curate } from '../monads/writer'
+import { Particle, Action, Operation } from '../utility/operation'
+import { parameterName, processLogs } from '../utility/processLogs'
 import { 
   TreeNode, TreeNodeGuardFn, isTreeNode, isSpecies, Species 
 } from '../utility/tree'
@@ -37,284 +39,253 @@ import { isFactorial } from '../functions/factorial'
 import { isGamma } from '../functions/gamma'
 import { polygamma, digamma, Polygamma } from '../functions/polygamma'
 import { Unicode } from '../Unicode'
-import { Input, rule } from '../utility/rule'
 
 type DifferentiateFn = Multi
-  & ((order: Writer<Real>, expression: Writer<TreeNode>) => Writer<TreeNode>)
-  & ((expression: Writer<TreeNode>) => Writer<TreeNode>)
+  & ((order: Writer<Real, Operation>, expression: Writer<TreeNode, Operation>) => Writer<TreeNode, Operation>)
+  & ((expression: Writer<TreeNode, Operation>) => Writer<TreeNode, Operation>)
 
 type CorrespondingFn<T extends TreeNode> = Action<TreeNode> 
-  | ((t: T) => Action<TreeNode>)
+  | ((t: Writer<T, Operation>) => Action<TreeNode>)
+
+const toParticles = (argument: Particle[]): Particle[] =>
+  [Unicode.derivative, '(', argument, ')']
+const logFunctional = processLogs(toParticles, Species.differentiate)
+
+const toParticlesNth = (order: Particle[], expression: Particle[]): Particle[] =>
+  [Unicode.derivative, '(', order, ',', expression, ')']
+const logFunctionalNth = processLogs(toParticlesNth, Species.differentiate)
 
 export const when = <T extends TreeNode>(
   predicate: TreeNodeGuardFn<T>, 
   fn: CorrespondingFn<T>
 ) =>
-  method(predicate, (t: Writer<T>) =>
-    bind(t, input => {
-      const [result, rewrite, action] = typeof fn === 'function' ? fn(input) : fn
-      return ({
-        value: isWriter(result) ? result.value : result,
-        log: [
-          {input: rule`${Unicode.derivative}(${input})`, rewrite, action},
-          ...(isWriter(result) ? result.log : [])
-        ]
-      })
-    })
-  )
+  method(predicate, (t: Writer<T, Operation>) => {
+    const [result, action] = typeof fn === 'function' ? fn(curate(t)) : fn
+    return writer(result, ...logFunctional(action, t))
+  })
 
 const d = Unicode.derivative
 
-const chain = (derivative: Writer<TreeNode>, argument: Writer<TreeNode>) =>
+const chain = (derivative: Writer<TreeNode, Operation>, argument: Writer<TreeNode, Operation>) =>
   multiply(derivative, differentiate(argument))
 
 export const differentiate: DifferentiateFn = multi(
   // nth derivative
   method(
     (o: unknown, e: unknown) => isTreeNode(o) && isReal(o) && isTreeNode(e),
-    (o: Writer<Real>, e: Writer<TreeNode>) =>
-      bind(o, order => bind(e, expression => {
-        let d: Writer<TreeNode> = unit(expression)
-        for(let i = 0; i < order.value; i++) {
+    (o: Writer<Real, Operation>, e: Writer<TreeNode, Operation>) => {
+        let d: Writer<TreeNode, Operation> = e
+        for(let i = 0; i < o.value.value; i++) {
           d = differentiate(d)
         }
-        return d
-      }))
+        return writer(d, ...logFunctionalNth(
+          `calculated ${parameterName(o.value.value, 0)} derivative`, o, e
+        ))
+    }
   ),
 
   // Primitives
-  when(isReal, [real(0), rule`${real(0)}`, 'derivative of a real']),
-  when(isComplex, [complex([0, 0]), rule`${complex([0, 0])}`, 'derivative of a complex number']),
-  when(isBoolean, [boolean(false), rule`${boolean(false)}`, 'derivative of a boolean']),
-  when(isNil, [nan, rule`${nan}`, 'derivative of nil']),
-  when(isNaN, [nan, rule`${nan}`, 'derivative of NaN']),
-  when(isVariable, [real(1), rule`${real(1)}`, 'derivative of a variable']),
+  when(isReal, [real(0), 'derivative of a real']),
+  when(isComplex, [complex([0, 0]), 'derivative of a complex number']),
+  when(isBoolean, [boolean(false), 'derivative of a boolean']),
+  when(isNil, [nan, 'derivative of nil']),
+  when(isNaN, [nan, 'derivative of NaN']),
+  when(isVariable, [real(1), 'derivative of a variable']),
 
   // Arithmetic
   when(isAddition, e => [ 
-    add(differentiate(e.left), differentiate(e.right)),
-    rule`${d}(${e.left}) + ${d}(${e.right})`,
+    add(differentiate(e.value.left), differentiate(e.value.right)),
     'derivative of an addition'
   ]),
   when(isMultiplication, e => [
     add(
-      multiply(differentiate(e.left), e.right),
-      multiply(e.left, differentiate(e.right))
+      multiply(differentiate(e.value.left), e.value.right),
+      multiply(e.value.left, differentiate(e.value.right))
     ),
-    rule`(${d}(${e.left}) * ${e.right}) + (${e.left} * ${d}(${e.right}))`,
     'derivative of a multiplication'
   ]),
   when(isExponentiation, e => [
     multiply(
-      unit(e),
+      e,
       add(
-        multiply(differentiate(e.left), divide(e.right, e.left)),
-        multiply(differentiate(e.right), ln(e.left))
+        multiply(differentiate(e.value.left), divide(e.value.right, e.value.left)),
+        multiply(differentiate(e.value.right), ln(e.value.left))
       )
     ),
-    rule`${e} * ((${d}(${e.left}) * (${e.right} / ${e.left})) + (${d}(${e.right}) * ln(${e.left})))`,
     'derivative of an exponentiation'
   ]),
 
   // Functions
   when(isLogarithm, e => [
     divide(
-      differentiate(e.right), multiply(e.right, ln(e.left))
+      differentiate(e.value.right), multiply(e.value.right, ln(e.value.left))
     ),
-    rule`${d}(${e.right}) / (${e.right} * ln(${e.left}))`,
     'derivative of a logarithm'
   ]),
   when(isAbsolute, e => [
-    chain(divide(e.expression, unit(e)), e.expression),
-    rule`(${e.expression} / ${e}) * ${d}(${e.expression})`,
+    chain(divide(e.value.expression, e), e.value.expression),
     'derivative of an absolute value'
   ]),
 
   // :: Trigonometric
   when(isCosine, e => [
-    chain(negate(sin(e.expression)), e.expression),
-    rule`-sin(${e.expression}) * ${d}(${e.expression})`,
+    chain(negate(sin(e.value.expression)), e.value.expression),
     'derivative of cosine'
   ]),
   when(isSine, e => [
-    chain(cos(e.expression), e.expression),
-    rule`cos(${e.expression}) * ${d}(${e.expression})`,
+    chain(cos(e.value.expression), e.value.expression),
     'derivative of sine'
   ]),
   when(isTangent, e => [
-    chain(square(sec(e.expression)), e.expression),
-    rule`[sec(${e.expression})]^2 * ${d}(${e.expression})`,
+    chain(square(sec(e.value.expression)), e.value.expression),
     'derivative of tangent'
   ]),
   when(isSecant, e => [
-    chain(multiply(sec(e.expression), tan(e.expression)), e.expression),
-    rule`(sec(${e.expression}) * tan(${e.expression})) * ${d}(${e.expression})`,
+    chain(multiply(sec(e.value.expression), tan(e.value.expression)), e.value.expression),
     'derivative of secant'
   ]),
   when(isCosecant, e => [
-    chain(multiply(negate(csc(e.expression)), cot(e.expression)), e.expression),
-    rule`(-csc(${e.expression}) * cot(${e.expression})) * ${d}(${e.expression})`,
+    chain(multiply(negate(csc(e.value.expression)), cot(e.value.expression)), e.value.expression),
     'derivative of cosecant'
   ]),
   when(isCotangent, e => [
-    chain(negate(square(csc(e.expression))), e.expression),
-    rule`-[csc(${e.expression})]^2 * ${d}(${e.expression})`,
+    chain(negate(square(csc(e.value.expression))), e.value.expression),
     'derivative of cotangent'
   ]),
 
   // :: Arcus
   when(isArcusCosine, e => [
     negate(divide(
-      differentiate(e.expression),
-      sqrt(subtract(real(1), square(e.expression)))
+      differentiate(e.value.expression),
+      sqrt(subtract(real(1), square(e.value.expression)))
     )),
-    rule`-[${d}(${e.expression}) / (${real(1)} - [${e.expression}]^2)^0.5]`,
     'derivative of arcus cosine'
   ]),
   when(isArcusSine, e => [
     chain(
-      reciprocal(sqrt(subtract(real(1), square(e.expression)))), 
-      e.expression
+      reciprocal(sqrt(subtract(real(1), square(e.value.expression)))), 
+      e.value.expression
     ),
-    rule`[(${real(1)} - [${e.expression}]^2)^0.5]^-1 * ${d}(${e.expression})`,
     'derivative of arcus sine'
   ]),
   when(isArcusTangent, e => [
-    chain(reciprocal(add(real(1), square(e.expression))), e.expression),
-    rule`(${real(1)} + [${e.expression}]^2)^-1 * ${d}(${e.expression})`,
+    chain(reciprocal(add(real(1), square(e.value.expression))), e.value.expression),
     'derivative of arcus tangent'
   ]),
   when(isArcusSecant, e => [
     chain(
       reciprocal(multiply(
-        abs(e.expression), 
-        sqrt(subtract(square(e.expression), real(1)))
+        abs(e.value.expression), 
+        sqrt(subtract(square(e.value.expression), real(1)))
       )), 
-      e.expression
+      e.value.expression
     ),
-    rule`(abs(${e.expression}) * ([${e.expression}]^2 - ${real(1)})^0.5)^-1 * ${d}(${e.expression})`,
     'derivative of arcus secant'
   ]),
   when(isArcusCosecant, e => [
     negate(chain(
       reciprocal(multiply(
-        abs(e.expression), 
-        sqrt(subtract(square(e.expression), real(1)))
+        abs(e.value.expression), 
+        sqrt(subtract(square(e.value.expression), real(1)))
       )), 
-      e.expression
+      e.value.expression
     )),
-    rule`-[(abs(${e.expression}) * ([${e.expression}]^2 - ${real(1)})^0.5)^-1 * ${d}(${e.expression})]`,
     'derivative of arcus cosecant'
   ]),
   when(isArcusCotangent, e => [
-    negate(chain(reciprocal(add(square(e.expression), real(1))), e.expression)),
-    rule`-[([${e.expression}]^2 + ${real(1)})^-1 * ${d}(${e.expression})]`,
+    negate(chain(reciprocal(add(square(e.value.expression), real(1))), e.value.expression)),
     'derivative of arcus cotangent'
   ]),
 
   // :: Hyperbolic
   when(isHyperbolicCosine, e => [
-    chain(sinh(e.expression), e.expression),
-    rule`sinh(${e.expression}) * ${d}(${e.expression})`,
+    chain(sinh(e.value.expression), e.value.expression),
     'derivative of hyperbolic cosine'
   ]),
   when(isHyperbolicSine, e => [
-    chain(cosh(e.expression), e.expression),
-    rule`cosh(${e.expression}) * ${d}(${e.expression})`,
+    chain(cosh(e.value.expression), e.value.expression),
     'derivative of hyperbolic sine'
   ]),
   when(isHyperbolicTangent, e => [
-    chain(square(sech(e.expression)), e.expression),
-    rule`[sech(${e.expression})]^2 * ${d}(${e.expression})`,
+    chain(square(sech(e.value.expression)), e.value.expression),
     'derivative of hyperbolic tangent'
   ]),
   when(isHyperbolicSecant, e => [
     chain(
-      multiply(negate(tanh(e.expression)), sech(e.expression)), 
-      e.expression
+      multiply(negate(tanh(e.value.expression)), sech(e.value.expression)), 
+      e.value.expression
     ),
-    rule`(-tanh(${e.expression}) * sech(${e.expression})) * ${d}(${e.expression})`,
     'derivative of hyperbolic secant'
   ]),
   when(isHyperbolicCosecant, e => [
     chain(
-      multiply(negate(coth(e.expression)), csch(e.expression)),
-      e.expression
+      multiply(negate(coth(e.value.expression)), csch(e.value.expression)),
+      e.value.expression
     ),
-    rule`(-coth(${e.expression}) * csch(${e.expression})) * ${d}(${e.expression})`,
     'derivative of hyperbolic cosecant'
   ]),
   when(isHyperbolicCotangent, e => [
     chain(
-      negate(square(csch(e.expression))),
-      e.expression
+      negate(square(csch(e.value.expression))),
+      e.value.expression
     ),
-    rule`-[csch(${e.expression})]^2 * ${d}(${e.expression})`,
     'derivative of hyperbolic cotangent'
   ]),
 
   // :: Area Hyperbolic
   when(isAreaHyperbolicCosine, e => [
     chain(
-      reciprocal(sqrt(subtract(square(e.expression), real(1)))),
-      e.expression
+      reciprocal(sqrt(subtract(square(e.value.expression), real(1)))),
+      e.value.expression
     ),
-    rule`(([${e.expression}]^2 - ${real(1)})^0.5)^-1 * ${d}(${e.expression})`,
     'derivative of area hyperbolic cosine'
   ]),
   when(isAreaHyperbolicSine, e => [
     chain(
-      reciprocal(sqrt(add(real(1), square(e.expression)))),
-      e.expression
+      reciprocal(sqrt(add(real(1), square(e.value.expression)))),
+      e.value.expression
     ),
-    rule`((${real(1)} + [${e.expression}]^2)^0.5)^-1 * ${d}(${e.expression})`,
     'derivative of area hyperbolic sine'
   ]),
   when(isAreaHyperbolicTangent, e => [
     chain(
-      reciprocal(subtract(real(1), square(e.expression))),
-      e.expression
+      reciprocal(subtract(real(1), square(e.value.expression))),
+      e.value.expression
     ),
-    rule`(${real(1)} - [${e.expression}]^2)^-1 * ${d}(${e.expression})`,
     'derivative of area hyperbolic tangent'
   ]),
   when(isAreaHyperbolicSecant, e => [
     negate(chain(
       reciprocal(multiply(
-        e.expression, 
-        sqrt(subtract(real(1), square(e.expression)))
+        e.value.expression, 
+        sqrt(subtract(real(1), square(e.value.expression)))
       )),
-      e.expression
+      e.value.expression
     )),
-    rule`-[(${e.expression} * (${real(1)} - [${e.expression}]^2)^0.5)^-1 * ${d}(${e.expression})]`,
     'derivative of area hyperbolic secant'
   ]),
   when(isAreaHyperbolicCosecant, e => [
     negate(chain(
       reciprocal(multiply(
-        abs(e.expression),
-        sqrt(add(real(1), square(e.expression)))
+        abs(e.value.expression),
+        sqrt(add(real(1), square(e.value.expression)))
       )),
-      e.expression
+      e.value.expression
     )),
-    rule`-[(abs(${e.expression}) * (${real(1)} + [${e.expression}]^2)^0.5)^-1 * ${d}(${e.expression})]`,
     'derivative of area hyperbolic cosecant'
   ]),
   when(isAreaHyperbolicCotangent, e => [
-    chain(reciprocal(subtract(real(1), square(e.expression))), e.expression),
-    rule`(${real(1)} - [${e.expression}]^2)^-1 * ${d}(${e.expression})`,
+    chain(reciprocal(subtract(real(1), square(e.value.expression))), e.value.expression),
     'derivative of area hyperbolic cotangent'
   ]),
 
   // :: Factorial-likes
   when(isFactorial, e => [
-    chain(multiply(unit(e), digamma(add(e.expression, real(1)))), e.expression),
-    rule`(${e} * ${Unicode.digamma}(${e.expression} + ${real(1)})) * ${d}(${e.expression})`,
+    chain(multiply(e, digamma(add(e.value.expression, real(1)))), e.value.expression),
     'derivative of factorial'
   ]),
   when(isGamma, e => [
-    chain(multiply(unit(e), digamma(e.expression)), e.expression),
-    rule`(${e} * ${Unicode.digamma}(${e.expression})) * ${d}(${e.expression})`,
+    chain(multiply(e, digamma(e.value.expression)), e.value.expression),
     'derivative of gamma'
   ]),
   // NOTE: while 'isPolygamma' is the more natural and consistent fit, here,
@@ -323,8 +294,7 @@ export const differentiate: DifferentiateFn = multi(
   // reflection formula, which borks this logic. Easier to replace with a
   // 'isSpecies'.
   when(isSpecies<Polygamma>(Species.polygamma), e => [
-    chain(polygamma(add(e.left, real(1)), e.right), e.right),
-    rule`${Unicode.digamma}(${e.left} + ${real(1)}, ${e.right}) * ${d}(${e.right})`,
+    chain(polygamma(add(e.value.left, real(1)), e.value.right), e.value.right),
     'derivative of polygamma'
   ])
 )

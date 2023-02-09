@@ -76,7 +76,7 @@ describe('multiply', () => {
       )(
         ...multiplyOps(
           'complex multiplication',
-          complexOps(Unicode.infinity, 'NaN'),
+          [[Unicode.complexInfinity, 'created complex']],
           complexOps('1', '0'),
           complexOps(Unicode.infinity, '0')
         )

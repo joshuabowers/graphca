@@ -98,7 +98,11 @@ export enum Species {
   combine = 'Combination',
 
   // Variables
-  variable = 'Variable'
+  variable = 'Variable',
+
+  // Immediate Functions (no AST representation)
+  differentiate = 'Differentiation',
+  invoke = 'Invocation'
 }
 
 export enum Notation {

@@ -1,5 +1,6 @@
 import { Unicode } from './Unicode'
 import { Writer } from './monads/writer'
+import { Operation } from './utility/operation'
 import { TreeNode } from './utility/tree'
 import { real, complex, boolean, nil, isNil } from './primitives'
 import { variable, assign, Scope } from './variable'
@@ -53,11 +54,14 @@ const validIdentifier = new RegExp(`[${letterRange}][${letterRange}0-9]*`, 'u')
 
 type Tail = {
   op: string,
-  a: Writer<TreeNode>,
+  a: Writer<TreeNode, Operation>,
   b?: Tail
 }
 
-const leftAssociate = (node: Writer<TreeNode>, tail: Tail | undefined): Writer<TreeNode> | undefined => {
+const leftAssociate = (
+  node: Writer<TreeNode, Operation>, 
+  tail: Tail | undefined
+): Writer<TreeNode, Operation> | undefined => {
   if(!tail){ return node; }
   const operator = operators.get(tail.op)
   if(!operator){ 
@@ -71,16 +75,22 @@ const leftAssociate = (node: Writer<TreeNode>, tail: Tail | undefined): Writer<T
 }
 
 type InvokeList = {
-  a: Writer<TreeNode>[],
+  a: Writer<TreeNode, Operation>[],
   b?: InvokeList
 }
 
-const createInvoke = (node: Writer<TreeNode>, tail: InvokeList | undefined): Writer<TreeNode> | undefined => {
+const createInvoke = (
+  node: Writer<TreeNode, Operation>, 
+  tail: InvokeList | undefined
+): Writer<TreeNode, Operation> | undefined => {
   if(!tail){ return node }
   return createInvoke(invoke($context())(node)(...tail.a), tail.b)
 }
 
-const builtInFunction = (name: string, expression: Writer<TreeNode>): Writer<TreeNode> | undefined => {
+const builtInFunction = (
+  name: string, expression: 
+  Writer<TreeNode, Operation>
+): Writer<TreeNode, Operation> | undefined => {
   const f = functions.get(name)
   if(!f){ 
     $fail(`could not locate built-in function '${name}'`)
@@ -89,18 +99,19 @@ const builtInFunction = (name: string, expression: Writer<TreeNode>): Writer<Tre
   return f(expression)
 }
 
-const unbox = (value: Writer<TreeNode> | undefined) => value && !isNil(value) ? value : undefined
+const unbox = (value: Writer<TreeNode, Operation> | undefined) => value && !isNil(value) ? value : undefined
 
 // NOTE on Factorial: '!' is used in both factorial and not equals (!=);
 // this can confuse peg (think 5! == x, 5 != x); so factorial deliberately
 // fails if it encounters a '=' afterward. Might need to revisit once
 // equals is integrated.
 
-export const parser = peg<Writer<TreeNode>, Scope>`
-expression: <a>assignment ${({a}) => assign('Ans', a, $context()).value.value}
+// Tag functions don't handle generic type parameters in an intuitive way.
+export const parser = peg<Writer<TreeNode, Operation>, Scope>`
+expression: <a>assignment ${({a}) => assign('Ans', a, $context()).value.binding}
 
 assignment:
-| <a>$variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b, $context()).value.value}
+| <a>$variable ${assignmentOperators} <b>expression ${({a, b}) => assign(a, b, $context()).value.binding}
 | connectives
 
 connectives: leftAssociative(inequality, ${connectiveOperators})
@@ -180,7 +191,7 @@ constant:
 | boolean
 
 variable:
-| <name>$variable ${({name}) => unbox($context()?.get(name)?.value.value) ?? variable(name)}
+| <name>$variable ${({name}) => unbox($context()?.get(name)?.value.binding) ?? variable(name)}
 
 complex:
 | <n>${subtractionOperators}? <a>real ${additionOperators} <b>real? $i ${({n, a, b}) => {

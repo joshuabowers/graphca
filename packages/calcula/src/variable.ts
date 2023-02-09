@@ -1,5 +1,5 @@
 import { Writer, writer } from './monads/writer'
-import { Operation, operation } from './utility/operation'
+import { Operation, operation, context } from './utility/operation'
 import { TreeNode, Clades, Species, isSpecies } from './utility/tree'
 import { isNil, nil } from './primitives/nil'
 
@@ -17,10 +17,9 @@ export const variable = (
 ): Writer<Variable, Operation> => 
   writer(
     {clade: Clades.variadic, species: Species.variable, name, binding} as Variable,
-    operation(
-      [isNil(binding) ? name : (binding.log.at(-1)?.particles ?? name)], 
-      isNil(binding) ? 'referenced variable' : 'referenced variable with value'
-    )
+    isNil(binding)
+      ? operation([name], 'referenced variable')
+      : operation(context(binding, -1), 'referenced variable with value')
   )
 
 export type Scope = Map<string, Writer<Variable, Operation>>

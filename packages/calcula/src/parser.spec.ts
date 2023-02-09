@@ -1,5 +1,6 @@
 import { Unicode } from './Unicode';
 import { Writer } from './monads/writer';
+import { Operation } from './utility/operation';
 import { TreeNode } from './utility/tree';
 import { real, complex, boolean, nil, isNil } from './primitives'
 import { variable, Variable } from './variable';
@@ -20,17 +21,17 @@ import { differentiate } from './calculus/differentiation';
 import { parser, Scope, scope } from "./parser";
 import { EulerMascheroni } from './primitives/real';
 
-const expectObject = (input: string, expected: Writer<TreeNode>, scope?: Scope) => {
+const expectObject = (input: string, expected: Writer<TreeNode, Operation>, scope?: Scope) => {
   const output = parser.value(input, {context: scope})
   expect(output).not.toBeUndefined()
   expect(output.value).toEqual(expected.value)
 }
 
-const expectInScope = (scope: Scope, input: string, ...expected: Writer<Variable>[]) => {
-  expectObject(input, expected[0].value.value ?? real(0xdeadbeef), scope)
+const expectInScope = (scope: Scope, input: string, ...expected: Writer<Variable, Operation>[]) => {
+  expectObject(input, expected[0].value.binding ?? real(0xdeadbeef), scope)
   for(let e of expected){
-    if(e.value.value && !isNil(e.value.value)) {
-      expect(scope.get(e.value.name)?.value?.value?.value).toEqual(e.value.value.value)
+    if(e.value.binding && !isNil(e.value.binding)) {
+      expect(scope.get(e.value.name)?.value?.binding?.value).toEqual(e.value.binding.value)
     } else {
       expect(scope.get(e.value.name)).toBeUndefined()
     }

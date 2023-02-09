@@ -1,12 +1,14 @@
 import { unit } from '../monads/writer'
-import { expectCloseTo, expectWriterTreeNode } from '../utility/expectations'
+import { 
+  expectCloseTo, expectWriterTreeNode,
+  realOps, variableOps, polygammaOps
+} from '../utility/expectations'
 import { Clades, Species } from '../utility/tree'
 import { EulerMascheroni } from '../primitives/real'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
 import { negate } from '../arithmetic'
 import { polygamma, digamma, $polygamma } from './polygamma'
-import { Unicode } from '../Unicode'
 
 describe('$polygamma', () => {
   it('generates a Polygamma for two TreeNode inputs', () => {
@@ -65,11 +67,14 @@ describe('polygamma', () => {
   it('generates a polygamma node of a given order on an expression', () => {
     expectWriterTreeNode(
       polygamma(variable('x'), variable('y')),
-      $polygamma(unit(variable('x').value), unit(variable('y').value))[0]
+      $polygamma(variable('x'), variable('y'))[0]
     )(
-      // ['x', 'x', 'given variable'],
-      // ['y', 'y', 'given variable'],
-      // [`${Unicode.digamma}(x, y)`, `${Unicode.digamma}(x,y)`, 'polygamma']
+      ...polygammaOps(
+        'created polygamma',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })
@@ -112,11 +117,14 @@ describe('digamma', () => {
   it('generates a polygamma node of order 0 on an expression', () => {
     expectWriterTreeNode(
       digamma(variable('x')),
-      $polygamma(unit(real(0).value), unit(variable('x').value))[0]
+      $polygamma(real(0), variable('x'))[0]
     )(
-      // ['0', '0', 'given primitive'],
-      // ['x', 'x', 'given variable'],
-      // [`${Unicode.digamma}(0, x)`, `${Unicode.digamma}(0,x)`, 'polygamma']
+      ...polygammaOps(
+        'created polygamma',
+        realOps('0'),
+        variableOps('x'),
+        []
+      )
     )
   })
 })
