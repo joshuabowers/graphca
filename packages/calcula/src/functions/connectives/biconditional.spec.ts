@@ -1,11 +1,13 @@
 import { unit } from '../../monads/writer'
-import { expectWriterTreeNode } from '../../utility/expectations'
+import { 
+  expectWriterTreeNode,
+  booleanOps, variableOps, xnorOps, notOps
+} from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { boolean } from '../../primitives'
 import { variable } from '../../variable'
 import { not } from './complement'
 import { xnor, $xnor } from './biconditional'
-import { Unicode } from '../../Unicode'
 
 describe('$xnor', () => {
   it('generates a Biconditional for a pair of TreeNode inputs', () => {
@@ -24,13 +26,12 @@ describe('xnor', () => {
       xnor(boolean(true), boolean(true)),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `true ${Unicode.xnor} true`,
-        `true`,
-        'biconditional identity'
-      ],
+      ...xnorOps(
+        'biconditional identity',
+        booleanOps('true'),
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -39,13 +40,12 @@ describe('xnor', () => {
       xnor(boolean(false), boolean(true)),
       boolean(false)
     )(
-      ['false', 'false', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `false ${Unicode.xnor} true`,
-        'false',
-        'biconditional identity'
-      ]
+      ...xnorOps(
+        'biconditional identity',
+        booleanOps('false'),
+        booleanOps('true'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -54,13 +54,12 @@ describe('xnor', () => {
       xnor(boolean(true), boolean(false)),
       boolean(false)
     )(
-      ['true', 'true', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `true ${Unicode.xnor} false`,
-        'false',
-        'biconditional identity'
-      ]
+      ...xnorOps(
+        'biconditional identity',
+        booleanOps('true'),
+        booleanOps('false'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -69,19 +68,16 @@ describe('xnor', () => {
       xnor(boolean(false), boolean(false)),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `false ${Unicode.xnor} false`,
-        `${Unicode.not}(false)`,
-        'biconditional complementation'
-      ],
-      [
-        `${Unicode.not}(false)`,
-        'true',
-        'boolean complement'
-      ],
-      ['true', 'true', 'given primitive']
+      ...xnorOps(
+        'biconditional complementation',
+        booleanOps('false'),
+        booleanOps('false'),
+        notOps(
+          'boolean complement',
+          booleanOps('false'),
+          booleanOps('true')
+        )
+      )
     )
   })
 
@@ -90,13 +86,12 @@ describe('xnor', () => {
       xnor(boolean(true), variable('x')),
       variable('x')
     )(
-      ['true', 'true', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `true ${Unicode.xnor} x`,
-        'x',
-        'biconditional identity'
-      ]
+      ...xnorOps(
+        'biconditional identity',
+        booleanOps('true'),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
   })
 
@@ -105,13 +100,12 @@ describe('xnor', () => {
       xnor(variable('x'), boolean(true)),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['true', 'true', 'given primitive'],
-      [
-        `x ${Unicode.xnor} true`,
-        'x',
-        'biconditional identity'
-      ]
+      ...xnorOps(
+        'biconditional identity',
+        variableOps('x'),
+        booleanOps('true'),
+        variableOps('x')
+      )
     )
   })
 
@@ -120,18 +114,16 @@ describe('xnor', () => {
       xnor(boolean(false), variable('x')),
       not(variable('x'))
     )(
-      ['false', 'false', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `false ${Unicode.xnor} x`,
-        `${Unicode.not}(x)`,
-        'biconditional complementation'
-      ],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ]
+      ...xnorOps(
+        'biconditional complementation',
+        booleanOps('false'),
+        variableOps('x'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        )
+      )
     )
   })
 
@@ -140,18 +132,16 @@ describe('xnor', () => {
       xnor(variable('x'), boolean(false)),
       not(variable('x'))
     )(
-      ['x', 'x', 'given variable'],
-      ['false', 'false', 'given primitive'],
-      [
-        `x ${Unicode.xnor} false`,
-        `${Unicode.not}(x)`,
-        'biconditional complementation'
-      ],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ]
+      ...xnorOps(
+        'biconditional complementation',
+        variableOps('x'),
+        booleanOps('false'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        )
+      )
     )
   })
 
@@ -160,25 +150,26 @@ describe('xnor', () => {
       xnor(variable('x'), variable('x')),
       boolean(true)
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `x ${Unicode.xnor} x`,
-        'true',
-        'biconditional annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...xnorOps(
+        'biconditional annihilator',
+        variableOps('x'),
+        variableOps('x'),
+        booleanOps('true')
+      )
     )
   })
 
   it('returns a Biconditional on variable input', () => {
     expectWriterTreeNode(
       xnor(variable('x'), variable('y')),
-      $xnor(unit(variable('x').value), unit(variable('y').value))[0]
+      $xnor(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [`x ${Unicode.xnor} y`, `(x${Unicode.xnor}y)`, 'biconditional']
+      ...xnorOps(
+        'created biconditional',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })

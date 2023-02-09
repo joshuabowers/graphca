@@ -1,72 +1,67 @@
 import { _ } from '@arrows/multimethod'
 import { Genera, Species, Notation, isSpecies } from "../../utility/tree"
 import { Boolean, boolean } from "../../primitives"
-import { Unary, unary, unaryFnRule, when } from "../../closures/unary"
-import { Conjunction, and, andRule } from './conjunction'
-import { Disjunction, or, orRule } from './disjunction'
-import { ExclusiveDisjunction, xor, xorRule } from './exclusiveDisjunction'
+import { Unary, unary, when } from "../../closures/unary"
+import { Conjunction, and } from './conjunction'
+import { Disjunction, or } from './disjunction'
+import { ExclusiveDisjunction, xor } from './exclusiveDisjunction'
 import { Implication } from './implication'
-import { AlternativeDenial, nand, nandRule } from './alternativeDenial'
-import { JointDenial, nor, norRule } from './jointDenial'
-import { Biconditional, xnor, xnorRule } from './biconditional'
+import { AlternativeDenial, nand } from './alternativeDenial'
+import { JointDenial, nor } from './jointDenial'
+import { Biconditional, xnor } from './biconditional'
 import { ConverseImplication } from './converseImplication'
 import { Unicode } from '../../Unicode'
-import { rule } from '../../utility/rule'
 
 export type Complement = Unary<Species.not, Genera.connective>
-
-export const notRule = unaryFnRule(Unicode.not)
 
 export const [not, isComplement, $not] = unary<Complement, Boolean>(
   Unicode.not, Notation.prefix, Species.not, Genera.connective
 )(
-  r => boolean(r.value === 0),
-  c => boolean(c.a === 0 && c.b === 0), 
-  b => boolean(!b.value) 
+  r => boolean(r.value.value === 0),
+  c => boolean(c.value.a === 0 && c.value.b === 0), 
+  b => boolean(!b.value.value) 
 )(
   // NOTE: Cannot use derived isSpecies guards as they are not defined
   // by this point.
   when<Complement>(
     isSpecies(Species.not), 
-    v => [v.expression, rule`${v.expression}`, 'double complement']
+    v => [v.value.expression, 'double complement']
   ),
   when<Conjunction>(
     isSpecies(Species.and), 
-    v => [nand(v.left, v.right), nandRule(v.left, v.right), 'complement of conjunction']
+    v => [nand(v.value.left, v.value.right), 'complement of conjunction']
   ),
   when<Disjunction>(
     isSpecies(Species.or), 
-    v => [nor(v.left, v.right), norRule(v.left, v.right), 'complement of disjunction']
+    v => [nor(v.value.left, v.value.right), 'complement of disjunction']
   ),
   when<AlternativeDenial>(
     isSpecies(Species.nand), 
-    v => [and(v.left, v.right), andRule(v.left, v.right), 'complement of alternative denial']
+    v => [and(v.value.left, v.value.right), 'complement of alternative denial']
   ),
   when<JointDenial>(
     isSpecies(Species.nor), 
-    v => [or(v.left, v.right), orRule(v.left, v.right), 'complement of joint denial']
+    v => [or(v.value.left, v.value.right), 'complement of joint denial']
   ),
   when<ExclusiveDisjunction>(
     isSpecies(Species.xor), 
-    v => [xnor(v.left, v.right), xnorRule(v.left, v.right), 'complement of exclusive disjunction']
+    v => [xnor(v.value.left, v.value.right), 'complement of exclusive disjunction']
   ),
   when<Implication>(
     isSpecies(Species.implies),
     v => [
-      and(v.left, not(v.right)), 
-      rule`${v.left} ${Unicode.and} ${Unicode.not}(${v.right})`, 
+      and(v.value.left, not(v.value.right)), 
       'complement of implication'
     ]
   ),
   when<Biconditional>(
     isSpecies(Species.xnor),
-    v => [xor(v.left, v.right), xorRule(v.left, v.right), 'complement of biconditional']
+    v => [xor(v.value.left, v.value.right), 'complement of biconditional']
   ),
   when<ConverseImplication>(
     isSpecies(Species.converse),
     v => [
-      and(not(v.left), v.right), 
-      rule`${Unicode.not}(${v.left}) ${Unicode.and} ${v.right}`,
+      and(not(v.value.left), v.value.right), 
       'complement of converse implication'
     ]
   )

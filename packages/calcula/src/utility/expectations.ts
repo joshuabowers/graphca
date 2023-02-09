@@ -105,6 +105,15 @@ export const greaterThanOps = binaryOps('>', Notation.infix, Species.greaterThan
 export const lessThanEqualsOps = binaryOps('<=', Notation.infix, Species.lessThanEquals)
 export const greaterThanEqualsOps = binaryOps('>=', Notation.infix, Species.greaterThanEquals)
 
+export const andOps = binaryOps(Unicode.and, Notation.infix, Species.and)
+export const orOps = binaryOps(Unicode.or, Notation.infix, Species.or)
+export const xorOps = binaryOps(Unicode.xor, Notation.infix, Species.xor)
+export const impliesOps = binaryOps(Unicode.implies, Notation.infix, Species.implies)
+export const nandOps = binaryOps(Unicode.nand, Notation.infix, Species.nand)
+export const norOps = binaryOps(Unicode.nor, Notation.infix, Species.nor)
+export const xnorOps = binaryOps(Unicode.xnor, Notation.infix, Species.xnor)
+export const converseOps = binaryOps(Unicode.converse, Notation.infix, Species.converse)
+
 export const unaryOps = (
   name: string, notation: Notation, species: Species
 ) => {
@@ -152,9 +161,4 @@ export const acothOps = unaryOps('acoth', Notation.prefix, Species.acoth)
 export const gammaOps = unaryOps(Unicode.gamma, Notation.prefix, Species.gamma)
 export const factorialOps = unaryOps('!', Notation.postfix, Species.factorial)
 
-/**
- * (x+y)     <- unprocessed or fully processed
- * ([x]+y)   <- processing left
- * ({x}+[y]) <- processed left; processing right
- * (x+{y})   <- processed right
- */
+export const notOps = unaryOps(Unicode.not, Notation.prefix, Species.not)

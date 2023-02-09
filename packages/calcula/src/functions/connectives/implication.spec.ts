@@ -1,11 +1,13 @@
 import { unit } from '../../monads/writer'
-import { expectWriterTreeNode } from '../../utility/expectations'
+import { 
+  expectWriterTreeNode,
+  booleanOps, variableOps, impliesOps, notOps
+} from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { boolean } from '../../primitives'
 import { variable } from '../../variable'
 import { not } from './complement'
 import { implies, $implies } from './implication'
-import { Unicode } from '../../Unicode'
 
 describe('$implies', () => {
   it('generates a Implication for a pair of TreeNode inputs', () => {
@@ -24,13 +26,12 @@ describe('implies', () => {
       implies(boolean(true), boolean(true)),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `true ${Unicode.implies} true`,
-        'true',
-        'implicative identity'
-      ]
+      ...impliesOps(
+        'implicative identity',
+        booleanOps('true'),
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -39,14 +40,12 @@ describe('implies', () => {
       implies(boolean(false), boolean(true)),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `false ${Unicode.implies} true`,
-        'true',
-        'implicative annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...impliesOps(
+        'implicative annihilator',
+        booleanOps('false'),
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -55,13 +54,12 @@ describe('implies', () => {
       implies(boolean(true), boolean(false)),
       boolean(false)
     )(
-      ['true', 'true', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `true ${Unicode.implies} false`,
-        'false',
-        'implicative identity'
-      ]
+      ...impliesOps(
+        'implicative identity',
+        booleanOps('true'),
+        booleanOps('false'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -70,14 +68,12 @@ describe('implies', () => {
       implies(boolean(false), boolean(false)),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `false ${Unicode.implies} false`,
-        'true',
-        'implicative annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...impliesOps(
+        'implicative annihilator',
+        booleanOps('false'),
+        booleanOps('false'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -86,13 +82,12 @@ describe('implies', () => {
       implies(boolean(true), variable('x')),
       variable('x')
     )(
-      ['true', 'true', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `true ${Unicode.implies} x`,
-        'x',
-        'implicative identity'
-      ]
+      ...impliesOps(
+        'implicative identity',
+        booleanOps('true'),
+        variableOps('x'),
+        variableOps('x'),
+      )
     )
   })
 
@@ -101,14 +96,12 @@ describe('implies', () => {
       implies(variable('x'), boolean(true)),
       boolean(true)
     )(
-      ['x', 'x', 'given variable'],
-      ['true', 'true', 'given primitive'],
-      [
-        `x ${Unicode.implies} true`,
-        'true',
-        'implicative annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...impliesOps(
+        'implicative annihilator',
+        variableOps('x'),
+        booleanOps('true'),
+        booleanOps('true'),
+      )
     )
   })
 
@@ -117,14 +110,12 @@ describe('implies', () => {
       implies(boolean(false), variable('x')),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `false ${Unicode.implies} x`,
-        'true',
-        'implicative annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...impliesOps(
+        'implicative annihilator',
+        booleanOps('false'),
+        variableOps('x'),
+        booleanOps('true'),
+      )
     )
   })
 
@@ -133,33 +124,30 @@ describe('implies', () => {
       implies(variable('x'), boolean(false)),
       not(variable('x'))
     )(
-      ['x', 'x', 'given variable'],
-      ['false', 'false', 'given primitive'],
-      [
-        `x ${Unicode.implies} false`,
-        `${Unicode.not}(x)`,
-        'implicative complementation'
-      ],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ]
+      ...impliesOps(
+        'implicative complementation',
+        variableOps('x'),
+        booleanOps('false'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        )
+      )
     )
   })
   
   it('returns an Implication on variable input', () => {
     expectWriterTreeNode(
       implies(variable('x'), variable('y')),
-      $implies(unit(variable('x').value), unit(variable('y').value))[0]
+      $implies(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.implies} y`,
-        `(x${Unicode.implies}y)`,
-        'implication'
-      ]
+      ...impliesOps(
+        'created implication',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })

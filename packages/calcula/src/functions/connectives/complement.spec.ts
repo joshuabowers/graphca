@@ -1,5 +1,9 @@
 import { unit } from '../../monads/writer'
-import { expectWriterTreeNode } from '../../utility/expectations'
+import { 
+  expectWriterTreeNode,
+  realOps, complexOps, booleanOps, notOps, andOps, orOps, xorOps,
+  impliesOps, nandOps, norOps, xnorOps, converseOps, variableOps
+} from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { real, complex, boolean } from '../../primitives'
 import { variable } from '../../variable'
@@ -12,7 +16,6 @@ import { nand } from './alternativeDenial'
 import { nor } from './jointDenial'
 import { xnor } from './biconditional'
 import { converse } from './converseImplication'
-import { Unicode } from '../../Unicode'
 
 describe('$not', () => {
   it('generates a Complement for a TreeNode input', () => {
@@ -31,13 +34,11 @@ describe('not', () => {
       not(real(5)),
       boolean(false)
     )(
-      ['5', '5', 'given primitive'],
-      [
-        `${Unicode.not}(5)`,
-        'false',
-        'real complement'
-      ],
-      ['false', 'false', 'given primitive']
+      ...notOps(
+        'real complement',
+        realOps('5'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -46,13 +47,11 @@ describe('not', () => {
       not(real(0)),
       boolean(true)
     )(
-      ['0', '0', 'given primitive'],
-      [
-        `${Unicode.not}(0)`,
-        'true',
-        'real complement'
-      ],
-      ['true', 'true', 'given primitive']
+      ...notOps(
+        'real complement',
+        realOps('0'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -61,13 +60,11 @@ describe('not', () => {
       not(complex([1, 0])),
       boolean(false)
     )(
-      [`1+0${Unicode.i}`, `1+0${Unicode.i}`, 'given primitive'],
-      [
-        `${Unicode.not}(1+0${Unicode.i})`,
-        'false',
-        'complex complement'
-      ],
-      ['false', 'false', 'given primitive']
+      ...notOps(
+        'complex complement',
+        complexOps('1', '0'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -76,13 +73,11 @@ describe('not', () => {
       not(complex([0, 0])),
       boolean(true)
     )(
-      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
-      [
-        `${Unicode.not}(0+0${Unicode.i})`,
-        'true',
-        'complex complement'
-      ],
-      ['true', 'true', 'given primitive']
+      ...notOps(
+        'complex complement',
+        complexOps('0', '0'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -91,13 +86,11 @@ describe('not', () => {
       not(boolean(true)),
       boolean(false)
     )(
-      ['true', 'true', 'given primitive'],
-      [
-        `${Unicode.not}(true)`,
-        'false',
-        'boolean complement'
-      ],
-      ['false', 'false', 'given primitive']
+      ...notOps(
+        'boolean complement',
+        booleanOps('true'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -106,27 +99,24 @@ describe('not', () => {
       not(boolean(false)),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      [
-        `${Unicode.not}(false)`,
-        'true',
-        'boolean complement'
-      ],
-      ['true', 'true', 'given primitive']
+      ...notOps(
+        'boolean complement', 
+        booleanOps('false'),
+        booleanOps('true')
+      ) 
     )
   })
 
   it('yields a logical complement for variable input', () => {
     expectWriterTreeNode(
       not(variable('x')),
-      $not(unit(variable('x').value))[0]
+      $not(variable('x'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ]
+      ...notOps(
+        'created complement',
+        variableOps('x'),
+        []
+      )
     )
   })
 
@@ -135,17 +125,15 @@ describe('not', () => {
       not(not(variable('x'))),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      [
-        `${Unicode.not}(${Unicode.not}(x))`,
-        'x',
-        'double complement'
-      ]
+      ...notOps(
+        'double complement',
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 
@@ -154,23 +142,21 @@ describe('not', () => {
       not(and(variable('x'), variable('y'))),
       nand(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.and} y`,
-        `(x${Unicode.and}y)`,
-        'conjunction'
-      ],
-      [
-        `${Unicode.not}((x${Unicode.and}y))`,
-        `x ${Unicode.nand} y`,
-        'complement of conjunction'
-      ],
-      [
-        `x ${Unicode.nand} y`,
-        `(x${Unicode.nand}y)`,
-        'alternative denial'
-      ]
+      ...notOps(
+        'complement of conjunction',
+        andOps(
+          'created conjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        nandOps(
+          'created alternative denial',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
@@ -179,23 +165,21 @@ describe('not', () => {
       not(nand(variable('x'), variable('y'))),
       and(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.nand} y`,
-        `(x${Unicode.nand}y)`,
-        'alternative denial'
-      ],
-      [
-        `${Unicode.not}((x${Unicode.nand}y))`,
-        `x ${Unicode.and} y`,
-        'complement of alternative denial'
-      ],
-      [
-        `x ${Unicode.and} y`,
-        `(x${Unicode.and}y)`,
-        'conjunction'
-      ]
+      ...notOps(
+        'complement of alternative denial',
+        nandOps(
+          'created alternative denial',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        andOps(
+          'created conjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
@@ -204,23 +188,21 @@ describe('not', () => {
       not(or(variable('x'), variable('y'))),
       nor(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.or} y`,
-        `(x${Unicode.or}y)`,
-        'disjunction'
-      ],
-      [
-        `${Unicode.not}((x${Unicode.or}y))`,
-        `x ${Unicode.nor} y`,
-        'complement of disjunction'
-      ],
-      [
-        `x ${Unicode.nor} y`,
-        `(x${Unicode.nor}y)`,
-        'joint denial'
-      ]
+      ...notOps(
+        'complement of disjunction',
+        orOps(
+          'created disjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        norOps(
+          'created joint denial',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
@@ -229,23 +211,21 @@ describe('not', () => {
       not(nor(variable('x'), variable('y'))),
       or(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.nor} y`,
-        `(x${Unicode.nor}y)`,
-        'joint denial'
-      ],
-      [
-        `${Unicode.not}((x${Unicode.nor}y))`,
-        `x ${Unicode.or} y`,
-        'complement of joint denial'
-      ],
-      [
-        `x ${Unicode.or} y`,
-        `(x${Unicode.or}y)`,
-        'disjunction'
-      ]
+      ...notOps(
+        'complement of joint denial',
+        norOps(
+          'created joint denial',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        orOps(
+          'created disjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
@@ -254,23 +234,21 @@ describe('not', () => {
       not(xor(variable('x'), variable('y'))),
       xnor(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.xor} y`,
-        `(x${Unicode.xor}y)`,
-        'exclusive disjunction'
-      ],
-      [
-        `${Unicode.not}((x${Unicode.xor}y))`,
-        `x ${Unicode.xnor} y`,
-        'complement of exclusive disjunction'
-      ],
-      [
-        `x ${Unicode.xnor} y`,
-        `(x${Unicode.xnor}y)`,
-        'biconditional'
-      ]
+      ...notOps(
+        'complement of exclusive disjunction',
+        xorOps(
+          'created exclusive disjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        xnorOps(
+          'created biconditional',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
@@ -279,28 +257,25 @@ describe('not', () => {
       not(implies(variable('x'), variable('y'))),
       and(variable('x'), not(variable('y')))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.implies} y`,
-        `(x${Unicode.implies}y)`,
-        'implication'
-      ],
-      [
-        `${Unicode.not}((x${Unicode.implies}y))`,
-        `x ${Unicode.and} ${Unicode.not}(y)`,
-        'complement of implication'
-      ],
-      [
-        `${Unicode.not}(y)`,
-        `${Unicode.not}(y)`,
-        'complement'
-      ],
-      [
-        `x ${Unicode.and} ${Unicode.not}(y)`,
-        `(x${Unicode.and}${Unicode.not}(y))`,
-        'conjunction'
-      ]
+      ...notOps(
+        'complement of implication',
+        impliesOps(
+          'created implication',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        andOps(
+          'created conjunction',
+          variableOps('x'),
+          notOps(
+            'created complement',
+            variableOps('y'),
+            []
+          ),
+          []
+        )
+      )
     )
   })
 
@@ -309,23 +284,21 @@ describe('not', () => {
       not(xnor(variable('x'), variable('y'))),
       xor(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.xnor} y`,
-        `(x${Unicode.xnor}y)`,
-        'biconditional'
-      ],
-      [
-        `${Unicode.not}((x${Unicode.xnor}y))`,
-        `x ${Unicode.xor} y`,
-        'complement of biconditional'
-      ],
-      [
-        `x ${Unicode.xor} y`,
-        `(x${Unicode.xor}y)`,
-        'exclusive disjunction'
-      ]
+      ...notOps(
+        'complement of biconditional',
+        xnorOps(
+          'created biconditional',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        xorOps(
+          'created exclusive disjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
@@ -334,28 +307,25 @@ describe('not', () => {
       not(converse(variable('x'), variable('y'))),
       and(not(variable('x')), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.converse} y`,
-        `(x${Unicode.converse}y)`,
-        'converse implication'
-      ],
-      [
-        `${Unicode.not}((x${Unicode.converse}y))`,
-        `${Unicode.not}(x) ${Unicode.and} y`,
-        'complement of converse implication'
-      ],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      [
-        `${Unicode.not}(x) ${Unicode.and} y`,
-        `(${Unicode.not}(x)${Unicode.and}y)`,
-        'conjunction'
-      ]
+      ...notOps(
+        'complement of converse implication',
+        converseOps(
+          'created converse implication',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        andOps(
+          'created conjunction',
+          notOps(
+            'created complement',
+            variableOps('x'),
+            []
+          ),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 })

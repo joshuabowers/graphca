@@ -1,5 +1,9 @@
 import { unit } from '../../monads/writer'
-import { expectWriterTreeNode } from '../../utility/expectations'
+import { 
+  expectWriterTreeNode,
+  realOps, complexOps, booleanOps, variableOps, orOps, notOps, andOps,
+  impliesOps, converseOps
+} from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { real, complex, boolean } from '../../primitives'
 import { variable } from '../../variable'
@@ -8,7 +12,6 @@ import { and } from './conjunction'
 import { implies } from './implication'
 import { converse } from './converseImplication'
 import { or, $or } from './disjunction'
-import { Unicode } from '../../Unicode'
 
 describe('$or', () => {
   it('generates a Disjunction for a pair of TreeNode inputs', () => {
@@ -27,14 +30,12 @@ describe('or', () => {
       or(boolean(true), boolean(true)),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `true ${Unicode.or} true`,
-        'true',
-        'disjunctive annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...orOps(
+        'disjunctive annihilator',
+        booleanOps('true'),
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -43,13 +44,12 @@ describe('or', () => {
       or(boolean(true), boolean(false)),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `true ${Unicode.or} false`,
-        'true',
-        'disjunctive identity'
-      ]
+      ...orOps(
+        'disjunctive identity',
+        booleanOps('true'),
+        booleanOps('false'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -58,13 +58,12 @@ describe('or', () => {
       or(boolean(false), boolean(true)),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `false ${Unicode.or} true`,
-        'true',
-        'disjunctive identity'
-      ]
+      ...orOps(
+        'disjunctive identity',
+        booleanOps('false'),
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -73,13 +72,12 @@ describe('or', () => {
       or(boolean(false), boolean(false)),
       boolean(false)
     )(
-      ['false', 'false', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `false ${Unicode.or} false`,
-        'false',
-        'disjunctive identity'
-      ]
+      ...orOps(
+        'disjunctive identity',
+        booleanOps('false'),
+        booleanOps('false'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -88,14 +86,12 @@ describe('or', () => {
       or(real(5), real(0)),
       boolean(true)
     )(
-      ['5', '5', 'given primitive'],
-      ['0', '0', 'given primitive'],
-      [
-        `5 ${Unicode.or} 0`,
-        'true',
-        'real disjunction'
-      ],
-      ['true', 'true', 'given primitive']
+      ...orOps(
+        'real disjunction',
+        realOps('5'),
+        realOps('0'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -104,14 +100,12 @@ describe('or', () => {
       or(complex([5, 0]), complex([0, 0])),
       boolean(true)
     )(
-      [`5+0${Unicode.i}`, `5+0${Unicode.i}`, 'given primitive'],
-      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
-      [
-        `5+0${Unicode.i} ${Unicode.or} 0+0${Unicode.i}`,
-        'true',
-        'complex disjunction'
-      ],
-      ['true', 'true', 'given primitive']
+      ...orOps(
+        'complex disjunction',
+        complexOps('5', '0'),
+        complexOps('0', '0'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -120,13 +114,12 @@ describe('or', () => {
       or(variable('x'), boolean(false)),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['false', 'false', 'given primitive'],
-      [
-        `x ${Unicode.or} false`,
-        'x',
-        'disjunctive identity'
-      ]
+      ...orOps(
+        'disjunctive identity',
+        variableOps('x'),
+        booleanOps('false'),
+        variableOps('x')
+      )
     )
   })
 
@@ -135,13 +128,12 @@ describe('or', () => {
       or(boolean(false), variable('x')),
       variable('x')
     )(
-      ['false', 'false', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `false ${Unicode.or} x`,
-        'x',
-        'disjunctive identity'
-      ]
+      ...orOps(
+        'disjunctive identity',
+        booleanOps('false'),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
   })
 
@@ -150,14 +142,12 @@ describe('or', () => {
       or(variable('x'), boolean(true)),
       boolean(true)
     )(
-      ['x', 'x', 'given variable'],
-      ['true', 'true', 'given primitive'],
-      [
-        `x ${Unicode.or} true`,
-        'true',
-        'disjunctive annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...orOps(
+        'disjunctive annihilator',
+        variableOps('x'),
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -166,14 +156,12 @@ describe('or', () => {
       or(boolean(true), variable('x')),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `true ${Unicode.or} x`,
-        'true',
-        'disjunctive annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...orOps(
+        'disjunctive annihilator',
+        booleanOps('true'),
+        variableOps('x'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -182,13 +170,12 @@ describe('or', () => {
       or(variable('x'), variable('x')),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `x ${Unicode.or} x`,
-        'x',
-        'disjunctive idempotency'
-      ]
+      ...orOps(
+        'disjunctive idempotency',
+        variableOps('x'),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
   })
 
@@ -197,19 +184,17 @@ describe('or', () => {
       or(variable('x'), and(variable('x'), variable('y'))),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.and} y`,
-        `(x${Unicode.and}y)`,
-        'conjunction'
-      ],
-      [
-        `x ${Unicode.or} (x${Unicode.and}y)`,
-        'x',
-        'disjunctive absorption'
-      ]
+      ...orOps(
+        'disjunctive absorption',
+        variableOps('x'),
+        andOps(
+          'created conjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 
@@ -218,19 +203,17 @@ describe('or', () => {
       or(variable('x'), and(variable('y'), variable('x'))),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `y ${Unicode.and} x`,
-        `(y${Unicode.and}x)`,
-        'conjunction'
-      ],
-      [
-        `x ${Unicode.or} (y${Unicode.and}x)`,
-        'x',
-        'disjunctive absorption'
-      ]
+      ...orOps(
+        'disjunctive absorption',
+        variableOps('x'),
+        andOps(
+          'created conjunction',
+          variableOps('y'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 
@@ -239,19 +222,17 @@ describe('or', () => {
       or(and(variable('x'), variable('y')), variable('x')),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.and} y`,
-        `(x${Unicode.and}y)`,
-        'conjunction'
-      ],
-      ['x', 'x', 'given variable'],
-      [
-        `(x${Unicode.and}y) ${Unicode.or} x`,
-        'x',
-        'disjunctive absorption'
-      ]
+      ...orOps(
+        'disjunctive absorption',
+        andOps(
+          'created conjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
   })
 
@@ -260,19 +241,17 @@ describe('or', () => {
       or(and(variable('y'), variable('x')), variable('x')),
       variable('x')
     )(
-      ['y', 'y', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `y ${Unicode.and} x`,
-        `(y${Unicode.and}x)`,
-        'conjunction'
-      ],
-      ['x', 'x', 'given variable'],
-      [
-        `(y${Unicode.and}x) ${Unicode.or} x`,
-        'x',
-        'disjunctive absorption'
-      ]
+      ...orOps(
+        'disjunctive absorption',
+        andOps(
+          'created conjunction',
+          variableOps('y'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
   })
 
@@ -281,19 +260,16 @@ describe('or', () => {
       or(variable('x'), not(variable('x'))),
       boolean(true)
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      [
-        `x ${Unicode.or} ${Unicode.not}(x)`,
-        'true',
-        'disjunctive complementation'
-      ],
-      ['true', 'true', 'given primitive']
+      ...orOps(
+        'disjunctive complementation',
+        variableOps('x'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        booleanOps('true')
+      )
     )
   })
 
@@ -302,19 +278,16 @@ describe('or', () => {
       or(not(variable('x')), variable('x')),
       boolean(true)
     )(
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x) ${Unicode.or} x`,
-        'true',
-        'disjunctive complementation'
-      ],
-      ['true', 'true', 'given primitive']
+      ...orOps(
+        'disjunctive complementation',
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        variableOps('x'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -323,23 +296,21 @@ describe('or', () => {
       or(not(variable('x')), variable('y')),
       implies(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      ['y', 'y', 'given variable'],
-      [
-        `${Unicode.not}(x) ${Unicode.or} y`,
-        `x ${Unicode.implies} y`,
-        'disjunctive implication'
-      ],
-      [
-        `x ${Unicode.implies} y`,
-        `(x${Unicode.implies}y)`,
-        'implication'
-      ]
+      ...orOps(
+        'disjunctive implication',
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        variableOps('y'),
+        impliesOps(
+          'created implication',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
@@ -348,38 +319,35 @@ describe('or', () => {
       or(variable('x'), not(variable('y'))),
       converse(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `${Unicode.not}(y)`,
-        `${Unicode.not}(y)`,
-        'complement'
-      ],
-      [
-        `x ${Unicode.or} ${Unicode.not}(y)`,
-        `x ${Unicode.converse} y`,
-        'disjunctive converse implication'
-      ],
-      [
-        `x ${Unicode.converse} y`,
-        `(x${Unicode.converse}y)`,
-        'converse implication'
-      ]
+      ...orOps(
+        'disjunctive converse implication',
+        variableOps('x'),
+        notOps(
+          'created complement',
+          variableOps('y'),
+          []
+        ),
+        converseOps(
+          'created converse implication',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
   it('returns a Disjunction on variable input', () => {
     expectWriterTreeNode(
       or(variable('x'), variable('y')),
-      $or(unit(variable('x').value), unit(variable('y').value))[0]
+      $or(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.or} y`,
-        `(x${Unicode.or}y)`,
-        'disjunction'
-      ]
+      ...orOps(
+        'created disjunction',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })

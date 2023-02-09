@@ -1,11 +1,13 @@
 import { unit } from '../../monads/writer'
-import { expectWriterTreeNode } from '../../utility/expectations'
+import { 
+  expectWriterTreeNode,
+  booleanOps, variableOps, converseOps, notOps
+} from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { boolean } from '../../primitives'
 import { variable } from '../../variable'
 import { not } from './complement'
 import { converse, $converse } from './converseImplication'
-import { Unicode } from '../../Unicode'
 
 describe('$converse', () => {
   it('generates a ConverseImplication for a pair of TreeNode inputs', () => {
@@ -24,14 +26,12 @@ describe('converse', () => {
       converse(boolean(true), boolean(true)),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `true ${Unicode.converse} true`, 
-        'true', 
-        'converse implication annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...converseOps(
+        'converse implication annihilator',
+        booleanOps('true'),
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -40,13 +40,12 @@ describe('converse', () => {
       converse(boolean(false), boolean(true)),
       boolean(false)
     )(
-      ['false', 'false', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `false ${Unicode.converse} true`,
-        'false',
-        'converse implication identity'
-      ]
+      ...converseOps(
+        'converse implication identity',
+        booleanOps('false'),
+        booleanOps('true'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -55,14 +54,12 @@ describe('converse', () => {
       converse(boolean(true), boolean(false)),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `true ${Unicode.converse} false`,
-        'true',
-        'converse implication annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...converseOps(
+        'converse implication annihilator',
+        booleanOps('true'),
+        booleanOps('false'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -71,19 +68,16 @@ describe('converse', () => {
       converse(boolean(false), boolean(false)),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `false ${Unicode.converse} false`,
-        `${Unicode.not}(false)`,
-        'converse implication complementation'
-      ],
-      [
-        `${Unicode.not}(false)`,
-        'true',
-        'boolean complement'
-      ],
-      ['true', 'true', 'given primitive']
+      ...converseOps(
+        'converse implication complementation',
+        booleanOps('false'),
+        booleanOps('false'),
+        notOps(
+          'boolean complement',
+          booleanOps('false'),
+          booleanOps('true')
+        )
+      )
     )
   })
 
@@ -92,14 +86,12 @@ describe('converse', () => {
       converse(boolean(true), variable('x')),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `true ${Unicode.converse} x`,
-        'true',
-        'converse implication annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...converseOps(
+        'converse implication annihilator',
+        booleanOps('true'),
+        variableOps('x'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -108,13 +100,12 @@ describe('converse', () => {
       converse(variable('x'), boolean(true)),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['true', 'true', 'given primitive'],
-      [
-        `x ${Unicode.converse} true`,
-        'x',
-        'converse implication identity'
-      ]
+      ...converseOps(
+        'converse implication identity',
+        variableOps('x'),
+        booleanOps('true'),
+        variableOps('x')
+      )
     )
   })
 
@@ -123,18 +114,16 @@ describe('converse', () => {
       converse(boolean(false), variable('x')),
       not(variable('x'))
     )(
-      ['false', 'false', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `false ${Unicode.converse} x`,
-        `${Unicode.not}(x)`,
-        'converse implication complementation'
-      ],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ]
+      ...converseOps(
+        'converse implication complementation',
+        booleanOps('false'),
+        variableOps('x'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        )
+      )
     )
   })
 
@@ -143,29 +132,26 @@ describe('converse', () => {
       converse(variable('x'), boolean(false)),
       boolean(true)
     )(
-      ['x', 'x', 'given variable'],
-      ['false', 'false', 'given primitive'],
-      [
-        `x ${Unicode.converse} false`,
-        'true',
-        'converse implication annihilator'
-      ],
-      ['true', 'true', 'given primitive']
+      ...converseOps(
+        'converse implication annihilator',
+        variableOps('x'),
+        booleanOps('false'),
+        booleanOps('true')
+      )
     )
   })
 
   it('returns a ConverseImplication on variable input', () => {
     expectWriterTreeNode(
       converse(variable('x'), variable('y')),
-      $converse(unit(variable('x').value), unit(variable('y').value))[0]
+      $converse(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.converse} y`,
-        `(x${Unicode.converse}y)`,
-        'converse implication'
-      ]
+      ...converseOps(
+        'created converse implication',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })

@@ -1,12 +1,15 @@
 import { unit } from '../../monads/writer'
-import { expectWriterTreeNode } from '../../utility/expectations'
+import { 
+  expectWriterTreeNode,
+  realOps, complexOps, booleanOps, variableOps,
+  andOps, orOps, notOps
+} from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { real, complex, boolean } from '../../primitives'
 import { variable } from '../../variable'
 import { not } from './complement'
 import { or } from './disjunction'
 import { and, $and } from './conjunction'
-import { Unicode } from '../../Unicode'
 
 describe('$and', () => {
   it('generates a Conjunction for a pair of TreeNode inputs', () => {
@@ -25,13 +28,12 @@ describe('and', () => {
       and(boolean(true), boolean(true)),
       boolean(true)
     )(
-      ['true', 'true', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `true ${Unicode.and} true`,
-        'true',
-        'conjunctive identity'
-      ]
+      ...andOps(
+        'conjunctive identity',
+        booleanOps('true'),
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -40,13 +42,12 @@ describe('and', () => {
       and(boolean(false), boolean(true)),
       boolean(false)
     )(
-      ['false', 'false', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `false ${Unicode.and} true`,
-        'false',
-        'conjunctive identity'
-      ]
+      ...andOps(
+        'conjunctive identity',
+        booleanOps('false'),
+        booleanOps('true'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -55,13 +56,12 @@ describe('and', () => {
       and(boolean(true), boolean(false)),
       boolean(false)
     )(
-      ['true', 'true', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `true ${Unicode.and} false`,
-        'false',
-        'conjunctive identity'
-      ]
+      ...andOps(
+        'conjunctive identity',
+        booleanOps('true'),
+        booleanOps('false'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -70,14 +70,12 @@ describe('and', () => {
       and(boolean(false), boolean(false)),
       boolean(false)
     )(
-      ['false', 'false', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `false ${Unicode.and} false`,
-        'false',
-        'conjunctive annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...andOps(
+        'conjunctive annihilator',
+        booleanOps('false'),
+        booleanOps('false'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -86,14 +84,12 @@ describe('and', () => {
       and(real(5), real(0)),
       boolean(false)
     )(
-      ['5', '5', 'given primitive'],
-      ['0', '0', 'given primitive'],
-      [
-        `5 ${Unicode.and} 0`,
-        'false',
-        'real conjunction'
-      ],
-      ['false', 'false', 'given primitive']
+      ...andOps(
+        'real conjunction',
+        realOps('5'),
+        realOps('0'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -102,14 +98,12 @@ describe('and', () => {
       and(complex([5,0]), complex([0,0])),
       boolean(false)
     )(
-      [`5+0${Unicode.i}`, `5+0${Unicode.i}`, 'given primitive'],
-      [`0+0${Unicode.i}`, `0+0${Unicode.i}`, 'given primitive'],
-      [
-        `5+0${Unicode.i} ${Unicode.and} 0+0${Unicode.i}`,
-        'false',
-        'complex conjunction'
-      ],
-      ['false', 'false', 'given primitive']
+      ...andOps(
+        'complex conjunction',
+        complexOps('5', '0'),
+        complexOps('0', '0'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -118,13 +112,12 @@ describe('and', () => {
       and(variable('x'), boolean(true)),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['true', 'true', 'given primitive'],
-      [
-        `x ${Unicode.and} true`,
-        'x',
-        'conjunctive identity'
-      ]
+      ...andOps(
+        'conjunctive identity',
+        variableOps('x'),
+        booleanOps('true'),
+        variableOps('x')
+      )
     )
   })
 
@@ -133,13 +126,12 @@ describe('and', () => {
       and(boolean(true), variable('x')),
       variable('x')
     )(
-      ['true', 'true', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `true ${Unicode.and} x`,
-        'x',
-        'conjunctive identity'
-      ]
+      ...andOps(
+        'conjunctive identity',
+        booleanOps('true'),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
   })
 
@@ -148,14 +140,12 @@ describe('and', () => {
       and(variable('x'), boolean(false)),
       boolean(false)
     )(
-      ['x', 'x', 'given variable'],
-      ['false', 'false', 'given primitive'],
-      [
-        `x ${Unicode.and} false`,
-        'false',
-        'conjunctive annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...andOps(
+        'conjunctive annihilator',
+        variableOps('x'),
+        booleanOps('false'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -164,14 +154,12 @@ describe('and', () => {
       and(boolean(false), variable('x')),
       boolean(false)
     )(
-      ['false', 'false', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `false ${Unicode.and} x`,
-        'false',
-        'conjunctive annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...andOps(
+        'conjunctive annihilator',
+        booleanOps('false'),
+        variableOps('x'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -180,13 +168,12 @@ describe('and', () => {
       and(variable('x'), variable('x')),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `x ${Unicode.and} x`,
-        'x',
-        'conjunctive idempotency'
-      ]
+      ...andOps(
+        'conjunctive idempotency',
+        variableOps('x'),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
   })
 
@@ -202,37 +189,33 @@ describe('and', () => {
       and(variable('x'), or(variable('x'), variable('y'))),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.or} y`,
-        `(x${Unicode.or}y)`,
-        'disjunction'
-      ],
-      [
-        `x ${Unicode.and} (x${Unicode.or}y)`,
-        'x',
-        'conjunctive absorption'
-      ]
+      ...andOps(
+        'conjunctive absorption',
+        variableOps('x'),
+        orOps(
+          'created disjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        variableOps('x')
+      )
     )
     expectWriterTreeNode(
       and(variable('x'), or(variable('y'), variable('x'))),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `y ${Unicode.or} x`,
-        `(y${Unicode.or}x)`,
-        'disjunction'
-      ],
-      [
-        `x ${Unicode.and} (y${Unicode.or}x)`,
-        'x',
-        'conjunctive absorption'
-      ]
+      ...andOps(
+        'conjunctive absorption',
+        variableOps('x'),
+        orOps(
+          'created disjunction',
+          variableOps('y'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x')
+      )
     )
   })
 
@@ -241,37 +224,33 @@ describe('and', () => {
       and(or(variable('x'), variable('y')), variable('x')),
       variable('x')
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.or} y`,
-        `(x${Unicode.or}y)`,
-        'disjunction'
-      ],
-      ['x', 'x', 'given variable'],
-      [
-        `(x${Unicode.or}y) ${Unicode.and} x`,
-        'x',
-        'conjunctive absorption'
-      ]
+      ...andOps(
+        'conjunctive absorption',
+        orOps(
+          'created disjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        ),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
     expectWriterTreeNode(
       and(or(variable('y'), variable('x')), variable('x')),
       variable('x')
     )(
-      ['y', 'y', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `y ${Unicode.or} x`,
-        `(y${Unicode.or}x)`,
-        'disjunction'
-      ],
-      ['x', 'x', 'given variable'],
-      [
-        `(y${Unicode.or}x) ${Unicode.and} x`,
-        'x',
-        'conjunctive absorption'
-      ]
+      ...andOps(
+        'conjunctive absorption',
+        orOps(
+          'created disjunction',
+          variableOps('y'),
+          variableOps('x'),
+          []
+        ),
+        variableOps('x'),
+        variableOps('x')
+      )
     )
   })
 
@@ -280,19 +259,16 @@ describe('and', () => {
       and(variable('x'), not(variable('x'))),
       boolean(false)
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      [
-        `x ${Unicode.and} ${Unicode.not}(x)`,
-        'false',
-        'contradiction'
-      ],
-      ['false', 'false', 'given primitive']
+      ...andOps(
+        'conjunctive contradiction',
+        variableOps('x'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        booleanOps('false')
+      )
     )
   })
 
@@ -301,34 +277,30 @@ describe('and', () => {
       and(not(variable('x')), variable('x')),
       boolean(false)
     )(
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x) ${Unicode.and} x`,
-        'false',
-        'contradiction'
-      ],
-      ['false', 'false', 'given primitive']
+      ...andOps(
+        'conjunctive contradiction',
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        variableOps('x'),
+        booleanOps('false')
+      )
     )
   })
 
   it('returns a Conjunction on variable input', () => {
     expectWriterTreeNode(
       and(variable('x'), variable('y')),
-      $and(unit(variable('x').value), unit(variable('y').value))[0]
+      $and(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.and} y`,
-        `(x${Unicode.and}y)`,
-        'conjunction'
-      ]
+      ...andOps(
+        'created conjunction',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })

@@ -1,12 +1,14 @@
 import { unit } from '../../monads/writer'
-import { expectWriterTreeNode } from '../../utility/expectations'
+import { 
+  expectWriterTreeNode,
+  booleanOps, variableOps, norOps, notOps, andOps
+} from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { boolean } from '../../primitives'
 import { variable } from '../../variable'
 import { not } from './complement'
 import { and } from './conjunction'
 import { nor, $nor } from './jointDenial'
-import { Unicode } from '../../Unicode'
 
 describe('$nor', () => {
   it('generates a Joint Denial for a pair of TreeNode inputs', () => {
@@ -25,14 +27,12 @@ describe('nor', () => {
       nor(boolean(true), boolean(true)),
       boolean(false)
     )(
-      ['true', 'true', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `true ${Unicode.nor} true`,
-        `false`,
-        'joint denial annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...norOps(
+        'joint deniable annihilator',
+        booleanOps('true'),
+        booleanOps('true'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -41,14 +41,12 @@ describe('nor', () => {
       nor(boolean(false), boolean(true)),
       boolean(false)
     )(
-      ['false', 'false', 'given primitive'],
-      ['true', 'true', 'given primitive'],
-      [
-        `false ${Unicode.nor} true`,
-        'false',
-        'joint denial annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...norOps(
+        'joint deniable annihilator',
+        booleanOps('false'),
+        booleanOps('true'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -57,14 +55,12 @@ describe('nor', () => {
       nor(boolean(true), boolean(false)),
       boolean(false)
     )(
-      ['true', 'true', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `true ${Unicode.nor} false`,
-        'false',
-        'joint denial annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...norOps(
+        'joint deniable annihilator',
+        booleanOps('true'),
+        booleanOps('false'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -73,19 +69,16 @@ describe('nor', () => {
       nor(boolean(false), boolean(false)),
       boolean(true)
     )(
-      ['false', 'false', 'given primitive'],
-      ['false', 'false', 'given primitive'],
-      [
-        `false ${Unicode.nor} false`,
-        `${Unicode.not}(false)`,
-        'joint denial complementation'
-      ],
-      [
-        `${Unicode.not}(false)`,
-        'true',
-        'boolean complement'
-      ],
-      ['true', 'true', 'given primitive']
+      ...norOps(
+        'joint deniable complementation',
+        booleanOps('false'),
+        booleanOps('false'),
+        notOps(
+          'boolean complement',
+          booleanOps('false'),
+          booleanOps('true')
+        )
+      )
     )
   })
 
@@ -94,18 +87,16 @@ describe('nor', () => {
       nor(variable('x'), boolean(false)),
       not(variable('x'))
     )(
-      ['x', 'x', 'given variable'],
-      ['false', 'false', 'given primitive'],
-      [
-        `x ${Unicode.nor} false`,
-        `${Unicode.not}(x)`,
-        'joint denial complementation'
-      ],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ]
+      ...norOps(
+        'joint deniable complementation',
+        variableOps('x'),
+        booleanOps('false'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        )
+      )
     )
   })
 
@@ -114,18 +105,16 @@ describe('nor', () => {
       nor(boolean(false), variable('x')),
       not(variable('x'))
     )(
-      ['false', 'false', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `false ${Unicode.nor} x`,
-        `${Unicode.not}(x)`,
-        'joint denial complementation'
-      ],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ]
+      ...norOps(
+        'joint deniable complementation',
+        booleanOps('false'),
+        variableOps('x'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        )
+      )
     )
   })
 
@@ -134,14 +123,12 @@ describe('nor', () => {
       nor(variable('x'), boolean(true)),
       boolean(false)
     )(
-      ['x', 'x', 'given variable'],
-      ['true', 'true', 'given primitive'],
-      [
-        `x ${Unicode.nor} true`,
-        'false',
-        'joint denial annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...norOps(
+        'joint deniable annihilator',
+        variableOps('x'),
+        booleanOps('true'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -150,14 +137,12 @@ describe('nor', () => {
       nor(boolean(true), variable('x')),
       boolean(false)
     )(
-      ['true', 'true', 'given primitive'],
-      ['x', 'x', 'given variable'],
-      [
-        `true ${Unicode.nor} x`,
-        'false',
-        'joint denial annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...norOps(
+        'joint deniable annihilator',
+        booleanOps('true'),
+        variableOps('x'),
+        booleanOps('false')
+      )
     )
   })
 
@@ -166,18 +151,16 @@ describe('nor', () => {
       nor(variable('x'), variable('x')),
       not(variable('x'))
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `x ${Unicode.nor} x`,
-        `${Unicode.not}(x)`,
-        'joint denial complementation'
-      ],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ]
+      ...norOps(
+        'joint deniable complementation',
+        variableOps('x'),
+        variableOps('x'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        )
+      )
     )
   })
 
@@ -186,28 +169,25 @@ describe('nor', () => {
       nor(not(variable('x')), not(variable('y'))),
       and(variable('x'), variable('y'))
     )(
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      ['y', 'y', 'given variable'],
-      [
-        `${Unicode.not}(y)`,
-        `${Unicode.not}(y)`,
-        'complement'
-      ],
-      [
-        `${Unicode.not}(x) ${Unicode.nor} ${Unicode.not}(y)`,
-        `x ${Unicode.and} y`,
-        'De Morgan'
-      ],
-      [
-        `x ${Unicode.and} y`,
-        `(x${Unicode.and}y)`,
-        'conjunction'
-      ]
+      ...norOps(
+        'De Morgan',
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        notOps(
+          'created complement',
+          variableOps('y'),
+          []
+        ),
+        andOps(
+          'created conjunction',
+          variableOps('x'),
+          variableOps('y'),
+          []
+        )
+      )
     )
   })
 
@@ -216,19 +196,16 @@ describe('nor', () => {
       nor(variable('x'), not(variable('x'))),
       boolean(false)
     )(
-      ['x', 'x', 'given variable'],
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      [
-        `x ${Unicode.nor} ${Unicode.not}(x)`,
-        'false',
-        'joint denial annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...norOps(
+        'joint deniable annihilator',
+        variableOps('x'),
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        booleanOps('false')
+      )
     )
   })
 
@@ -237,34 +214,30 @@ describe('nor', () => {
       nor(not(variable('x')), variable('x')),
       boolean(false)
     )(
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x)`,
-        `${Unicode.not}(x)`,
-        'complement'
-      ],
-      ['x', 'x', 'given variable'],
-      [
-        `${Unicode.not}(x) ${Unicode.nor} x`,
-        'false',
-        'joint denial annihilator'
-      ],
-      ['false', 'false', 'given primitive']
+      ...norOps(
+        'joint deniable annihilator',
+        notOps(
+          'created complement',
+          variableOps('x'),
+          []
+        ),
+        variableOps('x'),
+        booleanOps('false')
+      )
     )
   })
 
   it('returns a JointDenial on variable input', () => {
     expectWriterTreeNode(
       nor(variable('x'), variable('y')),
-      $nor(unit(variable('x').value), unit(variable('y').value))[0]
+      $nor(variable('x'), variable('y'))[0]
     )(
-      ['x', 'x', 'given variable'],
-      ['y', 'y', 'given variable'],
-      [
-        `x ${Unicode.nor} y`,
-        `(x${Unicode.nor}y)`,
-        'joint denial'
-      ]
+      ...norOps(
+        'created joint denial',
+        variableOps('x'),
+        variableOps('y'),
+        []
+      )
     )
   })
 })
