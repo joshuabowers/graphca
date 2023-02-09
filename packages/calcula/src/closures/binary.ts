@@ -1,7 +1,7 @@
 import { method, multi, fromMulti, Multi, _ } from "@arrows/multimethod"
 import { Writer, writer, curate } from "../monads/writer"
-import { Particle, Operation, operation, context, Action } from "../utility/operation"
-import { CaretPosition, embedCaret } from "../utility/caret"
+import { Particle, Operation, Action } from "../utility/operation"
+import { LogFunctionalFn, processLogs } from "../utility/processLogs"
 import { CastFn } from "../utility/typings"
 import { 
   TreeNode, Clades, Genera, Species, isClade, 
@@ -13,7 +13,6 @@ import {
   isReal, isComplex, isBoolean,
   real, complex, nan
 } from '../primitives'
-// import { rule, Input, process, resolve } from "../utility/rule"
 
 export type BinaryNode = TreeNode & {
   readonly clade: Clades.binary,
@@ -35,7 +34,6 @@ export const leftChild =
 export const rightChild = 
   <T extends BinaryNode>(t: Writer<T, Operation>) => t.value.right
 
-type BinaryCaseFn<L, R = L, T = L> = (l: L, r: R) => Action<T>
 type BinaryCastFn<L, R = L, T = L> = 
   (l: Writer<L, Operation>, r: Writer<R, Operation>) => Writer<T, Operation>
 
@@ -61,63 +59,16 @@ type Test<T> = UnaryPredicate<T> | Writer<T, Operation> | typeof _
 type CorrespondingFn<L, R> = (l: Writer<L, Operation>, r: Writer<R, Operation>) => Action<TreeNode>  
 export type BinaryCreateFn<T extends BinaryNode> = 
   (l: Writer<TreeNode, Operation>, r: Writer<TreeNode, Operation>) => Action<T>
-// export type BinaryToString<L extends Input, R extends Input> = (l: L, r: R) => Rewrite
-type ToParticlesFn = (
-  position: CaretPosition, left: Particle[], right: Particle[]
-) => Particle[]
 
 export const when = <L extends TreeNode, R extends TreeNode>( 
   predicate: Test<L> | [Test<L>, Test<R>] | BinaryPredicate<L, R>, 
   fn: Action<TreeNode> | CorrespondingFn<L, R>
 ) => 
-  (toParticles: ToParticlesFn, species: Species) => {
+  (logFunctional: LogFunctionalFn) => {
     return method(predicate, (l: Writer<L, Operation>, r: Writer<R, Operation>) => {
       const [result, action] = typeof fn === 'function' ? fn(curate(l), curate(r)) : fn
-      return writer(
-        result,
-        // identified species
-        operation(
-          toParticles(CaretPosition.none, context(l, 0), context(r, 0)),
-          `identified ${species.toLocaleLowerCase()}`
-        ),
-        // processing left
-        operation(
-          toParticles(CaretPosition.before, context(l, 0), context(r, 0)),
-          'processing left operand'
-        ),
-        // left logs
-        ...l.log,
-        // replaces left, processing right
-        operation(
-          toParticles(CaretPosition.between, context(l, -1), context(r, 0)),
-          'processed left operand; processing right operand'
-        ),
-        // right logs
-        ...r.log,
-        // replaces right
-        operation(
-          toParticles(CaretPosition.after, context(l, -1), context(r, -1)),
-          'processed right operand'
-        ),
-        // action applied
-        operation(          
-          toParticles(CaretPosition.none, context(l, -1), context(r, -1)),
-          action
-        )
-      )
+      return writer(result, ...logFunctional(action, l, r))
     })
-      // bind(l, x => 
-      //   bind(r, y => {
-      //     const [result, rewrite, action] = typeof fn === 'function' ? fn(x, y) : fn
-      //     return ({
-      //       value: isWriter(result) ? result.value : result,
-      //       log: [
-      //         {input: toString(x, y), rewrite, action},
-      //         ...(isWriter(result) ? result.log : [])
-      //       ]
-      //     })
-      //   })
-      // ) 
   }
 
 export type WhenFn = ReturnType<typeof when>
@@ -137,14 +88,6 @@ export type BinaryNodeMetaTuple<T extends BinaryNode, R> = [
   BinaryCreateFn<T>
 ]
 
-// export const binaryInfixRule = (operator: string) =>
-//   <L extends Input, R extends Input>(l: L, r: R) =>
-//     process`${l} ${operator} ${r}`
-
-// export const binaryFnRule = (fnName: string) =>
-//   <L extends Input, R extends Input>(l: L, r: R) =>
-//     process`${fnName}(${l}, ${r})`
-
 export type Handle<I extends TreeNode, O extends TreeNode> = 
   (l: Writer<I, Operation>, r: Writer<I, Operation>) => Writer<O, Operation>
 
@@ -157,12 +100,12 @@ export const binary = <T extends BinaryNode, R = void>(
     return [n, `created ${species.toLocaleLowerCase()}`]
   }
   if(notation === Notation.postfix){ throw new Error(`Unknown binary postfix operation: ${name}`) }
-  const toParticles: ToParticlesFn = (position, left, right) =>
+  const toParticles = (left: Particle[], right: Particle[]): Particle[] =>
     notation === Notation.prefix
-      ? [name, '(', ...embedCaret(position, left, ',', right), ')']
-      : ['(', ...embedCaret(position, left, name, right), ')']
+      ? [name, '(', left, ',', right, ')']
+      : ['(', left, name, right, ')']
+  const logFunctional = processLogs(toParticles, species)
 
-  // const toString = notation === Notation.infix ? binaryInfixRule(name) : binaryFnRule(name)
   return (
     whenReal: Handle<Real, Result<Real>>,
     whenComplex: Handle<Complex, Result<Complex>>,
@@ -175,21 +118,20 @@ export const binary = <T extends BinaryNode, R = void>(
         const result = fn(l, r)
         return [
           result, 
-          // process`${result}`, 
           `${kind.toLocaleLowerCase()} ${species.toLocaleLowerCase()}`
         ]
       }
     let fn: BinaryFn<T, R> = multi(
-      when([isReal, isReal], handled(whenReal, Species.real))(toParticles, species),
-      when([isComplex, isComplex], handled(whenComplex, Species.complex))(toParticles, species),
-      when([isBoolean, isBoolean], handled(whenBoolean, Species.boolean))(toParticles, species),
-      when<Nil|NaN, TreeNode>([eitherNilOrNaN, _], (_l, _r) => [nan, 'not a number'])(toParticles, species),
-      when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, 'not a number'])(toParticles, species),
-      when([isTreeNode, isTreeNode], (l, r) => create(l, r))(toParticles, species)
+      when([isReal, isReal], handled(whenReal, Species.real))(logFunctional),
+      when([isComplex, isComplex], handled(whenComplex, Species.complex))(logFunctional),
+      when([isBoolean, isBoolean], handled(whenBoolean, Species.boolean))(logFunctional),
+      when<Nil|NaN, TreeNode>([eitherNilOrNaN, _], (_l, _r) => [nan, 'not a number'])(logFunctional),
+      when<TreeNode, Nil|NaN>([_, eitherNilOrNaN], (_l, _r) => [nan, 'not a number'])(logFunctional),
+      when([isTreeNode, isTreeNode], (l, r) => create(l, r))(logFunctional)
     )
     return (...methods: WhenFn[]): BinaryNodeMetaTuple<T, R> => {
       fn = fromMulti(
-        ...methods.map(m => m(toParticles, species)),
+        ...methods.map(m => m(logFunctional)),
         method([isReal, isComplex], apply(fn)(complex, identity)),
         method([isComplex, isReal], apply(fn)(identity, complex)),
         method([isReal, isBoolean], apply(fn)(identity, real)),

@@ -40,7 +40,7 @@ export const expectWriterTreeNode = <
 
 export const realOps = (value: string): Op[] => [[value, 'created real']]
 export const complexOps = (a: string, b: string): Op[] => 
-  [[`${a}+${b}${Unicode.i}`, 'created complex']]
+  [[`${a}${b[0] === '-' ? '' : '+'}${b}${Unicode.i}`, 'created complex']]
 export const booleanOps = (value: string): Op[] => [[value, 'created boolean']]
 
 export const variableOps = (name: string): Op[] => [[name, 'referenced variable']]
@@ -79,11 +79,11 @@ export const binaryOps = (
   const e = expression(name, notation)
   return (action: string, left: Op[], right: Op[], result: Op[]): Op[] => [
     [e(left[0][0], right[0][0]), `identified ${species.toLocaleLowerCase()}`],
-    [e('|'+left[0][0], right[0][0]), 'processing left operand'],
+    [e('['+left[0][0]+']', right[0][0]), 'processing left operand'],
     ...left,
-    [e(left[left.length-1][0], '|'+right[0][0]), 'processed left operand; processing right operand'],
+    [e('{'+left[left.length-1][0]+'}', '['+right[0][0]+']'), 'processed left operand; processing right operand'],
     ...right,
-    [e(left[left.length-1][0], right[right.length-1][0]+'|'), 'processed right operand'],
+    [e(left[left.length-1][0], '{'+right[right.length-1][0]+'}'), 'processed right operand'],
     [e(left[left.length-1][0], right[right.length-1][0]), action],
     ...result
   ]
@@ -111,9 +111,9 @@ export const unaryOps = (
   const e = expression(name, notation)
   return (action: string, argument: Op[], result: Op[]): Op[] => [
     [e(argument[0][0]), `identified ${species.toLocaleLowerCase()}`],
-    [e('|'+argument[0][0]), 'processing argument'],
+    [e('['+argument[0][0]+']'), 'processing argument'],
     ...argument,
-    [e(argument[argument.length-1][0]+'|'), 'processed argument'],
+    [e('{'+argument[argument.length-1][0]+'}'), 'processed argument'],
     [e(argument[argument.length-1][0]), action],
     ...result
   ]

@@ -1,10 +1,12 @@
 import { unit } from '../monads/writer';
-import { expectWriterTreeNode } from '../utility/expectations';
+import { 
+  expectWriterTreeNode,
+  realOps, complexOps, booleanOps, variableOps, absOps
+} from '../utility/expectations';
 import { Clades, Species } from '../utility/tree';
 import { real, complex, boolean, nil, nan } from '../primitives';
 import { variable } from "../variable";
 import { abs, $abs } from "./absolute";
-import { Unicode } from '../Unicode';
 
 describe('$abs', () => {
   it('generates an Absolute for a TreeNode input', () => {
@@ -23,12 +25,11 @@ describe('abs', () => {
       abs(real(-5)),
       real(5)
     )(
-      ['abs(-5)', 'identified absolute'],
-      ['abs(|-5)', 'processing argument'],
-      ['-5', 'created real'],
-      ['abs(-5|)', 'processed argument'],
-      ['abs(-5)', 'real absolute'],
-      ['5', 'created real']
+      ...absOps(
+        'real absolute',
+        realOps('-5'),
+        realOps('5')
+      )
     )
   })
 
@@ -37,12 +38,11 @@ describe('abs', () => {
       abs(complex([1, 2])),
       complex([2.23606797749979, 0])
     )(
-      [`abs(1+2${Unicode.i})`, 'identified absolute'],
-      [`abs(|1+2${Unicode.i})`, 'processing argument'],
-      [`1+2${Unicode.i}`, 'created complex'],
-      [`abs(1+2${Unicode.i}|)`, 'processed argument'],
-      [`abs(1+2${Unicode.i})`, 'complex absolute'],
-      [`2.23606797749979+0${Unicode.i}`, 'created complex']
+      ...absOps(
+        'complex absolute',
+        complexOps('1', '2'),
+        complexOps('2.23606797749979', '0')
+      )
     )
   })
 
@@ -51,12 +51,11 @@ describe('abs', () => {
       abs(boolean(true)),
       boolean(true)
     )(
-      ['abs(true)', 'identified absolute'],
-      ['abs(|true)', 'processing argument'],
-      ['true', 'created boolean'],
-      ['abs(true|)', 'processed argument'],
-      ['abs(true)', 'boolean absolute'],
-      ['true', 'created boolean']
+      ...absOps(
+        'boolean absolute',
+        booleanOps('true'),
+        booleanOps('true')
+      )
     )
   })
 
@@ -65,11 +64,11 @@ describe('abs', () => {
       abs(variable('x')),
       $abs(variable('x'))[0]
     )(
-      ['abs(x)', 'identified absolute'],
-      ['abs(|x)', 'processing argument'],
-      ['x', 'referenced variable'],
-      ['abs(x|)', 'processed argument'],
-      ['abs(x)', 'created absolute']
+      ...absOps(
+        'created absolute', 
+        variableOps('x'),
+        []
+      )
     )
   })
 
@@ -78,12 +77,11 @@ describe('abs', () => {
       abs(nil),
       nan
     )(
-      ['abs(nil)', 'identified absolute'],
-      ['abs(|nil)', 'processing argument'],
-      ['nil', 'nothing'],
-      ['abs(nil|)', 'processed argument'],
-      ['abs(nil)', 'not a number'],
-      ['NaN', 'not a number']
+      ...absOps(
+        'not a number',
+        [['nil', 'nothing']],
+        [['NaN', 'not a number']]
+      )
     )
   })
 })
