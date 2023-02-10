@@ -1,3 +1,8 @@
+import { 
+  expectWriterTreeNode,
+  realOps, complexOps, booleanOps, variableOps,
+  invokeOps, addOps, multiplyOps, factorialOps
+} from './utility/expectations'
 import { real, complex, boolean } from './primitives'
 import { variable, scope } from './variable'
 import { add } from './arithmetic/addition'
@@ -7,16 +12,78 @@ import { factorial } from './functions/factorial'
 
 describe('invoke', () => {
   describe('with no passed scope', () => {
+    /**
+     * Desireable output for the following expression:
+     * (x+y)(5, 10) => [
+     *    ['(x+y)(5, 10)', 'identified invocation'],
+     *    ['([x+y])(5, 10), 'processing expression'],
+     *    ['(x+y)', 'identified addition'],
+     *    ['([x]+y), 'processing left operand'],
+     *    ['x', 'referenced variable'],
+     *    ['({x}+[y]), 'processed left operand; processing right operand'],
+     *    ['y', 'referenced variable'],
+     *    ['(x+{y}), 'processed right operand'],
+     *    ['(x+y)', 'created addition'],
+     *    ['((x+y))([5], 10)', 'processing 1st argument'],
+     *    ['5', 'created real'],
+     *    ['((x+y))({5}, [10])', 'processed 1st argument; processing 2nd'],
+     *    ['10', 'created real'],
+     *    ['((x+y))(5, {10})', 'processed 2nd argument'],
+     *    ['((x+y))(5, 10), 'evaluating expression with new scope'],
+     *    ['{x:=5, y:=10}', 'established scope']
+     *    ['(x+y)', 'evaluating addition'],
+     *    ['([x]+y)', 'evaluating left operand'],
+     *    ['5', 'substituting'],
+     *    ['({5}+[y]), 'evaluated left operand; evaluating right'],
+     *    ['10', 'substituting'],
+     *    ['(5+{10}), 'evaluated right operand'],
+     *    ['(5+10)', 'real addition'],
+     *    ['15', 'created real']
+     * ]
+     * 
+     * Implication: the last couple of operations in the result log would
+     * likely suffice to define continuity and remove redundancy.
+     */
     it('applies its arguments to unbound variables', () => {
-      const expression = add(variable('x'), variable('y'))
-      expect(invoke()(expression)(real(5), real(10)).value).toEqual(real(15).value)
+      // const expression = add(variable('x'), variable('y'))
+      expectWriterTreeNode(
+        invoke()(add(variable('x'), variable('y')))(real(5), real(10)),
+        real(15)
+      )(
+        ...invokeOps(
+          'invoked addition',
+          addOps(
+            'created addition',
+            variableOps('x'),
+            variableOps('y'),
+            []
+          )
+        )(
+          realOps('5'),
+          realOps('10')
+        )(
+          addOps(
+            'real addition',
+            realOps('5'),
+            realOps('10'),
+            realOps('15')
+          )
+        )
+      )
+      // expect(invoke()(expression)(real(5), real(10)).value).toEqual(real(15).value)
     })
 
     it('applies its arguments in appearance order', () => {
-      const expression = add(variable('x'), variable('y'))
-      expect(
-        invoke()(expression)(real(5)).value
-      ).toEqual(add(variable('y'), real(5)).value)
+      expectWriterTreeNode(
+        invoke()(add(variable('x'), variable('y')))(real(5)),
+        add(variable('y'), real(5))
+      )(
+
+      )
+      // const expression = add(variable('x'), variable('y'))
+      // expect(
+      //   invoke()(expression)(real(5)).value
+      // ).toEqual(add(variable('y'), real(5)).value)
     })
   })
 

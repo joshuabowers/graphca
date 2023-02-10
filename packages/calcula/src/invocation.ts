@@ -197,6 +197,10 @@ function* zip<T, U>(parameters: Set<T>, args: U[]) {
   }
 }
 
+// Ideally, this would generate a number of contextually global logs for
+// the operation being executed, so that the when steps are minimally complex.
+// Likely the best approach would be to capture the [value, log] pair
+// from the evaluate call and use those in a writer call.
 export const invoke = (scope?: Scope) => {
   const inner = createScope(scope)
   return (expression: W.Writer<TreeNode, Operation>) => {
@@ -206,7 +210,15 @@ export const invoke = (scope?: Scope) => {
       for(const [name, value] of zip(parameters, args)) {
         inner.set(name, variable(name, value))
       }
-      return evaluate(mExpression)(inner)
+      // return evaluate(mExpression)(inner)
+      const {value, log} = evaluate(mExpression)(inner)
+      return W.writer(
+        value,
+        // Insert contextually global, "setup" logs here. The ...log after
+        // this would then be the when operations performed to produce the
+        // result. 
+        ...log
+      )
     }
   }
 }

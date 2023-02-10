@@ -162,3 +162,38 @@ export const gammaOps = unaryOps(Unicode.gamma, Notation.prefix, Species.gamma)
 export const factorialOps = unaryOps('!', Notation.postfix, Species.factorial)
 
 export const notOps = unaryOps(Unicode.not, Notation.prefix, Species.not)
+
+// Logging for invocation needs to start at the point of the invoke method,
+// which would encompass most of the following logic, handled once. 
+// After that point, the when functions would need to detail substitution
+// phases.
+export const invokeOps = 
+  (action: string, expression: Op[]) => (...parameters: Op[][]) => (result: Op[]): Op[] => {
+    const e = (exp: string, ...ps: string[]) =>
+      `(${exp})(${ps.join(',')})`
+    const haveProcessed: string[] = [], toProcess = parameters.map(p => p[0][0]),
+      zeroth = toProcess.shift()
+    return [
+      [e(expression[0][0], zeroth ?? '', ...toProcess), 'identified invocation'],
+      [e('['+expression[0][0]+']', zeroth ?? '', ...toProcess), 'processing expression'],
+      ...expression,
+      [e('{'+expression[0][0]+'}', zeroth ?? '', ...toProcess), 'processed expression'],
+      // process arguments
+      ...(zeroth 
+        ? []
+        : []
+      ),
+      // Add op for showcasing active scope for this invocation.
+      // Scope should abstract the live construct. So, something like:
+      // const scope = Map<string, string>()
+      // where the first string corresponds to variable name, and the
+      // second corresponds to the stringified Particle[] for the variable's
+      // established value. Scope entries should be updated in the process
+      // arguments stage, set to the value of p[-1][0]. (i.e. fully processed.)
+      // Entries should look something like an assignment:
+      // x := 5
+      // y := z+10
+      [e(expression[0][0], ...haveProcessed), action],
+      ...result
+    ]
+  }
