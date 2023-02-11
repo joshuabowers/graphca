@@ -1,7 +1,8 @@
 import { 
-  expectWriterTreeNode,
+  expectWriterTreeNode, Op,
   realOps, complexOps, booleanOps, variableOps,
-  invokeOps, addOps, multiplyOps, factorialOps
+  evaluateOps, substituteOps, noSubstituteOps, invokeOps, 
+  addOps, multiplyOps, factorialOps
 } from './utility/expectations'
 import { real, complex, boolean } from './primitives'
 import { variable, scope } from './variable'
@@ -51,7 +52,7 @@ describe('invoke', () => {
         real(15)
       )(
         ...invokeOps(
-          'invoked addition',
+          'addition invocation',
           addOps(
             'created addition',
             variableOps('x'),
@@ -62,11 +63,22 @@ describe('invoke', () => {
           realOps('5'),
           realOps('10')
         )(
-          addOps(
-            'real addition',
-            realOps('5'),
-            realOps('10'),
-            realOps('15')
+          {x: '5', y: '10'}
+        )(
+          evaluateOps(
+            '(x+y)',
+            addOps(
+              'real addition',
+              substituteOps(
+                'x',
+                realOps('5')
+              ),
+              substituteOps(
+                'y',
+                realOps('10')
+              ),
+              realOps('15')
+            )
           )
         )
       )
@@ -78,7 +90,37 @@ describe('invoke', () => {
         invoke()(add(variable('x'), variable('y')))(real(5)),
         add(variable('y'), real(5))
       )(
-
+        ...invokeOps(
+          'addition invocation',
+          addOps(
+            'created addition',
+            variableOps('x'),
+            variableOps('y'),
+            []
+          )
+        )(
+          realOps('5')
+        )(
+          {x: '5'}
+        )(
+          evaluateOps(
+            '(x+y)',
+            addOps(
+              'reorder operands',
+              substituteOps(
+                'x',
+                realOps('5')
+              ),
+              noSubstituteOps('y'),
+              addOps(
+                'created addition',
+                variableOps('y'),
+                realOps('5'),
+                []
+              )
+            )
+          )
+        )
       )
       // const expression = add(variable('x'), variable('y'))
       // expect(

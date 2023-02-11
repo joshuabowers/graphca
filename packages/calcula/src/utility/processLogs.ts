@@ -29,8 +29,8 @@ export const parameterName: ParameterNameFn = multi(
   )
 )
 
-const processed = (argument: Particle[]): Particle[] => ['{', argument, '}']
-const processing = (argument: Particle[]): Particle[] => ['[', argument, ']']
+export const processed = (argument: Particle[]): Particle[] => ['{', argument, '}']
+export const processing = (argument: Particle[]): Particle[] => ['[', argument, ']']
 
 /**
  * log entries with [] are flagged for processing in next log;
@@ -44,7 +44,8 @@ export const processLogs: ProcessLogsFn = (toParticles, species) =>
   (action, ...expressions) => {
     const haveProcessed: Particle[][] = [], 
       toProcess = expressions.map(e => context(e, 0)),
-      zeroth = toProcess.shift(), n = expressions.length
+      zeroth = toProcess.shift(), 
+      n = species === Species.invoke ? -1 : expressions.length
     let i = 1
     return [
       // identified

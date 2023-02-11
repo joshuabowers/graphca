@@ -1,7 +1,9 @@
 import { multi, method, Multi } from '@arrows/multimethod'
 import * as R from './monads/reader'
 import * as W from './monads/writer'
-import { Particle, Operation, Action, operation, context } from './utility/operation'
+import { 
+  Particle, Operation, Action, operation, context 
+} from './utility/operation'
 import { TreeNode, TreeNodeGuardFn, Species } from "./utility/tree"
 import { PrimitiveNode } from './primitives'
 import { UnaryNode, UnaryFn } from './closures/unary'
@@ -55,8 +57,11 @@ import { factorial, isFactorial } from './functions/factorial'
 import { gamma, isGamma } from './functions/gamma'
 import { polygamma, isPolygamma } from './functions/polygamma'
 import { parameterize } from './utility/parameterization'
-import { rule } from './utility/rule'
+// import { rule } from './utility/rule'
 import { Unicode } from './Unicode'
+import { 
+  LogFunctionalFn, processLogs, processed, processing 
+} from './utility/processLogs'
 
 type EvaluableNode<T extends TreeNode> = R.Reader<Scope, W.Writer<T, Operation>>
 type EvaluateFn = Multi 
@@ -75,19 +80,14 @@ const constant = <T extends PrimitiveNode>(): CorrespondingFn<T> =>
 const binary = <T extends BinaryNode, R>(b: BinaryFn<T, R>): CorrespondingFn<T> =>
   scope => (e: W.Writer<BinaryNode, Operation>): Action<T> => [
     b(evaluate(s => e.value.left)(scope), evaluate(s => e.value.right)(scope)), 
-    // rule`[${e}](${scope})`,
-    `invoked ${e.value.species}`
+    'looking for variables to substitute in expression'
   ]
 
 const unary = <T extends UnaryNode, R>(u: UnaryFn<T, R>): CorrespondingFn<T> =>
   scope => (e: W.Writer<UnaryNode, Operation>): Action<T> => [
     u(evaluate(s => e.value.expression)(scope)),
-    // rule`[${e}](${scope})`,
-    `invoked ${e.value.species}`
+    'looking for variables to substitute in expression'
   ]
-
-const toParticles = (expression: Particle[]): Particle[] =>
-  [Unicode.derivative, '(', expression, ')']
 
 const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: CorrespondingFn<T>) =>
   method(
@@ -95,26 +95,8 @@ const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: CorrespondingFn
     (reader: EvaluableNode<T>) => R.bind(reader)<W.Writer<TreeNode, Operation>>(
       e => scope => {
         const [result, action] = fn(scope)(W.curate(e))
-        return W.writer(
-          result,
-          operation(toParticles(context(e, 0)), 'identified differentiation'),
-          operation(toParticles(context(e, 0)), 'processing expression'),
-          ...e.log,
-          operation(toParticles(context(e, -1)), 'processed expression'),
-          operation(toParticles(context(e, -1)), action)
-        )
+        return W.writer(result, operation(context(e, -1), action))
       }
-      // W.bind(writer, input => {
-      //   const [result, action] = fn(scope)(input)
-      //   // This is going to need to change
-      //   return ({
-      //     value: W.isWriter(result) ? result.value : result,
-      //     log: [
-      //       {input: rule`(${input})(${scope})`, action},
-      //       ...(W.isWriter(result) ? result.log : [])
-      //     ]
-      //   })
-      // })
     )
   )
 
@@ -125,8 +107,11 @@ const evaluate: EvaluateFn = multi(
 
   when(isVariable, scope => v => [
     scope.get(v.value.name)?.value.binding ?? v, 
-    // rule`${scope.get(v.name)?.result.value ?? v}`,
-    `${scope.get(v.value.name)?.value.binding ? 'substituting' : 'invoking'} variable ${v.value.name}`
+    `${
+      scope.get(v.value.name)?.value.binding 
+      ? 'substituting' 
+      : 'no substitution found in scope for'
+    } variable ${v.value.name}`
   ]),
 
   when(isAddition, binary(add)),
@@ -197,6 +182,53 @@ function* zip<T, U>(parameters: Set<T>, args: U[]) {
   }
 }
 
+const interleave = <A, E>(array: A[], element: E): (A|E)[] =>
+  array.flatMap((e, i) => i+1 < array.length ? [e, element] : e)
+
+const toParticles = (expression: Particle[]) => 
+  (...parameters: Particle[][]): Particle[] =>
+    ['(', expression, ')', '(', ...interleave(parameters, ','), ')']
+
+const logFunctional = (
+  expression: W.Writer<TreeNode, Operation>
+): LogFunctionalFn => { 
+  const tp = toParticles(context(expression, -1))
+  const lf = processLogs(tp, Species.invoke)
+  return (action, ...expressions) => {
+    const unprocessed = expressions.map(e => context(e, 0))
+    const [identify, ...parameters] = lf(action, ...expressions)
+    return [
+      identify,
+      operation(
+        toParticles(processing(context(expression, 0)))(...unprocessed), 
+        'processing expression'
+      ),
+      ...expression.log,
+      operation(
+        toParticles(processed(context(expression, -1)))(...unprocessed),
+        'processed expression'
+      ),
+      ...parameters
+    ]
+  }
+}
+
+const logScope = (scope: Scope): Operation =>
+  operation(
+    [
+      '{', 
+      Array.from(
+        scope.entries(), 
+        ([k, v], i) => {
+          const r = [k, ':=', context(v.value.binding, -1)] as Particle[]
+          return i+1 < scope.size ? [r, ','] : [r]
+        }
+      ).flat(1), 
+      '}'
+    ], 
+    'established scope'
+  )
+
 // Ideally, this would generate a number of contextually global logs for
 // the operation being executed, so that the when steps are minimally complex.
 // Likely the best approach would be to capture the [value, log] pair
@@ -206,6 +238,7 @@ export const invoke = (scope?: Scope) => {
   return (expression: W.Writer<TreeNode, Operation>) => {
     const parameters = parameterize(expression)
     const mExpression = R.unit<Scope, W.Writer<TreeNode, Operation>>(expression)
+    const lf = logFunctional(expression)
     return (...args: W.Writer<TreeNode, Operation>[]): W.Writer<TreeNode, Operation> => {
       for(const [name, value] of zip(parameters, args)) {
         inner.set(name, variable(name, value))
@@ -217,6 +250,8 @@ export const invoke = (scope?: Scope) => {
         // Insert contextually global, "setup" logs here. The ...log after
         // this would then be the when operations performed to produce the
         // result. 
+        ...lf(`${expression.value.species.toLocaleLowerCase()} invocation`, ...args),
+        logScope(inner),
         ...log
       )
     }

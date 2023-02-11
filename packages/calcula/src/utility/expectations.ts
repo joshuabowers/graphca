@@ -163,37 +163,78 @@ export const factorialOps = unaryOps('!', Notation.postfix, Species.factorial)
 
 export const notOps = unaryOps(Unicode.not, Notation.prefix, Species.not)
 
+export const evaluateOps = (expression: string, result: Op[]): Op[] => [
+  [expression, 'looking for variables to substitute in expression'],
+  ...result
+]
+
+export const substituteOps = (name: string, result: Op[]): Op[] => [
+  [name, `substituting variable ${name}`],
+  ...result
+]
+
+export const noSubstituteOps = (name: string): Op[] => [
+  [name, `no substitution found in scope for variable ${name}`],
+  ...variableOps(name)
+]
+
+const ordinal = (i: number) => i.toString()+[,'st','nd','rd'][i%100>>3^1&&i%10]||'th'
+
 // Logging for invocation needs to start at the point of the invoke method,
 // which would encompass most of the following logic, handled once. 
 // After that point, the when functions would need to detail substitution
 // phases.
 export const invokeOps = 
-  (action: string, expression: Op[]) => (...parameters: Op[][]) => (result: Op[]): Op[] => {
-    const e = (exp: string, ...ps: string[]) =>
-      `(${exp})(${ps.join(',')})`
-    const haveProcessed: string[] = [], toProcess = parameters.map(p => p[0][0]),
-      zeroth = toProcess.shift()
-    return [
-      [e(expression[0][0], zeroth ?? '', ...toProcess), 'identified invocation'],
-      [e('['+expression[0][0]+']', zeroth ?? '', ...toProcess), 'processing expression'],
-      ...expression,
-      [e('{'+expression[0][0]+'}', zeroth ?? '', ...toProcess), 'processed expression'],
-      // process arguments
-      ...(zeroth 
-        ? []
-        : []
-      ),
-      // Add op for showcasing active scope for this invocation.
-      // Scope should abstract the live construct. So, something like:
-      // const scope = Map<string, string>()
-      // where the first string corresponds to variable name, and the
-      // second corresponds to the stringified Particle[] for the variable's
-      // established value. Scope entries should be updated in the process
-      // arguments stage, set to the value of p[-1][0]. (i.e. fully processed.)
-      // Entries should look something like an assignment:
-      // x := 5
-      // y := z+10
-      [e(expression[0][0], ...haveProcessed), action],
-      ...result
-    ]
-  }
+  (action: string, expression: Op[]) => (...parameters: Op[][]) => 
+    (scope: Record<string, string>) => (result: Op[]): Op[] => {
+      const e = (exp: string, ...ps: string[]) =>
+        `(${exp})(${ps.join(',')})`
+      const haveProcessed: string[] = [], toProcess = parameters.map(p => p[0][0]),
+        zeroth = toProcess.shift(), exp = expression[expression.length-1][0]
+      return [
+        [e(expression[0][0], zeroth ?? '', ...toProcess), 'identified invocation'],
+        [e('['+expression[0][0]+']', zeroth ?? '', ...toProcess), 'processing expression'],
+        ...expression,
+        [e('{'+expression[0][0]+'}', zeroth ?? '', ...toProcess), 'processed expression'],
+        // process arguments
+        ...(zeroth 
+          ? [
+            [e(exp, '['+zeroth+']', ...toProcess), 'processing 1st'] as Op,
+            ...parameters.map(
+              (p, i) => {
+                const next = toProcess.shift(), current = p[p.length-1][0]
+                const entry = (
+                  next
+                    ? [
+                      e(exp, ...haveProcessed, '{'+current+'}', '['+next+']', ...toProcess), 
+                      `processed ${ordinal(i+1)}; processing ${ordinal(i+2)}`
+                    ] : [
+                      e(exp, ...haveProcessed, '{'+current+'}'), 
+                      `processed ${ordinal(i+1)}`
+                    ]
+                ) as Op
+                haveProcessed.push(p[p.length-1][0])
+                return [...p, entry] as Op[]
+              }
+            ).flat(1)
+          ]
+          : []
+        ),
+        // Add op for showcasing active scope for this invocation.
+        // Scope should abstract the live construct. So, something like:
+        // const scope = Map<string, string>()
+        // where the first string corresponds to variable name, and the
+        // second corresponds to the stringified Particle[] for the variable's
+        // established value. Scope entries should be updated in the process
+        // arguments stage, set to the value of p[-1][0]. (i.e. fully processed.)
+        // Entries should look something like an assignment:
+        // x := 5
+        // y := z+10
+        [e(expression[0][0], ...haveProcessed), action],
+        [
+          '{'+Object.entries(scope).map(([k,v]) => `${k}:=${v}`).join(',')+'}', 
+          'established scope'
+        ],
+        ...result
+      ]
+    }
