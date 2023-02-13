@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import {
-  Unicode, W, TreeNode,
+  Unicode, W, TreeNode, Operation,
   real, complex, boolean, nil, variable, add, subtract, multiply, divide, negate,
   raise, reciprocal, square, log, lb, ln, lg,
   cos, sin, tan, sec, csc, cot,
@@ -16,7 +16,7 @@ import {
 } from '@bowers/calcula'
 import { Expression } from '.'
 
-const expectMarkup = (input: W.Writer<TreeNode>, className: string, expected: string) => {
+const expectMarkup = (input: W.Writer<TreeNode, Operation>, className: string, expected: string) => {
   render(<div data-testid="asComponent"><Expression node={input} /></div>)
   expect(screen.getByTestId('asComponent').firstChild).toHaveClass(className)
   expect(screen.getByTestId('asComponent')).toHaveTextContent(expected)

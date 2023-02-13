@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import React, { useRef } from 'react'
 import styles from './Graph.module.css';
 import { Canvas } from '@react-three/fiber';
-import { TreeNode, W, parser } from '@bowers/calcula'
+import { TreeNode, W, Operation, parser } from '@bowers/calcula'
 import { RootState } from '../../app/store';
 import { Plot } from './Graph.slice';
 import { createArraySelector } from 'reselect-map';
@@ -16,7 +16,7 @@ export interface GraphProps {
 }
 
 interface Parsing {
-  expression: W.Writer<TreeNode>,
+  expression: W.Writer<TreeNode, Operation>,
   color: THREE.Color
 }
 

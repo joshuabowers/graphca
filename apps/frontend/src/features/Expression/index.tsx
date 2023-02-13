@@ -1,7 +1,8 @@
 import styles from './Expression.module.css'
 import { multi, method, Multi } from "@arrows/multimethod"
 import { 
-  Unicode, TreeNode, W, isTreeNode, TreeNodeGuardFn, Species, notAny,
+  Unicode, TreeNode, W, Operation,
+  isTreeNode, TreeNodeGuardFn, Species, notAny,
   BinaryNode, isBinary, UnaryNode,
   real, multiply, reciprocal, negate, isValue,
   isReal, isComplex, isBoolean, isNil, isNaN, isVariable, 
@@ -22,11 +23,11 @@ import {
 
 type AsComponent<T extends TreeNode> = (expression: T) => JSX.Element
 type AsBoolean<T extends TreeNode> = (expression: T) => boolean
-type ComponentizeFn = Multi & ((expression: W.Writer<TreeNode>) => JSX.Element)
+type ComponentizeFn = Multi & ((expression: W.Writer<TreeNode, Operation>) => JSX.Element)
 
 const when = <T extends TreeNode>(
   guard: TreeNodeGuardFn<T>, fn: AsComponent<T> | AsBoolean<T>
-) => method(guard, (e: W.Writer<T>) => fn(e.result))
+) => method(guard, (e: W.Writer<T, Operation>) => fn(e.value))
 
 const specialNumbers = new Map([
   [Number.POSITIVE_INFINITY.toString(), Unicode.infinity],
@@ -69,7 +70,7 @@ const identity = (n: JSX.Element) => n
 const wrap = (n: JSX.Element) => <>({n})</>
 
 type ParenthesizeFn = Multi
-  & ((node: W.Writer<BinaryNode>, child: W.Writer<TreeNode>) => 
+  & ((node: W.Writer<BinaryNode, Operation>, child: W.Writer<TreeNode, Operation>) => 
     (component: JSX.Element) => JSX.Element)
 
 const parenthesize: ParenthesizeFn = multi(
@@ -79,7 +80,7 @@ const parenthesize: ParenthesizeFn = multi(
   method(() => identity)
 )
 
-type NumericPredicateFn = Multi & ((expression: W.Writer<TreeNode>) => boolean)
+type NumericPredicateFn = Multi & ((expression: W.Writer<TreeNode, Operation>) => boolean)
 
 const isNegative: NumericPredicateFn = multi(
   when(isReal, e => e.value < 0),
@@ -92,7 +93,7 @@ const isReciprocal: NumericPredicateFn = multi(
   method(false)
 )
 
-type LogarithmNameFn = Multi & ((base: W.Writer<TreeNode>) => string)
+type LogarithmNameFn = Multi & ((base: W.Writer<TreeNode, Operation>) => string)
 
 const logarithm: LogarithmNameFn = multi(
   method(isValue(real(2)), 'lb'),
@@ -150,8 +151,8 @@ const componentize: ComponentizeFn = multi(
   when(
     isVariable,
     e => (
-      !isNil(e.value)
-        ? componentize(e.value)
+      !isNil(e.binding)
+        ? componentize(e.binding)
         : <span className={styles.variable}>
             {e.name}
           </span>
@@ -315,7 +316,7 @@ const componentize: ComponentizeFn = multi(
 )
 
 export type ExpressionProps = {
-  node: W.Writer<TreeNode>
+  node: W.Writer<TreeNode, Operation>
 }
 
 export type ExpressionComponent = (props: ExpressionProps) => JSX.Element
