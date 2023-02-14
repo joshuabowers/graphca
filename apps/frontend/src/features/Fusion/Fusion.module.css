@@ -1,0 +1,27 @@
+.matter {
+}
+
+.matter .grouping {
+  color: lightgrey;
+}
+
+.matter .variable {
+  color: lightgoldenrodyellow;
+}
+
+.matter .constant {
+  color: lightcyan;
+}
+
+.matter .binaryOp {
+  font-weight: bold;
+  font-size: larger;
+}
+
+.matter .nan {
+  color: lightsalmon;
+}
+
+.matter .function {
+  font-style: italic;
+}

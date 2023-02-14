@@ -80,7 +80,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.right, r.value.right)
       ),
       // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
-      'collecting equivalent value.left multiplicands'
+      'collecting equivalent left multiplicands'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -92,7 +92,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.right, r.value.left)
       ),
       // rule`(${l.value.left} * ${r.value.right}) * (${l.value.right} * ${r.value.left})`,
-      'collecting equivalent value.left/value.right multiplicands'
+      'collecting equivalent left/right multiplicands'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -104,7 +104,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.left, r.value.right)
       ),
       // rule`(${l.value.right} * ${r.value.left}) * (${l.value.left} * ${r.value.right})`,
-      'collecting equivalent value.right/value.left multiplicands'
+      'collecting equivalent right/left multiplicands'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -116,7 +116,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.right, r.value.right)
       ),
       // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
-      'collecting equivalent value.right multiplicands'
+      'collecting equivalent right multiplicands'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -125,7 +125,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => [
       multiply(square(l), r.value.right), 
       // rule`[${l}]^2 * ${r.value.right}`,
-      'equivalent: value.left operand and value.left child of value.right operand'
+      'equivalent: left operand and left child of right operand'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -134,7 +134,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => [
       multiply(square(l), r.value.left), 
       // rule`[${l}]^2 * ${r.value.left}`,
-      'equivalent: value.left operand and value.right child of value.right operand'
+      'equivalent: left operand and right child of right operand'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -143,7 +143,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => [ 
       multiply(square(r), l.value.right),
       // rule`[${r}]^2 * ${l.value.right}`,
-      'equivalent: value.left child of value.left operand and value.right operand'
+      'equivalent: left child of left operand and right operand'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -152,7 +152,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => [
       multiply(square(r), l.value.left),
       // rule`[${r}]^2 * ${l.value.left}`,
-      'equivalent: value.right child of value.left operand and value.right operand'
+      'equivalent: right child of left operand and right operand'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -188,7 +188,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.right, r.value.right)
       ),
       // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
-      'equivalent: value.left child of value.left multiplication and value.left child of value.right multiplication'
+      'equivalent: left child of left multiplication and left child of right multiplication'
     ]
   ),
   when<Multiplication, Multiplication>(
@@ -224,7 +224,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.right, r.value.left),
       ),
       // rule`(${l.value.left} * ${r.value.right}) * (${l.value.right} * ${r.value.left})`,
-      'equivalent: value.left child of value.left multiplication and value.right child of value.right multiplication'
+      'equivalent: left child of left multiplication and right child of right multiplication'
     ]
   ),
   when<Exponentiation, Exponentiation>(
@@ -244,7 +244,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         r.value.right, raise(l.value.left, add(l.value.right, real(1)))
       ),
       // rule`${r.value.right} * ${l.value.left}^(${l.value.right} + ${real(1)})`,
-      'equivalent: base of value.left exponentiation and value.left child of value.right'
+      'equivalent: base of left exponentiation and left child of right'
     ]
   ),
   when<Exponentiation, Multiplication>(
@@ -255,7 +255,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         r.value.left, raise(l.value.left, add(l.value.right, real(1)))
       ),
       // rule`${r.value.left} * ${l.value.left}^(${l.value.right} + ${real(1)})`,
-      'equivalent: base of value.left exponentiation and value.right child of value.right'
+      'equivalent: base of left exponentiation and right child of right'
     ]
   ),
   when<Exponentiation, MultiplicationOfLeftExponential>(
@@ -267,7 +267,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         raise(l.value.left, add(l.value.right, r.value.left.value.right))
       ),
       // rule`${r.value.right} * ${l.value.left}^(${l.value.right} + ${r.value.left.value.right})`,
-      'equivalent: base of value.left exponentiation and base of value.left child exponentiation of value.right multiplication'
+      'equivalent: base of left exponentiation and base of left child exponentiation of right multiplication'
     ]
   ),
   when<Exponentiation, MultiplicationOfRightExponential>(
@@ -279,7 +279,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         raise(l.value.left, add(l.value.right, r.value.right.value.right))
       ),
       // rule`${r.value.left} * ${l.value.left}^(${l.value.right} + ${r.value.right.value.right})`,
-      'equivalent: base of value.left exponentiation and base of value.right child exponentiation of value.right multiplication'
+      'equivalent: base of left exponentiation and base of right child exponentiation of right multiplication'
     ]
   ),
   when<Multiplication, Exponentiation>(
@@ -290,7 +290,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         l.value.right, raise(r.value.left, add(r.value.right, real(1)))
       ),
       // rule`${l.value.right} * ${r.value.left}^(${r.value.right} + ${real(1)})`,
-      'equivalent: value.left child of value.left and base of value.right exponentiation'
+      'equivalent: left child of left and base of right exponentiation'
     ]
   ),
   when<Multiplication, Exponentiation>(
@@ -301,7 +301,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         l.value.left, raise(r.value.left, add(r.value.right, real(1)))
       ),
       // rule`${l.value.left} * ${r.value.left}^(${r.value.right} + ${real(1)})`,
-      'equivalent: value.right child of value.left and base of value.right exponentiation'
+      'equivalent: right child of left and base of right exponentiation'
     ]
   ),
   when<MultiplicationOfLeftExponential, Exponentiation>(
@@ -313,7 +313,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         raise(r.value.left, add(l.value.left.value.right, r.value.right))
       ),
       // rule`${l.value.right} * ${r.value.left}^(${l.value.left.value.right} + ${r.value.right})`,
-      'equivalent: base of value.left child exponentiation of value.left multiplication and base of value.right exponentiation'
+      'equivalent: base of left child exponentiation of left multiplication and base of right exponentiation'
     ]
   ),
   when<MultiplicationOfRightExponential, Exponentiation>(
@@ -325,7 +325,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         raise(r.value.left, add(l.value.right.value.right, r.value.right))
       ),
       // rule`${l.value.left} * ${r.value.left}^(${l.value.right.value.right} + ${r.value.right})`,
-      'equivalent: base of value.right child exponentiation of value.left multiplication and base of value.right exponentiation'
+      'equivalent: base of right child exponentiation of left multiplication and base of right exponentiation'
     ]
   ),
   when<TreeNode, Multiplication>(
@@ -335,7 +335,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         r.value.right, multiply(l, r.value.left)
       ),
       // rule`${r.value.right} * (${l} * ${r.value.left})`,
-      'equivalent: value.left operand and value.left child of value.right operand'
+      'equivalent: left operand and left child of right operand'
     ]
   ),
   when<TreeNode, Multiplication>(
@@ -345,7 +345,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         r.value.left, multiply(l, r.value.right)
       ),
       // rule`${r.value.left} * (${l} * ${r.value.right})`,
-      'equivalent: value.left operand and value.right child of value.right operand'
+      'equivalent: left operand and right child of right operand'
     ]
   ),
   when<TreeNode, MultiplicationOfLeftExponential>(
@@ -356,7 +356,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         r.value.right, raise(l, add(real(1), r.value.left.value.right))
       ),
       // rule`${r.value.right} * ${l}^(${real(1)} + ${r.value.left.value.right})`,
-      'equivalent: value.left operand and base of value.left child exponentiation of value.right multiplication'
+      'equivalent: left operand and base of left child exponentiation of right multiplication'
     ]
   ),
   when<TreeNode, MultiplicationOfRightExponential>(
@@ -367,7 +367,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         r.value.left, raise(l, add(real(1), r.value.right.value.right))
       ),
       // rule`${r.value.left} * ${l}^(${real(1)} + ${r.value.right.value.right})`,
-      'equivalent: value.left operand and base of value.right child exponentiation of value.right multiplication'
+      'equivalent: left operand and base of right child exponentiation of right multiplication'
     ]
   ),
   when<Multiplication, TreeNode>(
@@ -377,7 +377,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         l.value.right, multiply(r, l.value.left)
       ),
       // rule`${l.value.right} * (${r} * ${l.value.left})`,
-      'equivalent: value.left child of value.left operand and value.right operand'
+      'equivalent: left child of left operand and right operand'
     ]
   ),
   when<Multiplication, TreeNode>(
@@ -387,7 +387,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         l.value.left, multiply(r, l.value.right)
       ),
       // rule`${l.value.left} * (${r} * ${l.value.right})`,
-      'equivalent: value.right child of value.left operand and value.right operand'
+      'equivalent: right child of left operand and right operand'
     ]
   ),
   when<MultiplicationOfLeftExponential, TreeNode>(
@@ -398,7 +398,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         l.value.right, raise(r, add(real(1), l.value.left.value.right))
       ),
       // rule`${l.value.right} * ${r}^(${real(1)} + ${l.value.left.value.right})`,
-      'equivalent: base of value.left child exponentiation of value.left multiplication and value.right operand'
+      'equivalent: base of left child exponentiation of left multiplication and right operand'
     ]
   ),
   when<MultiplicationOfRightExponential, TreeNode>(
@@ -409,7 +409,7 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         l.value.left, raise(r, add(real(1), l.value.right.value.right))
       ),
       // rule`${l.value.left} * ${r}^(${real(1)} + ${l.value.right.value.right})`,
-      'equivalent: base of value.right child exponentiation of value.left multiplication and value.right operand'
+      'equivalent: base of right child exponentiation of left multiplication and right operand'
     ]
   ),
   when<TreeNode, Exponentiation>(
