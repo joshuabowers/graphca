@@ -12,6 +12,7 @@ export const Derivation = (props: DerivationProps) => {
   return (
     <div className={[styles.normal, props.show && styles.visible].join(' ')}>
       {
+        props.show && 
         props.for.log.map(({particles, action}, i) => {
           return <React.Fragment key={i}>
             <span className={styles.step} />
