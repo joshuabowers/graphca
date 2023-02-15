@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { ClipboardEventHandler, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useAppSelector } from '../../app/hooks';
 import { scope as createScope } from '@bowers/calcula'
 import { Parse } from '../Parse';
@@ -47,6 +47,11 @@ export const Terminal = (props: TerminalProps) => {
     currentRef.current?.scrollIntoView({behavior: 'smooth'})
   }, [currentRef, history])
 
+  /**
+   * Could be used to insert text into the app, bypassing the KeyPad...
+   */
+  const handlePaste = (e: React.ClipboardEvent<HTMLSpanElement>) => console.log(e)
+
   return (
     <div className={styles.normal}>
       {
@@ -60,7 +65,7 @@ export const Terminal = (props: TerminalProps) => {
         )
       }
       <span ref={currentRef} className={styles.currentMarker} />
-      <span className={styles.currentLine}>{currentLine}<span className={styles.caret}>|</span></span>
+      <span className={styles.currentLine} onPaste={handlePaste}>{currentLine}<span className={styles.caret}>|</span></span>
     </div>
   )
 }
