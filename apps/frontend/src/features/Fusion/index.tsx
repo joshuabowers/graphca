@@ -44,19 +44,22 @@ const isFunction = new RegExp(functional.join('|'))
 
 const isConstant = new RegExp(`${isReal.source}|${isBoolean.source}|${isComplex.source}|${isSpecialNumber.source}`)
 
+const highlight = (className: string) => (s: string) => 
+  <span className={className}>{s}</span>
+
 const fusion: FusionFn = multi(
   method(
     Array.isArray, 
     (a: Particle[]) => <>{
-      a.map((p, i) => <Fusion key={i} toFuse={p} />)
+      a.map((p, i) => <React.Fragment key={i}>{fusion(p)}</React.Fragment>)
     }</>
   ),
-  method(isConstant, (s: string) => <span className={styles.constant}>{s}</span>),
-  method(isNilOrNaN, (s: string) => <span className={styles.nan}>{s}</span>),
-  method(isGrouping, (s: string) => <span className={styles.grouping}>{s}</span>),
-  method(isBinaryOp, (s: string) => <span className={styles.binaryOp}>{s}</span>),
-  method(isFunction, (s: string) => <span className={styles.function}>{s}</span>),
-  method((s: string) => <span className={styles.variable}>{s}</span>)
+  method(isConstant, highlight(styles.constant)),
+  method(isNilOrNaN, highlight(styles.nan)),
+  method(isGrouping, highlight(styles.grouping)),
+  method(isBinaryOp, highlight(styles.binaryOp)),
+  method(isFunction, highlight(styles.function)),
+  method(highlight(styles.variable))
 )
 
 export const Fusion = (props: FusionProps) =>

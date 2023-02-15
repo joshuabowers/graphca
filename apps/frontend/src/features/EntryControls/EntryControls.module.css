@@ -1,0 +1,41 @@
+
+.entryControls {
+  margin-right: 1em;
+  z-index: 1;
+}
+
+.entryControls > button {
+  cursor: pointer;
+  background: #AAAE;
+  color: black;
+  border: 0;
+  padding: 0.1em;
+  transition: all 0.2s ease-in-out;
+}
+
+.entryControls > .plotColor {
+  cursor: default;
+  color: var(--plotColor);
+}
+
+.entryControls > button:first-child {
+  border-top-left-radius: 0.3em;
+  border-bottom-left-radius: 0.3em;
+}
+
+.entryControls > button:last-child {
+  border-top-right-radius: 0.3em;
+  border-bottom-right-radius: 0.3em;
+}
+
+ .entryControls > button:hover {
+  background: var(--key-hover-color);
+}
+
+.entryControls > button:active {
+  background: var(--key-activate-color);
+}
+
+ .entryControls > button:disabled:hover {
+  background: #AAAE;
+}

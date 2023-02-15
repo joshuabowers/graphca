@@ -14,12 +14,41 @@
   font-size: 1.2em;
   line-height: 1.5;
   height: 100%;
-  padding-left: 1em;
+  padding: 0.5em;
   background-color: var(--terminal-background-color);
   color: var(--terminal-color);
+  display: grid;
+  grid: auto-flow / auto 1fr auto;
+  counter-reset: terminal-entries;
+  box-sizing: border-box;
 }
 
-.history > li::marker {
+.reference {
+  grid-column: span 3;
+  height: 0;
+  user-select: none;
+}
+
+.currentMarker {
+  justify-self: end;
+  color: gray;
+  margin-right: 0.5em;
+}
+
+.currentMarker::before {
+  content: '\03bb.'
+}
+
+.currentLine {
+  grid-column: span 2;
+}
+
+.caret {
+  font-variant-ligatures: no-common-ligatures;
+  animation: 1s linear infinite alternate-reverse flash;
+}
+
+/* .history > li::marker {
   color: gray;
 }
 
@@ -34,4 +63,4 @@
 .history .caret {
   font-variant-ligatures: no-common-ligatures;
   animation: 1s linear infinite alternate-reverse flash;
-}
+} */

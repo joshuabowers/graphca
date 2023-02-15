@@ -8,6 +8,35 @@
   padding: 0.5em;
 }
 
+.marker, .resultMarker {
+  user-select: none;
+  justify-self: end;
+  color: gray;
+  margin-right: 0.5em;
+}
+
+.marker::before {
+  counter-increment: terminal-entries;
+  content: counter(terminal-entries) ')';
+}
+
+.controls {
+  justify-self: end;
+}
+
+.output, .error {
+  grid-column: span 2;
+}
+
+.derivation {
+  grid-column: span 3;
+}
+
+.derivation, .error {
+  margin-bottom: 1em;
+}
+
+/* The following are currently dead and should be excised. */
 .result {
   display: flex;
   flex-direction: row;
@@ -25,45 +54,4 @@
   margin-left: -1.7em;
   margin-right: 0.5em;
   color: gray;
-}
-
-.result > .entryControls {
-  margin-right: 1em;
-  z-index: 1;
-}
-
-.result > .entryControls > button {
-  cursor: pointer;
-  background: #AAAE;
-  color: black;
-  border: 0;
-  padding: 0.1em;
-  transition: all 0.2s ease-in-out;
-}
-
-.result > .entryControls > .plotColor {
-  cursor: default;
-  color: var(--plotColor);
-}
-
-.result > .entryControls > button:first-child {
-  border-top-left-radius: 0.3em;
-  border-bottom-left-radius: 0.3em;
-}
-
-.result > .entryControls > button:last-child {
-  border-top-right-radius: 0.3em;
-  border-bottom-right-radius: 0.3em;
-}
-
-.result > .entryControls > button:hover {
-  background: var(--key-hover-color);
-}
-
-.result > .entryControls > button:active {
-  background: var(--key-activate-color);
-}
-
-.result > .entryControls > button:disabled:hover {
-  background: #AAAE;
 }
