@@ -22,6 +22,8 @@
 
 .controls {
   justify-self: end;
+  position: sticky;
+  top: 0;
 }
 
 .output, .error {
