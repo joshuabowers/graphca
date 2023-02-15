@@ -19,6 +19,8 @@
   color: var(--terminal-color);
   display: grid;
   grid: auto-flow / auto 1fr auto;
+  align-items: baseline;
+  align-content: start;
   counter-reset: terminal-entries;
   box-sizing: border-box;
 }

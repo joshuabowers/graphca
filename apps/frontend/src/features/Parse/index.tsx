@@ -38,7 +38,7 @@ export const Parse = (props: ParseProps) => {
     error = (err as Error).message
     console.error(error)
   }
-  return <>
+  return <div className={styles.entry}>
     <span className={styles.marker} />
     <span className={styles.input}>{props.input}</span>
     <span className={styles.controls}>
@@ -58,5 +58,5 @@ export const Parse = (props: ParseProps) => {
         <Derivation for={output} show={showDerivation} />
       </div>
     }
-  </>
+  </div>
 }

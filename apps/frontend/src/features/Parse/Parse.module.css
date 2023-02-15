@@ -1,3 +1,7 @@
+.entry {
+  display: contents;
+}
+
 .error {
   font-size: 0.8em;
   white-space: pre-wrap;
