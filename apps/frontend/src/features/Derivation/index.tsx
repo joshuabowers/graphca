@@ -16,7 +16,9 @@ export const Derivation = (props: DerivationProps) => {
         props.for.log.map(({particles, action}, i) => {
           return <React.Fragment key={i}>
             <span className={styles.step} />
-            <span className={styles.fusion}><Fusion toFuse={particles} /></span>
+            <span className={styles.fusion}>
+              <Fusion mode="dark" toFuse={particles} />
+            </span>
             <span className={styles.separator}>&mdash;</span>
             <span className={styles.action}>{action}</span>
           </React.Fragment>

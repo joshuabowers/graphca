@@ -8,7 +8,8 @@ import {
 import styles from './Fusion.module.css'
 
 export type FusionProps = {
-  toFuse: Particle
+  toFuse: Particle,
+  mode: "light"|"dark"
 }
 
 type FusionFn = Multi
@@ -63,4 +64,4 @@ const fusion: FusionFn = multi(
 )
 
 export const Fusion = (props: FusionProps) =>
-  <span className={styles.matter}>{fusion(props.toFuse)}</span>
+  <span className={[styles.matter, styles[props.mode]].join(' ')}>{fusion(props.toFuse)}</span>

@@ -5,6 +5,7 @@ import {
   parser, Scope, isNil, isBoolean, isReal, isComplex, stringify
 } from '@bowers/calcula'
 import { Expression } from "../Expression";
+import { Fusion } from '../Fusion';
 import { Derivation } from '../Derivation';
 import { Plot, graph, removePlot } from '../Graph/Graph.slice';
 import { toggleDerivation, forget } from '../Terminal/Terminal.slice';
@@ -40,7 +41,9 @@ export const Parse = (props: ParseProps) => {
   }
   return <div className={styles.entry}>
     <span className={styles.marker} />
-    <span className={styles.input}>{props.input}</span>
+    <span className={styles.input}>
+      <Fusion mode="light" toFuse={props.input.split(/\b/)} />
+    </span>
     <span className={styles.controls}>
       <EntryControls canPlot={canPlot} isPlotted={isPlotted} 
         showDerivation={showDerivation} enteredAt={props.enteredAt}

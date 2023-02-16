@@ -7,6 +7,7 @@ import { RootState } from '../../app/store';
 import { createArraySelector } from 'reselect-map';
 import { TerminalEntryState } from './Terminal.slice';
 import { createSelector, OutputSelector } from 'reselect';
+import { Fusion } from '../Fusion';
 
 export interface TerminalProps {
 
@@ -59,7 +60,10 @@ export const Terminal = (props: TerminalProps) => {
         )
       }
       <span ref={!focus ? currentRef : undefined} className={styles.currentMarker} />
-      <span className={styles.currentLine} onPaste={handlePaste}>{currentLine}<span className={styles.caret}>|</span></span>
+      <span className={styles.currentLine} onPaste={handlePaste}>
+        <Fusion mode="light" toFuse={currentLine.split(/\b/)} />
+        <span className={styles.caret}>|</span>
+      </span>
     </div>
   )
 }

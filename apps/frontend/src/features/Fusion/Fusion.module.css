@@ -1,16 +1,27 @@
-.matter {
+.matter.light {
+  --grouping: darkslategray;
+  --variable: darkgoldenrod;
+  --constant: darkcyan;
+  --nan: darksalmon;
+}
+
+.matter.dark {
+  --grouping: lightgrey;
+  --variable: lightgoldenrodyellow;
+  --constant: lightcyan;
+  --nan: lightsalmon;
 }
 
 .matter .grouping {
-  color: lightgrey;
+  color: var(--grouping);
 }
 
 .matter .variable {
-  color: lightgoldenrodyellow;
+  color: var(--variable);
 }
 
 .matter .constant {
-  color: lightcyan;
+  color: var(--constant);
 }
 
 .matter .binaryOp {
@@ -19,7 +30,7 @@
 }
 
 .matter .nan {
-  color: lightsalmon;
+  color: var(--nan);
 }
 
 .matter .function {
