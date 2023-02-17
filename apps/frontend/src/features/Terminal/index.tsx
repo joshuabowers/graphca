@@ -55,6 +55,9 @@ export const Terminal = (props: TerminalProps) => {
               focus === item.enteredAt &&
               <span ref={currentRef} className={styles.reference} />
             }
+            <header className={styles.markerTrack}>
+              <h2 className={styles.marker} />
+            </header>
             {parsings[key]}
           </React.Fragment>
         )

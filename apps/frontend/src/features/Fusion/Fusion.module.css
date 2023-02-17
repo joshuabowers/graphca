@@ -24,9 +24,22 @@
   color: var(--constant);
 }
 
-.matter .binaryOp {
-  font-weight: bold;
+.matter .operator {
   font-size: larger;
+  margin: 0 0.1em;
+}
+
+.matter .operator.small {
+  font-size: medium;
+  font-size: bold;
+}
+
+.matter .icon {
+  font-size: 1.75em;
+  font-weight: 900;
+  margin: 0 0.1em;
+  vertical-align: -5%;
+  line-height: 1;
 }
 
 .matter .nan {

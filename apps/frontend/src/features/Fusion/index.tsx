@@ -17,7 +17,8 @@ type FusionFn = Multi
 
 const operators = [
   ...connectives.keys(), ...inequality.keys(),
-  ...additive.keys(), ...multiplicative.keys(), '^'
+  ...additive.keys(), ...multiplicative.keys(), 
+  '^', ':=', Unicode.not
 ]
 
 const functional = [
@@ -40,13 +41,18 @@ const isBoolean = /true|false/
 const isSpecialNumber = new RegExp(`${specialNumber.join('|')}`)
 const isNilOrNaN = /nil|NaN/
 const isGrouping = /[\(\)\[\]\{\}]/
-const isBinaryOp = new RegExp(operators.map(s => escapeRegExp(s)).join('|'))
+const isOperator = new RegExp(operators.map(s => escapeRegExp(s)).join('|'))
 const isFunction = new RegExp(functional.join('|'))
+
+const isXnor = new RegExp(Unicode.xnor)
+const isXor = new RegExp(Unicode.xor)
+const isImplies = new RegExp(Unicode.implies)
+const isConverse = new RegExp(Unicode.converse)
 
 const isConstant = new RegExp(`${isReal.source}|${isBoolean.source}|${isComplex.source}|${isSpecialNumber.source}`)
 
-const highlight = (className: string) => (s: string) => 
-  <span className={className}>{s}</span>
+const highlight = (className: string|string[], override?: string) => (s: string) => 
+  <span className={Array.isArray(className) ? className.join(' ') : className}>{override ?? s}</span>
 
 const fusion: FusionFn = multi(
   method(
@@ -58,7 +64,11 @@ const fusion: FusionFn = multi(
   method(isConstant, highlight(styles.constant)),
   method(isNilOrNaN, highlight(styles.nan)),
   method(isGrouping, highlight(styles.grouping)),
-  method(isBinaryOp, highlight(styles.binaryOp)),
+  method(isXnor, highlight([styles.operator, styles.small], '<->')),
+  method(isXor, highlight(styles.icon)),
+  method(isImplies, highlight([styles.operator, styles.small], '->')),
+  method(isConverse, highlight([styles.operator, styles.small], '<-')),
+  method(isOperator, highlight(styles.operator)),
   method(isFunction, highlight(styles.function)),
   method(highlight(styles.variable))
 )

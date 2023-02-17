@@ -98,8 +98,8 @@ export const polygammaOps = binaryOps(Unicode.digamma, Notation.prefix, Species.
 export const permuteOps = binaryOps('P', Notation.prefix, Species.permute)
 export const combineOps = binaryOps('C', Notation.prefix, Species.combine)
 
-export const equalsOps = binaryOps('===', Notation.infix, Species.equals)
-export const notEqualsOps = binaryOps('!==', Notation.infix, Species.notEquals)
+export const equalsOps = binaryOps('==', Notation.infix, Species.equals)
+export const notEqualsOps = binaryOps('!=', Notation.infix, Species.notEquals)
 export const lessThanOps = binaryOps('<', Notation.infix, Species.lessThan)
 export const greaterThanOps = binaryOps('>', Notation.infix, Species.greaterThan)
 export const lessThanEqualsOps = binaryOps('<=', Notation.infix, Species.lessThanEquals)

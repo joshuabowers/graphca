@@ -18,15 +18,34 @@
   background-color: var(--terminal-background-color);
   color: var(--terminal-color);
   display: grid;
-  grid: auto-flow / auto 1fr auto;
+  grid: auto-flow / auto 1fr;
+  gap: 0.5em;
   align-items: baseline;
   align-content: start;
   counter-reset: terminal-entries;
   box-sizing: border-box;
 }
 
+.markerTrack {
+  align-self: stretch;
+  justify-self: end;
+}
+
+.marker {
+  color: var(--terminal-color);
+  position: sticky;
+  top: 0;
+  padding: 0;
+  margin: 0.45em 0;
+}
+
+.marker::before {
+  counter-increment: terminal-entries;
+  content: counter(terminal-entries);
+}
+
 .reference {
-  grid-column: span 3;
+  grid-column: span 2;
   height: 0;
   user-select: none;
 }
@@ -34,35 +53,13 @@
 .currentMarker {
   justify-self: end;
   color: gray;
-  margin-right: 0.5em;
 }
 
 .currentMarker::before {
   content: '\03bb.'
 }
 
-.currentLine {
-  grid-column: span 2;
-}
-
 .caret {
   font-variant-ligatures: no-common-ligatures;
   animation: 1s linear infinite alternate-reverse flash;
 }
-
-/* .history > li::marker {
-  color: gray;
-}
-
-.history > li:not(:last-child) {
-  margin-bottom: 0.25em;
-}
-
-.history > li:last-child {
-  list-style-type: '\03bb. '
-}
-
-.history .caret {
-  font-variant-ligatures: no-common-ligatures;
-  animation: 1s linear infinite alternate-reverse flash;
-} */

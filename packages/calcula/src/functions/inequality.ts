@@ -19,7 +19,7 @@ export type LessThanEquals = Inequality<Species.lessThanEquals>
 export type GreaterThanEquals = Inequality<Species.greaterThanEquals>
 
 export const [equals, isEquality, $equals] = binary<Equality, Boolean>(
-  '===', Notation.infix, Species.equals, Genera.inequalities
+  '==', Notation.infix, Species.equals, Genera.inequalities
 )(
   (l, r) => boolean(l.value.value === r.value.value),
   (l, r) => boolean(l.value.a === r.value.a && l.value.b === r.value.b),
@@ -27,7 +27,7 @@ export const [equals, isEquality, $equals] = binary<Equality, Boolean>(
 )()
 
 export const [notEquals, isStrictInequality, $notEquals] = binary<StrictInequality, Boolean>(
-  '!==', Notation.infix, Species.notEquals, Genera.inequalities
+  '!=', Notation.infix, Species.notEquals, Genera.inequalities
 )(
   (l, r) => boolean(l.value.value !== r.value.value),
   (l, r) => boolean(l.value.a !== r.value.a || l.value.b !== r.value.b), 

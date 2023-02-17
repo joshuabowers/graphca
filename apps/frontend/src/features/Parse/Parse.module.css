@@ -1,5 +1,9 @@
 .entry {
-  display: contents;
+  display: grid;
+  grid: auto-flow / 1fr auto;
+  align-items: baseline;
+  box-sizing: border-box;
+  place-self: stretch;
 }
 
 .error {
@@ -7,21 +11,7 @@
   white-space: pre-wrap;
   background-color: var(--error-background-color);
   color: var(--error-color);
-  /* border: 0.25em solid var(--fore-color);
-  border-radius: 0.25em; */
   padding: 0.5em;
-}
-
-.marker, .resultMarker {
-  user-select: none;
-  justify-self: end;
-  color: gray;
-  margin-right: 0.5em;
-}
-
-.marker::before {
-  counter-increment: terminal-entries;
-  content: counter(terminal-entries) ')';
 }
 
 .controls {
@@ -31,34 +21,12 @@
   top: 0;
 }
 
-.output, .error {
+.output, .error, .derivation {
   grid-column: span 2;
 }
 
-.derivation {
-  grid-column: span 3;
-}
-
-.derivation, .error {
-  margin-bottom: 1em;
-}
-
-/* The following are currently dead and should be excised. */
-.result {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.result > .output, .result > .output > span:last-child {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.result > .output > span:first-child {
-  margin-left: -1.7em;
-  margin-right: 0.5em;
+.output::before {
+  content: '=>';
   color: gray;
+  margin-right: 0.25em;
 }

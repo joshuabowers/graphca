@@ -40,7 +40,6 @@ export const Parse = (props: ParseProps) => {
     console.error(error)
   }
   return <div className={styles.entry}>
-    <span className={styles.marker} />
     <span className={styles.input}>
       <Fusion mode="light" toFuse={props.input.split(/\b/)} />
     </span>
@@ -50,7 +49,6 @@ export const Parse = (props: ParseProps) => {
         hasError={error !== undefined}
         plot={{expression: asString, enteredAt: props.enteredAt}} />
     </span>
-    <span className={styles.resultMarker}>{'=>'}</span>
     { 
       output && !error
         ? <div className={styles.output}><Expression node={output} /></div>
