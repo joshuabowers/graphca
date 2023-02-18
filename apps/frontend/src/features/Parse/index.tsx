@@ -39,7 +39,7 @@ export const Parse = (props: ParseProps) => {
     error = (err as Error).message
     console.error(error)
   }
-  return <div className={styles.entry}>
+  return <div className={[styles.entry, error ? styles.error : styles.valid].join(' ')}>
     <span className={styles.input}>
       <Fusion mode="light" toFuse={props.input.split(/\b/)} />
     </span>

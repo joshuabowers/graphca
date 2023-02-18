@@ -1,6 +1,7 @@
 .normal {
   counter-reset: step;
-  background-color: #254525AA;
+  /* background-color: #254525AA; */
+  background-color: hsla(0, 0%, 0%, 25%);
   color: white;
   opacity: 0;
   height: 0;
@@ -14,6 +15,7 @@
   align-content: start;
   column-gap: 0.5em;
   box-sizing: border-box;
+  border-bottom-left-radius: 0.75em;
 }
 
 .visible {

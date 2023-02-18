@@ -7,6 +7,9 @@
   }
 }
 
+@value valid from "../Parse/Parse.module.css";
+@value error from "../Parse/Parse.module.css";
+
 .normal {
   align-self: end;
   overflow: scroll;
@@ -19,7 +22,6 @@
   color: var(--terminal-color);
   display: grid;
   grid: auto-flow / auto 1fr;
-  gap: 0.5em;
   align-items: baseline;
   align-content: start;
   counter-reset: terminal-entries;
@@ -29,14 +31,27 @@
 .markerTrack {
   align-self: stretch;
   justify-self: end;
+  box-sizing: border-box;
 }
 
-.marker {
+.marker, .currentMarker {
   color: var(--terminal-color);
   position: sticky;
   top: 0;
-  padding: 0;
-  margin: 0.45em 0;
+  padding: 0.1em 0 0.1em 0.5em;
+  margin: 0.55em 0 1.5em;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.75em;
+}
+
+.markerTrack:has(+ :global(.error)) .marker {
+  background-color: var(--entry-error-background-color);
+  color: var(--entry-error-color);
+}
+
+.markerTrack:has(+ :global(.valid)) .marker {
+  background-color: var(--entry-valid-background-color);
+  color: var(--entry-valid-color);
 }
 
 .marker::before {
@@ -52,11 +67,23 @@
 
 .currentMarker {
   justify-self: end;
-  color: gray;
+  margin: 0;
 }
 
 .currentMarker::before {
-  content: '\03bb.'
+  content: '\03bb'
+}
+
+.currentMarker, .currentLine {
+  background-color: var(--entry-unknown-background-color);
+  color: var(--entry-unknown-color);
+  align-self: baseline;
+}
+
+.currentLine {
+  padding: 0.5em 0.5em;
+  margin: auto 0;
+  /* align-self: stretch; */
 }
 
 .caret {

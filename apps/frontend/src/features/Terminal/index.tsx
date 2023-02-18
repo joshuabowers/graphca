@@ -31,7 +31,7 @@ export const Terminal = (props: TerminalProps) => {
     [scope]
   )
 
-  const currentRef = useRef<HTMLLIElement>(null)
+  const currentRef = useRef<HTMLSpanElement>(null)
   const history = useAppSelector(getHistory);
   const currentLine = useAppSelector(getCurrentLine);
   const focus = useAppSelector(getFocus)
@@ -62,9 +62,10 @@ export const Terminal = (props: TerminalProps) => {
           </React.Fragment>
         )
       }
-      <span ref={!focus ? currentRef : undefined} className={styles.currentMarker} />
+      <span ref={!focus ? currentRef : undefined} className={styles.reference} />
+      <h2 className={styles.currentMarker} />
       <span className={styles.currentLine} onPaste={handlePaste}>
-        <Fusion mode="light" toFuse={currentLine.split(/\b/)} />
+        <Fusion mode="dark" toFuse={currentLine.split(/\b/)} />
         <span className={styles.caret}>|</span>
       </span>
     </div>

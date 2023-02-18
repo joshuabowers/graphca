@@ -55,6 +55,16 @@ code {
     --toggle-key-background-color: hsl(35, 23%, 43%);
     --terminal-background-color: hsla(0, 0%, 0%, 20%);
     --terminal-color: inherit;
+
+    --entry-input-background-color: hsl(0, 0%, 40%);
+    --entry-input-color: var(--terminal-color);
+    --entry-unknown-background-color: hsl(0, 0%, 40%);
+    --entry-unknown-color: var(--terminal-color);
+    --entry-valid-background-color: hsl(135, 60%, 25%);
+    --entry-valid-color: hsl(135, 60%, 85%);
+    --entry-error-background-color: hsl(0, 60%, 25%);
+    --entry-error-color: hsl(0, 60%, 85%);
+
     --error-color: hsl(0, 60%, 85%);
     --error-background-color: hsla(0, 60%, 25%, 45%);
     --curve-color: skyblue;
@@ -86,6 +96,14 @@ code {
     --toggle-key-background-color: hsl(35, 14%, 53%);
     --terminal-background-color: hsla(0, 0%, 75%, 45%);
     --terminal-color: black;
+    --entry-input-background-color: var(--key-color);
+    --entry-input-color: var(--terminal-color);
+    --entry-unknown-background-color: hsl(0, 0%, 55%);
+    --entry-unknown-color: whitesmoke;
+    --entry-valid-background-color: hsl(135, 60%, 65%);
+    --entry-valid-color: hsl(135, 60%, 25%);
+    --entry-error-background-color: hsl(0, 60%, 75%);
+    --entry-error-color: hsl(0, 60%, 25%);
     --error-color: hsl(0, 60%, 25%);
     --error-background-color: hsl(0, 60%, 75%);  
     --curve-color: black;

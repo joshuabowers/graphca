@@ -1,27 +1,48 @@
+@value visible from "../Derivation/Derivation.module.css";
+
 .entry {
   display: grid;
   grid: auto-flow / 1fr auto;
   align-items: baseline;
   box-sizing: border-box;
   place-self: stretch;
+  background-color: var(--entry-unknown-background-color);
+  color: var(--entry-unknown-color);
+  margin-bottom: 1em;
+  padding: 0.5em;
+  border-top-left-radius: 0.75em;
+  border-bottom-left-radius: 1.25em;
 }
 
-.error {
+:is(.entry).error {
+  background-color: var(--entry-error-background-color);
+  color: var(--entry-error-color);
+}
+
+:is(.entry).valid {
+  background-color: var(--entry-valid-background-color);
+  color: var(--entry-valid-color);
+}
+
+:not(.entry).error {
   font-size: 0.8em;
   white-space: pre-wrap;
-  background-color: var(--error-background-color);
-  color: var(--error-color);
+  background-color: hsla(0, 0%, 0%, 15%);
   padding: 0.5em;
+  border-bottom-left-radius: 0.75em;
 }
 
 .controls {
   justify-self: end;
   align-self: start;
-  position: sticky;
-  top: 0;
 }
 
-.output, .error, .derivation {
+.controls:has(~ .derivation > :global(.visible), ~ .error) {
+  position: sticky;
+  top: 0.25em;
+}
+
+.output, :not(.entry).error, .derivation {
   grid-column: span 2;
 }
 
