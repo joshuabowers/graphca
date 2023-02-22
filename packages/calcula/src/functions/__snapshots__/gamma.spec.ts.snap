@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gamma generates a Gamma node for unbound variables 1`] = `
+[
+  [
+    "𝚪(x)",
+    "identified gamma",
+  ],
+  [
+    "𝚪([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "𝚪({x})",
+    "processed argument",
+  ],
+  [
+    "𝚪(x)",
+    "created gamma",
+  ],
+]
+`;

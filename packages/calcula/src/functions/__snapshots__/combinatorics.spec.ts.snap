@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`combine generates a Combination for unbound sub-expressions 1`] = `
+[
+  [
+    "C(n,r)",
+    "identified combination",
+  ],
+  [
+    "C([n],r)",
+    "processing left operand",
+  ],
+  [
+    "n",
+    "referenced variable",
+  ],
+  [
+    "C({n},[r])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "r",
+    "referenced variable",
+  ],
+  [
+    "C(n,{r})",
+    "processed right operand",
+  ],
+  [
+    "C(n,r)",
+    "created combination",
+  ],
+]
+`;
+
+exports[`permute generates a Permutation for unbound sub-expressions 1`] = `
+[
+  [
+    "P(n,r)",
+    "identified permutation",
+  ],
+  [
+    "P([n],r)",
+    "processing left operand",
+  ],
+  [
+    "n",
+    "referenced variable",
+  ],
+  [
+    "P({n},[r])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "r",
+    "referenced variable",
+  ],
+  [
+    "P(n,{r})",
+    "processed right operand",
+  ],
+  [
+    "P(n,r)",
+    "created permutation",
+  ],
+]
+`;

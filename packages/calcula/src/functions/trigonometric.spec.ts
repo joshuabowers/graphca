@@ -1,8 +1,6 @@
 import { unit } from '../monads/writer'
 import { 
-  expectCloseTo, expectWriterTreeNode,
-  realOps, variableOps, raiseOps,
-  cosOps, sinOps, tanOps, secOps, cscOps, cotOps
+  expectToEqualWithSnapshot, expectCloseTo
 } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
@@ -23,16 +21,9 @@ describe('$cos', () => {
 
 describe('cos', () => {
   it('returns the appropriate real value when given real', () => {
-    const v = Math.cos(0.5).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       cos(real(0.5)),
       real(Math.cos(0.5))
-    )(
-      ...cosOps(
-        'real cosine',
-        realOps('0.5'),
-        realOps(v)
-      )
     )
   })
 
@@ -41,15 +32,9 @@ describe('cos', () => {
   })
 
   it('returns an expression when given non-constant', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       cos(variable('x')),
       $cos(variable('x'))[0]
-    )(
-      ...cosOps(
-        'created cosine',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -65,16 +50,9 @@ describe('$sin', () => {
 
 describe('sin', () => {
   it('returns the appropriate real value when given real', () => {
-    const v = Math.sin(0.5).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       sin(real(0.5)),
       real(Math.sin(0.5))
-    )(
-      ...sinOps(
-        'real sine',
-        realOps('0.5'),
-        realOps(v)
-      )
     )
   })
 
@@ -83,15 +61,9 @@ describe('sin', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       sin(variable('x')),
       $sin(variable('x'))[0]
-    )(
-      ...sinOps(
-        'created sine',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -107,16 +79,9 @@ describe('$tan', () => {
 
 describe('tan', () => {
   it('returns the appropriate real value when given real', () => {
-    const v = Math.tan(0.5).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       tan(real(0.5)),
       real(Math.tan(0.5))
-    )(
-      ...tanOps(
-        'real tangent',
-        realOps('0.5'),
-        realOps(v)
-      )
     )
   })
 
@@ -125,15 +90,9 @@ describe('tan', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       tan(variable('x')),
       $tan(variable('x'))[0]
-    )(
-      ...tanOps(
-        'created tangent',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -150,26 +109,9 @@ describe('$sec', () => {
 
 describe('sec', () => {
   it('returns the appropriate real value when given real', () => {
-    const v = (1 / Math.cos(0.5)).toString()
-    const w = Math.cos(0.5).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       sec(real(0.5)),
       real(1 / Math.cos(0.5))
-    )(
-      ...secOps(
-        'real secant',
-        realOps('0.5'),
-        raiseOps(
-          'real exponentiation',
-          cosOps(
-            'real cosine',
-            realOps('0.5'),
-            realOps(w)
-          ),
-          realOps('-1'),
-          realOps(v)
-        )
-      )
     )
   })
 
@@ -178,15 +120,9 @@ describe('sec', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       sec(variable('x')),
       $sec(variable('x'))[0]
-    )(
-      ...secOps(
-        'created secant',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -203,26 +139,9 @@ describe('$csc', () => {
 
 describe('csc', () => {
   it('returns the appropriate real value when given real', () => {
-    const v = (1 / Math.sin(0.5)).toString()
-    const w = Math.sin(0.5).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       csc(real(0.5)),
       real(1 / Math.sin(0.5))
-    )(
-      ...cscOps(
-        'real cosecant',
-        realOps('0.5'),
-        raiseOps(
-          'real exponentiation',
-          sinOps(
-            'real sine',
-            realOps('0.5'),
-            realOps(w)
-          ),
-          realOps('-1'),
-          realOps(v)
-        )
-      )
     )
   })
 
@@ -231,15 +150,9 @@ describe('csc', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       csc(variable('x')),
       $csc(variable('x'))[0]
-    )(
-      ...cscOps(
-        'created cosecant',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -255,26 +168,9 @@ describe('$cot', () => {
 
 describe('cot', () => {
   it('returns the appropriate real value when given real', () => {
-    const v = (1 / Math.tan(0.5)).toString()
-    const w = Math.tan(0.5).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       cot(real(0.5)),
       real(1 / Math.tan(0.5))
-    )(
-      ...cotOps(
-        'real cotangent',
-        realOps('0.5'),
-        raiseOps(
-          'real exponentiation',
-          tanOps(
-            'real tangent',
-            realOps('0.5'),
-            realOps(w)
-          ),
-          realOps('-1'),
-          realOps(v)
-        )
-      )
     )
   })
 
@@ -283,15 +179,9 @@ describe('cot', () => {
   })
 
   it('returns a expression when given non-constant', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       cot(variable('x')),
       $cot(variable('x'))[0]
-    )(
-      ...cotOps(
-        'created cotangent',
-        variableOps('x'),
-        []
-      )
     )
   })
 })

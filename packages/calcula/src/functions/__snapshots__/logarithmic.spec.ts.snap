@@ -1,0 +1,393 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`lb calculates the base 2 logarithm of a real 1`] = `
+[
+  [
+    "log(2,1024)",
+    "identified logarithm",
+  ],
+  [
+    "log([2],1024)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "log({2},[1024])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1024",
+    "created real",
+  ],
+  [
+    "log(2,{1024})",
+    "processed right operand",
+  ],
+  [
+    "log(2,1024)",
+    "real logarithm",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+]
+`;
+
+exports[`lb returns the exponent of a binary exponential 1`] = `
+[
+  [
+    "log(2,(2^x))",
+    "identified logarithm",
+  ],
+  [
+    "log([2],(2^x))",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "log({2},[(2^x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2^x)",
+    "identified exponentiation",
+  ],
+  [
+    "([2]^x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}^[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2^{x})",
+    "processed right operand",
+  ],
+  [
+    "(2^x)",
+    "created exponentiation",
+  ],
+  [
+    "log(2,{(2^x)})",
+    "processed right operand",
+  ],
+  [
+    "log(2,(2^x))",
+    "inverse operation cancellation",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`lg returns the exponent of a common exponential 1`] = `
+[
+  [
+    "log(10,(10^x))",
+    "identified logarithm",
+  ],
+  [
+    "log([10],(10^x))",
+    "processing left operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "log({10},[(10^x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(10^x)",
+    "identified exponentiation",
+  ],
+  [
+    "([10]^x)",
+    "processing left operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "({10}^[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(10^{x})",
+    "processed right operand",
+  ],
+  [
+    "(10^x)",
+    "created exponentiation",
+  ],
+  [
+    "log(10,{(10^x)})",
+    "processed right operand",
+  ],
+  [
+    "log(10,(10^x))",
+    "inverse operation cancellation",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`ln calculates the base e logarithm of complex 0 1`] = `
+[
+  [
+    "log(𝒆,0+0𝒊)",
+    "identified logarithm",
+  ],
+  [
+    "log([𝒆],0+0𝒊)",
+    "processing left operand",
+  ],
+  [
+    "𝒆",
+    "created real",
+  ],
+  [
+    "𝒆+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "log({𝒆+0𝒊},[0+0𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+  [
+    "log(𝒆+0𝒊,{0+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "log(𝒆+0𝒊,0+0𝒊)",
+    "complex logarithm",
+  ],
+  [
+    "-∞+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`ln returns the exponent of a natural exponential 1`] = `
+[
+  [
+    "log(𝒆,(𝒆^x))",
+    "identified logarithm",
+  ],
+  [
+    "log([𝒆],(𝒆^x))",
+    "processing left operand",
+  ],
+  [
+    "𝒆",
+    "created real",
+  ],
+  [
+    "log({𝒆},[(𝒆^x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(𝒆^x)",
+    "identified exponentiation",
+  ],
+  [
+    "([𝒆]^x)",
+    "processing left operand",
+  ],
+  [
+    "𝒆",
+    "created real",
+  ],
+  [
+    "({𝒆}^[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(𝒆^{x})",
+    "processed right operand",
+  ],
+  [
+    "(𝒆^x)",
+    "created exponentiation",
+  ],
+  [
+    "log(𝒆,{(𝒆^x)})",
+    "processed right operand",
+  ],
+  [
+    "log(𝒆,(𝒆^x))",
+    "inverse operation cancellation",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`log calculates the real log of a real value 1`] = `
+[
+  [
+    "log(16,256)",
+    "identified logarithm",
+  ],
+  [
+    "log([16],256)",
+    "processing left operand",
+  ],
+  [
+    "16",
+    "created real",
+  ],
+  [
+    "log({16},[256])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "256",
+    "created real",
+  ],
+  [
+    "log(16,{256})",
+    "processed right operand",
+  ],
+  [
+    "log(16,256)",
+    "real logarithm",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+]
+`;
+
+exports[`log returns an expression for unbound subtrees 1`] = `
+[
+  [
+    "log(x,y)",
+    "identified logarithm",
+  ],
+  [
+    "log([x],y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "log({x},[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "log(x,{y})",
+    "processed right operand",
+  ],
+  [
+    "log(x,y)",
+    "created logarithm",
+  ],
+]
+`;
+
+exports[`log returns the exponent of a similarly based exponential 1`] = `
+[
+  [
+    "log(16,(16^x))",
+    "identified logarithm",
+  ],
+  [
+    "log([16],(16^x))",
+    "processing left operand",
+  ],
+  [
+    "16",
+    "created real",
+  ],
+  [
+    "log({16},[(16^x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(16^x)",
+    "identified exponentiation",
+  ],
+  [
+    "([16]^x)",
+    "processing left operand",
+  ],
+  [
+    "16",
+    "created real",
+  ],
+  [
+    "({16}^[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(16^{x})",
+    "processed right operand",
+  ],
+  [
+    "(16^x)",
+    "created exponentiation",
+  ],
+  [
+    "log(16,{(16^x)})",
+    "processed right operand",
+  ],
+  [
+    "log(16,(16^x))",
+    "inverse operation cancellation",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;

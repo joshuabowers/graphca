@@ -2,8 +2,7 @@ import { Clades, Species } from '../utility/tree'
 import { real, $real } from './real'
 import { boolean } from './boolean'
 import { complex } from './complex'
-import { Unicode } from '../Unicode'
-import { expectWriterTreeNode } from '../utility/expectations'
+import { expectToEqualWithSnapshot } from '../utility/expectations'
 
 describe('$real', () => {
   it('returns a Real given a numeric parameter', () => {
@@ -16,55 +15,58 @@ describe('$real', () => {
 
 describe('real', () => {
   it('returns a Writer<Real> for a number input', () => {
-    expectWriterTreeNode(real(5), $real(5))(
-      ['5', 'created real']
+    expectToEqualWithSnapshot(
+      real(5), $real(5)
     )
   })
 
   it('returns a Writer<Real> for a real input', () => {
-    expectWriterTreeNode(real(real(5)), $real(5))(
-      ['5', 'created real'],
-      ['5', 'copied Real']
+    expectToEqualWithSnapshot(
+      real(real(5)), $real(5)
     )
   })
 
   it('returns a Writer<Real> for a complex input', () => {
-    expectWriterTreeNode(real(complex([1, 2])), $real(1))(
-      [`1+2${Unicode.i}`, 'created complex'],
-      ['1', 'cast to Real from Complex']
+    expectToEqualWithSnapshot(
+      real(complex([1, 2])), $real(1)
     )
   })
 
   it('returns a Writer<Real> for a boolean input', () => {
-    expectWriterTreeNode(real(boolean(true)), $real(1))(
-      ['true', 'created boolean'],
-      ['1', 'cast to Real from Boolean']
+    expectToEqualWithSnapshot(
+      real(boolean(true)), $real(1)
     )
   })
 
   describe('of special values', () => {
     it('correctly logs e', () => {
-      expectWriterTreeNode(real(Math.E), $real(Math.E))(
-        [Unicode.e, 'created real']
+      expectToEqualWithSnapshot(
+        real(Math.E), $real(Math.E)
       )
     })
 
     it('correctly logs pi', () => {
-      expectWriterTreeNode(real(Math.PI), $real(Math.PI))(
-        [Unicode.pi, 'created real']
+      expectToEqualWithSnapshot(
+        real(Math.PI), $real(Math.PI)
       )
     })
 
     it('correctly logs positive infinity', () => {
-      expectWriterTreeNode(real(Infinity), $real(Infinity))(
-        [Unicode.infinity, 'created real']
+      expectToEqualWithSnapshot(
+        real(Infinity), $real(Infinity)
       )
     })
 
     it('correctly logs negative infinity', () => {
-      expectWriterTreeNode(real(-Infinity), $real(-Infinity))(
-        [`-${Unicode.infinity}`, 'created real']
+      expectToEqualWithSnapshot(
+        real(-Infinity), $real(-Infinity)
       )
     })
+
+    // it('rewrites numeric NaN with Writer<NaN>', () => {
+    //   expectToEqualWithSnapshot(
+    //     real(NaN), nan
+    //   )
+    // })
   })
 })

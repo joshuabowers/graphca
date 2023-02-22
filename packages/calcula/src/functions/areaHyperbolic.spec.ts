@@ -1,8 +1,6 @@
 import { unit } from '../monads/writer'
 import { 
-  expectCloseTo, expectWriterTreeNode,
-  realOps, variableOps, raiseOps,
-  acoshOps, asinhOps, atanhOps, asechOps, acschOps, acothOps
+  expectToEqualWithSnapshot, expectCloseTo
 } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
@@ -33,15 +31,9 @@ describe('acosh', () => {
   })
 
   it('generates an AreaHyperbolicCosine node of a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       acosh(variable('x')),
       $acosh(variable('x'))[0]
-    )(
-      ...acoshOps(
-        'created area hyperbolic cosine',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -67,15 +59,9 @@ describe('asinh', () => {
   })
 
   it('generates an AreaHyperbolicSine node of a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       asinh(variable('x')),
       $asinh(variable('x'))[0]
-    )(
-      ...asinhOps(
-        'created area hyperbolic sine',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -101,15 +87,9 @@ describe('atanh', () => {
   })
 
   it('generates an AreaHyperbolicTangent node of a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       atanh(variable('x')),
       $atanh(variable('x'))[0]
-    )(
-      ...atanhOps(
-        'created area hyperbolic tangent',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -127,25 +107,9 @@ describe('$asech', () => {
 
 describe('asech', () => {
   it('calculates the area hyperbolic secant of a real value', () => {
-    const v = Math.acosh(1 / 2).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       asech(real(2)),
       real(Math.acosh(1 / 2))
-    )(
-      ...asechOps(
-        'real area hyperbolic secant',
-        realOps('2'),
-        acoshOps(
-          'real area hyperbolic cosine',
-          raiseOps(
-            'real exponentiation',
-            realOps('2'),
-            realOps('-1'),
-            realOps('0.5')
-          ),
-          realOps(v)
-        )
-      )
     )
   })
 
@@ -154,15 +118,9 @@ describe('asech', () => {
   })
 
   it('generates an AreaHyperbolicSecant node of a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       asech(variable('x')),
       $asech(variable('x'))[0]
-    )(
-      ...asechOps(
-        'created area hyperbolic secant',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -188,15 +146,9 @@ describe('acsch', () => {
   })
 
   it('generates an AreaHyperbolicCosecant node of a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       acsch(variable('x')),
       $acsch(variable('x'))[0]
-    )(
-      ...acschOps(
-        'created area hyperbolic cosecant',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -222,15 +174,9 @@ describe('acoth', () => {
   })
 
   it('generates an AreaHyperbolicCotangent node of a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       acoth(variable('x')),
       $acoth(variable('x'))[0]
-    )(
-      ...acothOps(
-        'created area hyperbolic cotangent',
-        variableOps('x'),
-        []
-      )
     )
   })
 })

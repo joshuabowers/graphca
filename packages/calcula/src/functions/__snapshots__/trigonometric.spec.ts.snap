@@ -1,0 +1,469 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cos returns an expression when given non-constant 1`] = `
+[
+  [
+    "cos(x)",
+    "identified cosine",
+  ],
+  [
+    "cos([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "cos({x})",
+    "processed argument",
+  ],
+  [
+    "cos(x)",
+    "created cosine",
+  ],
+]
+`;
+
+exports[`cos returns the appropriate real value when given real 1`] = `
+[
+  [
+    "cos(0.5)",
+    "identified cosine",
+  ],
+  [
+    "cos([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "cos({0.5})",
+    "processed argument",
+  ],
+  [
+    "cos(0.5)",
+    "real cosine",
+  ],
+  [
+    "0.8775825618903728",
+    "created real",
+  ],
+]
+`;
+
+exports[`cot returns a expression when given non-constant 1`] = `
+[
+  [
+    "cot(x)",
+    "identified cotangent",
+  ],
+  [
+    "cot([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "cot({x})",
+    "processed argument",
+  ],
+  [
+    "cot(x)",
+    "created cotangent",
+  ],
+]
+`;
+
+exports[`cot returns the appropriate real value when given real 1`] = `
+[
+  [
+    "cot(0.5)",
+    "identified cotangent",
+  ],
+  [
+    "cot([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "cot({0.5})",
+    "processed argument",
+  ],
+  [
+    "cot(0.5)",
+    "real cotangent",
+  ],
+  [
+    "(tan(0.5)^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([tan(0.5)]^-1)",
+    "processing left operand",
+  ],
+  [
+    "tan(0.5)",
+    "identified tangent",
+  ],
+  [
+    "tan([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "tan({0.5})",
+    "processed argument",
+  ],
+  [
+    "tan(0.5)",
+    "real tangent",
+  ],
+  [
+    "0.5463024898437905",
+    "created real",
+  ],
+  [
+    "({0.5463024898437905}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(0.5463024898437905^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(0.5463024898437905^-1)",
+    "real exponentiation",
+  ],
+  [
+    "1.830487721712452",
+    "created real",
+  ],
+]
+`;
+
+exports[`csc returns a expression when given non-constant 1`] = `
+[
+  [
+    "csc(x)",
+    "identified cosecant",
+  ],
+  [
+    "csc([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "csc({x})",
+    "processed argument",
+  ],
+  [
+    "csc(x)",
+    "created cosecant",
+  ],
+]
+`;
+
+exports[`csc returns the appropriate real value when given real 1`] = `
+[
+  [
+    "csc(0.5)",
+    "identified cosecant",
+  ],
+  [
+    "csc([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "csc({0.5})",
+    "processed argument",
+  ],
+  [
+    "csc(0.5)",
+    "real cosecant",
+  ],
+  [
+    "(sin(0.5)^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([sin(0.5)]^-1)",
+    "processing left operand",
+  ],
+  [
+    "sin(0.5)",
+    "identified sine",
+  ],
+  [
+    "sin([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "sin({0.5})",
+    "processed argument",
+  ],
+  [
+    "sin(0.5)",
+    "real sine",
+  ],
+  [
+    "0.479425538604203",
+    "created real",
+  ],
+  [
+    "({0.479425538604203}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(0.479425538604203^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(0.479425538604203^-1)",
+    "real exponentiation",
+  ],
+  [
+    "2.085829642933488",
+    "created real",
+  ],
+]
+`;
+
+exports[`sec returns a expression when given non-constant 1`] = `
+[
+  [
+    "sec(x)",
+    "identified secant",
+  ],
+  [
+    "sec([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "sec({x})",
+    "processed argument",
+  ],
+  [
+    "sec(x)",
+    "created secant",
+  ],
+]
+`;
+
+exports[`sec returns the appropriate real value when given real 1`] = `
+[
+  [
+    "sec(0.5)",
+    "identified secant",
+  ],
+  [
+    "sec([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "sec({0.5})",
+    "processed argument",
+  ],
+  [
+    "sec(0.5)",
+    "real secant",
+  ],
+  [
+    "(cos(0.5)^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([cos(0.5)]^-1)",
+    "processing left operand",
+  ],
+  [
+    "cos(0.5)",
+    "identified cosine",
+  ],
+  [
+    "cos([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "cos({0.5})",
+    "processed argument",
+  ],
+  [
+    "cos(0.5)",
+    "real cosine",
+  ],
+  [
+    "0.8775825618903728",
+    "created real",
+  ],
+  [
+    "({0.8775825618903728}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(0.8775825618903728^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(0.8775825618903728^-1)",
+    "real exponentiation",
+  ],
+  [
+    "1.139493927324549",
+    "created real",
+  ],
+]
+`;
+
+exports[`sin returns a expression when given non-constant 1`] = `
+[
+  [
+    "sin(x)",
+    "identified sine",
+  ],
+  [
+    "sin([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "sin({x})",
+    "processed argument",
+  ],
+  [
+    "sin(x)",
+    "created sine",
+  ],
+]
+`;
+
+exports[`sin returns the appropriate real value when given real 1`] = `
+[
+  [
+    "sin(0.5)",
+    "identified sine",
+  ],
+  [
+    "sin([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "sin({0.5})",
+    "processed argument",
+  ],
+  [
+    "sin(0.5)",
+    "real sine",
+  ],
+  [
+    "0.479425538604203",
+    "created real",
+  ],
+]
+`;
+
+exports[`tan returns a expression when given non-constant 1`] = `
+[
+  [
+    "tan(x)",
+    "identified tangent",
+  ],
+  [
+    "tan([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "tan({x})",
+    "processed argument",
+  ],
+  [
+    "tan(x)",
+    "created tangent",
+  ],
+]
+`;
+
+exports[`tan returns the appropriate real value when given real 1`] = `
+[
+  [
+    "tan(0.5)",
+    "identified tangent",
+  ],
+  [
+    "tan([0.5])",
+    "processing argument",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "tan({0.5})",
+    "processed argument",
+  ],
+  [
+    "tan(0.5)",
+    "real tangent",
+  ],
+  [
+    "0.5463024898437905",
+    "created real",
+  ],
+]
+`;

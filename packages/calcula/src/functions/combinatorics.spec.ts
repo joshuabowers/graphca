@@ -1,7 +1,6 @@
 import { unit } from '../monads/writer';
 import { 
-  expectCloseTo, expectWriterTreeNode,
-  variableOps, permuteOps, combineOps
+  expectToEqualWithSnapshot, expectCloseTo
 } from '../utility/expectations';
 import { Clades, Genera, Species } from '../utility/tree';
 import { real, complex } from '../primitives';
@@ -33,16 +32,9 @@ describe('permute', () => {
   })
 
   it('generates a Permutation for unbound sub-expressions', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       permute(variable('n'), variable('r')),
       $permute(variable('n'), variable('r'))[0]
-    )(
-      ...permuteOps(
-        'created permutation',
-        variableOps('n'),
-        variableOps('r'),
-        []
-      )
     )
   })
 })
@@ -72,16 +64,9 @@ describe('combine', () => {
   })
 
   it('generates a Combination for unbound sub-expressions', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       combine(variable('n'), variable('r')),
       $combine(variable('n'), variable('r'))[0]
-    )(
-      ...combineOps(
-        'created combination',
-        variableOps('n'),
-        variableOps('r'),
-        []
-      )
     )
   })
 })

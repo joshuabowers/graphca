@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`boolean returns a Writer<Boolean> for a boolean input 1`] = `
+[
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "false",
+    "copied Boolean",
+  ],
+]
+`;
+
+exports[`boolean returns a Writer<Boolean> for a complex input 1`] = `
+[
+  [
+    "1+2𝒊",
+    "created complex",
+  ],
+  [
+    "true",
+    "cast to Boolean from Complex",
+  ],
+]
+`;
+
+exports[`boolean returns a Writer<Boolean> for a real input 1`] = `
+[
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "true",
+    "cast to Boolean from Real",
+  ],
+]
+`;
+
+exports[`boolean returns a Writer<Boolean> for a system boolean input 1`] = `
+[
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;

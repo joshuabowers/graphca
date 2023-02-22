@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`complex returns a Writer<Complex> for a boolean input 1`] = `
+[
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "1+0𝒊",
+    "cast to Complex from Boolean",
+  ],
+]
+`;
+
+exports[`complex returns a Writer<Complex> for a complex input 1`] = `
+[
+  [
+    "1+2𝒊",
+    "created complex",
+  ],
+  [
+    "1+2𝒊",
+    "copied Complex",
+  ],
+]
+`;
+
+exports[`complex returns a Writer<Complex> for a number pair input 1`] = `
+[
+  [
+    "1+2𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`complex returns a Writer<Complex> for a real input 1`] = `
+[
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "5+0𝒊",
+    "cast to Complex from Real",
+  ],
+]
+`;

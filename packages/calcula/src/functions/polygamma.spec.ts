@@ -1,7 +1,6 @@
 import { unit } from '../monads/writer'
 import { 
-  expectCloseTo, expectWriterTreeNode,
-  realOps, variableOps, polygammaOps
+  expectToEqualWithSnapshot, expectCloseTo
 } from '../utility/expectations'
 import { Clades, Species } from '../utility/tree'
 import { EulerMascheroni } from '../primitives/real'
@@ -65,16 +64,9 @@ describe('polygamma', () => {
   })
 
   it('generates a polygamma node of a given order on an expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       polygamma(variable('x'), variable('y')),
       $polygamma(variable('x'), variable('y'))[0]
-    )(
-      ...polygammaOps(
-        'created polygamma',
-        variableOps('x'),
-        variableOps('y'),
-        []
-      )
     )
   })
 })
@@ -115,16 +107,9 @@ describe('digamma', () => {
   })
 
   it('generates a polygamma node of order 0 on an expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       digamma(variable('x')),
       $polygamma(real(0), variable('x'))[0]
-    )(
-      ...polygammaOps(
-        'created polygamma',
-        realOps('0'),
-        variableOps('x'),
-        []
-      )
     )
   })
 })

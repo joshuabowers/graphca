@@ -7,9 +7,7 @@ import {
   $cosh, $sinh, $tanh, $sech, $csch, $coth
 } from './hyperbolic'
 import { 
-  expectCloseTo, expectWriterTreeNode,
-  realOps, variableOps, raiseOps,
-  coshOps, sinhOps, tanhOps, sechOps, cschOps, cothOps
+  expectToEqualWithSnapshot, expectCloseTo
 } from '../utility/expectations'
 
 describe('$cosh', () => {
@@ -31,15 +29,9 @@ describe('cosh', () => {
   })
 
   it('returns a hyperbolic cosine node if not valuable', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       cosh(variable('x')),
       $cosh(variable('x'))[0]
-    )(
-      ...coshOps(
-        'created hyperbolic cosine',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -63,15 +55,9 @@ describe('sinh', () => {
   })
 
   it('returns a hyperbolic sine node if not valuable', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       sinh(variable('x')),
       $sinh(variable('x'))[0]
-    )(
-      ...sinhOps(
-        'created hyperbolic sine',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -95,15 +81,9 @@ describe('tanh', () => {
   })
 
   it('returns a hyperbolic tangent node if not valuable', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       tanh(variable('x')),
       $tanh(variable('x'))[0]
-    )(
-      ...tanhOps(
-        'created hyperbolic tangent',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -119,26 +99,9 @@ describe('$sech', () => {
 
 describe('sech', () => {
   it('calculates the hyperbolic secant of a real value', () => {
-    const v = (1 / Math.cosh(1)).toString()
-    const w = Math.cosh(1).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       sech(real(1)),
       real(1 / Math.cosh(1))
-    )(
-      ...sechOps(
-        'real hyperbolic secant',
-        realOps('1'),
-        raiseOps(
-          'real exponentiation',
-          coshOps(
-            'real hyperbolic cosine',
-            realOps('1'),
-            realOps(w)
-          ),
-          realOps('-1'),
-          realOps(v)
-        )
-      )
     )
   })
 
@@ -147,15 +110,9 @@ describe('sech', () => {
   })
 
   it('returns a hyperbolic secant node if not valuable', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       sech(variable('x')),
       $sech(variable('x'))[0]
-    )(
-      ...sechOps(
-        'created hyperbolic secant',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -179,15 +136,9 @@ describe('csch', () => {
   })
 
   it('returns a hyperbolic cosecant node if not valuable', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       csch(variable('x')),
       $csch(variable('x'))[0]
-    )(
-      ...cschOps(
-        'created hyperbolic cosecant',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -211,15 +162,9 @@ describe('coth', () => {
   })
 
   it('returns a hyperbolic cotangent node if not valuable', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       coth(variable('x')),
       $coth(variable('x'))[0]
-    )(
-      ...cothOps(
-        'created hyperbolic cotangent',
-        variableOps('x'),
-        []
-      )
     )
   })
 })

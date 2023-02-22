@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`digamma generates a polygamma node of order 0 on an expression 1`] = `
+[
+  [
+    "𝜓(0,x)",
+    "identified polygamma",
+  ],
+  [
+    "𝜓([0],x)",
+    "processing left operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "𝜓({0},[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "𝜓(0,{x})",
+    "processed right operand",
+  ],
+  [
+    "𝜓(0,x)",
+    "created polygamma",
+  ],
+]
+`;
+
+exports[`polygamma generates a polygamma node of a given order on an expression 1`] = `
+[
+  [
+    "𝜓(x,y)",
+    "identified polygamma",
+  ],
+  [
+    "𝜓([x],y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "𝜓({x},[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "𝜓(x,{y})",
+    "processed right operand",
+  ],
+  [
+    "𝜓(x,y)",
+    "created polygamma",
+  ],
+]
+`;

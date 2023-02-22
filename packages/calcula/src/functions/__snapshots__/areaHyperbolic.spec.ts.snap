@@ -1,0 +1,228 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`acosh generates an AreaHyperbolicCosine node of a variable expression 1`] = `
+[
+  [
+    "acosh(x)",
+    "identified area hyperbolic cosine",
+  ],
+  [
+    "acosh([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "acosh({x})",
+    "processed argument",
+  ],
+  [
+    "acosh(x)",
+    "created area hyperbolic cosine",
+  ],
+]
+`;
+
+exports[`acoth generates an AreaHyperbolicCotangent node of a variable expression 1`] = `
+[
+  [
+    "acoth(x)",
+    "identified area hyperbolic cotangent",
+  ],
+  [
+    "acoth([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "acoth({x})",
+    "processed argument",
+  ],
+  [
+    "acoth(x)",
+    "created area hyperbolic cotangent",
+  ],
+]
+`;
+
+exports[`acsch generates an AreaHyperbolicCosecant node of a variable expression 1`] = `
+[
+  [
+    "acsch(x)",
+    "identified area hyperbolic cosecant",
+  ],
+  [
+    "acsch([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "acsch({x})",
+    "processed argument",
+  ],
+  [
+    "acsch(x)",
+    "created area hyperbolic cosecant",
+  ],
+]
+`;
+
+exports[`asech calculates the area hyperbolic secant of a real value 1`] = `
+[
+  [
+    "asech(2)",
+    "identified area hyperbolic secant",
+  ],
+  [
+    "asech([2])",
+    "processing argument",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "asech({2})",
+    "processed argument",
+  ],
+  [
+    "asech(2)",
+    "real area hyperbolic secant",
+  ],
+  [
+    "acosh((2^-1))",
+    "identified area hyperbolic cosine",
+  ],
+  [
+    "acosh([(2^-1)])",
+    "processing argument",
+  ],
+  [
+    "(2^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([2]^-1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(2^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(2^-1)",
+    "real exponentiation",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "acosh({0.5})",
+    "processed argument",
+  ],
+  [
+    "acosh(0.5)",
+    "real area hyperbolic cosine",
+  ],
+  [
+    "NaN",
+    "created real",
+  ],
+]
+`;
+
+exports[`asech generates an AreaHyperbolicSecant node of a variable expression 1`] = `
+[
+  [
+    "asech(x)",
+    "identified area hyperbolic secant",
+  ],
+  [
+    "asech([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "asech({x})",
+    "processed argument",
+  ],
+  [
+    "asech(x)",
+    "created area hyperbolic secant",
+  ],
+]
+`;
+
+exports[`asinh generates an AreaHyperbolicSine node of a variable expression 1`] = `
+[
+  [
+    "asinh(x)",
+    "identified area hyperbolic sine",
+  ],
+  [
+    "asinh([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "asinh({x})",
+    "processed argument",
+  ],
+  [
+    "asinh(x)",
+    "created area hyperbolic sine",
+  ],
+]
+`;
+
+exports[`atanh generates an AreaHyperbolicTangent node of a variable expression 1`] = `
+[
+  [
+    "atanh(x)",
+    "identified area hyperbolic tangent",
+  ],
+  [
+    "atanh([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "atanh({x})",
+    "processed argument",
+  ],
+  [
+    "atanh(x)",
+    "created area hyperbolic tangent",
+  ],
+]
+`;

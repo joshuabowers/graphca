@@ -1,14 +1,12 @@
 import { unit } from '../monads/writer'
 import { 
-  expectCloseTo, expectWriterTreeNode,
-  realOps, complexOps, variableOps, logOps, raiseOps
+  expectToEqualWithSnapshot, expectCloseTo
 } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
 import { raise } from '../arithmetic'
 import { log, lb, ln, lg, $log } from './logarithmic'
-import { Unicode } from '../Unicode'
 
 describe('$log', () => {
   it('generates a Logarithm from two TreeNode parameters', () => {
@@ -23,16 +21,9 @@ describe('$log', () => {
 
 describe('log', () => {
   it('calculates the real log of a real value', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       log(real(16), real(256)),
       real(2)
-    )(
-      ...logOps(
-        'real logarithm',
-        realOps('16'),
-        realOps('256'),
-        realOps('2')
-      )
     )
   })
 
@@ -49,89 +40,41 @@ describe('log', () => {
   })
 
   it('returns an expression for unbound subtrees', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       log(variable('x'), variable('y')),
       $log(variable('x'), variable('y'))[0]
-    )(
-      ...logOps(
-        'created logarithm',
-        variableOps('x'),
-        variableOps('y'),
-        []
-      )
     )
   })
 
   it('returns the exponent of a similarly based exponential', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       log(real(16), raise(real(16), variable('x'))),
       variable('x')
-    )(
-      ...logOps(
-        'inverse operation cancellation',
-        realOps('16'),
-        raiseOps(
-          'created exponentiation',
-          realOps('16'),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
     )
   })
 })
 
 describe('lb', () => {
   it('calculates the base 2 logarithm of a real', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       lb(real(1024)),
       real(10)
-    )(
-      ...logOps(
-        'real logarithm',
-        realOps('2'),
-        realOps('1024'),
-        realOps('10')
-      )
     )
   })
 
   it('returns the exponent of a binary exponential', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       lb(raise(real(2), variable('x'))),
       variable('x')
-    )(
-      ...logOps(
-        'inverse operation cancellation',
-        realOps('2'),
-        raiseOps(
-          'created exponentiation',
-          realOps('2'),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
     )
   })
 })
 
 describe('ln', () => {
   it('calculates the base e logarithm of complex 0', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       ln(complex([0, 0])),
       complex([-Infinity, 0])
-    )(
-      ...logOps(
-        'complex logarithm',
-        [
-          ...realOps(Unicode.e),
-          [`${Unicode.e}+0${Unicode.i}`, 'cast to Complex from Real']
-        ],
-        complexOps('0','0'),
-        complexOps(`-${Unicode.infinity}`, '0')
-      )
     )
   })
 
@@ -140,21 +83,9 @@ describe('ln', () => {
   })
 
   it('returns the exponent of a natural exponential', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       ln(raise(real(Math.E), variable('x'))),
       variable('x')
-    )(
-      ...logOps(
-        'inverse operation cancellation',
-        realOps(Unicode.e),
-        raiseOps(
-          'created exponentiation',
-          realOps(Unicode.e),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
     )
   })
 })
@@ -165,21 +96,9 @@ describe('lg', () => {
   })
 
   it('returns the exponent of a common exponential', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       lg(raise(real(10), variable('x'))),
       variable('x')
-    )(
-      ...logOps(
-        'inverse operation cancellation',
-        realOps('10'),
-        raiseOps(
-          'created exponentiation',
-          realOps('10'),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
     )
   })
 })

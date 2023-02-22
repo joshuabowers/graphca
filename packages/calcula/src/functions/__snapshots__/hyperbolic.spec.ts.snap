@@ -1,0 +1,228 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cosh returns a hyperbolic cosine node if not valuable 1`] = `
+[
+  [
+    "cosh(x)",
+    "identified hyperbolic cosine",
+  ],
+  [
+    "cosh([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "cosh({x})",
+    "processed argument",
+  ],
+  [
+    "cosh(x)",
+    "created hyperbolic cosine",
+  ],
+]
+`;
+
+exports[`coth returns a hyperbolic cotangent node if not valuable 1`] = `
+[
+  [
+    "coth(x)",
+    "identified hyperbolic cotangent",
+  ],
+  [
+    "coth([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "coth({x})",
+    "processed argument",
+  ],
+  [
+    "coth(x)",
+    "created hyperbolic cotangent",
+  ],
+]
+`;
+
+exports[`csch returns a hyperbolic cosecant node if not valuable 1`] = `
+[
+  [
+    "csch(x)",
+    "identified hyperbolic cosecant",
+  ],
+  [
+    "csch([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "csch({x})",
+    "processed argument",
+  ],
+  [
+    "csch(x)",
+    "created hyperbolic cosecant",
+  ],
+]
+`;
+
+exports[`sech calculates the hyperbolic secant of a real value 1`] = `
+[
+  [
+    "sech(1)",
+    "identified hyperbolic secant",
+  ],
+  [
+    "sech([1])",
+    "processing argument",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "sech({1})",
+    "processed argument",
+  ],
+  [
+    "sech(1)",
+    "real hyperbolic secant",
+  ],
+  [
+    "(cosh(1)^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([cosh(1)]^-1)",
+    "processing left operand",
+  ],
+  [
+    "cosh(1)",
+    "identified hyperbolic cosine",
+  ],
+  [
+    "cosh([1])",
+    "processing argument",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "cosh({1})",
+    "processed argument",
+  ],
+  [
+    "cosh(1)",
+    "real hyperbolic cosine",
+  ],
+  [
+    "1.5430806348152437",
+    "created real",
+  ],
+  [
+    "({1.5430806348152437}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(1.5430806348152437^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(1.5430806348152437^-1)",
+    "real exponentiation",
+  ],
+  [
+    "0.6480542736638855",
+    "created real",
+  ],
+]
+`;
+
+exports[`sech returns a hyperbolic secant node if not valuable 1`] = `
+[
+  [
+    "sech(x)",
+    "identified hyperbolic secant",
+  ],
+  [
+    "sech([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "sech({x})",
+    "processed argument",
+  ],
+  [
+    "sech(x)",
+    "created hyperbolic secant",
+  ],
+]
+`;
+
+exports[`sinh returns a hyperbolic sine node if not valuable 1`] = `
+[
+  [
+    "sinh(x)",
+    "identified hyperbolic sine",
+  ],
+  [
+    "sinh([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "sinh({x})",
+    "processed argument",
+  ],
+  [
+    "sinh(x)",
+    "created hyperbolic sine",
+  ],
+]
+`;
+
+exports[`tanh returns a hyperbolic tangent node if not valuable 1`] = `
+[
+  [
+    "tanh(x)",
+    "identified hyperbolic tangent",
+  ],
+  [
+    "tanh([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "tanh({x})",
+    "processed argument",
+  ],
+  [
+    "tanh(x)",
+    "created hyperbolic tangent",
+  ],
+]
+`;

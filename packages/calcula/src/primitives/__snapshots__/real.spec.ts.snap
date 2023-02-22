@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`real of special values correctly logs e 1`] = `
+[
+  [
+    "𝒆",
+    "created real",
+  ],
+]
+`;
+
+exports[`real of special values correctly logs negative infinity 1`] = `
+[
+  [
+    "-∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`real of special values correctly logs pi 1`] = `
+[
+  [
+    "𝜋",
+    "created real",
+  ],
+]
+`;
+
+exports[`real of special values correctly logs positive infinity 1`] = `
+[
+  [
+    "∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`real returns a Writer<Real> for a boolean input 1`] = `
+[
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "1",
+    "cast to Real from Boolean",
+  ],
+]
+`;
+
+exports[`real returns a Writer<Real> for a complex input 1`] = `
+[
+  [
+    "1+2𝒊",
+    "created complex",
+  ],
+  [
+    "1",
+    "cast to Real from Complex",
+  ],
+]
+`;
+
+exports[`real returns a Writer<Real> for a number input 1`] = `
+[
+  [
+    "5",
+    "created real",
+  ],
+]
+`;
+
+exports[`real returns a Writer<Real> for a real input 1`] = `
+[
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "5",
+    "copied Real",
+  ],
+]
+`;

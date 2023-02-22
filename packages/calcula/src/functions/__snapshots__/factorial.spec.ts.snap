@@ -1,0 +1,475 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`factorial returns 1 for an input of 0 1`] = `
+[
+  [
+    "(0)!",
+    "identified factorial",
+  ],
+  [
+    "([0])!",
+    "processing argument",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0})!",
+    "processed argument",
+  ],
+  [
+    "(0)!",
+    "degenerate case",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+]
+`;
+
+exports[`factorial returns a Factorial node for unbound variables 1`] = `
+[
+  [
+    "(x)!",
+    "identified factorial",
+  ],
+  [
+    "([x])!",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x})!",
+    "processed argument",
+  ],
+  [
+    "(x)!",
+    "created factorial",
+  ],
+]
+`;
+
+exports[`factorial returns complex 1 for an input of complex 0 1`] = `
+[
+  [
+    "(0+0𝒊)!",
+    "identified factorial",
+  ],
+  [
+    "([0+0𝒊])!",
+    "processing argument",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+  [
+    "({0+0𝒊})!",
+    "processed argument",
+  ],
+  [
+    "(0+0𝒊)!",
+    "degenerate case",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`factorial returns complex infinity for non-positive integer reals 1`] = `
+[
+  [
+    "(-5)!",
+    "identified factorial",
+  ],
+  [
+    "([-5])!",
+    "processing argument",
+  ],
+  [
+    "-5",
+    "created real",
+  ],
+  [
+    "({-5})!",
+    "processed argument",
+  ],
+  [
+    "(-5)!",
+    "singularity",
+  ],
+  [
+    "∞̄",
+    "created complex",
+  ],
+]
+`;
+
+exports[`factorial returns the factorial for a integer complex 1`] = `
+[
+  [
+    "(2+0𝒊)!",
+    "identified factorial",
+  ],
+  [
+    "([2+0𝒊])!",
+    "processing argument",
+  ],
+  [
+    "2+0𝒊",
+    "created complex",
+  ],
+  [
+    "({2+0𝒊})!",
+    "processed argument",
+  ],
+  [
+    "(2+0𝒊)!",
+    "complex factorial",
+  ],
+  [
+    "(2+0𝒊*((2+0𝒊+-1+0𝒊))!)",
+    "identified multiplication",
+  ],
+  [
+    "([2+0𝒊]*((2+0𝒊+-1+0𝒊))!)",
+    "processing left operand",
+  ],
+  [
+    "2+0𝒊",
+    "created complex",
+  ],
+  [
+    "({2+0𝒊}*[((2+0𝒊+-1+0𝒊))!])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((2+0𝒊+-1+0𝒊))!",
+    "identified factorial",
+  ],
+  [
+    "([(2+0𝒊+-1+0𝒊)])!",
+    "processing argument",
+  ],
+  [
+    "(2+0𝒊+-1+0𝒊)",
+    "identified addition",
+  ],
+  [
+    "([2+0𝒊]+-1+0𝒊)",
+    "processing left operand",
+  ],
+  [
+    "2+0𝒊",
+    "created complex",
+  ],
+  [
+    "({2+0𝒊}+[-1+0𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1+0𝒊",
+    "created complex",
+  ],
+  [
+    "(2+0𝒊+{-1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(2+0𝒊+-1+0𝒊)",
+    "complex addition",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "({1+0𝒊})!",
+    "processed argument",
+  ],
+  [
+    "(1+0𝒊)!",
+    "complex factorial",
+  ],
+  [
+    "(1+0𝒊*((1+0𝒊+-1+0𝒊))!)",
+    "identified multiplication",
+  ],
+  [
+    "([1+0𝒊]*((1+0𝒊+-1+0𝒊))!)",
+    "processing left operand",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "({1+0𝒊}*[((1+0𝒊+-1+0𝒊))!])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((1+0𝒊+-1+0𝒊))!",
+    "identified factorial",
+  ],
+  [
+    "([(1+0𝒊+-1+0𝒊)])!",
+    "processing argument",
+  ],
+  [
+    "(1+0𝒊+-1+0𝒊)",
+    "identified addition",
+  ],
+  [
+    "([1+0𝒊]+-1+0𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "({1+0𝒊}+[-1+0𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1+0𝒊",
+    "created complex",
+  ],
+  [
+    "(1+0𝒊+{-1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+0𝒊+-1+0𝒊)",
+    "complex addition",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+  [
+    "({0+0𝒊})!",
+    "processed argument",
+  ],
+  [
+    "(0+0𝒊)!",
+    "degenerate case",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "(1+0𝒊*{1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+0𝒊*1+0𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "(2+0𝒊*{1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(2+0𝒊*1+0𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "2+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`factorial returns the factorial for positive integers 1`] = `
+[
+  [
+    "(2)!",
+    "identified factorial",
+  ],
+  [
+    "([2])!",
+    "processing argument",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2})!",
+    "processed argument",
+  ],
+  [
+    "(2)!",
+    "real factorial",
+  ],
+  [
+    "(2*((2+-1))!)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*((2+-1))!)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[((2+-1))!])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((2+-1))!",
+    "identified factorial",
+  ],
+  [
+    "([(2+-1)])!",
+    "processing argument",
+  ],
+  [
+    "(2+-1)",
+    "identified addition",
+  ],
+  [
+    "([2]+-1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(2+{-1})",
+    "processed right operand",
+  ],
+  [
+    "(2+-1)",
+    "real addition",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1})!",
+    "processed argument",
+  ],
+  [
+    "(1)!",
+    "real factorial",
+  ],
+  [
+    "(1*((1+-1))!)",
+    "identified multiplication",
+  ],
+  [
+    "([1]*((1+-1))!)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}*[((1+-1))!])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((1+-1))!",
+    "identified factorial",
+  ],
+  [
+    "([(1+-1)])!",
+    "processing argument",
+  ],
+  [
+    "(1+-1)",
+    "identified addition",
+  ],
+  [
+    "([1]+-1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(1+{-1})",
+    "processed right operand",
+  ],
+  [
+    "(1+-1)",
+    "real addition",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0})!",
+    "processed argument",
+  ],
+  [
+    "(0)!",
+    "degenerate case",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(1*{1})",
+    "processed right operand",
+  ],
+  [
+    "(1*1)",
+    "multiplicative identity",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2*{1})",
+    "processed right operand",
+  ],
+  [
+    "(2*1)",
+    "real multiplication",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+]
+`;

@@ -1,0 +1,1235 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`equals returns an Equals for variable input 1`] = `
+[
+  [
+    "(x==y)",
+    "identified equality",
+  ],
+  [
+    "([x]==y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}==[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x=={y})",
+    "processed right operand",
+  ],
+  [
+    "(x==y)",
+    "created equality",
+  ],
+]
+`;
+
+exports[`equals returns false for unequal things 1`] = `
+[
+  [
+    "(1==2)",
+    "identified equality",
+  ],
+  [
+    "([1]==2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}==[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1=={2})",
+    "processed right operand",
+  ],
+  [
+    "(1==2)",
+    "real equality",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`equals returns true for two equal booleans 1`] = `
+[
+  [
+    "(false==false)",
+    "identified equality",
+  ],
+  [
+    "([false]==false)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}==[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(false=={false})",
+    "processed right operand",
+  ],
+  [
+    "(false==false)",
+    "boolean equality",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`equals returns true for two equal complexes 1`] = `
+[
+  [
+    "(1+1𝒊==1+1𝒊)",
+    "identified equality",
+  ],
+  [
+    "([1+1𝒊]==1+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "({1+1𝒊}==[1+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(1+1𝒊=={1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+1𝒊==1+1𝒊)",
+    "complex equality",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`equals returns true for two equal reals 1`] = `
+[
+  [
+    "(1==1)",
+    "identified equality",
+  ],
+  [
+    "([1]==1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}==[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(1=={1})",
+    "processed right operand",
+  ],
+  [
+    "(1==1)",
+    "real equality",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThan returns a GreaterThan for variable input 1`] = `
+[
+  [
+    "(x>y)",
+    "identified greater than",
+  ],
+  [
+    "([x]>y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}>[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x>{y})",
+    "processed right operand",
+  ],
+  [
+    "(x>y)",
+    "created greater than",
+  ],
+]
+`;
+
+exports[`greaterThan returns false for two complexes ordered by length 1`] = `
+[
+  [
+    "(1+1𝒊>5+5𝒊)",
+    "identified greater than",
+  ],
+  [
+    "([1+1𝒊]>5+5𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "({1+1𝒊}>[5+5𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "(1+1𝒊>{5+5𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+1𝒊>5+5𝒊)",
+    "complex greater than",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThan returns false for two equal inputs 1`] = `
+[
+  [
+    "(1>1)",
+    "identified greater than",
+  ],
+  [
+    "([1]>1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}>[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(1>{1})",
+    "processed right operand",
+  ],
+  [
+    "(1>1)",
+    "real greater than",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThan returns false for two ordered reals 1`] = `
+[
+  [
+    "(1>2)",
+    "identified greater than",
+  ],
+  [
+    "([1]>2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}>[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1>{2})",
+    "processed right operand",
+  ],
+  [
+    "(1>2)",
+    "real greater than",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThan returns true for two complexes not ordered by length 1`] = `
+[
+  [
+    "(5+5𝒊>1+1𝒊)",
+    "identified greater than",
+  ],
+  [
+    "([5+5𝒊]>1+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "({5+5𝒊}>[1+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(5+5𝒊>{1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(5+5𝒊>1+1𝒊)",
+    "complex greater than",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThan returns true for two unordered reals 1`] = `
+[
+  [
+    "(2>1)",
+    "identified greater than",
+  ],
+  [
+    "([2]>1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}>[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2>{1})",
+    "processed right operand",
+  ],
+  [
+    "(2>1)",
+    "real greater than",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThanEquals returns a GreaterThanEquals for variable input 1`] = `
+[
+  [
+    "(x>=y)",
+    "identified greater than equals",
+  ],
+  [
+    "([x]>=y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}>=[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x>={y})",
+    "processed right operand",
+  ],
+  [
+    "(x>=y)",
+    "created greater than equals",
+  ],
+]
+`;
+
+exports[`greaterThanEquals returns false for two complexes ordered by length 1`] = `
+[
+  [
+    "(1+1𝒊>=5+5𝒊)",
+    "identified greater than equals",
+  ],
+  [
+    "([1+1𝒊]>=5+5𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "({1+1𝒊}>=[5+5𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "(1+1𝒊>={5+5𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+1𝒊>=5+5𝒊)",
+    "complex greater than equals",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThanEquals returns false for two ordered reals 1`] = `
+[
+  [
+    "(1>=2)",
+    "identified greater than equals",
+  ],
+  [
+    "([1]>=2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}>=[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1>={2})",
+    "processed right operand",
+  ],
+  [
+    "(1>=2)",
+    "real greater than equals",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThanEquals returns true for two complexes not ordered by length 1`] = `
+[
+  [
+    "(5+5𝒊>=1+1𝒊)",
+    "identified greater than equals",
+  ],
+  [
+    "([5+5𝒊]>=1+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "({5+5𝒊}>=[1+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(5+5𝒊>={1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(5+5𝒊>=1+1𝒊)",
+    "complex greater than equals",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThanEquals returns true for two equal inputs 1`] = `
+[
+  [
+    "(1>=1)",
+    "identified greater than equals",
+  ],
+  [
+    "([1]>=1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}>=[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(1>={1})",
+    "processed right operand",
+  ],
+  [
+    "(1>=1)",
+    "real greater than equals",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`greaterThanEquals returns true for two unordered reals 1`] = `
+[
+  [
+    "(2>=1)",
+    "identified greater than equals",
+  ],
+  [
+    "([2]>=1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}>=[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2>={1})",
+    "processed right operand",
+  ],
+  [
+    "(2>=1)",
+    "real greater than equals",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThan returns a LessThan for variable input 1`] = `
+[
+  [
+    "(x<y)",
+    "identified less than",
+  ],
+  [
+    "([x]<y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}<[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x<{y})",
+    "processed right operand",
+  ],
+  [
+    "(x<y)",
+    "created less than",
+  ],
+]
+`;
+
+exports[`lessThan returns false for two complexes not ordered by length 1`] = `
+[
+  [
+    "(5+5𝒊<1+1𝒊)",
+    "identified less than",
+  ],
+  [
+    "([5+5𝒊]<1+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "({5+5𝒊}<[1+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(5+5𝒊<{1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(5+5𝒊<1+1𝒊)",
+    "complex less than",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThan returns false for two equal inputs 1`] = `
+[
+  [
+    "(1<1)",
+    "identified less than",
+  ],
+  [
+    "([1]<1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}<[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(1<{1})",
+    "processed right operand",
+  ],
+  [
+    "(1<1)",
+    "real less than",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThan returns false for two unordered reals 1`] = `
+[
+  [
+    "(2<1)",
+    "identified less than",
+  ],
+  [
+    "([2]<1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}<[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2<{1})",
+    "processed right operand",
+  ],
+  [
+    "(2<1)",
+    "real less than",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThan returns true for two complexes ordered by length 1`] = `
+[
+  [
+    "(1+1𝒊<5+5𝒊)",
+    "identified less than",
+  ],
+  [
+    "([1+1𝒊]<5+5𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "({1+1𝒊}<[5+5𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "(1+1𝒊<{5+5𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+1𝒊<5+5𝒊)",
+    "complex less than",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThan returns true for two ordered reals 1`] = `
+[
+  [
+    "(1<2)",
+    "identified less than",
+  ],
+  [
+    "([1]<2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}<[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1<{2})",
+    "processed right operand",
+  ],
+  [
+    "(1<2)",
+    "real less than",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThanEquals returns a LessThanEquals for variable input 1`] = `
+[
+  [
+    "(x<=y)",
+    "identified less than equals",
+  ],
+  [
+    "([x]<=y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}<=[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x<={y})",
+    "processed right operand",
+  ],
+  [
+    "(x<=y)",
+    "created less than equals",
+  ],
+]
+`;
+
+exports[`lessThanEquals returns false for two complexes not ordered by length 1`] = `
+[
+  [
+    "(5+5𝒊<=1+1𝒊)",
+    "identified less than equals",
+  ],
+  [
+    "([5+5𝒊]<=1+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "({5+5𝒊}<=[1+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(5+5𝒊<={1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(5+5𝒊<=1+1𝒊)",
+    "complex less than equals",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThanEquals returns false for two unordered reals 1`] = `
+[
+  [
+    "(2<=1)",
+    "identified less than equals",
+  ],
+  [
+    "([2]<=1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}<=[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2<={1})",
+    "processed right operand",
+  ],
+  [
+    "(2<=1)",
+    "real less than equals",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThanEquals returns true for two complexes ordered by length 1`] = `
+[
+  [
+    "(1+1𝒊<=5+5𝒊)",
+    "identified less than equals",
+  ],
+  [
+    "([1+1𝒊]<=5+5𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "({1+1𝒊}<=[5+5𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "(1+1𝒊<={5+5𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+1𝒊<=5+5𝒊)",
+    "complex less than equals",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThanEquals returns true for two equal inputs 1`] = `
+[
+  [
+    "(1<=1)",
+    "identified less than equals",
+  ],
+  [
+    "([1]<=1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}<=[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(1<={1})",
+    "processed right operand",
+  ],
+  [
+    "(1<=1)",
+    "real less than equals",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`lessThanEquals returns true for two ordered reals 1`] = `
+[
+  [
+    "(1<=2)",
+    "identified less than equals",
+  ],
+  [
+    "([1]<=2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}<=[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1<={2})",
+    "processed right operand",
+  ],
+  [
+    "(1<=2)",
+    "real less than equals",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`notEquals returns a NotEquals for variable input 1`] = `
+[
+  [
+    "(x!=y)",
+    "identified inequality",
+  ],
+  [
+    "([x]!=y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}!=[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x!={y})",
+    "processed right operand",
+  ],
+  [
+    "(x!=y)",
+    "created inequality",
+  ],
+]
+`;
+
+exports[`notEquals returns false for two equal booleans 1`] = `
+[
+  [
+    "(false!=false)",
+    "identified inequality",
+  ],
+  [
+    "([false]!=false)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}!=[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(false!={false})",
+    "processed right operand",
+  ],
+  [
+    "(false!=false)",
+    "boolean inequality",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`notEquals returns false for two equal complexes 1`] = `
+[
+  [
+    "(1+1𝒊!=1+1𝒊)",
+    "identified inequality",
+  ],
+  [
+    "([1+1𝒊]!=1+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "({1+1𝒊}!=[1+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(1+1𝒊!={1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+1𝒊!=1+1𝒊)",
+    "complex inequality",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`notEquals returns false for two equal reals 1`] = `
+[
+  [
+    "(1!=1)",
+    "identified inequality",
+  ],
+  [
+    "([1]!=1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}!=[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(1!={1})",
+    "processed right operand",
+  ],
+  [
+    "(1!=1)",
+    "real inequality",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`notEquals returns true for unequal things 1`] = `
+[
+  [
+    "(1!=2)",
+    "identified inequality",
+  ],
+  [
+    "([1]!=2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}!=[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1!={2})",
+    "processed right operand",
+  ],
+  [
+    "(1!=2)",
+    "real inequality",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
