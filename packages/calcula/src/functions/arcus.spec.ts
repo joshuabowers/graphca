@@ -7,9 +7,7 @@ import {
   $acos, $asin, $atan, $asec, $acsc, $acot
 } from './arcus'
 import { 
-  expectCloseTo, expectWriterTreeNode,
-  realOps, variableOps, raiseOps,
-  acosOps, asinOps, atanOps, asecOps, acscOps, acotOps
+  expectToEqualWithSnapshot, expectCloseTo
 } from '../utility/expectations'
 
 describe('$acos', () => {
@@ -31,15 +29,9 @@ describe('acos', () => {
   })
 
   it('generates an arcus cosine node for a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       acos(variable('x')),
       $acos(variable('x'))[0]
-    )(
-      ...acosOps(
-        'created arcus cosine',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -63,15 +55,9 @@ describe('asin', () => {
   })
 
   it('generates an arcus sine node for a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       asin(variable('x')),
       $asin(variable('x'))[0]
-    )(
-      ...asinOps(
-        'created arcus sine',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -95,15 +81,9 @@ describe('atan', () => {
   })
 
   it('generates an arcus tangent node for a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       atan(variable('x')),
       $atan(variable('x'))[0]
-    )(
-      ...atanOps(
-        'created arcus tangent',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -119,25 +99,9 @@ describe('$asec', () => {
 
 describe('asec', () => {
   it('calculates the arcus secant of a real number', () => {
-    const v = Math.acos(1 / 2).toString()
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       asec(real(2)),
       real(Math.acos(1 / 2))
-    )(
-      ...asecOps(
-        'real arcus secant',
-        realOps('2'),
-        acosOps(
-          'real arcus cosine',
-          raiseOps(
-            'real exponentiation',
-            realOps('2'),
-            realOps('-1'),
-            realOps('0.5')
-          ),
-          realOps(v)
-        )
-      )
     )
   })
 
@@ -146,15 +110,9 @@ describe('asec', () => {
   })
 
   it('generates an arcus secant node for a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       asec(variable('x')),
       $asec(variable('x'))[0]
-    )(
-      ...asecOps(
-        'created arcus secant',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -178,15 +136,9 @@ describe('acsc', () => {
   })
 
   it('generates an arcus cosecant node for a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       acsc(variable('x')),
       $acsc(variable('x'))[0]
-    )(
-      ...acscOps(
-        'created arcus cosecant',
-        variableOps('x'),
-        []
-      )
     )
   })
 })
@@ -210,15 +162,9 @@ describe('acot', () => {
   })
 
   it('generates an arcus cotangent node for a variable expression', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       acot(variable('x')),
       $acot(variable('x'))[0]
-    )(
-      ...acotOps(
-        'created arcus cotangent',
-        variableOps('x'),
-        []
-      )
     )
   })
 })

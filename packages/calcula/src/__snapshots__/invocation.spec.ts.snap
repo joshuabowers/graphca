@@ -1,0 +1,1264 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`invoke of specific node types evaluates child variables of unary nodes 1`] = `
+[
+  [
+    "(cos(x))(𝜋)",
+    "identified invocation",
+  ],
+  [
+    "([cos(x)])(𝜋)",
+    "processing expression",
+  ],
+  [
+    "cos(x)",
+    "identified cosine",
+  ],
+  [
+    "cos([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "cos({x})",
+    "processed argument",
+  ],
+  [
+    "cos(x)",
+    "created cosine",
+  ],
+  [
+    "({cos(x)})(𝜋)",
+    "processed expression",
+  ],
+  [
+    "(cos(x))([𝜋])",
+    "processing 1st",
+  ],
+  [
+    "𝜋",
+    "created real",
+  ],
+  [
+    "(cos(x))({𝜋})",
+    "processed 1st",
+  ],
+  [
+    "(cos(x))(𝜋)",
+    "cosine invocation",
+  ],
+  [
+    "{x:=𝜋}",
+    "established scope",
+  ],
+  [
+    "cos(x)",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "cos(x)",
+    "identified cosine",
+  ],
+  [
+    "cos([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "𝜋",
+    "created real",
+  ],
+  [
+    "cos({𝜋})",
+    "processed argument",
+  ],
+  [
+    "cos(𝜋)",
+    "real cosine",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+]
+`;
+
+exports[`invoke of specific node types evaluates left child variables of binaries 1`] = `
+[
+  [
+    "((x+5))(10)",
+    "identified invocation",
+  ],
+  [
+    "([(x+5)])(10)",
+    "processing expression",
+  ],
+  [
+    "(x+5)",
+    "identified addition",
+  ],
+  [
+    "([x]+5)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x+{5})",
+    "processed right operand",
+  ],
+  [
+    "(x+5)",
+    "created addition",
+  ],
+  [
+    "({(x+5)})(10)",
+    "processed expression",
+  ],
+  [
+    "((x+5))([10])",
+    "processing 1st",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "((x+5))({10})",
+    "processed 1st",
+  ],
+  [
+    "((x+5))(10)",
+    "addition invocation",
+  ],
+  [
+    "{x:=10}",
+    "established scope",
+  ],
+  [
+    "(x+5)",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "(x+5)",
+    "identified addition",
+  ],
+  [
+    "([x]+5)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "({10}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "invoked Real",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(10+{5})",
+    "processed right operand",
+  ],
+  [
+    "(10+5)",
+    "real addition",
+  ],
+  [
+    "15",
+    "created real",
+  ],
+]
+`;
+
+exports[`invoke of specific node types evaluates right child variables of binaries 1`] = `
+[
+  [
+    "((5*x))(10)",
+    "identified invocation",
+  ],
+  [
+    "([(5*x)])(10)",
+    "processing expression",
+  ],
+  [
+    "(5*x)",
+    "identified multiplication",
+  ],
+  [
+    "([5]*x)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(5*{x})",
+    "processed right operand",
+  ],
+  [
+    "(5*x)",
+    "created multiplication",
+  ],
+  [
+    "({(5*x)})(10)",
+    "processed expression",
+  ],
+  [
+    "((5*x))([10])",
+    "processing 1st",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "((5*x))({10})",
+    "processed 1st",
+  ],
+  [
+    "((5*x))(10)",
+    "multiplication invocation",
+  ],
+  [
+    "{x:=10}",
+    "established scope",
+  ],
+  [
+    "(5*x)",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "(5*x)",
+    "identified multiplication",
+  ],
+  [
+    "([5]*x)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "invoked Real",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "(5*{10})",
+    "processed right operand",
+  ],
+  [
+    "(5*10)",
+    "real multiplication",
+  ],
+  [
+    "50",
+    "created real",
+  ],
+]
+`;
+
+exports[`invoke of specific node types returns booleans directly 1`] = `
+[
+  [
+    "(true)()",
+    "identified invocation",
+  ],
+  [
+    "([true])()",
+    "processing expression",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true})()",
+    "processed expression",
+  ],
+  [
+    "(true)()",
+    "boolean invocation",
+  ],
+  [
+    "{}",
+    "established scope",
+  ],
+  [
+    "true",
+    "invoked Boolean",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`invoke of specific node types returns complex numbers directly 1`] = `
+[
+  [
+    "(1+5𝒊)()",
+    "identified invocation",
+  ],
+  [
+    "([1+5𝒊])()",
+    "processing expression",
+  ],
+  [
+    "1+5𝒊",
+    "created complex",
+  ],
+  [
+    "({1+5𝒊})()",
+    "processed expression",
+  ],
+  [
+    "(1+5𝒊)()",
+    "complex invocation",
+  ],
+  [
+    "{}",
+    "established scope",
+  ],
+  [
+    "1+5𝒊",
+    "invoked Complex",
+  ],
+  [
+    "1+5𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`invoke of specific node types returns reals directly 1`] = `
+[
+  [
+    "(5)()",
+    "identified invocation",
+  ],
+  [
+    "([5])()",
+    "processing expression",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5})()",
+    "processed expression",
+  ],
+  [
+    "(5)()",
+    "real invocation",
+  ],
+  [
+    "{}",
+    "established scope",
+  ],
+  [
+    "5",
+    "invoked Real",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+]
+`;
+
+exports[`invoke of specific node types returns the value of a scope-bound variable 1`] = `
+[
+  [
+    "(x)()",
+    "identified invocation",
+  ],
+  [
+    "([x])()",
+    "processing expression",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x})()",
+    "processed expression",
+  ],
+  [
+    "(x)()",
+    "variable invocation",
+  ],
+  [
+    "{x:=5}",
+    "established scope",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+]
+`;
+
+exports[`invoke of specific node types returns the value of an argument-bound variable 1`] = `
+[
+  [
+    "(x)(5)",
+    "identified invocation",
+  ],
+  [
+    "([x])(5)",
+    "processing expression",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x})(5)",
+    "processed expression",
+  ],
+  [
+    "(x)([5])",
+    "processing 1st",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x)({5})",
+    "processed 1st",
+  ],
+  [
+    "(x)(5)",
+    "variable invocation",
+  ],
+  [
+    "{x:=5}",
+    "established scope",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+]
+`;
+
+exports[`invoke of specific node types returns unbound variables directly 1`] = `
+[
+  [
+    "(x)()",
+    "identified invocation",
+  ],
+  [
+    "([x])()",
+    "processing expression",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x})()",
+    "processed expression",
+  ],
+  [
+    "(x)()",
+    "variable invocation",
+  ],
+  [
+    "{}",
+    "established scope",
+  ],
+  [
+    "x",
+    "no substitution found in scope for variable x",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`invoke of specific node types substitutes a variable with an unbound variable argument 1`] = `
+[
+  [
+    "(x)(y)",
+    "identified invocation",
+  ],
+  [
+    "([x])(y)",
+    "processing expression",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x})(y)",
+    "processed expression",
+  ],
+  [
+    "(x)([y])",
+    "processing 1st",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x)({y})",
+    "processed 1st",
+  ],
+  [
+    "(x)(y)",
+    "variable invocation",
+  ],
+  [
+    "{x:=y}",
+    "established scope",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`invoke when given an expression with multiple instances of a variable substitutes a newly bound value for each variable instance 1`] = `
+[
+  [
+    "((x*(x+5)))(4)",
+    "identified invocation",
+  ],
+  [
+    "([(x*(x+5))])(4)",
+    "processing expression",
+  ],
+  [
+    "(x*(x+5))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(x+5))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(x+5)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x+5)",
+    "identified addition",
+  ],
+  [
+    "([x]+5)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x+{5})",
+    "processed right operand",
+  ],
+  [
+    "(x+5)",
+    "created addition",
+  ],
+  [
+    "(x*{(x+5)})",
+    "processed right operand",
+  ],
+  [
+    "(x*(x+5))",
+    "created multiplication",
+  ],
+  [
+    "({(x*(x+5))})(4)",
+    "processed expression",
+  ],
+  [
+    "((x*(x+5)))([4])",
+    "processing 1st",
+  ],
+  [
+    "4",
+    "created real",
+  ],
+  [
+    "((x*(x+5)))({4})",
+    "processed 1st",
+  ],
+  [
+    "((x*(x+5)))(4)",
+    "multiplication invocation",
+  ],
+  [
+    "{x:=4}",
+    "established scope",
+  ],
+  [
+    "(x*(x+5))",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "(x*(x+5))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(x+5))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "4",
+    "created real",
+  ],
+  [
+    "({4}*[(x+5)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x+5)",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "(x+5)",
+    "identified addition",
+  ],
+  [
+    "([x]+5)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "4",
+    "created real",
+  ],
+  [
+    "({4}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "invoked Real",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(4+{5})",
+    "processed right operand",
+  ],
+  [
+    "(4+5)",
+    "real addition",
+  ],
+  [
+    "9",
+    "created real",
+  ],
+  [
+    "(4*{9})",
+    "processed right operand",
+  ],
+  [
+    "(4*9)",
+    "real multiplication",
+  ],
+  [
+    "36",
+    "created real",
+  ],
+]
+`;
+
+exports[`invoke with a passed scope and arguments evaluates any unbound variables against argument overridden scope 1`] = `
+[
+  [
+    "((x+y))(10)",
+    "identified invocation",
+  ],
+  [
+    "([(x+y)])(10)",
+    "processing expression",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x+{y})",
+    "processed right operand",
+  ],
+  [
+    "(x+y)",
+    "created addition",
+  ],
+  [
+    "({(x+y)})(10)",
+    "processed expression",
+  ],
+  [
+    "((x+y))([10])",
+    "processing 1st",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "((x+y))({10})",
+    "processed 1st",
+  ],
+  [
+    "((x+y))(10)",
+    "addition invocation",
+  ],
+  [
+    "{x:=10}",
+    "established scope",
+  ],
+  [
+    "(x+y)",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "({10}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "no substitution found in scope for variable y",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(10+{y})",
+    "processed right operand",
+  ],
+  [
+    "(10+y)",
+    "reorder operands",
+  ],
+  [
+    "(y+10)",
+    "identified addition",
+  ],
+  [
+    "([y]+10)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}+[10])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "(y+{10})",
+    "processed right operand",
+  ],
+  [
+    "(y+10)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`invoke with a passed scope but no arguments evaluates any unbound variables against its scope 1`] = `
+[
+  [
+    "((x+y))()",
+    "identified invocation",
+  ],
+  [
+    "([(x+y)])()",
+    "processing expression",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x+{y})",
+    "processed right operand",
+  ],
+  [
+    "(x+y)",
+    "created addition",
+  ],
+  [
+    "({(x+y)})()",
+    "processed expression",
+  ],
+  [
+    "((x+y))()",
+    "addition invocation",
+  ],
+  [
+    "{x:=5}",
+    "established scope",
+  ],
+  [
+    "(x+y)",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "no substitution found in scope for variable y",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(5+{y})",
+    "processed right operand",
+  ],
+  [
+    "(5+y)",
+    "reorder operands",
+  ],
+  [
+    "(y+5)",
+    "identified addition",
+  ],
+  [
+    "([y]+5)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(y+{5})",
+    "processed right operand",
+  ],
+  [
+    "(y+5)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`invoke with no passed scope applies its arguments in appearance order 1`] = `
+[
+  [
+    "((x+y))(5)",
+    "identified invocation",
+  ],
+  [
+    "([(x+y)])(5)",
+    "processing expression",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x+{y})",
+    "processed right operand",
+  ],
+  [
+    "(x+y)",
+    "created addition",
+  ],
+  [
+    "({(x+y)})(5)",
+    "processed expression",
+  ],
+  [
+    "((x+y))([5])",
+    "processing 1st",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "((x+y))({5})",
+    "processed 1st",
+  ],
+  [
+    "((x+y))(5)",
+    "addition invocation",
+  ],
+  [
+    "{x:=5}",
+    "established scope",
+  ],
+  [
+    "(x+y)",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "no substitution found in scope for variable y",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(5+{y})",
+    "processed right operand",
+  ],
+  [
+    "(5+y)",
+    "reorder operands",
+  ],
+  [
+    "(y+5)",
+    "identified addition",
+  ],
+  [
+    "([y]+5)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(y+{5})",
+    "processed right operand",
+  ],
+  [
+    "(y+5)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`invoke with no passed scope applies its arguments to unbound variables 1`] = `
+[
+  [
+    "((x+y))(5,10)",
+    "identified invocation",
+  ],
+  [
+    "([(x+y)])(5,10)",
+    "processing expression",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x+{y})",
+    "processed right operand",
+  ],
+  [
+    "(x+y)",
+    "created addition",
+  ],
+  [
+    "({(x+y)})(5,10)",
+    "processed expression",
+  ],
+  [
+    "((x+y))([5],10)",
+    "processing 1st",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "((x+y))({5},[10])",
+    "processed 1st; processing 2nd",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "((x+y))(5,{10})",
+    "processed 2nd",
+  ],
+  [
+    "((x+y))(5,10)",
+    "addition invocation",
+  ],
+  [
+    "{x:=5,y:=10}",
+    "established scope",
+  ],
+  [
+    "(x+y)",
+    "looking for variables to substitute in expression",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "substituting variable x",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "substituting variable y",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "(5+{10})",
+    "processed right operand",
+  ],
+  [
+    "(5+10)",
+    "real addition",
+  ],
+  [
+    "15",
+    "created real",
+  ],
+]
+`;

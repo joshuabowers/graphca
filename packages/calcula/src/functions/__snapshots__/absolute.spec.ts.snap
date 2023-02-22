@@ -1,0 +1,142 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`abs returns a NaN for Nil input 1`] = `
+[
+  [
+    "abs(nil)",
+    "identified absolute",
+  ],
+  [
+    "abs([nil])",
+    "processing argument",
+  ],
+  [
+    "nil",
+    "nothing",
+  ],
+  [
+    "abs({nil})",
+    "processed argument",
+  ],
+  [
+    "abs(nil)",
+    "not a number",
+  ],
+  [
+    "NaN",
+    "not a number",
+  ],
+]
+`;
+
+exports[`abs returns a Writer<Absolute> for variable input 1`] = `
+[
+  [
+    "abs(x)",
+    "identified absolute",
+  ],
+  [
+    "abs([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "abs({x})",
+    "processed argument",
+  ],
+  [
+    "abs(x)",
+    "created absolute",
+  ],
+]
+`;
+
+exports[`abs returns a Writer<Boolean> for a boolean input 1`] = `
+[
+  [
+    "abs(true)",
+    "identified absolute",
+  ],
+  [
+    "abs([true])",
+    "processing argument",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "abs({true})",
+    "processed argument",
+  ],
+  [
+    "abs(true)",
+    "boolean absolute",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`abs returns a Writer<Complex> for a complex input 1`] = `
+[
+  [
+    "abs(1+2𝒊)",
+    "identified absolute",
+  ],
+  [
+    "abs([1+2𝒊])",
+    "processing argument",
+  ],
+  [
+    "1+2𝒊",
+    "created complex",
+  ],
+  [
+    "abs({1+2𝒊})",
+    "processed argument",
+  ],
+  [
+    "abs(1+2𝒊)",
+    "complex absolute",
+  ],
+  [
+    "2.23606797749979+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`abs returns a Writer<Real> for a real input 1`] = `
+[
+  [
+    "abs(-5)",
+    "identified absolute",
+  ],
+  [
+    "abs([-5])",
+    "processing argument",
+  ],
+  [
+    "-5",
+    "created real",
+  ],
+  [
+    "abs({-5})",
+    "processed argument",
+  ],
+  [
+    "abs(-5)",
+    "real absolute",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+]
+`;

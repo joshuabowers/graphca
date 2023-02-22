@@ -38,6 +38,23 @@ export const expectWriterTreeNode = <
   expect(stringified).toEqual(operations)
 }
 
+/**
+ * Performs two assertions:
+ * 1) Tests that actual's value is equal to expected's value
+ * 2) Verifies that actual's log matches a snapshot
+ * @param actual the value yielded by a process
+ * @param expected the value actual is meant to evaluate to
+ */
+export const expectToEqualWithSnapshot = <
+  Actual extends Writer<TreeNode, Operation>,
+  Expected extends TreeNode|Writer<TreeNode, Operation>
+>(
+  actual: Actual, expected: Expected
+) => {
+  expect(actual.value).toEqual(isWriter(expected) ? expected.value : expected)
+  expect(actual.log).toMatchSnapshot()
+}
+
 export const realOps = (value: string): Op[] => [[value, 'created real']]
 export const complexOps = (a: string, b: string): Op[] => 
   [[`${a}${b[0] === '-' ? '' : '+'}${b}${Unicode.i}`, 'created complex']]

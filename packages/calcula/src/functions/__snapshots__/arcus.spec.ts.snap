@@ -1,0 +1,228 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`acos generates an arcus cosine node for a variable expression 1`] = `
+[
+  [
+    "acos(x)",
+    "identified arcus cosine",
+  ],
+  [
+    "acos([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "acos({x})",
+    "processed argument",
+  ],
+  [
+    "acos(x)",
+    "created arcus cosine",
+  ],
+]
+`;
+
+exports[`acot generates an arcus cotangent node for a variable expression 1`] = `
+[
+  [
+    "acot(x)",
+    "identified arcus cotangent",
+  ],
+  [
+    "acot([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "acot({x})",
+    "processed argument",
+  ],
+  [
+    "acot(x)",
+    "created arcus cotangent",
+  ],
+]
+`;
+
+exports[`acsc generates an arcus cosecant node for a variable expression 1`] = `
+[
+  [
+    "acsc(x)",
+    "identified arcus cosecant",
+  ],
+  [
+    "acsc([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "acsc({x})",
+    "processed argument",
+  ],
+  [
+    "acsc(x)",
+    "created arcus cosecant",
+  ],
+]
+`;
+
+exports[`asec calculates the arcus secant of a real number 1`] = `
+[
+  [
+    "asec(2)",
+    "identified arcus secant",
+  ],
+  [
+    "asec([2])",
+    "processing argument",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "asec({2})",
+    "processed argument",
+  ],
+  [
+    "asec(2)",
+    "real arcus secant",
+  ],
+  [
+    "acos((2^-1))",
+    "identified arcus cosine",
+  ],
+  [
+    "acos([(2^-1)])",
+    "processing argument",
+  ],
+  [
+    "(2^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([2]^-1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(2^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(2^-1)",
+    "real exponentiation",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "acos({0.5})",
+    "processed argument",
+  ],
+  [
+    "acos(0.5)",
+    "real arcus cosine",
+  ],
+  [
+    "1.0471975511965979",
+    "created real",
+  ],
+]
+`;
+
+exports[`asec generates an arcus secant node for a variable expression 1`] = `
+[
+  [
+    "asec(x)",
+    "identified arcus secant",
+  ],
+  [
+    "asec([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "asec({x})",
+    "processed argument",
+  ],
+  [
+    "asec(x)",
+    "created arcus secant",
+  ],
+]
+`;
+
+exports[`asin generates an arcus sine node for a variable expression 1`] = `
+[
+  [
+    "asin(x)",
+    "identified arcus sine",
+  ],
+  [
+    "asin([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "asin({x})",
+    "processed argument",
+  ],
+  [
+    "asin(x)",
+    "created arcus sine",
+  ],
+]
+`;
+
+exports[`atan generates an arcus tangent node for a variable expression 1`] = `
+[
+  [
+    "atan(x)",
+    "identified arcus tangent",
+  ],
+  [
+    "atan([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "atan({x})",
+    "processed argument",
+  ],
+  [
+    "atan(x)",
+    "created arcus tangent",
+  ],
+]
+`;
