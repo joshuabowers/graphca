@@ -1,0 +1,366 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`converse returns a ConverseImplication on variable input 1`] = `
+[
+  [
+    "(x←y)",
+    "identified converse implication",
+  ],
+  [
+    "([x]←y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}←[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x←{y})",
+    "processed right operand",
+  ],
+  [
+    "(x←y)",
+    "created converse implication",
+  ],
+]
+`;
+
+exports[`converse returns false if the left argument is false 1`] = `
+[
+  [
+    "(false←true)",
+    "identified converse implication",
+  ],
+  [
+    "([false]←true)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}←[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(false←{true})",
+    "processed right operand",
+  ],
+  [
+    "(false←true)",
+    "converse implication identity",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`converse returns the complement of the right if the left is false 1`] = `
+[
+  [
+    "(false←x)",
+    "identified converse implication",
+  ],
+  [
+    "([false]←x)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}←[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(false←{x})",
+    "processed right operand",
+  ],
+  [
+    "(false←x)",
+    "converse implication complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`converse returns the left operand if the right is true 1`] = `
+[
+  [
+    "(x←true)",
+    "identified converse implication",
+  ],
+  [
+    "([x]←true)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}←[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(x←{true})",
+    "processed right operand",
+  ],
+  [
+    "(x←true)",
+    "converse implication identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`converse returns true if both arguments are false 1`] = `
+[
+  [
+    "(false←false)",
+    "identified converse implication",
+  ],
+  [
+    "([false]←false)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}←[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(false←{false})",
+    "processed right operand",
+  ],
+  [
+    "(false←false)",
+    "converse implication complementation",
+  ],
+  [
+    "¬(false)",
+    "identified complement",
+  ],
+  [
+    "¬([false])",
+    "processing argument",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "¬({false})",
+    "processed argument",
+  ],
+  [
+    "¬(false)",
+    "boolean complement",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`converse returns true if the left operand is true 1`] = `
+[
+  [
+    "(true←x)",
+    "identified converse implication",
+  ],
+  [
+    "([true]←x)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}←[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(true←{x})",
+    "processed right operand",
+  ],
+  [
+    "(true←x)",
+    "converse implication annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`converse returns true if the right argument is false 1`] = `
+[
+  [
+    "(true←false)",
+    "identified converse implication",
+  ],
+  [
+    "([true]←false)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}←[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(true←{false})",
+    "processed right operand",
+  ],
+  [
+    "(true←false)",
+    "converse implication annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`converse returns true if the right operand is false 1`] = `
+[
+  [
+    "(x←false)",
+    "identified converse implication",
+  ],
+  [
+    "([x]←false)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}←[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(x←{false})",
+    "processed right operand",
+  ],
+  [
+    "(x←false)",
+    "converse implication annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`converse returns true when given two true things 1`] = `
+[
+  [
+    "(true←true)",
+    "identified converse implication",
+  ],
+  [
+    "([true]←true)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}←[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(true←{true})",
+    "processed right operand",
+  ],
+  [
+    "(true←true)",
+    "converse implication annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;

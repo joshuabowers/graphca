@@ -1,0 +1,419 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`xnor returns a Biconditional on variable input 1`] = `
+[
+  [
+    "(x↔y)",
+    "identified biconditional",
+  ],
+  [
+    "([x]↔y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↔[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↔{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↔y)",
+    "created biconditional",
+  ],
+]
+`;
+
+exports[`xnor returns false if the left argument is false 1`] = `
+[
+  [
+    "(false↔true)",
+    "identified biconditional",
+  ],
+  [
+    "([false]↔true)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↔[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(false↔{true})",
+    "processed right operand",
+  ],
+  [
+    "(false↔true)",
+    "biconditional identity",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`xnor returns false if the right argument is false 1`] = `
+[
+  [
+    "(true↔false)",
+    "identified biconditional",
+  ],
+  [
+    "([true]↔false)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↔[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(true↔{false})",
+    "processed right operand",
+  ],
+  [
+    "(true↔false)",
+    "biconditional identity",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`xnor returns the complement of the left if the right is false 1`] = `
+[
+  [
+    "(x↔false)",
+    "identified biconditional",
+  ],
+  [
+    "([x]↔false)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↔[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(x↔{false})",
+    "processed right operand",
+  ],
+  [
+    "(x↔false)",
+    "biconditional complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`xnor returns the complement of the right if the left is false 1`] = `
+[
+  [
+    "(false↔x)",
+    "identified biconditional",
+  ],
+  [
+    "([false]↔x)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↔[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(false↔{x})",
+    "processed right operand",
+  ],
+  [
+    "(false↔x)",
+    "biconditional complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`xnor returns the left operand if the right is true 1`] = `
+[
+  [
+    "(x↔true)",
+    "identified biconditional",
+  ],
+  [
+    "([x]↔true)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↔[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(x↔{true})",
+    "processed right operand",
+  ],
+  [
+    "(x↔true)",
+    "biconditional identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`xnor returns the right operand if the left is true 1`] = `
+[
+  [
+    "(true↔x)",
+    "identified biconditional",
+  ],
+  [
+    "([true]↔x)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↔[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(true↔{x})",
+    "processed right operand",
+  ],
+  [
+    "(true↔x)",
+    "biconditional identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`xnor returns true if both arguments are false 1`] = `
+[
+  [
+    "(false↔false)",
+    "identified biconditional",
+  ],
+  [
+    "([false]↔false)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↔[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(false↔{false})",
+    "processed right operand",
+  ],
+  [
+    "(false↔false)",
+    "biconditional complementation",
+  ],
+  [
+    "¬(false)",
+    "identified complement",
+  ],
+  [
+    "¬([false])",
+    "processing argument",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "¬({false})",
+    "processed argument",
+  ],
+  [
+    "¬(false)",
+    "boolean complement",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`xnor returns true if the operands are equal 1`] = `
+[
+  [
+    "(x↔x)",
+    "identified biconditional",
+  ],
+  [
+    "([x]↔x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↔[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x↔{x})",
+    "processed right operand",
+  ],
+  [
+    "(x↔x)",
+    "biconditional annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`xnor returns true when given two true things 1`] = `
+[
+  [
+    "(true↔true)",
+    "identified biconditional",
+  ],
+  [
+    "([true]↔true)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↔[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(true↔{true})",
+    "processed right operand",
+  ],
+  [
+    "(true↔true)",
+    "biconditional identity",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;

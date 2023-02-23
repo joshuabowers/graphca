@@ -59,11 +59,11 @@ export const [or, isDisjunction, $or] = binary<Disjunction, Boolean>(
   ),
   when(
     (l, r) => isComplement(r) && deepEquals(l, r.value.expression),
-    [boolean(true), 'disjunctive complementation']
+    [boolean(true), 'disjunctive tautology']
   ),
   when(
     (l, r) => isComplement(l) && deepEquals(l.value.expression, r),
-    [boolean(true), 'disjunctive complementation']
+    [boolean(true), 'disjunctive tautology']
   ),
   when<Complement, TreeNode>(
     (l, _r) => isComplement(l),

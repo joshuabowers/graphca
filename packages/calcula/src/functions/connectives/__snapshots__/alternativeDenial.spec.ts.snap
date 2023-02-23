@@ -1,0 +1,844 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nand returns a AlternativeDenial on variable input 1`] = `
+[
+  [
+    "(x↑y)",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↑{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↑y)",
+    "created alternative denial",
+  ],
+]
+`;
+
+exports[`nand returns a disjunction of mutually complemented operands 1`] = `
+[
+  [
+    "(¬(x)↑¬(y))",
+    "identified alternative denial",
+  ],
+  [
+    "([¬(x)]↑¬(y))",
+    "processing left operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "({¬(x)}↑[¬(y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "¬(y)",
+    "identified complement",
+  ],
+  [
+    "¬([y])",
+    "processing argument",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "¬({y})",
+    "processed argument",
+  ],
+  [
+    "¬(y)",
+    "created complement",
+  ],
+  [
+    "(¬(x)↑{¬(y)})",
+    "processed right operand",
+  ],
+  [
+    "(¬(x)↑¬(y))",
+    "De Morgan",
+  ],
+  [
+    "(x∨y)",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∨{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∨y)",
+    "created disjunction",
+  ],
+]
+`;
+
+exports[`nand returns an implication if the right operand is a nand of the left 1`] = `
+[
+  [
+    "(x↑(x↑y))",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑(x↑y))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[(x↑y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x↑y)",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↑{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↑y)",
+    "created alternative denial",
+  ],
+  [
+    "(x↑{(x↑y)})",
+    "processed right operand",
+  ],
+  [
+    "(x↑(x↑y))",
+    "alternative deniable implication",
+  ],
+  [
+    "(x→y)",
+    "identified implication",
+  ],
+  [
+    "([x]→y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}→[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x→{y})",
+    "processed right operand",
+  ],
+  [
+    "(x→y)",
+    "created implication",
+  ],
+]
+`;
+
+exports[`nand returns an implication if the right operand is a nand of the left 2`] = `
+[
+  [
+    "(x↑(y↑x))",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑(y↑x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[(y↑x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y↑x)",
+    "identified alternative denial",
+  ],
+  [
+    "([y]↑x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}↑[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y↑{x})",
+    "processed right operand",
+  ],
+  [
+    "(y↑x)",
+    "created alternative denial",
+  ],
+  [
+    "(x↑{(y↑x)})",
+    "processed right operand",
+  ],
+  [
+    "(x↑(y↑x))",
+    "alternative deniable implication",
+  ],
+  [
+    "(x→y)",
+    "identified implication",
+  ],
+  [
+    "([x]→y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}→[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x→{y})",
+    "processed right operand",
+  ],
+  [
+    "(x→y)",
+    "created implication",
+  ],
+]
+`;
+
+exports[`nand returns false when given two true things 1`] = `
+[
+  [
+    "(true↑true)",
+    "identified alternative denial",
+  ],
+  [
+    "([true]↑true)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↑[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(true↑{true})",
+    "processed right operand",
+  ],
+  [
+    "(true↑true)",
+    "alternative deniable complementation",
+  ],
+  [
+    "¬(true)",
+    "identified complement",
+  ],
+  [
+    "¬([true])",
+    "processing argument",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "¬({true})",
+    "processed argument",
+  ],
+  [
+    "¬(true)",
+    "boolean complement",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nand returns the complement of left operand if the right is true 1`] = `
+[
+  [
+    "(x↑true)",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑true)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(x↑{true})",
+    "processed right operand",
+  ],
+  [
+    "(x↑true)",
+    "alternative deniable complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`nand returns the complement of the left operand if left equivalent to right 1`] = `
+[
+  [
+    "(x↑x)",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x↑{x})",
+    "processed right operand",
+  ],
+  [
+    "(x↑x)",
+    "alternative deniable complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`nand returns the right operand if the left is true 1`] = `
+[
+  [
+    "(true↑x)",
+    "identified alternative denial",
+  ],
+  [
+    "([true]↑x)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↑[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(true↑{x})",
+    "processed right operand",
+  ],
+  [
+    "(true↑x)",
+    "alternative deniable complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`nand returns true if both arguments are false 1`] = `
+[
+  [
+    "(false↑false)",
+    "identified alternative denial",
+  ],
+  [
+    "([false]↑false)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↑[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(false↑{false})",
+    "processed right operand",
+  ],
+  [
+    "(false↑false)",
+    "alternative deniable annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nand returns true if the left argument is false 1`] = `
+[
+  [
+    "(false↑true)",
+    "identified alternative denial",
+  ],
+  [
+    "([false]↑true)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↑[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(false↑{true})",
+    "processed right operand",
+  ],
+  [
+    "(false↑true)",
+    "alternative deniable complementation",
+  ],
+  [
+    "¬(false)",
+    "identified complement",
+  ],
+  [
+    "¬([false])",
+    "processing argument",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "¬({false})",
+    "processed argument",
+  ],
+  [
+    "¬(false)",
+    "boolean complement",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nand returns true if the left operand is false 1`] = `
+[
+  [
+    "(false↑x)",
+    "identified alternative denial",
+  ],
+  [
+    "([false]↑x)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↑[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(false↑{x})",
+    "processed right operand",
+  ],
+  [
+    "(false↑x)",
+    "alternative deniable annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nand returns true if the left operand is the complement of the right 1`] = `
+[
+  [
+    "(¬(x)↑x)",
+    "identified alternative denial",
+  ],
+  [
+    "([¬(x)]↑x)",
+    "processing left operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "({¬(x)}↑[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(¬(x)↑{x})",
+    "processed right operand",
+  ],
+  [
+    "(¬(x)↑x)",
+    "alternative deniable annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nand returns true if the right argument is false 1`] = `
+[
+  [
+    "(true↑false)",
+    "identified alternative denial",
+  ],
+  [
+    "([true]↑false)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↑[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(true↑{false})",
+    "processed right operand",
+  ],
+  [
+    "(true↑false)",
+    "alternative deniable complementation",
+  ],
+  [
+    "¬(false)",
+    "identified complement",
+  ],
+  [
+    "¬([false])",
+    "processing argument",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "¬({false})",
+    "processed argument",
+  ],
+  [
+    "¬(false)",
+    "boolean complement",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nand returns true if the right operand is false 1`] = `
+[
+  [
+    "(x↑false)",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑false)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(x↑{false})",
+    "processed right operand",
+  ],
+  [
+    "(x↑false)",
+    "alternative deniable annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nand returns true if the right operand is the complement of the left 1`] = `
+[
+  [
+    "(x↑¬(x))",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑¬(x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[¬(x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "(x↑{¬(x)})",
+    "processed right operand",
+  ],
+  [
+    "(x↑¬(x))",
+    "alternative deniable annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;

@@ -1,0 +1,893 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`not returns a biconditional if given an exclusive disjunction 1`] = `
+[
+  [
+    "¬((x⊕y))",
+    "identified complement",
+  ],
+  [
+    "¬([(x⊕y)])",
+    "processing argument",
+  ],
+  [
+    "(x⊕y)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([x]⊕y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}⊕[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x⊕{y})",
+    "processed right operand",
+  ],
+  [
+    "(x⊕y)",
+    "created exclusive disjunction",
+  ],
+  [
+    "¬({(x⊕y)})",
+    "processed argument",
+  ],
+  [
+    "¬((x⊕y))",
+    "complement of exclusive disjunction",
+  ],
+  [
+    "(x↔y)",
+    "identified biconditional",
+  ],
+  [
+    "([x]↔y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↔[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↔{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↔y)",
+    "created biconditional",
+  ],
+]
+`;
+
+exports[`not returns a conjunction if given a converse implication 1`] = `
+[
+  [
+    "¬((x←y))",
+    "identified complement",
+  ],
+  [
+    "¬([(x←y)])",
+    "processing argument",
+  ],
+  [
+    "(x←y)",
+    "identified converse implication",
+  ],
+  [
+    "([x]←y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}←[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x←{y})",
+    "processed right operand",
+  ],
+  [
+    "(x←y)",
+    "created converse implication",
+  ],
+  [
+    "¬({(x←y)})",
+    "processed argument",
+  ],
+  [
+    "¬((x←y))",
+    "complement of converse implication",
+  ],
+  [
+    "(¬(x)∧y)",
+    "identified conjunction",
+  ],
+  [
+    "([¬(x)]∧y)",
+    "processing left operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "({¬(x)}∧[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(¬(x)∧{y})",
+    "processed right operand",
+  ],
+  [
+    "(¬(x)∧y)",
+    "created conjunction",
+  ],
+]
+`;
+
+exports[`not returns a conjunction if given an alternative denial 1`] = `
+[
+  [
+    "¬((x↑y))",
+    "identified complement",
+  ],
+  [
+    "¬([(x↑y)])",
+    "processing argument",
+  ],
+  [
+    "(x↑y)",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↑{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↑y)",
+    "created alternative denial",
+  ],
+  [
+    "¬({(x↑y)})",
+    "processed argument",
+  ],
+  [
+    "¬((x↑y))",
+    "complement of alternative denial",
+  ],
+  [
+    "(x∧y)",
+    "identified conjunction",
+  ],
+  [
+    "([x]∧y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∧[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∧{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∧y)",
+    "created conjunction",
+  ],
+]
+`;
+
+exports[`not returns a conjunction if given an implication 1`] = `
+[
+  [
+    "¬((x→y))",
+    "identified complement",
+  ],
+  [
+    "¬([(x→y)])",
+    "processing argument",
+  ],
+  [
+    "(x→y)",
+    "identified implication",
+  ],
+  [
+    "([x]→y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}→[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x→{y})",
+    "processed right operand",
+  ],
+  [
+    "(x→y)",
+    "created implication",
+  ],
+  [
+    "¬({(x→y)})",
+    "processed argument",
+  ],
+  [
+    "¬((x→y))",
+    "complement of implication",
+  ],
+  [
+    "(x∧¬(y))",
+    "identified conjunction",
+  ],
+  [
+    "([x]∧¬(y))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∧[¬(y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "¬(y)",
+    "identified complement",
+  ],
+  [
+    "¬([y])",
+    "processing argument",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "¬({y})",
+    "processed argument",
+  ],
+  [
+    "¬(y)",
+    "created complement",
+  ],
+  [
+    "(x∧{¬(y)})",
+    "processed right operand",
+  ],
+  [
+    "(x∧¬(y))",
+    "created conjunction",
+  ],
+]
+`;
+
+exports[`not returns a disjunction if given a joint denial 1`] = `
+[
+  [
+    "¬((x↓y))",
+    "identified complement",
+  ],
+  [
+    "¬([(x↓y)])",
+    "processing argument",
+  ],
+  [
+    "(x↓y)",
+    "identified joint denial",
+  ],
+  [
+    "([x]↓y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↓[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↓{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↓y)",
+    "created joint denial",
+  ],
+  [
+    "¬({(x↓y)})",
+    "processed argument",
+  ],
+  [
+    "¬((x↓y))",
+    "complement of joint denial",
+  ],
+  [
+    "(x∨y)",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∨{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∨y)",
+    "created disjunction",
+  ],
+]
+`;
+
+exports[`not returns a joint denial if given a disjunction 1`] = `
+[
+  [
+    "¬((x∨y))",
+    "identified complement",
+  ],
+  [
+    "¬([(x∨y)])",
+    "processing argument",
+  ],
+  [
+    "(x∨y)",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∨{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∨y)",
+    "created disjunction",
+  ],
+  [
+    "¬({(x∨y)})",
+    "processed argument",
+  ],
+  [
+    "¬((x∨y))",
+    "complement of disjunction",
+  ],
+  [
+    "(x↓y)",
+    "identified joint denial",
+  ],
+  [
+    "([x]↓y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↓[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↓{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↓y)",
+    "created joint denial",
+  ],
+]
+`;
+
+exports[`not returns an alternative denial when given a conjunction 1`] = `
+[
+  [
+    "¬((x∧y))",
+    "identified complement",
+  ],
+  [
+    "¬([(x∧y)])",
+    "processing argument",
+  ],
+  [
+    "(x∧y)",
+    "identified conjunction",
+  ],
+  [
+    "([x]∧y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∧[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∧{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∧y)",
+    "created conjunction",
+  ],
+  [
+    "¬({(x∧y)})",
+    "processed argument",
+  ],
+  [
+    "¬((x∧y))",
+    "complement of conjunction",
+  ],
+  [
+    "(x↑y)",
+    "identified alternative denial",
+  ],
+  [
+    "([x]↑y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↑[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↑{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↑y)",
+    "created alternative denial",
+  ],
+]
+`;
+
+exports[`not returns an exclusive disjunction if given a biconditional 1`] = `
+[
+  [
+    "¬((x↔y))",
+    "identified complement",
+  ],
+  [
+    "¬([(x↔y)])",
+    "processing argument",
+  ],
+  [
+    "(x↔y)",
+    "identified biconditional",
+  ],
+  [
+    "([x]↔y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↔[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↔{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↔y)",
+    "created biconditional",
+  ],
+  [
+    "¬({(x↔y)})",
+    "processed argument",
+  ],
+  [
+    "¬((x↔y))",
+    "complement of biconditional",
+  ],
+  [
+    "(x⊕y)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([x]⊕y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}⊕[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x⊕{y})",
+    "processed right operand",
+  ],
+  [
+    "(x⊕y)",
+    "created exclusive disjunction",
+  ],
+]
+`;
+
+exports[`not rewrites double negations as the inner expression 1`] = `
+[
+  [
+    "¬(¬(x))",
+    "identified complement",
+  ],
+  [
+    "¬([¬(x)])",
+    "processing argument",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "¬({¬(x)})",
+    "processed argument",
+  ],
+  [
+    "¬(¬(x))",
+    "double complement",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`not yields a logical complement for variable input 1`] = `
+[
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`not yields false for a true input 1`] = `
+[
+  [
+    "¬(true)",
+    "identified complement",
+  ],
+  [
+    "¬([true])",
+    "processing argument",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "¬({true})",
+    "processed argument",
+  ],
+  [
+    "¬(true)",
+    "boolean complement",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`not yields false for non-zero complex inputs 1`] = `
+[
+  [
+    "¬(1+0𝒊)",
+    "identified complement",
+  ],
+  [
+    "¬([1+0𝒊])",
+    "processing argument",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "¬({1+0𝒊})",
+    "processed argument",
+  ],
+  [
+    "¬(1+0𝒊)",
+    "complex complement",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`not yields false for non-zero real inputs 1`] = `
+[
+  [
+    "¬(5)",
+    "identified complement",
+  ],
+  [
+    "¬([5])",
+    "processing argument",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "¬({5})",
+    "processed argument",
+  ],
+  [
+    "¬(5)",
+    "real complement",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`not yields true for a false input 1`] = `
+[
+  [
+    "¬(false)",
+    "identified complement",
+  ],
+  [
+    "¬([false])",
+    "processing argument",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "¬({false})",
+    "processed argument",
+  ],
+  [
+    "¬(false)",
+    "boolean complement",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`not yields true for a real value of zero 1`] = `
+[
+  [
+    "¬(0)",
+    "identified complement",
+  ],
+  [
+    "¬([0])",
+    "processing argument",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "¬({0})",
+    "processed argument",
+  ],
+  [
+    "¬(0)",
+    "real complement",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`not yields true for complex 0 1`] = `
+[
+  [
+    "¬(0+0𝒊)",
+    "identified complement",
+  ],
+  [
+    "¬([0+0𝒊])",
+    "processing argument",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+  [
+    "¬({0+0𝒊})",
+    "processed argument",
+  ],
+  [
+    "¬(0+0𝒊)",
+    "complex complement",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;

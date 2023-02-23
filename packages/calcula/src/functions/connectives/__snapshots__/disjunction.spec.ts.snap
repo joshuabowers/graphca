@@ -1,0 +1,945 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`or casts complexes to booleans, 0 => false, non-zero => true 1`] = `
+[
+  [
+    "(5+0𝒊∨0+0𝒊)",
+    "identified disjunction",
+  ],
+  [
+    "([5+0𝒊]∨0+0𝒊)",
+    "processing left operand",
+  ],
+  [
+    "5+0𝒊",
+    "created complex",
+  ],
+  [
+    "({5+0𝒊}∨[0+0𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+  [
+    "(5+0𝒊∨{0+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(5+0𝒊∨0+0𝒊)",
+    "complex disjunction",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or casts reals to booleans, where 0 is false, non-zero is true 1`] = `
+[
+  [
+    "(5∨0)",
+    "identified disjunction",
+  ],
+  [
+    "([5]∨0)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}∨[0])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(5∨{0})",
+    "processed right operand",
+  ],
+  [
+    "(5∨0)",
+    "real disjunction",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or returns a Disjunction on variable input 1`] = `
+[
+  [
+    "(x∨y)",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∨{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∨y)",
+    "created disjunction",
+  ],
+]
+`;
+
+exports[`or returns a converse if the right operand is a complement 1`] = `
+[
+  [
+    "(x∨¬(y))",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨¬(y))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[¬(y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "¬(y)",
+    "identified complement",
+  ],
+  [
+    "¬([y])",
+    "processing argument",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "¬({y})",
+    "processed argument",
+  ],
+  [
+    "¬(y)",
+    "created complement",
+  ],
+  [
+    "(x∨{¬(y)})",
+    "processed right operand",
+  ],
+  [
+    "(x∨¬(y))",
+    "disjunctive converse implication",
+  ],
+  [
+    "(x←y)",
+    "identified converse implication",
+  ],
+  [
+    "([x]←y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}←[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x←{y})",
+    "processed right operand",
+  ],
+  [
+    "(x←y)",
+    "created converse implication",
+  ],
+]
+`;
+
+exports[`or returns an implication if the left operand is a complement 1`] = `
+[
+  [
+    "(¬(x)∨y)",
+    "identified disjunction",
+  ],
+  [
+    "([¬(x)]∨y)",
+    "processing left operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "({¬(x)}∨[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(¬(x)∨{y})",
+    "processed right operand",
+  ],
+  [
+    "(¬(x)∨y)",
+    "disjunctive implication",
+  ],
+  [
+    "(x→y)",
+    "identified implication",
+  ],
+  [
+    "([x]→y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}→[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x→{y})",
+    "processed right operand",
+  ],
+  [
+    "(x→y)",
+    "created implication",
+  ],
+]
+`;
+
+exports[`or returns false if both arguments are false 1`] = `
+[
+  [
+    "(false∨false)",
+    "identified disjunction",
+  ],
+  [
+    "([false]∨false)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}∨[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(false∨{false})",
+    "processed right operand",
+  ],
+  [
+    "(false∨false)",
+    "disjunctive identity",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or returns the left operand if left is equivalent to right 1`] = `
+[
+  [
+    "(x∨x)",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x∨{x})",
+    "processed right operand",
+  ],
+  [
+    "(x∨x)",
+    "disjunctive idempotency",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`or returns the left operand if the right is a left-child Conjunction of the left 1`] = `
+[
+  [
+    "(x∨(x∧y))",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨(x∧y))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[(x∧y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x∧y)",
+    "identified conjunction",
+  ],
+  [
+    "([x]∧y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∧[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∧{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∧y)",
+    "created conjunction",
+  ],
+  [
+    "(x∨{(x∧y)})",
+    "processed right operand",
+  ],
+  [
+    "(x∨(x∧y))",
+    "disjunctive absorption",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`or returns the left operand if the right is a right-child Conjunction of the left 1`] = `
+[
+  [
+    "(x∨(y∧x))",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨(y∧x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[(y∧x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y∧x)",
+    "identified conjunction",
+  ],
+  [
+    "([y]∧x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}∧[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y∧{x})",
+    "processed right operand",
+  ],
+  [
+    "(y∧x)",
+    "created conjunction",
+  ],
+  [
+    "(x∨{(y∧x)})",
+    "processed right operand",
+  ],
+  [
+    "(x∨(y∧x))",
+    "disjunctive absorption",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`or returns the left operand if the right is false 1`] = `
+[
+  [
+    "(x∨false)",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨false)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(x∨{false})",
+    "processed right operand",
+  ],
+  [
+    "(x∨false)",
+    "disjunctive identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`or returns the right operand if the left is a left-child Conjunction of the right 1`] = `
+[
+  [
+    "((x∧y)∨x)",
+    "identified disjunction",
+  ],
+  [
+    "([(x∧y)]∨x)",
+    "processing left operand",
+  ],
+  [
+    "(x∧y)",
+    "identified conjunction",
+  ],
+  [
+    "([x]∧y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∧[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∧{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∧y)",
+    "created conjunction",
+  ],
+  [
+    "({(x∧y)}∨[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((x∧y)∨{x})",
+    "processed right operand",
+  ],
+  [
+    "((x∧y)∨x)",
+    "disjunctive absorption",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`or returns the right operand if the left is a right-child Conjunction of the right 1`] = `
+[
+  [
+    "((y∧x)∨x)",
+    "identified disjunction",
+  ],
+  [
+    "([(y∧x)]∨x)",
+    "processing left operand",
+  ],
+  [
+    "(y∧x)",
+    "identified conjunction",
+  ],
+  [
+    "([y]∧x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}∧[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y∧{x})",
+    "processed right operand",
+  ],
+  [
+    "(y∧x)",
+    "created conjunction",
+  ],
+  [
+    "({(y∧x)}∨[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((y∧x)∨{x})",
+    "processed right operand",
+  ],
+  [
+    "((y∧x)∨x)",
+    "disjunctive absorption",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`or returns the right operand if the left is false 1`] = `
+[
+  [
+    "(false∨x)",
+    "identified disjunction",
+  ],
+  [
+    "([false]∨x)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}∨[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(false∨{x})",
+    "processed right operand",
+  ],
+  [
+    "(false∨x)",
+    "disjunctive identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`or returns true if the left argument is true 1`] = `
+[
+  [
+    "(true∨false)",
+    "identified disjunction",
+  ],
+  [
+    "([true]∨false)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}∨[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(true∨{false})",
+    "processed right operand",
+  ],
+  [
+    "(true∨false)",
+    "disjunctive identity",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or returns true if the left operand is the negation of the right 1`] = `
+[
+  [
+    "(¬(x)∨x)",
+    "identified disjunction",
+  ],
+  [
+    "([¬(x)]∨x)",
+    "processing left operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "({¬(x)}∨[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(¬(x)∨{x})",
+    "processed right operand",
+  ],
+  [
+    "(¬(x)∨x)",
+    "disjunctive tautology",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or returns true if the left operand is true 1`] = `
+[
+  [
+    "(true∨x)",
+    "identified disjunction",
+  ],
+  [
+    "([true]∨x)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}∨[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(true∨{x})",
+    "processed right operand",
+  ],
+  [
+    "(true∨x)",
+    "disjunctive annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or returns true if the right argument is true 1`] = `
+[
+  [
+    "(false∨true)",
+    "identified disjunction",
+  ],
+  [
+    "([false]∨true)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}∨[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(false∨{true})",
+    "processed right operand",
+  ],
+  [
+    "(false∨true)",
+    "disjunctive identity",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or returns true if the right operand is the negation of the left 1`] = `
+[
+  [
+    "(x∨¬(x))",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨¬(x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[¬(x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "(x∨{¬(x)})",
+    "processed right operand",
+  ],
+  [
+    "(x∨¬(x))",
+    "disjunctive tautology",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or returns true if the right operand is true 1`] = `
+[
+  [
+    "(x∨true)",
+    "identified disjunction",
+  ],
+  [
+    "([x]∨true)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∨[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(x∨{true})",
+    "processed right operand",
+  ],
+  [
+    "(x∨true)",
+    "disjunctive annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`or returns true when given two true things 1`] = `
+[
+  [
+    "(true∨true)",
+    "identified disjunction",
+  ],
+  [
+    "([true]∨true)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}∨[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(true∨{true})",
+    "processed right operand",
+  ],
+  [
+    "(true∨true)",
+    "disjunctive annihilator",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;

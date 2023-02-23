@@ -47,10 +47,10 @@ export const [nor, isJointDenial, $nor] = binary<JointDenial, Boolean>(
   ),
   when(
     (l, r) => isComplement(r) && deepEquals(l, r.value.expression),
-    [boolean(false), 'joint deniable annihilator']
+    [boolean(false), 'joint deniable contradiction']
   ),
   when(
     (l, r) => isComplement(l) && deepEquals(l.value.expression, r),
-    [boolean(false), 'joint deniable annihilator']
+    [boolean(false), 'joint deniable contradiction']
   )
 )

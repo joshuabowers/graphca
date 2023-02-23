@@ -1,0 +1,419 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`xor returns a ExclusiveDisjunction on variable input 1`] = `
+[
+  [
+    "(x⊕y)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([x]⊕y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}⊕[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x⊕{y})",
+    "processed right operand",
+  ],
+  [
+    "(x⊕y)",
+    "created exclusive disjunction",
+  ],
+]
+`;
+
+exports[`xor returns false if both arguments are false 1`] = `
+[
+  [
+    "(false⊕false)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([false]⊕false)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}⊕[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(false⊕{false})",
+    "processed right operand",
+  ],
+  [
+    "(false⊕false)",
+    "exclusive disjunctive identity",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`xor returns false if the left and right operands are equal 1`] = `
+[
+  [
+    "(x⊕x)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([x]⊕x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}⊕[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x⊕{x})",
+    "processed right operand",
+  ],
+  [
+    "(x⊕x)",
+    "exclusive disjunctive annihilator",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`xor returns false when given two true things 1`] = `
+[
+  [
+    "(true⊕true)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([true]⊕true)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}⊕[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(true⊕{true})",
+    "processed right operand",
+  ],
+  [
+    "(true⊕true)",
+    "exclusive disjunctive complementation",
+  ],
+  [
+    "¬(true)",
+    "identified complement",
+  ],
+  [
+    "¬([true])",
+    "processing argument",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "¬({true})",
+    "processed argument",
+  ],
+  [
+    "¬(true)",
+    "boolean complement",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`xor returns the complement of the left if the right is true 1`] = `
+[
+  [
+    "(x⊕true)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([x]⊕true)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}⊕[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(x⊕{true})",
+    "processed right operand",
+  ],
+  [
+    "(x⊕true)",
+    "exclusive disjunctive complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`xor returns the complement of the right if the left is true 1`] = `
+[
+  [
+    "(true⊕x)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([true]⊕x)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}⊕[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(true⊕{x})",
+    "processed right operand",
+  ],
+  [
+    "(true⊕x)",
+    "exclusive disjunctive complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`xor returns the left operand if the right is false 1`] = `
+[
+  [
+    "(x⊕false)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([x]⊕false)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}⊕[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(x⊕{false})",
+    "processed right operand",
+  ],
+  [
+    "(x⊕false)",
+    "exclusive disjunctive identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`xor returns the right operand if the left is false 1`] = `
+[
+  [
+    "(false⊕x)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([false]⊕x)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}⊕[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(false⊕{x})",
+    "processed right operand",
+  ],
+  [
+    "(false⊕x)",
+    "exclusive disjunctive identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`xor returns true if the left argument is false 1`] = `
+[
+  [
+    "(false⊕true)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([false]⊕true)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}⊕[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(false⊕{true})",
+    "processed right operand",
+  ],
+  [
+    "(false⊕true)",
+    "exclusive disjunctive identity",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`xor returns true if the right argument is false 1`] = `
+[
+  [
+    "(true⊕false)",
+    "identified exclusive disjunction",
+  ],
+  [
+    "([true]⊕false)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}⊕[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(true⊕{false})",
+    "processed right operand",
+  ],
+  [
+    "(true⊕false)",
+    "exclusive disjunctive identity",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;

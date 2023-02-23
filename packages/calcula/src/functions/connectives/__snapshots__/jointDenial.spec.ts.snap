@@ -1,0 +1,634 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`nor returns a JointDenial on variable input 1`] = `
+[
+  [
+    "(x↓y)",
+    "identified joint denial",
+  ],
+  [
+    "([x]↓y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↓[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x↓{y})",
+    "processed right operand",
+  ],
+  [
+    "(x↓y)",
+    "created joint denial",
+  ],
+]
+`;
+
+exports[`nor returns a conjunction of mutually complemented operands 1`] = `
+[
+  [
+    "(¬(x)↓¬(y))",
+    "identified joint denial",
+  ],
+  [
+    "([¬(x)]↓¬(y))",
+    "processing left operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "({¬(x)}↓[¬(y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "¬(y)",
+    "identified complement",
+  ],
+  [
+    "¬([y])",
+    "processing argument",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "¬({y})",
+    "processed argument",
+  ],
+  [
+    "¬(y)",
+    "created complement",
+  ],
+  [
+    "(¬(x)↓{¬(y)})",
+    "processed right operand",
+  ],
+  [
+    "(¬(x)↓¬(y))",
+    "De Morgan",
+  ],
+  [
+    "(x∧y)",
+    "identified conjunction",
+  ],
+  [
+    "([x]∧y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}∧[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x∧{y})",
+    "processed right operand",
+  ],
+  [
+    "(x∧y)",
+    "created conjunction",
+  ],
+]
+`;
+
+exports[`nor returns false if the left argument is false 1`] = `
+[
+  [
+    "(false↓true)",
+    "identified joint denial",
+  ],
+  [
+    "([false]↓true)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↓[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(false↓{true})",
+    "processed right operand",
+  ],
+  [
+    "(false↓true)",
+    "joint deniable annihilator",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nor returns false if the left operand is the complement of the right 1`] = `
+[
+  [
+    "(¬(x)↓x)",
+    "identified joint denial",
+  ],
+  [
+    "([¬(x)]↓x)",
+    "processing left operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "({¬(x)}↓[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(¬(x)↓{x})",
+    "processed right operand",
+  ],
+  [
+    "(¬(x)↓x)",
+    "joint deniable contradiction",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nor returns false if the left operand is true 1`] = `
+[
+  [
+    "(true↓x)",
+    "identified joint denial",
+  ],
+  [
+    "([true]↓x)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↓[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(true↓{x})",
+    "processed right operand",
+  ],
+  [
+    "(true↓x)",
+    "joint deniable annihilator",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nor returns false if the right argument is false 1`] = `
+[
+  [
+    "(true↓false)",
+    "identified joint denial",
+  ],
+  [
+    "([true]↓false)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↓[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(true↓{false})",
+    "processed right operand",
+  ],
+  [
+    "(true↓false)",
+    "joint deniable annihilator",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nor returns false if the right operand is the complement of the left 1`] = `
+[
+  [
+    "(x↓¬(x))",
+    "identified joint denial",
+  ],
+  [
+    "([x]↓¬(x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↓[¬(x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+  [
+    "(x↓{¬(x)})",
+    "processed right operand",
+  ],
+  [
+    "(x↓¬(x))",
+    "joint deniable contradiction",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nor returns false if the right operand is true 1`] = `
+[
+  [
+    "(x↓true)",
+    "identified joint denial",
+  ],
+  [
+    "([x]↓true)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↓[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(x↓{true})",
+    "processed right operand",
+  ],
+  [
+    "(x↓true)",
+    "joint deniable annihilator",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nor returns false when given two true things 1`] = `
+[
+  [
+    "(true↓true)",
+    "identified joint denial",
+  ],
+  [
+    "([true]↓true)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}↓[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "(true↓{true})",
+    "processed right operand",
+  ],
+  [
+    "(true↓true)",
+    "joint deniable annihilator",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`nor returns the complement of the left operand if left is equivalent to right 1`] = `
+[
+  [
+    "(x↓x)",
+    "identified joint denial",
+  ],
+  [
+    "([x]↓x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↓[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x↓{x})",
+    "processed right operand",
+  ],
+  [
+    "(x↓x)",
+    "joint deniable complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`nor returns the complement of the left operand if the right is false 1`] = `
+[
+  [
+    "(x↓false)",
+    "identified joint denial",
+  ],
+  [
+    "([x]↓false)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}↓[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(x↓{false})",
+    "processed right operand",
+  ],
+  [
+    "(x↓false)",
+    "joint deniable complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`nor returns the complement of the right operand if the left is false 1`] = `
+[
+  [
+    "(false↓x)",
+    "identified joint denial",
+  ],
+  [
+    "([false]↓x)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↓[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(false↓{x})",
+    "processed right operand",
+  ],
+  [
+    "(false↓x)",
+    "joint deniable complementation",
+  ],
+  [
+    "¬(x)",
+    "identified complement",
+  ],
+  [
+    "¬([x])",
+    "processing argument",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "¬({x})",
+    "processed argument",
+  ],
+  [
+    "¬(x)",
+    "created complement",
+  ],
+]
+`;
+
+exports[`nor returns true if both arguments are false 1`] = `
+[
+  [
+    "(false↓false)",
+    "identified joint denial",
+  ],
+  [
+    "([false]↓false)",
+    "processing left operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "({false}↓[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(false↓{false})",
+    "processed right operand",
+  ],
+  [
+    "(false↓false)",
+    "joint deniable complementation",
+  ],
+  [
+    "¬(false)",
+    "identified complement",
+  ],
+  [
+    "¬([false])",
+    "processing argument",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "¬({false})",
+    "processed argument",
+  ],
+  [
+    "¬(false)",
+    "boolean complement",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;

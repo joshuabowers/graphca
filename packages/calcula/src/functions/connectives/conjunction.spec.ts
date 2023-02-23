@@ -1,9 +1,5 @@
 import { unit } from '../../monads/writer'
-import { 
-  expectWriterTreeNode,
-  realOps, complexOps, booleanOps, variableOps,
-  andOps, orOps, notOps
-} from '../../utility/expectations'
+import { expectToEqualWithSnapshot } from '../../utility/expectations'
 import { Clades, Genera, Species } from '../../utility/tree'
 import { real, complex, boolean } from '../../primitives'
 import { variable } from '../../variable'
@@ -24,156 +20,79 @@ describe('$and', () => {
 
 describe('and', () => {
   it('returns true when given two true things', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(boolean(true), boolean(true)),
       boolean(true)
-    )(
-      ...andOps(
-        'conjunctive identity',
-        booleanOps('true'),
-        booleanOps('true'),
-        booleanOps('true')
-      )
     )
   })
 
   it('returns false if the left argument is false', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(boolean(false), boolean(true)),
       boolean(false)
-    )(
-      ...andOps(
-        'conjunctive identity',
-        booleanOps('false'),
-        booleanOps('true'),
-        booleanOps('false')
-      )
     )
   })
 
   it('returns false if the right argument is false', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(boolean(true), boolean(false)),
       boolean(false)
-    )(
-      ...andOps(
-        'conjunctive identity',
-        booleanOps('true'),
-        booleanOps('false'),
-        booleanOps('false')
-      )
     )
   })
 
   it('returns false if both arguments are false', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(boolean(false), boolean(false)),
       boolean(false)
-    )(
-      ...andOps(
-        'conjunctive annihilator',
-        booleanOps('false'),
-        booleanOps('false'),
-        booleanOps('false')
-      )
     )
   })
 
   it('casts reals to booleans, where 0 is false, non-zero is true', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(real(5), real(0)),
       boolean(false)
-    )(
-      ...andOps(
-        'real conjunction',
-        realOps('5'),
-        realOps('0'),
-        booleanOps('false')
-      )
     )
   })
 
   it('casts complexes to booleans, 0 => false, non-0 => true', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(complex([5,0]), complex([0,0])),
       boolean(false)
-    )(
-      ...andOps(
-        'complex conjunction',
-        complexOps('5', '0'),
-        complexOps('0', '0'),
-        booleanOps('false')
-      )
     )
   })
 
   it('returns the left operand if the right is true', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(variable('x'), boolean(true)),
       variable('x')
-    )(
-      ...andOps(
-        'conjunctive identity',
-        variableOps('x'),
-        booleanOps('true'),
-        variableOps('x')
-      )
     )
   })
 
   it('returns the right operand if the left is true', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(boolean(true), variable('x')),
       variable('x')
-    )(
-      ...andOps(
-        'conjunctive identity',
-        booleanOps('true'),
-        variableOps('x'),
-        variableOps('x')
-      )
     )
   })
 
   it('returns the false if the right operand is false', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(variable('x'), boolean(false)),
       boolean(false)
-    )(
-      ...andOps(
-        'conjunctive annihilator',
-        variableOps('x'),
-        booleanOps('false'),
-        booleanOps('false')
-      )
     )
   })
 
   it('returns false if the left operand is false', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(boolean(false), variable('x')),
       boolean(false)
-    )(
-      ...andOps(
-        'conjunctive annihilator',
-        booleanOps('false'),
-        variableOps('x'),
-        booleanOps('false')
-      )
     )
   })
 
   it('returns the left operand if left equivalent to right', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(variable('x'), variable('x')),
       variable('x')
-    )(
-      ...andOps(
-        'conjunctive idempotency',
-        variableOps('x'),
-        variableOps('x'),
-        variableOps('x')
-      )
     )
   })
 
@@ -185,122 +104,45 @@ describe('and', () => {
   // T | F | T      | T              | T       | F       | T
   // T | T | T      | T              | T       | T       | T
   it('returns the left operand if the right is a Disjunction of the left', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(variable('x'), or(variable('x'), variable('y'))),
       variable('x')
-    )(
-      ...andOps(
-        'conjunctive absorption',
-        variableOps('x'),
-        orOps(
-          'created disjunction',
-          variableOps('x'),
-          variableOps('y'),
-          []
-        ),
-        variableOps('x')
-      )
     )
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(variable('x'), or(variable('y'), variable('x'))),
       variable('x')
-    )(
-      ...andOps(
-        'conjunctive absorption',
-        variableOps('x'),
-        orOps(
-          'created disjunction',
-          variableOps('y'),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
     )
   })
 
   it('returns the right operand if the left is a Disjunction of the right', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(or(variable('x'), variable('y')), variable('x')),
       variable('x')
-    )(
-      ...andOps(
-        'conjunctive absorption',
-        orOps(
-          'created disjunction',
-          variableOps('x'),
-          variableOps('y'),
-          []
-        ),
-        variableOps('x'),
-        variableOps('x')
-      )
     )
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(or(variable('y'), variable('x')), variable('x')),
       variable('x')
-    )(
-      ...andOps(
-        'conjunctive absorption',
-        orOps(
-          'created disjunction',
-          variableOps('y'),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x'),
-        variableOps('x')
-      )
     )
   })
 
   it('returns false if the right operand is the negation of the left', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(variable('x'), not(variable('x'))),
       boolean(false)
-    )(
-      ...andOps(
-        'conjunctive contradiction',
-        variableOps('x'),
-        notOps(
-          'created complement',
-          variableOps('x'),
-          []
-        ),
-        booleanOps('false')
-      )
     )
   })
 
   it('returns false if the left operand is the negation of the right', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(not(variable('x')), variable('x')),
       boolean(false)
-    )(
-      ...andOps(
-        'conjunctive contradiction',
-        notOps(
-          'created complement',
-          variableOps('x'),
-          []
-        ),
-        variableOps('x'),
-        booleanOps('false')
-      )
     )
   })
 
   it('returns a Conjunction on variable input', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       and(variable('x'), variable('y')),
       $and(variable('x'), variable('y'))[0]
-    )(
-      ...andOps(
-        'created conjunction',
-        variableOps('x'),
-        variableOps('y'),
-        []
-      )
     )
   })
 })
