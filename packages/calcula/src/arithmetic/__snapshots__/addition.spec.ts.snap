@@ -1,0 +1,2278 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`add doubles the left operand if equivalent to the right 1`] = `
+[
+  [
+    "(x+x)",
+    "identified addition",
+  ],
+  [
+    "([x]+x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x+{x})",
+    "processed right operand",
+  ],
+  [
+    "(x+x)",
+    "equivalence: replaced with double",
+  ],
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`add logs all layers of an operation without loss 1`] = `
+[
+  [
+    "(x+(y+(5+-5)))",
+    "identified addition",
+  ],
+  [
+    "([x]+(y+(5+-5)))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(y+(5+-5))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y+(5+-5))",
+    "identified addition",
+  ],
+  [
+    "([y]+(5+-5))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}+[(5+-5)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(5+-5)",
+    "identified addition",
+  ],
+  [
+    "([5]+-5)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}+[-5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-5",
+    "created real",
+  ],
+  [
+    "(5+{-5})",
+    "processed right operand",
+  ],
+  [
+    "(5+-5)",
+    "real addition",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(y+{0})",
+    "processed right operand",
+  ],
+  [
+    "(y+0)",
+    "additive identity",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x+{y})",
+    "processed right operand",
+  ],
+  [
+    "(x+y)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add reorders primitives to the right 1`] = `
+[
+  [
+    "(5+x)",
+    "identified addition",
+  ],
+  [
+    "([5]+x)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(5+{x})",
+    "processed right operand",
+  ],
+  [
+    "(5+x)",
+    "reorder operands",
+  ],
+  [
+    "(x+5)",
+    "identified addition",
+  ],
+  [
+    "([x]+5)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x+{5})",
+    "processed right operand",
+  ],
+  [
+    "(x+5)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add returns NaN if the left operand is nil 1`] = `
+[
+  [
+    "(nil+5)",
+    "identified addition",
+  ],
+  [
+    "([nil]+5)",
+    "processing left operand",
+  ],
+  [
+    "nil",
+    "nothing",
+  ],
+  [
+    "({nil}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(nil+{5})",
+    "processed right operand",
+  ],
+  [
+    "(nil+5)",
+    "not a number",
+  ],
+  [
+    "NaN",
+    "not a number",
+  ],
+]
+`;
+
+exports[`add returns NaN if the right operand is nil 1`] = `
+[
+  [
+    "(x+nil)",
+    "identified addition",
+  ],
+  [
+    "([x]+nil)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[nil])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "nil",
+    "nothing",
+  ],
+  [
+    "(x+{nil})",
+    "processed right operand",
+  ],
+  [
+    "(x+nil)",
+    "not a number",
+  ],
+  [
+    "NaN",
+    "not a number",
+  ],
+]
+`;
+
+exports[`add returns a Writer<Addition> for variable input 1`] = `
+[
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x+{y})",
+    "processed right operand",
+  ],
+  [
+    "(x+y)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add when dealing with the additive identity returns the left operand if the right is zero 1`] = `
+[
+  [
+    "(x+0)",
+    "identified addition",
+  ],
+  [
+    "([x]+0)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[0])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(x+{0})",
+    "processed right operand",
+  ],
+  [
+    "(x+0)",
+    "additive identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`add when dealing with the additive identity returns the right operand if the left is zero 1`] = `
+[
+  [
+    "(0+x)",
+    "identified addition",
+  ],
+  [
+    "([0]+x)",
+    "processing left operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(0+{x})",
+    "processed right operand",
+  ],
+  [
+    "(0+x)",
+    "reorder operands",
+  ],
+  [
+    "(x+0)",
+    "identified addition",
+  ],
+  [
+    "([x]+0)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[0])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(x+{0})",
+    "processed right operand",
+  ],
+  [
+    "(x+0)",
+    "additive identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`add when given a nested addition with a like term doubles a left operand if equivalent to a right-nested-add left operand 1`] = `
+[
+  [
+    "(x+(x+y))",
+    "identified addition",
+  ],
+  [
+    "([x]+(x+y))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(x+y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x+{y})",
+    "processed right operand",
+  ],
+  [
+    "(x+y)",
+    "created addition",
+  ],
+  [
+    "(x+{(x+y)})",
+    "processed right operand",
+  ],
+  [
+    "(x+(x+y))",
+    "combined like terms",
+  ],
+  [
+    "((2*x)+y)",
+    "identified addition",
+  ],
+  [
+    "([(2*x)]+y)",
+    "processing left operand",
+  ],
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+  [
+    "({(2*x)}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "((2*x)+{y})",
+    "processed right operand",
+  ],
+  [
+    "((2*x)+y)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add when given a nested addition with a like term doubles a left operand if equivalent to a right-nested-add right operand 1`] = `
+[
+  [
+    "(x+(y+x))",
+    "identified addition",
+  ],
+  [
+    "([x]+(y+x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(y+x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y+x)",
+    "identified addition",
+  ],
+  [
+    "([y]+x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y+{x})",
+    "processed right operand",
+  ],
+  [
+    "(y+x)",
+    "created addition",
+  ],
+  [
+    "(x+{(y+x)})",
+    "processed right operand",
+  ],
+  [
+    "(x+(y+x))",
+    "combined like terms",
+  ],
+  [
+    "((2*x)+y)",
+    "identified addition",
+  ],
+  [
+    "([(2*x)]+y)",
+    "processing left operand",
+  ],
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+  [
+    "({(2*x)}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "((2*x)+{y})",
+    "processed right operand",
+  ],
+  [
+    "((2*x)+y)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add when given a nested addition with a like term doubles a right operand if equivalent to a left-nested-add left operand 1`] = `
+[
+  [
+    "((x+y)+x)",
+    "identified addition",
+  ],
+  [
+    "([(x+y)]+x)",
+    "processing left operand",
+  ],
+  [
+    "(x+y)",
+    "identified addition",
+  ],
+  [
+    "([x]+y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x+{y})",
+    "processed right operand",
+  ],
+  [
+    "(x+y)",
+    "created addition",
+  ],
+  [
+    "({(x+y)}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((x+y)+{x})",
+    "processed right operand",
+  ],
+  [
+    "((x+y)+x)",
+    "combined like terms",
+  ],
+  [
+    "((2*x)+y)",
+    "identified addition",
+  ],
+  [
+    "([(2*x)]+y)",
+    "processing left operand",
+  ],
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+  [
+    "({(2*x)}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "((2*x)+{y})",
+    "processed right operand",
+  ],
+  [
+    "((2*x)+y)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add when given a nested addition with a like term doubles a right operand if equivalent to a left-nested-add right operand 1`] = `
+[
+  [
+    "((y+x)+x)",
+    "identified addition",
+  ],
+  [
+    "([(y+x)]+x)",
+    "processing left operand",
+  ],
+  [
+    "(y+x)",
+    "identified addition",
+  ],
+  [
+    "([y]+x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y+{x})",
+    "processed right operand",
+  ],
+  [
+    "(y+x)",
+    "created addition",
+  ],
+  [
+    "({(y+x)}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((y+x)+{x})",
+    "processed right operand",
+  ],
+  [
+    "((y+x)+x)",
+    "combined like terms",
+  ],
+  [
+    "((2*x)+y)",
+    "identified addition",
+  ],
+  [
+    "([(2*x)]+y)",
+    "processing left operand",
+  ],
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+  [
+    "({(2*x)}+[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "((2*x)+{y})",
+    "processed right operand",
+  ],
+  [
+    "((2*x)+y)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add when given nested additions with primitives casts primitives to minimize complexity 1`] = `
+[
+  [
+    "((x+1)+0+1𝒊)",
+    "identified addition",
+  ],
+  [
+    "([(x+1)]+0+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "(x+1)",
+    "identified addition",
+  ],
+  [
+    "([x]+1)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(x+{1})",
+    "processed right operand",
+  ],
+  [
+    "(x+1)",
+    "created addition",
+  ],
+  [
+    "({(x+1)}+[0+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0+1𝒊",
+    "created complex",
+  ],
+  [
+    "((x+1)+{0+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "((x+1)+0+1𝒊)",
+    "additive associativity",
+  ],
+  [
+    "(x+(1+0+1𝒊))",
+    "identified addition",
+  ],
+  [
+    "([x]+(1+0+1𝒊))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(1+0+1𝒊)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+0+1𝒊)",
+    "identified addition",
+  ],
+  [
+    "([1]+0+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "1+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "({1+0𝒊}+[0+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0+1𝒊",
+    "created complex",
+  ],
+  [
+    "(1+0𝒊+{0+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+0𝒊+0+1𝒊)",
+    "complex addition",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(x+{1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(x+1+1𝒊)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add when given nested additions with primitives combines primitives on the right 1`] = `
+[
+  [
+    "((x+5)+10)",
+    "identified addition",
+  ],
+  [
+    "([(x+5)]+10)",
+    "processing left operand",
+  ],
+  [
+    "(x+5)",
+    "identified addition",
+  ],
+  [
+    "([x]+5)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x+{5})",
+    "processed right operand",
+  ],
+  [
+    "(x+5)",
+    "created addition",
+  ],
+  [
+    "({(x+5)}+[10])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "((x+5)+{10})",
+    "processed right operand",
+  ],
+  [
+    "((x+5)+10)",
+    "additive associativity",
+  ],
+  [
+    "(x+(5+10))",
+    "identified addition",
+  ],
+  [
+    "([x]+(5+10))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(5+10)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(5+10)",
+    "identified addition",
+  ],
+  [
+    "([5]+10)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}+[10])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "(5+{10})",
+    "processed right operand",
+  ],
+  [
+    "(5+10)",
+    "real addition",
+  ],
+  [
+    "15",
+    "created real",
+  ],
+  [
+    "(x+{15})",
+    "processed right operand",
+  ],
+  [
+    "(x+15)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add when given nested additions with primitives reorders primitives before combining them 1`] = `
+[
+  [
+    "(5+(10+x))",
+    "identified addition",
+  ],
+  [
+    "([5]+(10+x))",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}+[(10+x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(10+x)",
+    "identified addition",
+  ],
+  [
+    "([10]+x)",
+    "processing left operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "({10}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(10+{x})",
+    "processed right operand",
+  ],
+  [
+    "(10+x)",
+    "reorder operands",
+  ],
+  [
+    "(x+10)",
+    "identified addition",
+  ],
+  [
+    "([x]+10)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[10])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "(x+{10})",
+    "processed right operand",
+  ],
+  [
+    "(x+10)",
+    "created addition",
+  ],
+  [
+    "(5+{(x+10)})",
+    "processed right operand",
+  ],
+  [
+    "(5+(x+10))",
+    "reorder operands",
+  ],
+  [
+    "((x+10)+5)",
+    "identified addition",
+  ],
+  [
+    "([(x+10)]+5)",
+    "processing left operand",
+  ],
+  [
+    "(x+10)",
+    "created addition",
+  ],
+  [
+    "({(x+10)}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "((x+10)+{5})",
+    "processed right operand",
+  ],
+  [
+    "((x+10)+5)",
+    "additive associativity",
+  ],
+  [
+    "(x+(10+5))",
+    "identified addition",
+  ],
+  [
+    "([x]+(10+5))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(10+5)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(10+5)",
+    "identified addition",
+  ],
+  [
+    "([10]+5)",
+    "processing left operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "({10}+[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(10+{5})",
+    "processed right operand",
+  ],
+  [
+    "(10+5)",
+    "real addition",
+  ],
+  [
+    "15",
+    "created real",
+  ],
+  [
+    "(x+{15})",
+    "processed right operand",
+  ],
+  [
+    "(x+15)",
+    "created addition",
+  ],
+]
+`;
+
+exports[`add when given nested multiplications with primitives adds 1 to left operand of left-nested-multiply 1`] = `
+[
+  [
+    "((2*x)+x)",
+    "identified addition",
+  ],
+  [
+    "([(2*x)]+x)",
+    "processing left operand",
+  ],
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+  [
+    "({(2*x)}+[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((2*x)+{x})",
+    "processed right operand",
+  ],
+  [
+    "((2*x)+x)",
+    "combined like terms",
+  ],
+  [
+    "((1+2)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(1+2)]*x)",
+    "processing left operand",
+  ],
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "({3}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(3*{x})",
+    "processed right operand",
+  ],
+  [
+    "(3*x)",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`add when given nested multiplications with primitives adds 1 to left operand of right-nested-multiply 1`] = `
+[
+  [
+    "(x+(2*x))",
+    "identified addition",
+  ],
+  [
+    "([x]+(2*x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(2*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+  [
+    "(x+{(2*x)})",
+    "processed right operand",
+  ],
+  [
+    "(x+(2*x))",
+    "combined like terms",
+  ],
+  [
+    "((1+2)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(1+2)]*x)",
+    "processing left operand",
+  ],
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "({3}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(3*{x})",
+    "processed right operand",
+  ],
+  [
+    "(3*x)",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`add when given nested multiplications with primitives adds left operands of dual-nested-multiplies 1`] = `
+[
+  [
+    "((2*x)+(3*x))",
+    "identified addition",
+  ],
+  [
+    "([(2*x)]+(3*x))",
+    "processing left operand",
+  ],
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+  [
+    "({(2*x)}+[(3*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(3*x)",
+    "identified multiplication",
+  ],
+  [
+    "([3]*x)",
+    "processing left operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "({3}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(3*{x})",
+    "processed right operand",
+  ],
+  [
+    "(3*x)",
+    "created multiplication",
+  ],
+  [
+    "((2*x)+{(3*x)})",
+    "processed right operand",
+  ],
+  [
+    "((2*x)+(3*x))",
+    "combined like terms",
+  ],
+  [
+    "((2+3)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(2+3)]*x)",
+    "processing left operand",
+  ],
+  [
+    "(2+3)",
+    "identified addition",
+  ],
+  [
+    "([2]+3)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(2+{3})",
+    "processed right operand",
+  ],
+  [
+    "(2+3)",
+    "real addition",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(5*{x})",
+    "processed right operand",
+  ],
+  [
+    "(5*x)",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`add when given pairs of primitives returns a Writer<Boolean> for two boolean inputs 1`] = `
+[
+  [
+    "(true+false)",
+    "identified addition",
+  ],
+  [
+    "([true]+false)",
+    "processing left operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "({true}+[false])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "false",
+    "created boolean",
+  ],
+  [
+    "(true+{false})",
+    "processed right operand",
+  ],
+  [
+    "(true+false)",
+    "boolean addition",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+]
+`;
+
+exports[`add when given pairs of primitives returns a Writer<Complex> for two complex inputs 1`] = `
+[
+  [
+    "(1+2𝒊+3+4𝒊)",
+    "identified addition",
+  ],
+  [
+    "([1+2𝒊]+3+4𝒊)",
+    "processing left operand",
+  ],
+  [
+    "1+2𝒊",
+    "created complex",
+  ],
+  [
+    "({1+2𝒊}+[3+4𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3+4𝒊",
+    "created complex",
+  ],
+  [
+    "(1+2𝒊+{3+4𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+2𝒊+3+4𝒊)",
+    "complex addition",
+  ],
+  [
+    "4+6𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`add when given pairs of primitives returns a Writer<Real> for two real inputs 1`] = `
+[
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+]
+`;
+
+exports[`add when given pairs of primitives returns a complex for a [real, complex] pair 1`] = `
+[
+  [
+    "(5+0+5𝒊)",
+    "identified addition",
+  ],
+  [
+    "([5]+0+5𝒊)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "5+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "({5+0𝒊}+[0+5𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0+5𝒊",
+    "created complex",
+  ],
+  [
+    "(5+0𝒊+{0+5𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(5+0𝒊+0+5𝒊)",
+    "complex addition",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`add when given pairs of primitives returns a real for a [real, boolean] pair 1`] = `
+[
+  [
+    "(9+true)",
+    "identified addition",
+  ],
+  [
+    "([9]+true)",
+    "processing left operand",
+  ],
+  [
+    "9",
+    "created real",
+  ],
+  [
+    "({9}+[true])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "true",
+    "created boolean",
+  ],
+  [
+    "1",
+    "cast to Real from Boolean",
+  ],
+  [
+    "(9+{1})",
+    "processed right operand",
+  ],
+  [
+    "(9+1)",
+    "real addition",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+]
+`;
+
+exports[`subtract properly subtracts a real from a complex 1`] = `
+[
+  [
+    "(2+1𝒊+(-1*1))",
+    "identified addition",
+  ],
+  [
+    "([2+1𝒊]+(-1*1))",
+    "processing left operand",
+  ],
+  [
+    "2+1𝒊",
+    "created complex",
+  ],
+  [
+    "({2+1𝒊}+[(-1*1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(-1*1)",
+    "identified multiplication",
+  ],
+  [
+    "([-1]*1)",
+    "processing left operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "({-1}*[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(-1*{1})",
+    "processed right operand",
+  ],
+  [
+    "(-1*1)",
+    "real multiplication",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "-1+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "(2+1𝒊+{-1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(2+1𝒊+-1+0𝒊)",
+    "complex addition",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`subtract returns 0 if subtracting a complex from itself 1`] = `
+[
+  [
+    "(0+1𝒊+(-1*0+1𝒊))",
+    "identified addition",
+  ],
+  [
+    "([0+1𝒊]+(-1*0+1𝒊))",
+    "processing left operand",
+  ],
+  [
+    "0+1𝒊",
+    "created complex",
+  ],
+  [
+    "({0+1𝒊}+[(-1*0+1𝒊)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(-1*0+1𝒊)",
+    "identified multiplication",
+  ],
+  [
+    "([-1]*0+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "-1+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "({-1+0𝒊}*[0+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0+1𝒊",
+    "created complex",
+  ],
+  [
+    "(-1+0𝒊*{0+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(-1+0𝒊*0+1𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "0-1𝒊",
+    "created complex",
+  ],
+  [
+    "(0+1𝒊+{0-1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(0+1𝒊+0-1𝒊)",
+    "complex addition",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`subtract returns 0 if subtracting a quantity from itself 1`] = `
+[
+  [
+    "(x+(-1*x))",
+    "identified addition",
+  ],
+  [
+    "([x]+(-1*x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(-1*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(-1*x)",
+    "identified multiplication",
+  ],
+  [
+    "([-1]*x)",
+    "processing left operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "({-1}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(-1*{x})",
+    "processed right operand",
+  ],
+  [
+    "(-1*x)",
+    "created multiplication",
+  ],
+  [
+    "(x+{(-1*x)})",
+    "processed right operand",
+  ],
+  [
+    "(x+(-1*x))",
+    "combined like terms",
+  ],
+  [
+    "((1+-1)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(1+-1)]*x)",
+    "processing left operand",
+  ],
+  [
+    "(1+-1)",
+    "identified addition",
+  ],
+  [
+    "([1]+-1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(1+{-1})",
+    "processed right operand",
+  ],
+  [
+    "(1+-1)",
+    "real addition",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(0*{x})",
+    "processed right operand",
+  ],
+  [
+    "(0*x)",
+    "zero absorption",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+]
+`;
+
+exports[`subtract returns a Writer<Addition> for variable inputs 1`] = `
+[
+  [
+    "(x+(-1*y))",
+    "identified addition",
+  ],
+  [
+    "([x]+(-1*y))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}+[(-1*y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(-1*y)",
+    "identified multiplication",
+  ],
+  [
+    "([-1]*y)",
+    "processing left operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "({-1}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(-1*{y})",
+    "processed right operand",
+  ],
+  [
+    "(-1*y)",
+    "created multiplication",
+  ],
+  [
+    "(x+{(-1*y)})",
+    "processed right operand",
+  ],
+  [
+    "(x+(-1*y))",
+    "created addition",
+  ],
+]
+`;
+
+exports[`subtract returns a Writer<Real> for two real inputs 1`] = `
+[
+  [
+    "(4+(-1*5))",
+    "identified addition",
+  ],
+  [
+    "([4]+(-1*5))",
+    "processing left operand",
+  ],
+  [
+    "4",
+    "created real",
+  ],
+  [
+    "({4}+[(-1*5)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(-1*5)",
+    "identified multiplication",
+  ],
+  [
+    "([-1]*5)",
+    "processing left operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "({-1}*[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(-1*{5})",
+    "processed right operand",
+  ],
+  [
+    "(-1*5)",
+    "real multiplication",
+  ],
+  [
+    "-5",
+    "created real",
+  ],
+  [
+    "(4+{-5})",
+    "processed right operand",
+  ],
+  [
+    "(4+-5)",
+    "real addition",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+]
+`;
+
+exports[`subtract returns the negated right when subtracting from 0 1`] = `
+[
+  [
+    "(0+(-1*x))",
+    "identified addition",
+  ],
+  [
+    "([0]+(-1*x))",
+    "processing left operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0}+[(-1*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(-1*x)",
+    "identified multiplication",
+  ],
+  [
+    "([-1]*x)",
+    "processing left operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "({-1}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(-1*{x})",
+    "processed right operand",
+  ],
+  [
+    "(-1*x)",
+    "created multiplication",
+  ],
+  [
+    "(0+{(-1*x)})",
+    "processed right operand",
+  ],
+  [
+    "(0+(-1*x))",
+    "reorder operands",
+  ],
+  [
+    "((-1*x)+0)",
+    "identified addition",
+  ],
+  [
+    "([(-1*x)]+0)",
+    "processing left operand",
+  ],
+  [
+    "(-1*x)",
+    "created multiplication",
+  ],
+  [
+    "({(-1*x)}+[0])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "((-1*x)+{0})",
+    "processed right operand",
+  ],
+  [
+    "((-1*x)+0)",
+    "additive identity",
+  ],
+  [
+    "(-1*x)",
+    "created multiplication",
+  ],
+]
+`;

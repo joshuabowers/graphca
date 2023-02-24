@@ -1,15 +1,11 @@
 import { unit } from '../monads/writer'
-import { 
-  expectCloseTo, expectWriterTreeNode,
-  realOps, complexOps, variableOps, addOps, multiplyOps, raiseOps
-} from '../utility/expectations'
+import { expectToEqualWithSnapshot } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { ComplexInfinity } from '../primitives/complex'
 import { real, complex, nan } from '../primitives'
 import { variable } from '../variable'
 import { $multiply, multiply, negate, double, divide } from './multiplication'
 import { raise, square, reciprocal } from './exponentiation'
-import { Unicode } from '../Unicode'
 
 describe('$multiply', () => {
   it('generates a Multiplication for a pair of TreeNode inputs', () => {
@@ -25,623 +21,342 @@ describe('$multiply', () => {
 describe('multiply', () => {
   describe('when given two primitives', () => {
     it('is the product of two reals', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(real(2), real(3)),
         real(6)
-      )(
-        ...multiplyOps(
-          'real multiplication',
-          realOps('2'),
-          realOps('3'),
-          realOps('6')
-        )
       )
     })
 
     it('is the product of two complexes', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(complex([2,3]), complex([3,4])),
         complex([-6,17])
-      )(
-        ...multiplyOps(
-          'complex multiplication',
-          complexOps('2', '3'),
-          complexOps('3', '4'),
-          complexOps('-6', '17')
-        )
       )
     })
 
     it('is the product of mixed inputs', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(complex([2,3]), real(5)),
         complex([10,15])
-      )(
-        ...multiplyOps(
-          'complex multiplication',
-          complexOps('2', '3'),
-          [
-            ...realOps('5'),
-            [`5+0${Unicode.i}`, 'cast to Complex from Real']
-          ],
-          complexOps('10', '15')
-        )
       )
     })
 
     it('multiplies complex infinity against complex 1 correctly', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(ComplexInfinity, complex([1,0])),
         complex([Infinity, 0])
-      )(
-        ...multiplyOps(
-          'complex multiplication',
-          [[Unicode.complexInfinity, 'created complex']],
-          complexOps('1', '0'),
-          complexOps(Unicode.infinity, '0')
-        )
       )
     })
 
     it('multiplies a complex wrapped real by a pure imaginary correctly', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(complex([Infinity, 0]), complex([0, 3])),
         complex([0, Infinity])
-      )(
-        ...multiplyOps(
-          'complex multiplication',
-          complexOps(Unicode.infinity, '0'),
-          complexOps('0', '3'),
-          complexOps('0', Unicode.infinity)
-        )
       )
     })
 
     it('multiplies a pure imaginary by a complex wrapped real correctly', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(complex([0, 3]), complex([Infinity, 0])),
         complex([0, Infinity])
-      )(
-        ...multiplyOps(
-          'complex multiplication',
-          complexOps('0', '3'),
-          complexOps(Unicode.infinity, '0'),
-          complexOps('0', Unicode.infinity)
-        )
       )
     })
   })
 
   describe('when given a primitive and a not primitive', () => {
     it('reorders a real right multiplicand to the left', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(variable('x'), real(5)),
         $multiply(real(5), variable('x'))[0]
-      )(
-        ...multiplyOps(
-          'reorder operands',
-          variableOps('x'),
-          realOps('5'),
-          multiplyOps(
-            'created multiplication',
-            realOps('5'),
-            variableOps('x'),
-            []
-          )
-        )
       )
     })
 
     it('reorder a complex right multiplicand to the left', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(variable('x'), complex([0, 1])),
         $multiply(complex([0, 1]), variable('x'))[0]
-      )(
-        ...multiplyOps(
-          'reorder operands',
-          variableOps('x'),
-          complexOps('0', '1'),
-          multiplyOps(
-            'created multiplication',
-            complexOps('0', '1'),
-            variableOps('x'),
-            []
-          )
-        )
       )
     })
   })
 
   describe('when dealing with 0, 1, or (+/-)Infinity', () => {
     it('is NaN if given 0 and Infinity', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(real(0), real(Infinity)),
         nan
-      )(
-        ...multiplyOps(
-          'incalculable',
-          realOps('0'),
-          realOps(Unicode.infinity),
-          [['NaN', 'not a number']]
-        )
       )
     })
 
     it('is real 0 if the left is real 0', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(real(0), variable('x')),
         real(0)
-      )(
-        ...multiplyOps(
-          'zero absorption',
-          realOps('0'),
-          variableOps('x'),
-          realOps('0')
-        )
       )
     })
 
     it('is real 0 if the right is real 0', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(variable('x'), real(0)),
         real(0)
-      )(
-        ...multiplyOps(
-          'reorder operands',
-          variableOps('x'),
-          realOps('0'),
-          multiplyOps(
-            'zero absorption',
-            realOps('0'),
-            variableOps('x'),
-            realOps('0')
-          )
-        )
       )
     })
 
     it('is infinity if left is infinity', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(real(Infinity), variable('x')),
         real(Infinity)
-      )(
-        ...multiplyOps(
-          'infinite absorption',
-          realOps(Unicode.infinity),
-          variableOps('x'),
-          realOps(Unicode.infinity)
-        )
       )
     })
 
     it('is infinity if right is infinity', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(variable('x'), real(Infinity)),
         real(Infinity)
-      )(
-        ...multiplyOps(
-          'reorder operands',
-          variableOps('x'),
-          realOps(Unicode.infinity),
-          multiplyOps(
-            'infinite absorption',
-            realOps(Unicode.infinity),
-            variableOps('x'),
-            realOps(Unicode.infinity)
-          )
-        )
       )
     })
 
     it('is negative infinity if left is negative infinity', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(real(-Infinity), variable('x')),
         real(-Infinity)
-      )(
-        ...multiplyOps(
-          'infinite absorption',
-          realOps(`-${Unicode.infinity}`),
-          variableOps('x'),
-          realOps(`-${Unicode.infinity}`)
-        )
       )
     })
 
     it('is negative infinity if right is negative infinity', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(variable('x'), real(-Infinity)),
         real(-Infinity)
-      )(
-        ...multiplyOps(
-          'reorder operands',
-          variableOps('x'),
-          realOps(`-${Unicode.infinity}`),
-          multiplyOps(
-            'infinite absorption',
-            realOps(`-${Unicode.infinity}`),
-            variableOps('x'),
-            realOps(`-${Unicode.infinity}`)
-          )
-        )
       )
     })
 
     it('is the right if the left is 1', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(real(1), variable('x')),
         variable('x')
-      )(
-        ...multiplyOps(
-          'multiplicative identity',
-          realOps('1'),
-          variableOps('x'),
-          variableOps('x')
-        )
       )
     })
 
     it('is the left if the right is 1', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(variable('x'), real(1)),
         variable('x')
-      )(
-        ...multiplyOps(
-          'reorder operands',
-          variableOps('x'),
-          realOps('1'),
-          multiplyOps(
-            'multiplicative identity',
-            realOps('1'),
-            variableOps('x'),
-            variableOps('x')
-          )
-        )
       )
     })
   })
 
   describe('when dealing with nested multiplications with primitives', () => {
     it('multiplies primitives across nested multiplications', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(real(5), multiply(variable('x'), complex([1, 1]))),
         multiply(complex([5, 5]), variable('x'))
-      )(
-        ...multiplyOps(
-          'multiplicative associativity',
-          realOps('5'),
-          multiplyOps(
-            'reorder operands',
-            variableOps('x'),
-            complexOps('1', '1'),
-            multiplyOps(
-              'created multiplication',
-              complexOps('1', '1'),
-              variableOps('x'),
-              []
-            )
-          ),
-          multiplyOps(
-            'created multiplication',
-            multiplyOps(
-              'complex multiplication',
-              [
-                ...realOps('5'),
-                [`5+0${Unicode.i}`, 'cast to Complex from Real']
-              ],
-              complexOps('1', '1'),
-              complexOps('5', '5')
-            ),
-            variableOps('x'),
-            []
-          )
-        )
       )
     })
   })
 
   describe('when dealing with equivalent subtrees', () => {
     it('squares the left if the right is equivalent', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(variable('x'), variable('x')),
         square(variable('x'))
-      )(
-        ...multiplyOps(
-          'equivalence: replaced with square',
-          variableOps('x'),
-          variableOps('x'),
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            realOps('2'),
-            []
-          )
-        )
       )
     })
 
     it('adds to the power when multiplying by the base from the left', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(variable('x'), square(variable('x'))),
         raise(variable('x'), real(3))
-      )(
-        ...multiplyOps(
-          'combined like terms',
-          variableOps('x'),
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            realOps('2'),
-            []
-          ),
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            addOps(
-              'real addition',
-              realOps('1'),
-              realOps('2'),
-              realOps('3')
-            ),
-            []
-          )
-        )
       )
     })
 
     it('adds to the power when multiplying by the base from the right', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(square(variable('x')), variable('x')),
         raise(variable('x'), real(3))
-      )(
-        ...multiplyOps(
-          'combined like terms',
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            realOps('2'),
-            []
-          ),
-          variableOps('x'),
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            addOps(
-              'real addition',
-              realOps('1'),
-              realOps('2'),
-              realOps('3')
-            ),
-            []
-          )
-        )
       )
     })
 
     it('combines equivalently-based powers together', () => {
-      expectWriterTreeNode(
+      expectToEqualWithSnapshot(
         multiply(square(variable('x')), raise(variable('x'), real(3))),
         raise(variable('x'), real(5))
-      )(
-        ...multiplyOps(
-          'combined like terms',
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            realOps('2'),
-            []
-          ),
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            realOps('3'),
-            []
-          ),
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            addOps(
-              'real addition',
-              realOps('2'),
-              realOps('3'),
-              realOps('5')
-            ),
-            []
-          )
-        )
       )
     })
   })
 
   describe('when dealing with exponentiations', () => {
     it('isEa_A2xEa: combines nested multiplications involving similar exponentiations', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           square(variable('x')), 
           multiply(
             variable('y'), 
             raise(variable('x'), real(3))
           )
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(5))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(5)))        
       )
     })
 
     it('isEa_EaxA2: combines nested multiplications involving similar exponentiations', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           square(variable('x')), 
           multiply(
             raise(variable('x'), real(3)),
             variable('y')
           )
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(5))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(5)))
       )
     })
 
     it('isA2xEa_Ea: combines nested multiplications involving similar exponentiations', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           multiply(
             variable('y'), 
             raise(variable('x'), real(3))
           ),
           square(variable('x'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(5))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(5)))
       )
     })
 
     it('isEaxA2_Ea: combines nested multiplications involving similar exponentiations', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           multiply(
             raise(variable('x'), real(3)),
             variable('y')
           ),
           square(variable('x'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(5))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(5)))
       )
     })
 
     it('isA1_A1xA2: combines nested multiplications involving similar terms', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           variable('x'),
           multiply(variable('x'), variable('y'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), square(variable('x'))).value
+        ),
+        multiply(variable('y'), square(variable('x')))
       )
     })
 
     it('isA1_A2xA1: combines nested multiplications involving similar terms', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           variable('x'),
           multiply(variable('y'), variable('x'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), square(variable('x'))).value
+        ),
+        multiply(variable('y'), square(variable('x')))
       )
     })
 
     it('isA1xA2_A1: combines nested multiplications involving similar terms', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           multiply(variable('x'), variable('y')),
           variable('x')
-        ).value
-      ).toEqual(
-        multiply(variable('y'), square(variable('x'))).value
+        ),
+        multiply(variable('y'), square(variable('x')))
       )
     })
 
     it('isA2xA1_A1: combines nested multiplications involving similar terms', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           multiply(variable('y'), variable('x')),
           variable('x')
-        ).value
-      ).toEqual(
-        multiply(variable('y'), square(variable('x'))).value
-      )    
+        ),
+        multiply(variable('y'), square(variable('x')))
+      )
     })
 
     it('isA1_A2xEa1: adds to an exponential across nested multiplications', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           variable('x'),
           multiply(variable('y'), square(variable('x')))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(3))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(3)))
       )
     })
 
     it('isA1_Ea1xA2: adds to an exponential across nested multiplications', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           variable('x'),
           multiply(square(variable('x')), variable('y'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(3))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(3)))
       )
     })
 
     it('isA2xEa1_A1: adds to an exponential across nested multiplications', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           multiply(variable('y'), square(variable('x'))),
           variable('x')
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(3))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(3)))
       )
     })
 
     it('isEa1xA2_A1: adds to an exponential across nested multiplications', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           multiply(square(variable('x')), variable('y')),
           variable('x')
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(3))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(3)))
       )
     })
 
     // isEa1_A1xA2
     it('isEa1_A1xA2: adds to an exponential across nested multiplications', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           square(variable('x')),
           multiply(variable('x'), variable('y'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(3))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(3)))
       )
     })
 
     // isEa1_A2xA1
     it('isEa1_A2xA1: adds to an exponential across nested multiplications', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           square(variable('x')),
           multiply(variable('y'), variable('x'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(3))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(3)))
       )
     })
 
     // isA1xA2_Ea1
     it('isA1xA2_Ea1: adds to an exponential across nested multiplications', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           multiply(variable('x'), variable('y')),
           square(variable('x'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(3))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(3)))
       )
     })
 
     // isA2xA1_Ea1
     it('isA2xA1_Ea1: adds to an exponential across nested multiplications', () => {
-      expect(
+      expectToEqualWithSnapshot(
         multiply(
           multiply(variable('y'), variable('x')),
           square(variable('x'))
-        ).value
-      ).toEqual(
-        multiply(variable('y'), raise(variable('x'), real(3))).value
+        ),
+        multiply(variable('y'), raise(variable('x'), real(3)))
       )
     })
   })
@@ -649,188 +364,131 @@ describe('multiply', () => {
 
 describe('negate', () => {
   it('returns a Writer<Multiplication> for variable inputs', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       negate(variable('x')),
       multiply(real(-1), variable('x'))
-    )(
-      ...multiplyOps(
-        'created multiplication',
-        realOps('-1'),
-        variableOps('x'),
-        []
-      )
     )
   })
 
   it('results in a real with negative value, when real', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       negate(real(1)),
       real(-1)
-    )(
-      ...multiplyOps(
-        'real multiplication',
-        realOps('-1'),
-        realOps('1'),
-        realOps('-1')
-      )
     )
   })
 })
 
 describe('double', () => {
   it('returns a Writer<Real> for real inputs', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       double(real(5)),
       real(10)
-    )(
-      ...multiplyOps(
-        'real multiplication',
-        realOps('2'),
-        realOps('5'),
-        realOps('10')
-      )
     )
   })
 
-  it('returns a Writer<Multiplication for variable inputs', () => {
-    expectWriterTreeNode(
+  it('returns a Writer<Multiplication> for variable inputs', () => {
+    expectToEqualWithSnapshot(
       double(variable('x')),
       multiply(real(2), variable('x'))
-    )(
-      ...multiplyOps(
-        'created multiplication',
-        realOps('2'),
-        variableOps('x'),
-        []
-      )
     )
   })
 })
 
 describe('divide', () => {
   it('results in a division of the two real arguments', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       divide(real(10), real(5)),
       real(2)
-    )(
-      ...multiplyOps(
-        'real multiplication',
-        realOps('10'),
-        raiseOps(
-          'real exponentiation',
-          realOps('5'),
-          realOps('-1'),
-          realOps('0.2')
-        ),
-        realOps('2')
-      )
     )
   })
 
   it('is the multiplication of the numerator by the reciprocal of the denominator', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       divide(real(2), variable('x')),
       multiply(real(2), reciprocal(variable('x')))
-    )(
-      ...multiplyOps(
-        'created multiplication',
-        realOps('2'),
-        raiseOps(
-          'created exponentiation',
-          variableOps('x'),
-          realOps('-1'),
-          []
-        ),
-        []
-      )
     )
   })
 
   it('handles division by zero correctly', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       divide(variable('x'), real(0)),
       real(Infinity)
-    )(
-      ...multiplyOps(
-        'reorder operands',
-        variableOps('x'),
-        raiseOps(
-          'division by zero',
-          realOps('0'),
-          realOps('-1'),
-          realOps(Unicode.infinity)
-        ),
-        multiplyOps(
-          'infinite absorption',
-          realOps(Unicode.infinity),
-          variableOps('x'),
-          realOps(Unicode.infinity)
-        )
-      )
     )
   })
 
+  // NOTE: Result should be `0.2-0.4i`, but imprecision of floating point math
   it('properly calculates real / complex division', () => {
-    expectCloseTo(divide(real(1), complex([1, 2])), complex([0.2, -0.4]), 10)
+    expectToEqualWithSnapshot(
+      divide(real(1), complex([1, 2])),
+      complex([0.20000000000000004, -0.39999999999999997])
+    )
   })
 
   it('properly handles dividing complex 0 by another complex', () => {
-    expectCloseTo(divide(complex([0, 0]), complex([0, 2])), complex([0, 0]), 10)
+    expectToEqualWithSnapshot(
+      divide(complex([0, 0]), complex([0, 2])),
+      complex([0, 0])
+    )
   })
 
   it('properly handles dividing a complex by complex 0', () => {
-    expectCloseTo(divide(complex([0, 2]), complex([0, 0])), complex([0, Infinity]), 10)
+    expectToEqualWithSnapshot(
+      divide(complex([0, 2]), complex([0, 0])), 
+      complex([0, Infinity])
+    )
   })
 
   it('properly divides a complex value by complex 1', () => {
-    expectCloseTo(divide(complex([2, 0]), complex([1, 0])), complex([2, 0]), 10)
+    expectToEqualWithSnapshot(
+      divide(complex([2, 0]), complex([1, 0])), 
+      complex([2, 0])
+    )
   })
 
   it('properly divides complex negative infinity by complex 1', () => {
-    expectCloseTo(divide(complex([-Infinity, 0]), complex([1, 0])), complex([-Infinity, 0]), 10)
+    expectToEqualWithSnapshot(
+      divide(complex([-Infinity, 0]), complex([1, 0])), 
+      complex([-Infinity, 0])
+    )
   })
 
   it('a: cancels like terms in a division of multiplications', () => {
-    expect(
+    expectToEqualWithSnapshot(
       divide(
         multiply(variable('x'), variable('y')), 
         multiply(variable('z'), variable('y'))
-      ).value
-    ).toEqual(
-      divide(variable('x'), variable('z')).value
+      ),
+      divide(variable('x'), variable('z'))
     )
   })
 
   it('b; cancels like terms in a division of multiplications', () => {
-    expect(
+    expectToEqualWithSnapshot(
       divide(
         multiply(variable('x'), variable('y')),
         multiply(variable('x'), variable('z'))
-      ).value
-    ).toEqual(
-      divide(variable('y'), variable('z')).value
+      ),
+      divide(variable('y'), variable('z'))
     )
   })
 
   it('c: cancels like terms in a division of multiplications', () => {
-    expect(
+    expectToEqualWithSnapshot(
       divide(
         multiply(variable('x'), variable('y')),
         multiply(variable('y'), variable('z'))
-      ).value
-    ).toEqual(
-      divide(variable('x'), variable('z')).value
+      ),
+      divide(variable('x'), variable('z'))
     )
   })
 
   it('d: cancels like terms in a division of multiplications', () => {
-    expect(
+    expectToEqualWithSnapshot(
       divide(
         multiply(variable('x'), variable('y')),
         multiply(variable('z'), variable('x'))
-      ).value
-    ).toEqual(
-      divide(variable('y'), variable('z')).value
+      ),
+      divide(variable('y'), variable('z'))
     )
   })
 })

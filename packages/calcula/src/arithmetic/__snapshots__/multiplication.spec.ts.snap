@@ -1,0 +1,5975 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`divide a: cancels like terms in a division of multiplications 1`] = `
+[
+  [
+    "((x*y)*((z*y)^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*y)]*((z*y)^-1))",
+    "processing left operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "({(x*y)}*[((z*y)^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((z*y)^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([(z*y)]^-1)",
+    "processing left operand",
+  ],
+  [
+    "(z*y)",
+    "identified multiplication",
+  ],
+  [
+    "([z]*y)",
+    "processing left operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "({z}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(z*{y})",
+    "processed right operand",
+  ],
+  [
+    "(z*y)",
+    "created multiplication",
+  ],
+  [
+    "({(z*y)}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "((z*y)^{-1})",
+    "processed right operand",
+  ],
+  [
+    "((z*y)^-1)",
+    "exponential distribution",
+  ],
+  [
+    "((z^-1)*(y^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([(z^-1)]*(y^-1))",
+    "processing left operand",
+  ],
+  [
+    "(z^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([z]^-1)",
+    "processing left operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "({z}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(z^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(z^-1)",
+    "created exponentiation",
+  ],
+  [
+    "({(z^-1)}*[(y^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([y]^-1)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(y^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(y^-1)",
+    "created exponentiation",
+  ],
+  [
+    "((z^-1)*{(y^-1)})",
+    "processed right operand",
+  ],
+  [
+    "((z^-1)*(y^-1))",
+    "created multiplication",
+  ],
+  [
+    "((x*y)*{((z^-1)*(y^-1))})",
+    "processed right operand",
+  ],
+  [
+    "((x*y)*((z^-1)*(y^-1)))",
+    "equivalent: left child of left multiplication and left child of right multiplication",
+  ],
+  [
+    "((x*(z^-1))*(y*(y^-1)))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*(z^-1))]*(y*(y^-1)))",
+    "processing left operand",
+  ],
+  [
+    "(x*(z^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(z^-1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(z^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(z^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(x*{(z^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(x*(z^-1))",
+    "created multiplication",
+  ],
+  [
+    "({(x*(z^-1))}*[(y*(y^-1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*(y^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(y^-1))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(y^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(y^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(y^-1))",
+    "combined like terms",
+  ],
+  [
+    "(y^(1+-1))",
+    "identified exponentiation",
+  ],
+  [
+    "([y]^(1+-1))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}^[(1+-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+-1)",
+    "identified addition",
+  ],
+  [
+    "([1]+-1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(1+{-1})",
+    "processed right operand",
+  ],
+  [
+    "(1+-1)",
+    "real addition",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(y^{0})",
+    "processed right operand",
+  ],
+  [
+    "(y^0)",
+    "exponent of 0",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "((x*(z^-1))*{1})",
+    "processed right operand",
+  ],
+  [
+    "((x*(z^-1))*1)",
+    "reorder operands",
+  ],
+  [
+    "(1*(x*(z^-1)))",
+    "identified multiplication",
+  ],
+  [
+    "([1]*(x*(z^-1)))",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}*[(x*(z^-1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*(z^-1))",
+    "created multiplication",
+  ],
+  [
+    "(1*{(x*(z^-1))})",
+    "processed right operand",
+  ],
+  [
+    "(1*(x*(z^-1)))",
+    "multiplicative identity",
+  ],
+  [
+    "(x*(z^-1))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`divide b; cancels like terms in a division of multiplications 1`] = `
+[
+  [
+    "((x*y)*((x*z)^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*y)]*((x*z)^-1))",
+    "processing left operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "({(x*y)}*[((x*z)^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((x*z)^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([(x*z)]^-1)",
+    "processing left operand",
+  ],
+  [
+    "(x*z)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*z)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[z])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "(x*{z})",
+    "processed right operand",
+  ],
+  [
+    "(x*z)",
+    "created multiplication",
+  ],
+  [
+    "({(x*z)}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "((x*z)^{-1})",
+    "processed right operand",
+  ],
+  [
+    "((x*z)^-1)",
+    "exponential distribution",
+  ],
+  [
+    "((x^-1)*(z^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([(x^-1)]*(z^-1))",
+    "processing left operand",
+  ],
+  [
+    "(x^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^-1)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(x^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(x^-1)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^-1)}*[(z^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(z^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([z]^-1)",
+    "processing left operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "({z}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(z^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(z^-1)",
+    "created exponentiation",
+  ],
+  [
+    "((x^-1)*{(z^-1)})",
+    "processed right operand",
+  ],
+  [
+    "((x^-1)*(z^-1))",
+    "created multiplication",
+  ],
+  [
+    "((x*y)*{((x^-1)*(z^-1))})",
+    "processed right operand",
+  ],
+  [
+    "((x*y)*((x^-1)*(z^-1)))",
+    "equivalent: left child of left multiplication and left child of right multiplication",
+  ],
+  [
+    "((x*(x^-1))*(y*(z^-1)))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*(x^-1))]*(y*(z^-1)))",
+    "processing left operand",
+  ],
+  [
+    "(x*(x^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(x^-1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(x^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(x*{(x^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(x*(x^-1))",
+    "combined like terms",
+  ],
+  [
+    "(x^(1+-1))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(1+-1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(1+-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+-1)",
+    "identified addition",
+  ],
+  [
+    "([1]+-1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(1+{-1})",
+    "processed right operand",
+  ],
+  [
+    "(1+-1)",
+    "real addition",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(x^{0})",
+    "processed right operand",
+  ],
+  [
+    "(x^0)",
+    "exponent of 0",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}*[(y*(z^-1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*(z^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(z^-1))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(z^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(z^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(z^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(z^-1))",
+    "created multiplication",
+  ],
+  [
+    "(1*{(y*(z^-1))})",
+    "processed right operand",
+  ],
+  [
+    "(1*(y*(z^-1)))",
+    "multiplicative identity",
+  ],
+  [
+    "(y*(z^-1))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`divide c: cancels like terms in a division of multiplications 1`] = `
+[
+  [
+    "((x*y)*((y*z)^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*y)]*((y*z)^-1))",
+    "processing left operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "({(x*y)}*[((y*z)^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((y*z)^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([(y*z)]^-1)",
+    "processing left operand",
+  ],
+  [
+    "(y*z)",
+    "identified multiplication",
+  ],
+  [
+    "([y]*z)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[z])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "(y*{z})",
+    "processed right operand",
+  ],
+  [
+    "(y*z)",
+    "created multiplication",
+  ],
+  [
+    "({(y*z)}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "((y*z)^{-1})",
+    "processed right operand",
+  ],
+  [
+    "((y*z)^-1)",
+    "exponential distribution",
+  ],
+  [
+    "((y^-1)*(z^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([(y^-1)]*(z^-1))",
+    "processing left operand",
+  ],
+  [
+    "(y^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([y]^-1)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(y^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(y^-1)",
+    "created exponentiation",
+  ],
+  [
+    "({(y^-1)}*[(z^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(z^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([z]^-1)",
+    "processing left operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "({z}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(z^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(z^-1)",
+    "created exponentiation",
+  ],
+  [
+    "((y^-1)*{(z^-1)})",
+    "processed right operand",
+  ],
+  [
+    "((y^-1)*(z^-1))",
+    "created multiplication",
+  ],
+  [
+    "((x*y)*{((y^-1)*(z^-1))})",
+    "processed right operand",
+  ],
+  [
+    "((x*y)*((y^-1)*(z^-1)))",
+    "equivalent: left child of left multiplication and right child of right multiplication",
+  ],
+  [
+    "((x*(z^-1))*(y*(y^-1)))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*(z^-1))]*(y*(y^-1)))",
+    "processing left operand",
+  ],
+  [
+    "(x*(z^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(z^-1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(z^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(z^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(x*{(z^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(x*(z^-1))",
+    "created multiplication",
+  ],
+  [
+    "({(x*(z^-1))}*[(y*(y^-1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*(y^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(y^-1))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(y^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(y^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(y^-1))",
+    "combined like terms",
+  ],
+  [
+    "(y^(1+-1))",
+    "identified exponentiation",
+  ],
+  [
+    "([y]^(1+-1))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}^[(1+-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+-1)",
+    "identified addition",
+  ],
+  [
+    "([1]+-1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(1+{-1})",
+    "processed right operand",
+  ],
+  [
+    "(1+-1)",
+    "real addition",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(y^{0})",
+    "processed right operand",
+  ],
+  [
+    "(y^0)",
+    "exponent of 0",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "((x*(z^-1))*{1})",
+    "processed right operand",
+  ],
+  [
+    "((x*(z^-1))*1)",
+    "reorder operands",
+  ],
+  [
+    "(1*(x*(z^-1)))",
+    "identified multiplication",
+  ],
+  [
+    "([1]*(x*(z^-1)))",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}*[(x*(z^-1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*(z^-1))",
+    "created multiplication",
+  ],
+  [
+    "(1*{(x*(z^-1))})",
+    "processed right operand",
+  ],
+  [
+    "(1*(x*(z^-1)))",
+    "multiplicative identity",
+  ],
+  [
+    "(x*(z^-1))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`divide d: cancels like terms in a division of multiplications 1`] = `
+[
+  [
+    "((x*y)*((z*x)^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*y)]*((z*x)^-1))",
+    "processing left operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "({(x*y)}*[((z*x)^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((z*x)^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([(z*x)]^-1)",
+    "processing left operand",
+  ],
+  [
+    "(z*x)",
+    "identified multiplication",
+  ],
+  [
+    "([z]*x)",
+    "processing left operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "({z}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(z*{x})",
+    "processed right operand",
+  ],
+  [
+    "(z*x)",
+    "created multiplication",
+  ],
+  [
+    "({(z*x)}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "((z*x)^{-1})",
+    "processed right operand",
+  ],
+  [
+    "((z*x)^-1)",
+    "exponential distribution",
+  ],
+  [
+    "((z^-1)*(x^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([(z^-1)]*(x^-1))",
+    "processing left operand",
+  ],
+  [
+    "(z^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([z]^-1)",
+    "processing left operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "({z}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(z^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(z^-1)",
+    "created exponentiation",
+  ],
+  [
+    "({(z^-1)}*[(x^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^-1)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(x^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(x^-1)",
+    "created exponentiation",
+  ],
+  [
+    "((z^-1)*{(x^-1)})",
+    "processed right operand",
+  ],
+  [
+    "((z^-1)*(x^-1))",
+    "created multiplication",
+  ],
+  [
+    "((x*y)*{((z^-1)*(x^-1))})",
+    "processed right operand",
+  ],
+  [
+    "((x*y)*((z^-1)*(x^-1)))",
+    "equivalent: left child of left multiplication and right child of right multiplication",
+  ],
+  [
+    "((x*(x^-1))*(y*(z^-1)))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*(x^-1))]*(y*(z^-1)))",
+    "processing left operand",
+  ],
+  [
+    "(x*(x^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(x^-1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(x^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(x*{(x^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(x*(x^-1))",
+    "combined like terms",
+  ],
+  [
+    "(x^(1+-1))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(1+-1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(1+-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+-1)",
+    "identified addition",
+  ],
+  [
+    "([1]+-1)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(1+{-1})",
+    "processed right operand",
+  ],
+  [
+    "(1+-1)",
+    "real addition",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(x^{0})",
+    "processed right operand",
+  ],
+  [
+    "(x^0)",
+    "exponent of 0",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}*[(y*(z^-1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*(z^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(z^-1))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(z^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(z^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(z^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(z^-1))",
+    "created multiplication",
+  ],
+  [
+    "(1*{(y*(z^-1))})",
+    "processed right operand",
+  ],
+  [
+    "(1*(y*(z^-1)))",
+    "multiplicative identity",
+  ],
+  [
+    "(y*(z^-1))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`divide handles division by zero correctly 1`] = `
+[
+  [
+    "(x*(0^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(0^-1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(0^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(0^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([0]^-1)",
+    "processing left operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(0^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(0^-1)",
+    "division by zero",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+  [
+    "(x*{∞})",
+    "processed right operand",
+  ],
+  [
+    "(x*∞)",
+    "reorder operands",
+  ],
+  [
+    "(∞*x)",
+    "identified multiplication",
+  ],
+  [
+    "([∞]*x)",
+    "processing left operand",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+  [
+    "({∞}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(∞*{x})",
+    "processed right operand",
+  ],
+  [
+    "(∞*x)",
+    "infinite absorption",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`divide is the multiplication of the numerator by the reciprocal of the denominator 1`] = `
+[
+  [
+    "(2*(x^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([2]*(x^-1))",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[(x^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^-1)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(x^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(x^-1)",
+    "created exponentiation",
+  ],
+  [
+    "(2*{(x^-1)})",
+    "processed right operand",
+  ],
+  [
+    "(2*(x^-1))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`divide properly calculates real / complex division 1`] = `
+[
+  [
+    "(1*(1+2𝒊^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([1]*(1+2𝒊^-1))",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}*[(1+2𝒊^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+2𝒊^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([1+2𝒊]^-1)",
+    "processing left operand",
+  ],
+  [
+    "1+2𝒊",
+    "created complex",
+  ],
+  [
+    "({1+2𝒊}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "-1+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "(1+2𝒊^{-1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+2𝒊^-1+0𝒊)",
+    "complex exponentiation",
+  ],
+  [
+    "0.20000000000000004-0.39999999999999997𝒊",
+    "created complex",
+  ],
+  [
+    "(1*{0.20000000000000004-0.39999999999999997𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1*0.20000000000000004-0.39999999999999997𝒊)",
+    "multiplicative identity",
+  ],
+  [
+    "0.20000000000000004-0.39999999999999997𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`divide properly divides a complex value by complex 1 1`] = `
+[
+  [
+    "(2+0𝒊*(1+0𝒊^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([2+0𝒊]*(1+0𝒊^-1))",
+    "processing left operand",
+  ],
+  [
+    "2+0𝒊",
+    "created complex",
+  ],
+  [
+    "({2+0𝒊}*[(1+0𝒊^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+0𝒊^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([1+0𝒊]^-1)",
+    "processing left operand",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "({1+0𝒊}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "-1+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "(1+0𝒊^{-1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+0𝒊^-1+0𝒊)",
+    "complex exponentiation",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "(2+0𝒊*{1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(2+0𝒊*1+0𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "2+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`divide properly divides complex negative infinity by complex 1 1`] = `
+[
+  [
+    "(-∞+0𝒊*(1+0𝒊^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([-∞+0𝒊]*(1+0𝒊^-1))",
+    "processing left operand",
+  ],
+  [
+    "-∞+0𝒊",
+    "created complex",
+  ],
+  [
+    "({-∞+0𝒊}*[(1+0𝒊^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+0𝒊^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([1+0𝒊]^-1)",
+    "processing left operand",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "({1+0𝒊}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "-1+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "(1+0𝒊^{-1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+0𝒊^-1+0𝒊)",
+    "complex exponentiation",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "(-∞+0𝒊*{1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(-∞+0𝒊*1+0𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "-∞+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`divide properly handles dividing a complex by complex 0 1`] = `
+[
+  [
+    "(0+2𝒊*(0+0𝒊^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([0+2𝒊]*(0+0𝒊^-1))",
+    "processing left operand",
+  ],
+  [
+    "0+2𝒊",
+    "created complex",
+  ],
+  [
+    "({0+2𝒊}*[(0+0𝒊^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(0+0𝒊^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([0+0𝒊]^-1)",
+    "processing left operand",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+  [
+    "({0+0𝒊}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(0+0𝒊^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(0+0𝒊^-1)",
+    "division by complex zero",
+  ],
+  [
+    "∞+0𝒊",
+    "created complex",
+  ],
+  [
+    "(0+2𝒊*{∞+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(0+2𝒊*∞+0𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "0+∞𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`divide properly handles dividing complex 0 by another complex 1`] = `
+[
+  [
+    "(0+0𝒊*(0+2𝒊^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([0+0𝒊]*(0+2𝒊^-1))",
+    "processing left operand",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+  [
+    "({0+0𝒊}*[(0+2𝒊^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(0+2𝒊^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([0+2𝒊]^-1)",
+    "processing left operand",
+  ],
+  [
+    "0+2𝒊",
+    "created complex",
+  ],
+  [
+    "({0+2𝒊}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "-1+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "(0+2𝒊^{-1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(0+2𝒊^-1+0𝒊)",
+    "complex exponentiation",
+  ],
+  [
+    "3.061616997868383e-17-0.5𝒊",
+    "created complex",
+  ],
+  [
+    "(0+0𝒊*{3.061616997868383e-17-0.5𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(0+0𝒊*3.061616997868383e-17-0.5𝒊)",
+    "zero absorption",
+  ],
+  [
+    "0+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`divide results in a division of the two real arguments 1`] = `
+[
+  [
+    "(10*(5^-1))",
+    "identified multiplication",
+  ],
+  [
+    "([10]*(5^-1))",
+    "processing left operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "({10}*[(5^-1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(5^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([5]^-1)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(5^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(5^-1)",
+    "real exponentiation",
+  ],
+  [
+    "0.2",
+    "created real",
+  ],
+  [
+    "(10*{0.2})",
+    "processed right operand",
+  ],
+  [
+    "(10*0.2)",
+    "real multiplication",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+]
+`;
+
+exports[`double returns a Writer<Multiplication> for variable inputs 1`] = `
+[
+  [
+    "(2*x)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(2*{x})",
+    "processed right operand",
+  ],
+  [
+    "(2*x)",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`double returns a Writer<Real> for real inputs 1`] = `
+[
+  [
+    "(2*5)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*5)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(2*{5})",
+    "processed right operand",
+  ],
+  [
+    "(2*5)",
+    "real multiplication",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is NaN if given 0 and Infinity 1`] = `
+[
+  [
+    "(0*∞)",
+    "identified multiplication",
+  ],
+  [
+    "([0]*∞)",
+    "processing left operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0}*[∞])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+  [
+    "(0*{∞})",
+    "processed right operand",
+  ],
+  [
+    "(0*∞)",
+    "incalculable",
+  ],
+  [
+    "NaN",
+    "not a number",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is infinity if left is infinity 1`] = `
+[
+  [
+    "(∞*x)",
+    "identified multiplication",
+  ],
+  [
+    "([∞]*x)",
+    "processing left operand",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+  [
+    "({∞}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(∞*{x})",
+    "processed right operand",
+  ],
+  [
+    "(∞*x)",
+    "infinite absorption",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is infinity if right is infinity 1`] = `
+[
+  [
+    "(x*∞)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*∞)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[∞])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+  [
+    "(x*{∞})",
+    "processed right operand",
+  ],
+  [
+    "(x*∞)",
+    "reorder operands",
+  ],
+  [
+    "(∞*x)",
+    "identified multiplication",
+  ],
+  [
+    "([∞]*x)",
+    "processing left operand",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+  [
+    "({∞}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(∞*{x})",
+    "processed right operand",
+  ],
+  [
+    "(∞*x)",
+    "infinite absorption",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is negative infinity if left is negative infinity 1`] = `
+[
+  [
+    "(-∞*x)",
+    "identified multiplication",
+  ],
+  [
+    "([-∞]*x)",
+    "processing left operand",
+  ],
+  [
+    "-∞",
+    "created real",
+  ],
+  [
+    "({-∞}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(-∞*{x})",
+    "processed right operand",
+  ],
+  [
+    "(-∞*x)",
+    "infinite absorption",
+  ],
+  [
+    "-∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is negative infinity if right is negative infinity 1`] = `
+[
+  [
+    "(x*-∞)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*-∞)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[-∞])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-∞",
+    "created real",
+  ],
+  [
+    "(x*{-∞})",
+    "processed right operand",
+  ],
+  [
+    "(x*-∞)",
+    "reorder operands",
+  ],
+  [
+    "(-∞*x)",
+    "identified multiplication",
+  ],
+  [
+    "([-∞]*x)",
+    "processing left operand",
+  ],
+  [
+    "-∞",
+    "created real",
+  ],
+  [
+    "({-∞}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(-∞*{x})",
+    "processed right operand",
+  ],
+  [
+    "(-∞*x)",
+    "infinite absorption",
+  ],
+  [
+    "-∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is real 0 if the left is real 0 1`] = `
+[
+  [
+    "(0*x)",
+    "identified multiplication",
+  ],
+  [
+    "([0]*x)",
+    "processing left operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(0*{x})",
+    "processed right operand",
+  ],
+  [
+    "(0*x)",
+    "zero absorption",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is real 0 if the right is real 0 1`] = `
+[
+  [
+    "(x*0)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*0)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[0])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(x*{0})",
+    "processed right operand",
+  ],
+  [
+    "(x*0)",
+    "reorder operands",
+  ],
+  [
+    "(0*x)",
+    "identified multiplication",
+  ],
+  [
+    "([0]*x)",
+    "processing left operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(0*{x})",
+    "processed right operand",
+  ],
+  [
+    "(0*x)",
+    "zero absorption",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is the left if the right is 1 1`] = `
+[
+  [
+    "(x*1)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*1)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(x*{1})",
+    "processed right operand",
+  ],
+  [
+    "(x*1)",
+    "reorder operands",
+  ],
+  [
+    "(1*x)",
+    "identified multiplication",
+  ],
+  [
+    "([1]*x)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(1*{x})",
+    "processed right operand",
+  ],
+  [
+    "(1*x)",
+    "multiplicative identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`multiply when dealing with 0, 1, or (+/-)Infinity is the right if the left is 1 1`] = `
+[
+  [
+    "(1*x)",
+    "identified multiplication",
+  ],
+  [
+    "([1]*x)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(1*{x})",
+    "processed right operand",
+  ],
+  [
+    "(1*x)",
+    "multiplicative identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`multiply when dealing with equivalent subtrees adds to the power when multiplying by the base from the left 1`] = `
+[
+  [
+    "(x*(x^2))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(x^2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(x^2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "(x*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "(x*(x^2))",
+    "combined like terms",
+  ],
+  [
+    "(x^(1+2))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(1+2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(1+2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+]
+`;
+
+exports[`multiply when dealing with equivalent subtrees adds to the power when multiplying by the base from the right 1`] = `
+[
+  [
+    "((x^2)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(x^2)]*x)",
+    "processing left operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^2)}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((x^2)*{x})",
+    "processed right operand",
+  ],
+  [
+    "((x^2)*x)",
+    "combined like terms",
+  ],
+  [
+    "(x^(1+2))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(1+2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(1+2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+]
+`;
+
+exports[`multiply when dealing with equivalent subtrees combines equivalently-based powers together 1`] = `
+[
+  [
+    "((x^2)*(x^3))",
+    "identified multiplication",
+  ],
+  [
+    "([(x^2)]*(x^3))",
+    "processing left operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^2)}*[(x^3)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^3)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^3)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "((x^2)*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "((x^2)*(x^3))",
+    "combined like terms",
+  ],
+  [
+    "(x^(2+3))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(2+3))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(2+3)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2+3)",
+    "identified addition",
+  ],
+  [
+    "([2]+3)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(2+{3})",
+    "processed right operand",
+  ],
+  [
+    "(2+3)",
+    "real addition",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x^{5})",
+    "processed right operand",
+  ],
+  [
+    "(x^5)",
+    "created exponentiation",
+  ],
+]
+`;
+
+exports[`multiply when dealing with equivalent subtrees squares the left if the right is equivalent 1`] = `
+[
+  [
+    "(x*x)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x*{x})",
+    "processed right operand",
+  ],
+  [
+    "(x*x)",
+    "equivalence: replaced with square",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA1_A1xA2: combines nested multiplications involving similar terms 1`] = `
+[
+  [
+    "(x*(x*y))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(x*y))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(x*y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "(x*{(x*y)})",
+    "processed right operand",
+  ],
+  [
+    "(x*(x*y))",
+    "equivalent: left operand and left child of right operand",
+  ],
+  [
+    "(y*(x*x))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x*x))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*x)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x*{x})",
+    "processed right operand",
+  ],
+  [
+    "(x*x)",
+    "equivalence: replaced with square",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^2))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA1_A2xA1: combines nested multiplications involving similar terms 1`] = `
+[
+  [
+    "(x*(y*x))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(y*x))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(y*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*x)",
+    "identified multiplication",
+  ],
+  [
+    "([y]*x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y*{x})",
+    "processed right operand",
+  ],
+  [
+    "(y*x)",
+    "created multiplication",
+  ],
+  [
+    "(x*{(y*x)})",
+    "processed right operand",
+  ],
+  [
+    "(x*(y*x))",
+    "equivalent: left operand and right child of right operand",
+  ],
+  [
+    "(y*(x*x))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x*x))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*x)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x*{x})",
+    "processed right operand",
+  ],
+  [
+    "(x*x)",
+    "equivalence: replaced with square",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^2))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA1_A2xEa1: adds to an exponential across nested multiplications 1`] = `
+[
+  [
+    "(x*(y*(x^2)))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*(y*(x^2)))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[(y*(x^2))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*(x^2))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^2))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^2))",
+    "created multiplication",
+  ],
+  [
+    "(x*{(y*(x^2))})",
+    "processed right operand",
+  ],
+  [
+    "(x*(y*(x^2)))",
+    "equivalent: left operand and base of right child exponentiation of right multiplication",
+  ],
+  [
+    "(y*(x^(1+2)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(1+2)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(1+2))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(1+2))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(1+2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(1+2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA1_Ea1xA2: adds to an exponential across nested multiplications 1`] = `
+[
+  [
+    "(x*((x^2)*y))",
+    "identified multiplication",
+  ],
+  [
+    "([x]*((x^2)*y))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[((x^2)*y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((x^2)*y)",
+    "identified multiplication",
+  ],
+  [
+    "([(x^2)]*y)",
+    "processing left operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^2)}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "((x^2)*{y})",
+    "processed right operand",
+  ],
+  [
+    "((x^2)*y)",
+    "created multiplication",
+  ],
+  [
+    "(x*{((x^2)*y)})",
+    "processed right operand",
+  ],
+  [
+    "(x*((x^2)*y))",
+    "equivalent: left operand and base of left child exponentiation of right multiplication",
+  ],
+  [
+    "(y*(x^(1+2)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(1+2)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(1+2))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(1+2))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(1+2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(1+2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA1xA2_A1: combines nested multiplications involving similar terms 1`] = `
+[
+  [
+    "((x*y)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(x*y)]*x)",
+    "processing left operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "({(x*y)}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((x*y)*{x})",
+    "processed right operand",
+  ],
+  [
+    "((x*y)*x)",
+    "equivalent: left child of left operand and right operand",
+  ],
+  [
+    "(y*(x*x))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x*x))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*x)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x*{x})",
+    "processed right operand",
+  ],
+  [
+    "(x*x)",
+    "equivalence: replaced with square",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^2))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA1xA2_Ea1: adds to an exponential across nested multiplications 1`] = `
+[
+  [
+    "((x*y)*(x^2))",
+    "identified multiplication",
+  ],
+  [
+    "([(x*y)]*(x^2))",
+    "processing left operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "({(x*y)}*[(x^2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "((x*y)*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "((x*y)*(x^2))",
+    "equivalent: left child of left and base of right exponentiation",
+  ],
+  [
+    "(y*(x^(2+1)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(2+1)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(2+1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(2+1))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(2+1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(2+1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2+1)",
+    "identified addition",
+  ],
+  [
+    "([2]+1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2+{1})",
+    "processed right operand",
+  ],
+  [
+    "(2+1)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA2xA1_A1: combines nested multiplications involving similar terms 1`] = `
+[
+  [
+    "((y*x)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(y*x)]*x)",
+    "processing left operand",
+  ],
+  [
+    "(y*x)",
+    "identified multiplication",
+  ],
+  [
+    "([y]*x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y*{x})",
+    "processed right operand",
+  ],
+  [
+    "(y*x)",
+    "created multiplication",
+  ],
+  [
+    "({(y*x)}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((y*x)*{x})",
+    "processed right operand",
+  ],
+  [
+    "((y*x)*x)",
+    "equivalent: right child of left operand and right operand",
+  ],
+  [
+    "(y*(x*x))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x*x))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*x)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*x)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(x*{x})",
+    "processed right operand",
+  ],
+  [
+    "(x*x)",
+    "equivalence: replaced with square",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^2))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA2xA1_Ea1: adds to an exponential across nested multiplications 1`] = `
+[
+  [
+    "((y*x)*(x^2))",
+    "identified multiplication",
+  ],
+  [
+    "([(y*x)]*(x^2))",
+    "processing left operand",
+  ],
+  [
+    "(y*x)",
+    "identified multiplication",
+  ],
+  [
+    "([y]*x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y*{x})",
+    "processed right operand",
+  ],
+  [
+    "(y*x)",
+    "created multiplication",
+  ],
+  [
+    "({(y*x)}*[(x^2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "((y*x)*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "((y*x)*(x^2))",
+    "equivalent: right child of left and base of right exponentiation",
+  ],
+  [
+    "(y*(x^(2+1)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(2+1)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(2+1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(2+1))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(2+1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(2+1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2+1)",
+    "identified addition",
+  ],
+  [
+    "([2]+1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2+{1})",
+    "processed right operand",
+  ],
+  [
+    "(2+1)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA2xEa_Ea: combines nested multiplications involving similar exponentiations 1`] = `
+[
+  [
+    "((y*(x^3))*(x^2))",
+    "identified multiplication",
+  ],
+  [
+    "([(y*(x^3))]*(x^2))",
+    "processing left operand",
+  ],
+  [
+    "(y*(x^3))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^3))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^3)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^3)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^3)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+  [
+    "({(y*(x^3))}*[(x^2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "((y*(x^3))*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "((y*(x^3))*(x^2))",
+    "equivalent: base of right child exponentiation of left multiplication and base of right exponentiation",
+  ],
+  [
+    "(y*(x^(3+2)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(3+2)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(3+2))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(3+2))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(3+2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(3+2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(3+2)",
+    "identified addition",
+  ],
+  [
+    "([3]+2)",
+    "processing left operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "({3}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(3+{2})",
+    "processed right operand",
+  ],
+  [
+    "(3+2)",
+    "real addition",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x^{5})",
+    "processed right operand",
+  ],
+  [
+    "(x^5)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^5)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^5))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isA2xEa1_A1: adds to an exponential across nested multiplications 1`] = `
+[
+  [
+    "((y*(x^2))*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(y*(x^2))]*x)",
+    "processing left operand",
+  ],
+  [
+    "(y*(x^2))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^2))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^2))",
+    "created multiplication",
+  ],
+  [
+    "({(y*(x^2))}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "((y*(x^2))*{x})",
+    "processed right operand",
+  ],
+  [
+    "((y*(x^2))*x)",
+    "equivalent: base of right child exponentiation of left multiplication and right operand",
+  ],
+  [
+    "(y*(x^(1+2)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(1+2)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(1+2))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(1+2))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(1+2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(1+2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isEa_A2xEa: combines nested multiplications involving similar exponentiations 1`] = `
+[
+  [
+    "((x^2)*(y*(x^3)))",
+    "identified multiplication",
+  ],
+  [
+    "([(x^2)]*(y*(x^3)))",
+    "processing left operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^2)}*[(y*(x^3))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^3))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^3)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^3)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^3)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+  [
+    "((x^2)*{(y*(x^3))})",
+    "processed right operand",
+  ],
+  [
+    "((x^2)*(y*(x^3)))",
+    "equivalent: base of left exponentiation and base of right child exponentiation of right multiplication",
+  ],
+  [
+    "(y*(x^(2+3)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(2+3)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(2+3))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(2+3))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(2+3))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(2+3)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2+3)",
+    "identified addition",
+  ],
+  [
+    "([2]+3)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(2+{3})",
+    "processed right operand",
+  ],
+  [
+    "(2+3)",
+    "real addition",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x^{5})",
+    "processed right operand",
+  ],
+  [
+    "(x^5)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^5)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^5))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isEa_EaxA2: combines nested multiplications involving similar exponentiations 1`] = `
+[
+  [
+    "((x^2)*((x^3)*y))",
+    "identified multiplication",
+  ],
+  [
+    "([(x^2)]*((x^3)*y))",
+    "processing left operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^2)}*[((x^3)*y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "((x^3)*y)",
+    "identified multiplication",
+  ],
+  [
+    "([(x^3)]*y)",
+    "processing left operand",
+  ],
+  [
+    "(x^3)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^3)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^3)}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "((x^3)*{y})",
+    "processed right operand",
+  ],
+  [
+    "((x^3)*y)",
+    "created multiplication",
+  ],
+  [
+    "((x^2)*{((x^3)*y)})",
+    "processed right operand",
+  ],
+  [
+    "((x^2)*((x^3)*y))",
+    "equivalent: base of left exponentiation and base of left child exponentiation of right multiplication",
+  ],
+  [
+    "(y*(x^(2+3)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(2+3)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(2+3))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(2+3))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(2+3))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(2+3)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2+3)",
+    "identified addition",
+  ],
+  [
+    "([2]+3)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(2+{3})",
+    "processed right operand",
+  ],
+  [
+    "(2+3)",
+    "real addition",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x^{5})",
+    "processed right operand",
+  ],
+  [
+    "(x^5)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^5)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^5))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isEa1_A1xA2: adds to an exponential across nested multiplications 1`] = `
+[
+  [
+    "((x^2)*(x*y))",
+    "identified multiplication",
+  ],
+  [
+    "([(x^2)]*(x*y))",
+    "processing left operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^2)}*[(x*y)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "((x^2)*{(x*y)})",
+    "processed right operand",
+  ],
+  [
+    "((x^2)*(x*y))",
+    "equivalent: base of left exponentiation and left child of right",
+  ],
+  [
+    "(y*(x^(2+1)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(2+1)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(2+1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(2+1))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(2+1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(2+1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2+1)",
+    "identified addition",
+  ],
+  [
+    "([2]+1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2+{1})",
+    "processed right operand",
+  ],
+  [
+    "(2+1)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isEa1_A2xA1: adds to an exponential across nested multiplications 1`] = `
+[
+  [
+    "((x^2)*(y*x))",
+    "identified multiplication",
+  ],
+  [
+    "([(x^2)]*(y*x))",
+    "processing left operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^2)}*[(y*x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*x)",
+    "identified multiplication",
+  ],
+  [
+    "([y]*x)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(y*{x})",
+    "processed right operand",
+  ],
+  [
+    "(y*x)",
+    "created multiplication",
+  ],
+  [
+    "((x^2)*{(y*x)})",
+    "processed right operand",
+  ],
+  [
+    "((x^2)*(y*x))",
+    "equivalent: base of left exponentiation and right child of right",
+  ],
+  [
+    "(y*(x^(2+1)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(2+1)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(2+1))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(2+1))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(2+1))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(2+1)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(2+1)",
+    "identified addition",
+  ],
+  [
+    "([2]+1)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}+[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(2+{1})",
+    "processed right operand",
+  ],
+  [
+    "(2+1)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isEa1xA2_A1: adds to an exponential across nested multiplications 1`] = `
+[
+  [
+    "(((x^2)*y)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([((x^2)*y)]*x)",
+    "processing left operand",
+  ],
+  [
+    "((x^2)*y)",
+    "identified multiplication",
+  ],
+  [
+    "([(x^2)]*y)",
+    "processing left operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^2)}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "((x^2)*{y})",
+    "processed right operand",
+  ],
+  [
+    "((x^2)*y)",
+    "created multiplication",
+  ],
+  [
+    "({((x^2)*y)}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(((x^2)*y)*{x})",
+    "processed right operand",
+  ],
+  [
+    "(((x^2)*y)*x)",
+    "equivalent: base of left child exponentiation of left multiplication and right operand",
+  ],
+  [
+    "(y*(x^(1+2)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(1+2)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(1+2))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(1+2))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(1+2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(1+2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(1+2)",
+    "identified addition",
+  ],
+  [
+    "([1]+2)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(1+{2})",
+    "processed right operand",
+  ],
+  [
+    "(1+2)",
+    "real addition",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^3)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^3))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with exponentiations isEaxA2_Ea: combines nested multiplications involving similar exponentiations 1`] = `
+[
+  [
+    "(((x^3)*y)*(x^2))",
+    "identified multiplication",
+  ],
+  [
+    "([((x^3)*y)]*(x^2))",
+    "processing left operand",
+  ],
+  [
+    "((x^3)*y)",
+    "identified multiplication",
+  ],
+  [
+    "([(x^3)]*y)",
+    "processing left operand",
+  ],
+  [
+    "(x^3)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^3)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^3)}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "((x^3)*{y})",
+    "processed right operand",
+  ],
+  [
+    "((x^3)*y)",
+    "created multiplication",
+  ],
+  [
+    "({((x^3)*y)}*[(x^2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+  [
+    "(((x^3)*y)*{(x^2)})",
+    "processed right operand",
+  ],
+  [
+    "(((x^3)*y)*(x^2))",
+    "equivalent: base of left child exponentiation of left multiplication and base of right exponentiation",
+  ],
+  [
+    "(y*(x^(3+2)))",
+    "identified multiplication",
+  ],
+  [
+    "([y]*(x^(3+2)))",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[(x^(3+2))])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x^(3+2))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(3+2))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(3+2)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(3+2)",
+    "identified addition",
+  ],
+  [
+    "([3]+2)",
+    "processing left operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "({3}+[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(3+{2})",
+    "processed right operand",
+  ],
+  [
+    "(3+2)",
+    "real addition",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x^{5})",
+    "processed right operand",
+  ],
+  [
+    "(x^5)",
+    "created exponentiation",
+  ],
+  [
+    "(y*{(x^5)})",
+    "processed right operand",
+  ],
+  [
+    "(y*(x^5))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when dealing with nested multiplications with primitives multiplies primitives across nested multiplications 1`] = `
+[
+  [
+    "(5*(x*1+1𝒊))",
+    "identified multiplication",
+  ],
+  [
+    "([5]*(x*1+1𝒊))",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}*[(x*1+1𝒊)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(x*1+1𝒊)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*1+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[1+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(x*{1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(x*1+1𝒊)",
+    "reorder operands",
+  ],
+  [
+    "(1+1𝒊*x)",
+    "identified multiplication",
+  ],
+  [
+    "([1+1𝒊]*x)",
+    "processing left operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "({1+1𝒊}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(1+1𝒊*{x})",
+    "processed right operand",
+  ],
+  [
+    "(1+1𝒊*x)",
+    "created multiplication",
+  ],
+  [
+    "(5*{(1+1𝒊*x)})",
+    "processed right operand",
+  ],
+  [
+    "(5*(1+1𝒊*x))",
+    "multiplicative associativity",
+  ],
+  [
+    "((5*1+1𝒊)*x)",
+    "identified multiplication",
+  ],
+  [
+    "([(5*1+1𝒊)]*x)",
+    "processing left operand",
+  ],
+  [
+    "(5*1+1𝒊)",
+    "identified multiplication",
+  ],
+  [
+    "([5]*1+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "5+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "({5+0𝒊}*[1+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+1𝒊",
+    "created complex",
+  ],
+  [
+    "(5+0𝒊*{1+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(5+0𝒊*1+1𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "5+5𝒊",
+    "created complex",
+  ],
+  [
+    "({5+5𝒊}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(5+5𝒊*{x})",
+    "processed right operand",
+  ],
+  [
+    "(5+5𝒊*x)",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when given a primitive and a not primitive reorder a complex right multiplicand to the left 1`] = `
+[
+  [
+    "(x*0+1𝒊)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*0+1𝒊)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[0+1𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0+1𝒊",
+    "created complex",
+  ],
+  [
+    "(x*{0+1𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(x*0+1𝒊)",
+    "reorder operands",
+  ],
+  [
+    "(0+1𝒊*x)",
+    "identified multiplication",
+  ],
+  [
+    "([0+1𝒊]*x)",
+    "processing left operand",
+  ],
+  [
+    "0+1𝒊",
+    "created complex",
+  ],
+  [
+    "({0+1𝒊}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(0+1𝒊*{x})",
+    "processed right operand",
+  ],
+  [
+    "(0+1𝒊*x)",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when given a primitive and a not primitive reorders a real right multiplicand to the left 1`] = `
+[
+  [
+    "(x*5)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*5)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "(x*{5})",
+    "processed right operand",
+  ],
+  [
+    "(x*5)",
+    "reorder operands",
+  ],
+  [
+    "(5*x)",
+    "identified multiplication",
+  ],
+  [
+    "([5]*x)",
+    "processing left operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "({5}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(5*{x})",
+    "processed right operand",
+  ],
+  [
+    "(5*x)",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`multiply when given two primitives is the product of mixed inputs 1`] = `
+[
+  [
+    "(2+3𝒊*5)",
+    "identified multiplication",
+  ],
+  [
+    "([2+3𝒊]*5)",
+    "processing left operand",
+  ],
+  [
+    "2+3𝒊",
+    "created complex",
+  ],
+  [
+    "({2+3𝒊}*[5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "5",
+    "created real",
+  ],
+  [
+    "5+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "(2+3𝒊*{5+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(2+3𝒊*5+0𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "10+15𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`multiply when given two primitives is the product of two complexes 1`] = `
+[
+  [
+    "(2+3𝒊*3+4𝒊)",
+    "identified multiplication",
+  ],
+  [
+    "([2+3𝒊]*3+4𝒊)",
+    "processing left operand",
+  ],
+  [
+    "2+3𝒊",
+    "created complex",
+  ],
+  [
+    "({2+3𝒊}*[3+4𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3+4𝒊",
+    "created complex",
+  ],
+  [
+    "(2+3𝒊*{3+4𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(2+3𝒊*3+4𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "-6+17𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`multiply when given two primitives is the product of two reals 1`] = `
+[
+  [
+    "(2*3)",
+    "identified multiplication",
+  ],
+  [
+    "([2]*3)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}*[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(2*{3})",
+    "processed right operand",
+  ],
+  [
+    "(2*3)",
+    "real multiplication",
+  ],
+  [
+    "6",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when given two primitives multiplies a complex wrapped real by a pure imaginary correctly 1`] = `
+[
+  [
+    "(∞+0𝒊*0+3𝒊)",
+    "identified multiplication",
+  ],
+  [
+    "([∞+0𝒊]*0+3𝒊)",
+    "processing left operand",
+  ],
+  [
+    "∞+0𝒊",
+    "created complex",
+  ],
+  [
+    "({∞+0𝒊}*[0+3𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0+3𝒊",
+    "created complex",
+  ],
+  [
+    "(∞+0𝒊*{0+3𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(∞+0𝒊*0+3𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "0+∞𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`multiply when given two primitives multiplies a pure imaginary by a complex wrapped real correctly 1`] = `
+[
+  [
+    "(0+3𝒊*∞+0𝒊)",
+    "identified multiplication",
+  ],
+  [
+    "([0+3𝒊]*∞+0𝒊)",
+    "processing left operand",
+  ],
+  [
+    "0+3𝒊",
+    "created complex",
+  ],
+  [
+    "({0+3𝒊}*[∞+0𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "∞+0𝒊",
+    "created complex",
+  ],
+  [
+    "(0+3𝒊*{∞+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(0+3𝒊*∞+0𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "0+∞𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`multiply when given two primitives multiplies complex infinity against complex 1 correctly 1`] = `
+[
+  [
+    "(∞̄*1+0𝒊)",
+    "identified multiplication",
+  ],
+  [
+    "([∞̄]*1+0𝒊)",
+    "processing left operand",
+  ],
+  [
+    "∞̄",
+    "created complex",
+  ],
+  [
+    "({∞̄}*[1+0𝒊])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "(∞̄*{1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(∞̄*1+0𝒊)",
+    "complex multiplication",
+  ],
+  [
+    "∞+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`negate results in a real with negative value, when real 1`] = `
+[
+  [
+    "(-1*1)",
+    "identified multiplication",
+  ],
+  [
+    "([-1]*1)",
+    "processing left operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "({-1}*[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(-1*{1})",
+    "processed right operand",
+  ],
+  [
+    "(-1*1)",
+    "real multiplication",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+]
+`;
+
+exports[`negate returns a Writer<Multiplication> for variable inputs 1`] = `
+[
+  [
+    "(-1*x)",
+    "identified multiplication",
+  ],
+  [
+    "([-1]*x)",
+    "processing left operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "({-1}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(-1*{x})",
+    "processed right operand",
+  ],
+  [
+    "(-1*x)",
+    "created multiplication",
+  ],
+]
+`;

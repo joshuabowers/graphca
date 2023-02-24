@@ -1,0 +1,845 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`raise computes the value of a real raised to a real 1`] = `
+[
+  [
+    "(2^3)",
+    "identified exponentiation",
+  ],
+  [
+    "([2]^3)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}^[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(2^{3})",
+    "processed right operand",
+  ],
+  [
+    "(2^3)",
+    "real exponentiation",
+  ],
+  [
+    "8",
+    "created real",
+  ],
+]
+`;
+
+exports[`raise converts a base multiplication into a product of exponentiations 1`] = `
+[
+  [
+    "((x*y)^z)",
+    "identified exponentiation",
+  ],
+  [
+    "([(x*y)]^z)",
+    "processing left operand",
+  ],
+  [
+    "(x*y)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}*[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x*{y})",
+    "processed right operand",
+  ],
+  [
+    "(x*y)",
+    "created multiplication",
+  ],
+  [
+    "({(x*y)}^[z])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "((x*y)^{z})",
+    "processed right operand",
+  ],
+  [
+    "((x*y)^z)",
+    "exponential distribution",
+  ],
+  [
+    "((x^z)*(y^z))",
+    "identified multiplication",
+  ],
+  [
+    "([(x^z)]*(y^z))",
+    "processing left operand",
+  ],
+  [
+    "(x^z)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^z)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[z])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "(x^{z})",
+    "processed right operand",
+  ],
+  [
+    "(x^z)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^z)}*[(y^z)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y^z)",
+    "identified exponentiation",
+  ],
+  [
+    "([y]^z)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}^[z])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "(y^{z})",
+    "processed right operand",
+  ],
+  [
+    "(y^z)",
+    "created exponentiation",
+  ],
+  [
+    "((x^z)*{(y^z)})",
+    "processed right operand",
+  ],
+  [
+    "((x^z)*(y^z))",
+    "created multiplication",
+  ],
+]
+`;
+
+exports[`raise creates an Exponentiation when given non-constants 1`] = `
+[
+  [
+    "(x^3)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^3)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[3])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "3",
+    "created real",
+  ],
+  [
+    "(x^{3})",
+    "processed right operand",
+  ],
+  [
+    "(x^3)",
+    "created exponentiation",
+  ],
+]
+`;
+
+exports[`raise multiplies the exponent of a base exponential against the exponent 1`] = `
+[
+  [
+    "((x^y)^z)",
+    "identified exponentiation",
+  ],
+  [
+    "([(x^y)]^z)",
+    "processing left operand",
+  ],
+  [
+    "(x^y)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^y)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[y])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "(x^{y})",
+    "processed right operand",
+  ],
+  [
+    "(x^y)",
+    "created exponentiation",
+  ],
+  [
+    "({(x^y)}^[z])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "((x^y)^{z})",
+    "processed right operand",
+  ],
+  [
+    "((x^y)^z)",
+    "exponential product",
+  ],
+  [
+    "(x^(y*z))",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^(y*z))",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[(y*z)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "(y*z)",
+    "identified multiplication",
+  ],
+  [
+    "([y]*z)",
+    "processing left operand",
+  ],
+  [
+    "y",
+    "referenced variable",
+  ],
+  [
+    "({y}*[z])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "z",
+    "referenced variable",
+  ],
+  [
+    "(y*{z})",
+    "processed right operand",
+  ],
+  [
+    "(y*z)",
+    "created multiplication",
+  ],
+  [
+    "(x^{(y*z)})",
+    "processed right operand",
+  ],
+  [
+    "(x^(y*z))",
+    "created exponentiation",
+  ],
+]
+`;
+
+exports[`raise returns 0 when the base is 0 1`] = `
+[
+  [
+    "(0^x)",
+    "identified exponentiation",
+  ],
+  [
+    "([0]^x)",
+    "processing left operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "({0}^[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(0^{x})",
+    "processed right operand",
+  ],
+  [
+    "(0^x)",
+    "powers of 0",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+]
+`;
+
+exports[`raise returns 1 when the base is 1 1`] = `
+[
+  [
+    "(1^x)",
+    "identified exponentiation",
+  ],
+  [
+    "([1]^x)",
+    "processing left operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "({1}^[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "(1^{x})",
+    "processed right operand",
+  ],
+  [
+    "(1^x)",
+    "powers of 1",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+]
+`;
+
+exports[`raise returns 1 when the exponent is 0 1`] = `
+[
+  [
+    "(x^0)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^0)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[0])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+  [
+    "(x^{0})",
+    "processed right operand",
+  ],
+  [
+    "(x^0)",
+    "exponent of 0",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+]
+`;
+
+exports[`raise returns the base whenever the exponent is 1 1`] = `
+[
+  [
+    "(x^1)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^1)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "1",
+    "created real",
+  ],
+  [
+    "(x^{1})",
+    "processed right operand",
+  ],
+  [
+    "(x^1)",
+    "exponent of 1",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`raise returns the sub-expression of an lb if base 2 1`] = `
+[
+  [
+    "(2^log(2,x))",
+    "identified exponentiation",
+  ],
+  [
+    "([2]^log(2,x))",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "({2}^[log(2,x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "log(2,x)",
+    "identified logarithm",
+  ],
+  [
+    "log([2],x)",
+    "processing left operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "log({2},[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "log(2,{x})",
+    "processed right operand",
+  ],
+  [
+    "log(2,x)",
+    "created logarithm",
+  ],
+  [
+    "(2^{log(2,x)})",
+    "processed right operand",
+  ],
+  [
+    "(2^log(2,x))",
+    "inverse function cancellation",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`raise returns the sub-expression of an lg if base 10 1`] = `
+[
+  [
+    "(10^log(10,x))",
+    "identified exponentiation",
+  ],
+  [
+    "([10]^log(10,x))",
+    "processing left operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "({10}^[log(10,x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "log(10,x)",
+    "identified logarithm",
+  ],
+  [
+    "log([10],x)",
+    "processing left operand",
+  ],
+  [
+    "10",
+    "created real",
+  ],
+  [
+    "log({10},[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "log(10,{x})",
+    "processed right operand",
+  ],
+  [
+    "log(10,x)",
+    "created logarithm",
+  ],
+  [
+    "(10^{log(10,x)})",
+    "processed right operand",
+  ],
+  [
+    "(10^log(10,x))",
+    "inverse function cancellation",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`raise returns the sub-expression of an ln if base e 1`] = `
+[
+  [
+    "(𝒆^log(𝒆,x))",
+    "identified exponentiation",
+  ],
+  [
+    "([𝒆]^log(𝒆,x))",
+    "processing left operand",
+  ],
+  [
+    "𝒆",
+    "created real",
+  ],
+  [
+    "({𝒆}^[log(𝒆,x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "log(𝒆,x)",
+    "identified logarithm",
+  ],
+  [
+    "log([𝒆],x)",
+    "processing left operand",
+  ],
+  [
+    "𝒆",
+    "created real",
+  ],
+  [
+    "log({𝒆},[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "log(𝒆,{x})",
+    "processed right operand",
+  ],
+  [
+    "log(𝒆,x)",
+    "created logarithm",
+  ],
+  [
+    "(𝒆^{log(𝒆,x)})",
+    "processed right operand",
+  ],
+  [
+    "(𝒆^log(𝒆,x))",
+    "inverse function cancellation",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`raise returns the value of a logarithm if raising similar base to it 1`] = `
+[
+  [
+    "(0+1𝒊^log(0+1𝒊,x))",
+    "identified exponentiation",
+  ],
+  [
+    "([0+1𝒊]^log(0+1𝒊,x))",
+    "processing left operand",
+  ],
+  [
+    "0+1𝒊",
+    "created complex",
+  ],
+  [
+    "({0+1𝒊}^[log(0+1𝒊,x)])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "log(0+1𝒊,x)",
+    "identified logarithm",
+  ],
+  [
+    "log([0+1𝒊],x)",
+    "processing left operand",
+  ],
+  [
+    "0+1𝒊",
+    "created complex",
+  ],
+  [
+    "log({0+1𝒊},[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "log(0+1𝒊,{x})",
+    "processed right operand",
+  ],
+  [
+    "log(0+1𝒊,x)",
+    "created logarithm",
+  ],
+  [
+    "(0+1𝒊^{log(0+1𝒊,x)})",
+    "processed right operand",
+  ],
+  [
+    "(0+1𝒊^log(0+1𝒊,x))",
+    "inverse function cancellation",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`reciprocal raises complex 1 to -1 correctly 1`] = `
+[
+  [
+    "(1+0𝒊^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([1+0𝒊]^-1)",
+    "processing left operand",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+  [
+    "({1+0𝒊}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "-1+0𝒊",
+    "cast to Complex from Real",
+  ],
+  [
+    "(1+0𝒊^{-1+0𝒊})",
+    "processed right operand",
+  ],
+  [
+    "(1+0𝒊^-1+0𝒊)",
+    "complex exponentiation",
+  ],
+  [
+    "1+0𝒊",
+    "created complex",
+  ],
+]
+`;
+
+exports[`reciprocal raises its argument to the power of -1 1`] = `
+[
+  [
+    "(x^-1)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^-1)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[-1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "-1",
+    "created real",
+  ],
+  [
+    "(x^{-1})",
+    "processed right operand",
+  ],
+  [
+    "(x^-1)",
+    "created exponentiation",
+  ],
+]
+`;
+
+exports[`sqrt raises its argument to the power of 0.5 1`] = `
+[
+  [
+    "(x^0.5)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^0.5)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[0.5])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "0.5",
+    "created real",
+  ],
+  [
+    "(x^{0.5})",
+    "processed right operand",
+  ],
+  [
+    "(x^0.5)",
+    "created exponentiation",
+  ],
+]
+`;
+
+exports[`square raises its argument to the power of 2 1`] = `
+[
+  [
+    "(x^2)",
+    "identified exponentiation",
+  ],
+  [
+    "([x]^2)",
+    "processing left operand",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+  [
+    "({x}^[2])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    "2",
+    "created real",
+  ],
+  [
+    "(x^{2})",
+    "processed right operand",
+  ],
+  [
+    "(x^2)",
+    "created exponentiation",
+  ],
+]
+`;

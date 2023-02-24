@@ -1,18 +1,31 @@
 import { unit } from '../monads/writer'
+import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex } from '../primitives'
 import { variable } from '../variable'
 import { multiply } from './multiplication'
 import { raise, reciprocal, square, sqrt, $raise } from './exponentiation'
 import { log, lb, ln, lg } from '../functions/logarithmic'
-import { Unicode } from '../Unicode'
 import { 
-  expectCloseTo, expectWriterTreeNode,
-  realOps, variableOps, raiseOps, logOps, complexOps, multiplyOps
+  expectToEqualWithSnapshot, expectCloseTo 
 } from '../utility/expectations'
+
+describe('$raise', () => {
+  it('generates an Exponentiation for a pair of TreeNode inputs', () => {
+    expect(
+      $raise(unit(variable('x').value), unit(variable('y').value))[0]
+    ).toEqual({
+      clade: Clades.binary, genus: Genera.arithmetic, species: Species.raise,
+      left: unit(variable('x').value), right: unit(variable('y').value)
+    })
+  })
+})
 
 describe('raise', () => {
   it('computes the value of a real raised to a real', () => {
-    expectCloseTo(raise(real(2), real(3)), real(8), 10)
+    expectToEqualWithSnapshot(
+      raise(real(2), real(3)),
+      real(8)
+    )
   })
 
   it('calculates the value of raising one complex to another', () => {
@@ -36,253 +49,98 @@ describe('raise', () => {
   })
 
   it('returns 0 when the base is 0', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(real(0), variable('x')),
       real(0)
-    )(
-      ...raiseOps(
-        'powers of 0',
-        realOps('0'),
-        variableOps('x'),
-        realOps('0')
-      )
     )
   })
 
   it('returns 1 when the exponent is 0', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(variable('x'), real(0)),
       real(1)
-    )(
-      ...raiseOps(
-        'exponent of 0',
-        variableOps('x'),
-        realOps('0'),
-        realOps('1')
-      )
     )
   })
 
   it('returns 1 when the base is 1', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(real(1), variable('x')),
       real(1)
-    )(
-      ...raiseOps(
-        'powers of 1',
-        realOps('1'),
-        variableOps('x'),
-        realOps('1')
-      )
     )
   })
 
   it('returns the base whenever the exponent is 1', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(variable('x'), real(1)),
       variable('x')
-    )(
-      ...raiseOps(
-        'exponent of 1',
-        variableOps('x'),
-        realOps('1'),
-        variableOps('x')
-      )
     )
   })
 
   it('returns the sub-expression of an lb if base 2', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(real(2), lb(variable('x'))),
       variable('x')
-    )(
-      ...raiseOps(
-        'inverse function cancellation',
-        realOps('2'),
-        logOps(
-          'created logarithm',
-          realOps('2'),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
     )
   })
 
   it('returns the sub-expression of an ln if base e', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(real(Math.E), ln(variable('x'))),
       variable('x')
-    )(
-      ...raiseOps(
-        'inverse function cancellation',
-        realOps(Unicode.e),
-        logOps(
-          'created logarithm',
-          realOps(Unicode.e),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
-      // [Unicode.e, Unicode.e, 'given primitive'],
-      // [Unicode.e, Unicode.e, 'given primitive'],
-      // ['x', 'x', 'given variable'],
-      // [`log(${Unicode.e}, x)`, `log(${Unicode.e},x)`, 'logarithm'],
-      // [`${Unicode.e} ^ log(${Unicode.e},x)`, 'x', 'inverse function cancellation']
     )
   })
 
   it('returns the sub-expression of an lg if base 10', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(real(10), lg(variable('x'))),
       variable('x')
-    )(
-      ...raiseOps(
-        'inverse function cancellation',
-        realOps('10'),
-        logOps(
-          'created logarithm',
-          realOps('10'),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
     )
   })
   
   it('returns the value of a logarithm if raising similar base to it', () => {
-    const i = `0+1${Unicode.i}`
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(complex([0, 1]), log(complex([0, 1]), variable('x'))),
       variable('x')
-    )(
-      ...raiseOps(
-        'inverse function cancellation',
-        complexOps('0', '1'),
-        logOps(
-          'created logarithm',
-          complexOps('0', '1'),
-          variableOps('x'),
-          []
-        ),
-        variableOps('x')
-      )
     )
   })
 
   it('multiplies the exponent of a base exponential against the exponent', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(raise(variable('x'), variable('y')), variable('z')),
       raise(variable('x'), multiply(variable('y'), variable('z')))
-    )(
-      ...raiseOps(
-        'exponential product',
-        raiseOps(
-          'created exponentiation',
-          variableOps('x'),
-          variableOps('y'),
-          []
-        ),
-        variableOps('z'),
-        raiseOps(
-          'created exponentiation',
-          variableOps('x'),
-          multiplyOps(
-            'created multiplication',
-            variableOps('y'),
-            variableOps('z'),
-            []
-          ),
-          []
-        )
-      )
     )
   })
 
   it('converts a base multiplication into a product of exponentiations', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(multiply(variable('x'), variable('y')), variable('z')),
       multiply(
         raise(variable('x'), variable('z')),
         raise(variable('y'), variable('z'))
       )
-    )(
-      ...raiseOps(
-        'exponential distribution',
-        multiplyOps(
-          'created multiplication',
-          variableOps('x'),
-          variableOps('y'),
-          []
-        ),
-        variableOps('z'),
-        multiplyOps(
-          'created multiplication',
-          raiseOps(
-            'created exponentiation',
-            variableOps('x'),
-            variableOps('z'),
-            []
-          ),
-          raiseOps(
-            'created exponentiation',
-            variableOps('y'),
-            variableOps('z'),
-            []
-          ),
-          []
-        )
-      )
     )
   })
   
   it('creates an Exponentiation when given non-constants', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       raise(variable('x'), real(3)),
       $raise(variable('x'), real(3))[0]
-    )(
-      ...raiseOps(
-        'created exponentiation',
-        variableOps('x'),
-        realOps('3'),
-        []
-      )
     )
   })
 })
 
 describe('reciprocal', () => {
   it('raises its argument to the power of -1', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       reciprocal(variable('x')),
       raise(variable('x'), real(-1))
-    )(
-      ...raiseOps(
-        'created exponentiation',
-        variableOps('x'),
-        realOps('-1'),
-        []
-      )
     )
   })
 
   it('raises complex 1 to -1 correctly', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       reciprocal(complex([1, 0])),
       complex([1, 0])
-    )(
-      ...raiseOps(
-        'complex exponentiation',
-        complexOps('1', '0'),
-        [
-          ...realOps('-1'),
-          [`-1+0${Unicode.i}`, 'cast to Complex from Real']
-        ],
-        complexOps('1', '0')
-      )
     )
   })
 
@@ -297,16 +155,9 @@ describe('reciprocal', () => {
 
 describe('square', () => {
   it('raises its argument to the power of 2', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       square(variable('x')),
       raise(variable('x'), real(2))
-    )(
-      ...raiseOps(
-        'created exponentiation',
-        variableOps('x'),
-        realOps('2'),
-        []
-      )
     )
   })
 
@@ -317,16 +168,9 @@ describe('square', () => {
 
 describe('sqrt', () => {
   it('raises its argument to the power of 0.5', () => {
-    expectWriterTreeNode(
+    expectToEqualWithSnapshot(
       sqrt(variable('x')),
       raise(variable('x'), real(0.5))
-    )(
-      ...raiseOps(
-        'created exponentiation',
-        variableOps('x'),
-        realOps('0.5'),
-        []
-      )
     )
   })
 
