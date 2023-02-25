@@ -1,5 +1,5 @@
 import { _ } from '@arrows/multimethod'
-import { Writer, unit } from '../monads/writer'
+import { Writer } from '../monads/writer'
 import { Operation } from '../utility/operation'
 import { TreeNode, Clades, Genera, Species, Notation } from '../utility/tree'
 import { Complex, real, complex, boolean, nan, isReal, isPrimitive, isComplex } from '../primitives'
@@ -9,7 +9,6 @@ import {
   Exponentiation, isExponentiation, raise, reciprocal, square 
 } from './exponentiation'
 import { deepEquals, isValue } from '../utility/deepEquals'
-import { identityRule, rule } from '../utility/rule'
 
 export type Multiplication = Binary<Species.multiply, Genera.arithmetic>
 type MultiplicationOfLeftExponential = Multiplication & {
@@ -85,7 +84,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => isPrimitive(l) && isMultiplication(r) && isPrimitive(r.value.left),
     (l, r) => [
       multiply(multiply(l, r.value.left), r.value.right),
-      // rule`(${l} * ${r.value.left}) * ${r.value.right}`,
       'multiplicative associativity'
     ]
   ),
@@ -98,7 +96,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.left, r.value.left),
         multiply(l.value.right, r.value.right)
       ),
-      // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
       'collecting equivalent left multiplicands'
     ]
   ),
@@ -110,7 +107,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.left, r.value.right),
         multiply(l.value.right, r.value.left)
       ),
-      // rule`(${l.value.left} * ${r.value.right}) * (${l.value.right} * ${r.value.left})`,
       'collecting equivalent left/right multiplicands'
     ]
   ),
@@ -122,7 +118,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.right, r.value.left),
         multiply(l.value.left, r.value.right)
       ),
-      // rule`(${l.value.right} * ${r.value.left}) * (${l.value.left} * ${r.value.right})`,
       'collecting equivalent right/left multiplicands'
     ]
   ),
@@ -134,7 +129,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.left, r.value.left),
         multiply(l.value.right, r.value.right)
       ),
-      // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
       'collecting equivalent right multiplicands'
     ]
   ),
@@ -143,7 +137,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l, r.value.left),
     (l, r) => [
       multiply(square(l), r.value.right), 
-      // rule`[${l}]^2 * ${r.value.right}`,
       'equivalent: left operand and left child of right operand'
     ]
   ),
@@ -152,7 +145,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l, r.value.right),
     (l, r) => [
       multiply(square(l), r.value.left), 
-      // rule`[${l}]^2 * ${r.value.left}`,
       'equivalent: left operand and right child of right operand'
     ]
   ),
@@ -161,7 +153,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.left, r),
     (l, r) => [ 
       multiply(square(r), l.value.right),
-      // rule`[${r}]^2 * ${l.value.right}`,
       'equivalent: left child of left operand and right operand'
     ]
   ),
@@ -170,7 +161,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.right, r),
     (l, r) => [
       multiply(square(r), l.value.left),
-      // rule`[${r}]^2 * ${l.value.left}`,
       'equivalent: right child of left operand and right operand'
     ]
   ),
@@ -206,7 +196,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.left, r.value.left),
         multiply(l.value.right, r.value.right)
       ),
-      // rule`(${l.value.left} * ${r.value.left}) * (${l.value.right} * ${r.value.right})`,
       'equivalent: left child of left multiplication and left child of right multiplication'
     ]
   ),
@@ -246,7 +235,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         multiply(l.value.left, r.value.right),
         multiply(l.value.right, r.value.left),
       ),
-      // rule`(${l.value.left} * ${r.value.right}) * (${l.value.right} * ${r.value.left})`,
       'equivalent: left child of left multiplication and right child of right multiplication'
     ]
   ),
@@ -255,7 +243,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       && deepEquals(l.value.left, r.value.left),
     (l, r) => [
       raise(l.value.left, add(l.value.right, r.value.right)), 
-      // rule`${l.value.left} ^ (${l.value.right} + ${r.value.right})`,
       'combined like terms'
     ]
   ),
@@ -266,7 +253,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         r.value.right, raise(l.value.left, add(l.value.right, real(1)))
       ),
-      // rule`${r.value.right} * ${l.value.left}^(${l.value.right} + ${real(1)})`,
       'equivalent: base of left exponentiation and left child of right'
     ]
   ),
@@ -277,7 +263,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         r.value.left, raise(l.value.left, add(l.value.right, real(1)))
       ),
-      // rule`${r.value.left} * ${l.value.left}^(${l.value.right} + ${real(1)})`,
       'equivalent: base of left exponentiation and right child of right'
     ]
   ),
@@ -289,7 +274,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         r.value.right,
         raise(l.value.left, add(l.value.right, r.value.left.value.right))
       ),
-      // rule`${r.value.right} * ${l.value.left}^(${l.value.right} + ${r.value.left.value.right})`,
       'equivalent: base of left exponentiation and base of left child exponentiation of right multiplication'
     ]
   ),
@@ -301,7 +285,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         r.value.left,
         raise(l.value.left, add(l.value.right, r.value.right.value.right))
       ),
-      // rule`${r.value.left} * ${l.value.left}^(${l.value.right} + ${r.value.right.value.right})`,
       'equivalent: base of left exponentiation and base of right child exponentiation of right multiplication'
     ]
   ),
@@ -312,7 +295,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         l.value.right, raise(r.value.left, add(r.value.right, real(1)))
       ),
-      // rule`${l.value.right} * ${r.value.left}^(${r.value.right} + ${real(1)})`,
       'equivalent: left child of left and base of right exponentiation'
     ]
   ),
@@ -323,7 +305,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         l.value.left, raise(r.value.left, add(r.value.right, real(1)))
       ),
-      // rule`${l.value.left} * ${r.value.left}^(${r.value.right} + ${real(1)})`,
       'equivalent: right child of left and base of right exponentiation'
     ]
   ),
@@ -335,7 +316,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         l.value.right,
         raise(r.value.left, add(l.value.left.value.right, r.value.right))
       ),
-      // rule`${l.value.right} * ${r.value.left}^(${l.value.left.value.right} + ${r.value.right})`,
       'equivalent: base of left child exponentiation of left multiplication and base of right exponentiation'
     ]
   ),
@@ -347,7 +327,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
         l.value.left,
         raise(r.value.left, add(l.value.right.value.right, r.value.right))
       ),
-      // rule`${l.value.left} * ${r.value.left}^(${l.value.right.value.right} + ${r.value.right})`,
       'equivalent: base of right child exponentiation of left multiplication and base of right exponentiation'
     ]
   ),
@@ -357,7 +336,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         r.value.right, multiply(l, r.value.left)
       ),
-      // rule`${r.value.right} * (${l} * ${r.value.left})`,
       'equivalent: left operand and left child of right operand'
     ]
   ),
@@ -367,7 +345,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         r.value.left, multiply(l, r.value.right)
       ),
-      // rule`${r.value.left} * (${l} * ${r.value.right})`,
       'equivalent: left operand and right child of right operand'
     ]
   ),
@@ -378,7 +355,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         r.value.right, raise(l, add(real(1), r.value.left.value.right))
       ),
-      // rule`${r.value.right} * ${l}^(${real(1)} + ${r.value.left.value.right})`,
       'equivalent: left operand and base of left child exponentiation of right multiplication'
     ]
   ),
@@ -389,7 +365,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         r.value.left, raise(l, add(real(1), r.value.right.value.right))
       ),
-      // rule`${r.value.left} * ${l}^(${real(1)} + ${r.value.right.value.right})`,
       'equivalent: left operand and base of right child exponentiation of right multiplication'
     ]
   ),
@@ -399,7 +374,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         l.value.right, multiply(r, l.value.left)
       ),
-      // rule`${l.value.right} * (${r} * ${l.value.left})`,
       'equivalent: left child of left operand and right operand'
     ]
   ),
@@ -409,7 +383,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         l.value.left, multiply(r, l.value.right)
       ),
-      // rule`${l.value.left} * (${r} * ${l.value.right})`,
       'equivalent: right child of left operand and right operand'
     ]
   ),
@@ -420,7 +393,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         l.value.right, raise(r, add(real(1), l.value.left.value.right))
       ),
-      // rule`${l.value.right} * ${r}^(${real(1)} + ${l.value.left.value.right})`,
       'equivalent: base of left child exponentiation of left multiplication and right operand'
     ]
   ),
@@ -431,7 +403,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
       multiply(
         l.value.left, raise(r, add(real(1), l.value.right.value.right))
       ),
-      // rule`${l.value.left} * ${r}^(${real(1)} + ${l.value.right.value.right})`,
       'equivalent: base of right child exponentiation of left multiplication and right operand'
     ]
   ),
@@ -439,7 +410,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => isExponentiation(r) && deepEquals(l, r.value.left),
     (l, r) => [
       raise(l, add(real(1), r.value.right)), 
-      // rule`${l} ^ (${real(1)} + ${r.value.right})`,
       'combined like terms'
     ]
   ),
@@ -447,7 +417,6 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
     (l, r) => isExponentiation(l) && deepEquals(l.value.left, r),
     (l, r) => [
       raise(r, add(real(1), l.value.right)), 
-      // rule`${r} ^ (${real(1)} + ${l.value.right})`,
       'combined like terms'
     ]
   )

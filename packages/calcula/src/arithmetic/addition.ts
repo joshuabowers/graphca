@@ -24,8 +24,6 @@
 //   BpM(identity, rightChild)((l, r) => multiply(add(real(1), r.left), l))
 // )
 
-// export const subtract = binaryFrom(add, (l, r) => [l, negate(r)])
-
 import { Writer, unit } from '../monads/writer'
 import { Operation } from '../utility/operation'
 import { _ } from '@arrows/multimethod'
@@ -36,18 +34,15 @@ import {
   Real, real, complex, boolean, isPrimitive, PrimitiveNode 
 } from "../primitives"
 import { 
-  Binary, binary, binaryFrom, when, // binaryInfixRule 
+  Binary, binary, binaryFrom, when
 } from "../closures/binary"
 import { deepEquals, isValue } from "../utility/deepEquals"
 import { multiply, double, negate, Multiplication, isMultiplication } from './multiplication'
-import { rule, identityRule } from '../utility/rule'
 
 export type Addition = Binary<Species.add, Genera.arithmetic>
 type AdditionWithPrimitive = Addition & {
   readonly right: Writer<PrimitiveNode, Operation>
 }
-
-// export const addRule = binaryInfixRule('+')
 
 export const [add, isAddition, $add] = binary<Addition>(
   '+', Notation.infix, Species.add, Genera.arithmetic
@@ -70,7 +65,6 @@ export const [add, isAddition, $add] = binary<Addition>(
       && isPrimitive(r), 
     (l, r) => [
       add(l.value.left, add(l.value.right, r)), 
-      // rule`${l.left} + (${l.right} + ${r})`,
       'additive associativity'
     ]),
   when(deepEquals, (l, _r) => [
@@ -98,7 +92,6 @@ export const [add, isAddition, $add] = binary<Addition>(
       && deepEquals(l.value.right, r.value.right),
     (l, r) => [
       multiply(add(l.value.left, r.value.left), l.value.right), 
-      // rule`(${l.left} + ${r.left}) * ${l.right}`,
       'combined like terms'
     ]
   ),

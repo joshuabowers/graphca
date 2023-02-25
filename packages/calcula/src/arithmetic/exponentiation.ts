@@ -1,12 +1,10 @@
 import { _ } from '@arrows/multimethod'
-import { unit } from '../monads/writer'
 import { TreeNode, Genera, Species, Notation } from "../utility/tree"
 import { real, complex, boolean } from "../primitives"
 import { Binary, binary, when, partialRight } from "../closures/binary"
 import { deepEquals, isValue } from "../utility/deepEquals"
 import { isMultiplication, Multiplication, multiply } from './multiplication'
 import { isLogarithm, Logarithm } from '../functions/logarithmic'
-import { rule } from '../utility/rule'
 
 export type Exponentiation = Binary<Species.raise, Genera.arithmetic>
 
@@ -42,8 +40,6 @@ export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
   when([isValue(real(1)), _], [real(1), 'powers of 1']),
   when([_, isValue(real(1))], (l, _r) => [l, 'exponent of 1']),
 
-  // QUESTION: Should this be `${l}^log(${l}, ${r.value.right})`? That would make
-  // the rewrite obvious.
   when<TreeNode, Logarithm>(
     (l, r) => isLogarithm(r) && deepEquals(l, r.value.left),
     (_l, r) => [r.value.right, 'inverse function cancellation']
@@ -52,7 +48,6 @@ export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
     (l, _r) => isExponentiation(l),
     (l, r) => [
       raise(l.value.left, multiply(l.value.right, r)), 
-      // rule`${l.value.left}^(${l.value.right} * ${r})`,
       'exponential product'
     ]
   ),
@@ -60,7 +55,6 @@ export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
     (l, _r) => isMultiplication(l),
     (l, r) => [
       multiply(raise(l.value.left, r), raise(l.value.right, r)), 
-      // rule`(${l.value.left}^${r}) * (${l.value.right}^${r})`,
       'exponential distribution'
     ]
   )

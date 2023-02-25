@@ -1,6 +1,6 @@
 import { Genera, Species, Notation, isGenus } from "../utility/tree"
 import { boolean, real } from "../primitives"
-import { UnaryNode, unary } from "../closures/unary"
+import { UnaryNode, unary, UnaryNodeMetaTuple } from "../closures/unary"
 import { 
   add, subtract, multiply, divide, square, sqrt, reciprocal 
 } from "../arithmetic"
@@ -35,7 +35,7 @@ export const [acosh, isAreaHyperbolicCosine, $acosh] = unary<AreaHyperbolicCosin
     )
   )),
   b => boolean(acosh(real(b)))
-)()
+)() as UnaryNodeMetaTuple<AreaHyperbolicCosine, void>
 
 export const [asinh, isAreaHyperbolicSine, $asinh] = unary<AreaHyperbolicSine>(
   'asinh', Notation.prefix, Species.asinh, Genera.areaHyperbolic
@@ -46,7 +46,7 @@ export const [asinh, isAreaHyperbolicSine, $asinh] = unary<AreaHyperbolicSine>(
     c
   )),
   b => boolean(asinh(real(b)))
-)()
+)() as UnaryNodeMetaTuple<AreaHyperbolicSine, void>
 
 export const [atanh, isAreaHyperbolicTangent, $atanh] = unary<AreaHyperbolicTangent>(
   'atanh', Notation.prefix, Species.atanh, Genera.areaHyperbolic
@@ -60,7 +60,7 @@ export const [atanh, isAreaHyperbolicTangent, $atanh] = unary<AreaHyperbolicTang
     ))
   ),
   b => boolean(atanh(real(b)))
-)()
+)() as UnaryNodeMetaTuple<AreaHyperbolicTangent, void>
 
 export const [asech, isAreaHyperbolicSecant, $asech] = unary<AreaHyperbolicSecant>(
   'asech', Notation.prefix, Species.asech, Genera.areaHyperbolic
@@ -68,7 +68,7 @@ export const [asech, isAreaHyperbolicSecant, $asech] = unary<AreaHyperbolicSecan
   r => acosh(reciprocal(r)),
   c => acosh(reciprocal(c)),
   b => acosh(reciprocal(b))
-)()
+)() as UnaryNodeMetaTuple<AreaHyperbolicSecant, void>
 
 export const [acsch, isAreaHyperbolicCosecant, $acsch] = unary<AreaHyperbolicCosecant>(
   'acsch', Notation.prefix, Species.acsch, Genera.areaHyperbolic
@@ -76,7 +76,7 @@ export const [acsch, isAreaHyperbolicCosecant, $acsch] = unary<AreaHyperbolicCos
   r => asinh(reciprocal(r)),
   c => asinh(reciprocal(c)),
   b => asinh(reciprocal(b))
-)()
+)() as UnaryNodeMetaTuple<AreaHyperbolicCosecant, void>
 
 export const [acoth, isAreaHyperbolicCotangent, $acoth] = unary<AreaHyperbolicCotangent>(
   'acoth', Notation.prefix, Species.acoth, Genera.areaHyperbolic
@@ -84,4 +84,4 @@ export const [acoth, isAreaHyperbolicCotangent, $acoth] = unary<AreaHyperbolicCo
   r => atanh(reciprocal(r)),
   c => atanh(reciprocal(c)),
   b => atanh(reciprocal(b))
-)()
+)() as UnaryNodeMetaTuple<AreaHyperbolicCotangent, void>

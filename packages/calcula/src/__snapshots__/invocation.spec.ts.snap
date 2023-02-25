@@ -177,7 +177,7 @@ exports[`invoke of specific node types evaluates left child variables of binarie
   ],
   [
     "5",
-    "invoked Real",
+    "evaluating real",
   ],
   [
     "5",
@@ -274,7 +274,7 @@ exports[`invoke of specific node types evaluates right child variables of binari
   ],
   [
     "5",
-    "invoked Real",
+    "evaluating real",
   ],
   [
     "5",
@@ -335,7 +335,7 @@ exports[`invoke of specific node types returns booleans directly 1`] = `
   ],
   [
     "true",
-    "invoked Boolean",
+    "evaluating boolean",
   ],
   [
     "true",
@@ -372,7 +372,7 @@ exports[`invoke of specific node types returns complex numbers directly 1`] = `
   ],
   [
     "1+5𝒊",
-    "invoked Complex",
+    "evaluating complex",
   ],
   [
     "1+5𝒊",
@@ -409,7 +409,7 @@ exports[`invoke of specific node types returns reals directly 1`] = `
   ],
   [
     "5",
-    "invoked Real",
+    "evaluating real",
   ],
   [
     "5",
@@ -726,7 +726,7 @@ exports[`invoke when given an expression with multiple instances of a variable s
   ],
   [
     "5",
-    "invoked Real",
+    "evaluating real",
   ],
   [
     "5",

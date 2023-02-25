@@ -1,6 +1,6 @@
 import { Genera, Species, Notation, isGenus } from "../utility/tree"
 import { real, complex, boolean } from "../primitives"
-import { UnaryNode, unary } from "../closures/unary"
+import { UnaryNode, unary, UnaryNodeMetaTuple } from "../closures/unary"
 import { reciprocal } from "../arithmetic"
 
 export type HyperbolicNode = UnaryNode & {
@@ -29,7 +29,7 @@ export const [cosh, isHyperbolicCosine, $cosh] = unary<HyperbolicCosine>(
     Math.sinh(c.value.a) * Math.sin(c.value.b)
   ]),
   b => boolean(cosh(real(b)))
-)()
+)() as UnaryNodeMetaTuple<HyperbolicCosine, void>
 
 export const [sinh, isHyperbolicSine, $sinh] = unary<HyperbolicSine>(
   'sinh', Notation.prefix, Species.sinh, Genera.hyperbolic
@@ -40,7 +40,7 @@ export const [sinh, isHyperbolicSine, $sinh] = unary<HyperbolicSine>(
     Math.cosh(c.value.a) * Math.sin(c.value.b)
   ]),
   b => boolean(sinh(real(b))),
-)()
+)() as UnaryNodeMetaTuple<HyperbolicSine, void>
 
 export const [tanh, isHyperbolicTangent, $tanh] = unary<HyperbolicTangent>(
   'tanh', Notation.prefix, Species.tanh, Genera.hyperbolic
@@ -54,31 +54,28 @@ export const [tanh, isHyperbolicTangent, $tanh] = unary<HyperbolicTangent>(
     ])
   },
   b => boolean(tanh(real(b))),
-)()
+)() as UnaryNodeMetaTuple<HyperbolicTangent, void>
 
 export const [sech, isHyperbolicSecant, $sech] = unary<HyperbolicSecant>(
-  'sech', Notation.prefix, Species.sech, Genera.hyperbolic,
-  // t => rule`cosh(${t}) ^ -1`
+  'sech', Notation.prefix, Species.sech, Genera.hyperbolic
 )(
   r => reciprocal(cosh(r)),
   c => reciprocal(cosh(c)),
   b => reciprocal(cosh(b))
-)()
+)() as UnaryNodeMetaTuple<HyperbolicSecant, void>
 
 export const [csch, isHyperbolicCosecant, $csch] = unary<HyperbolicCosecant>(
-  'csch', Notation.prefix, Species.csch, Genera.hyperbolic,
-  // t => rule`sinh(${t}) ^ -1`
+  'csch', Notation.prefix, Species.csch, Genera.hyperbolic
 )(
   r => reciprocal(sinh(r)),
   c => reciprocal(sinh(c)),
   b => reciprocal(sinh(b))
-)()
+)() as UnaryNodeMetaTuple<HyperbolicCosecant, void>
 
 export const [coth, isHyperbolicCotangent, $coth] = unary<HyperbolicCotangent>(
-  'coth', Notation.prefix, Species.coth, Genera.hyperbolic,
-  // t => rule`tanh(${t}) ^ -1`
+  'coth', Notation.prefix, Species.coth, Genera.hyperbolic
 )(
   r => reciprocal(tanh(r)),
   c => reciprocal(tanh(c)),
   b => reciprocal(tanh(b))
-)()
+)() as UnaryNodeMetaTuple<HyperbolicCotangent, void>

@@ -57,8 +57,6 @@ import { factorial, isFactorial } from './functions/factorial'
 import { gamma, isGamma } from './functions/gamma'
 import { polygamma, isPolygamma } from './functions/polygamma'
 import { parameterize } from './utility/parameterization'
-// import { rule } from './utility/rule'
-import { Unicode } from './Unicode'
 import { 
   LogFunctionalFn, processLogs, processed, processing 
 } from './utility/processLogs'
@@ -75,7 +73,9 @@ const guardFrom = <T extends TreeNode>(guard: TreeNodeGuardFn<T>) =>
   (expression: EvaluableNode<T>) => guard(expression(emptyScope))
 
 const constant = <T extends PrimitiveNode>(): CorrespondingFn<T> => 
-  _ => (n: W.Writer<T, Operation>): Action<T> => [n, `invoked ${n.value.species}`]
+  _ => (n: W.Writer<T, Operation>): Action<T> => [
+    n, `evaluating ${n.value.species.toLocaleLowerCase()}`
+  ]
 
 const binary = <T extends BinaryNode, R>(b: BinaryFn<T, R>): CorrespondingFn<T> =>
   scope => (e: W.Writer<BinaryNode, Operation>): Action<T> => [
