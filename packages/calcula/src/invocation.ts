@@ -2,7 +2,7 @@ import { multi, method, Multi } from '@arrows/multimethod'
 import * as R from './monads/reader'
 import * as W from './monads/writer'
 import { 
-  Particle, Operation, Action, operation, context 
+  Particle, Operation, Action, operation, context, interleave
 } from './utility/operation'
 import { TreeNode, TreeNodeGuardFn, Species } from "./utility/tree"
 import { PrimitiveNode } from './primitives'
@@ -181,9 +181,6 @@ function* zip<T, U>(parameters: Set<T>, args: U[]) {
     i++
   }
 }
-
-const interleave = <A, E>(array: A[], element: E): (A|E)[] =>
-  array.flatMap((e, i) => i+1 < array.length ? [e, element] : e)
 
 const toParticles = (expression: Particle[]) => 
   (...parameters: Particle[][]): Particle[] =>

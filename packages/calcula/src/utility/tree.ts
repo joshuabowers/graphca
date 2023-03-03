@@ -5,6 +5,7 @@ export enum Clades {
   primitive = 'Primitive',  // Constants: 10, 4 - 5i, true
   unary = 'Unary',          // Functions and Ops: not, abs, sin
   binary = 'Binary',        // Functions and Ops: and, log, polygamma
+  multiary = 'Multiary',    // Functions and Ops: add, multiply
   variadic = 'Variadic'     // Variables: x, OhGodWhy
 }
 

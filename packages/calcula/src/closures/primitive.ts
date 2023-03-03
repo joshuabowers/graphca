@@ -1,11 +1,10 @@
 import { method, multi, fromMulti, Multi } from '@arrows/multimethod'
 import { Writer, bind, writer } from '../monads/writer'
-import { Operation, operation } from '../utility/operation'
+import { Operation, operation, Action } from '../utility/operation'
 import { CreateFn, CastFn } from '../utility/typings'
 import { 
   TreeNode, Clades, Species, isClade, TreeNodeGuardFn, isSpecies 
 } from '../utility/tree'
-// import { rule, process, resolve } from '../utility/rule'
 
 export type PrimitiveNode = TreeNode & {
   readonly clade: Clades.primitive
@@ -37,6 +36,16 @@ export type PrimitiveMetaTuple<T extends PrimitiveNode, U> = [
   CreateFn<U, T>
 ]
 
+export const when = <Params, Fields, T extends PrimitiveNode & Fields>(
+  predicate: ((params: Params) => boolean) | GuardFn<T>,
+  fn: Action<TreeNode>
+) => 
+  method(predicate, (params: Params|T) => {
+
+  })
+
+export type WhenFn = typeof when
+
 export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
   guard: GuardFn<Params>,
   paramsMap: ((u: Params) => Fields),
@@ -62,10 +71,6 @@ export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
           value,
           operation([toString(value)], action)
         )
-        // return ({
-        //   value: value,
-        //   log: [{input: rule`${input}`, rewrite: rule`${value}`, action}]
-        // })
       })
   return (
     whenReal: HandleFn<Real>,
@@ -82,14 +87,6 @@ export const primitive = <Params, Fields, T extends PrimitiveNode & Fields>(
             value,
             operation([toString(value)], `created ${species.toLocaleLowerCase()}`)
           )
-          // return ({
-          //   result: value, 
-          //   log: [{
-          //     input: process`${value}`,
-          //     rewrite: resolve`${value}`,
-          //     action: `created ${species.toLocaleLowerCase()}`
-          //   }]
-          // })
         }
       ),
       method(Species.real, handle(whenReal)),

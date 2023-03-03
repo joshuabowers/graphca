@@ -103,3 +103,6 @@ export function *flatten(particles: Particle[]): IterableIterator<string>{
  */
 export const toString = (particles: Particle[]) =>
   [...flatten(particles)].join('')
+
+export const interleave = <A, E>(array: A[], element: E): (A|E)[] =>
+  array.flatMap((e, i) => i+1 < array.length ? [e, element] : e)

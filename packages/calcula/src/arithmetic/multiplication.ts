@@ -18,25 +18,6 @@ type MultiplicationOfRightExponential = Multiplication & {
   readonly right: Writer<Exponentiation, Operation>
 }
 
-type W = number
-type O = string
-type M = W | O | W[] | [...W[], O]
-
-// const r: M = 5
-// const s: M = '5'
-// const t: M = [5, 6, 7, '8']
-// const u: M = [5, 6, 7]
-// const v: M = ['5', 4, 5, 2]
-
-// const foo = (...m: W[] | [O] | [...W[], O]) => {
-//   return m.map(i => i.toString()).join(', ')
-// }
-
-// foo('red')
-// foo(1, 2, 3)
-// foo(1, 2, 3, 'red')
-// foo(1, 'red', 2, 3)
-
 const isComplexWrapped = (v: Writer<TreeNode, Operation>): v is Writer<Complex, Operation> => 
   isComplex(v) && v.value.b === 0
 const isImaginary = (v: Writer<TreeNode, Operation>): v is Writer<Complex, Operation> => 
