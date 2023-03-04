@@ -462,6 +462,9 @@ quux(5, 'ten').raw.b
 const isNumericOrString = (v: unknown): v is number|string =>
   typeof v === 'number' || typeof v === 'string'
 
+const isBooleanOrString = (v: unknown): v is boolean|string =>
+  typeof v === 'boolean' || typeof v === 'string'
+
 const areNumericOrString = (...v: unknown[]): boolean => v.every(isNumericOrString)
 
 type GuardFn = (...v: unknown[]) => boolean
@@ -489,12 +492,18 @@ const c = createClosure<[number|string, number|string], {a: number, b: number}>(
   areNumericOrString,
   (a, b) => ({a: Number(a), b: Number(b)})
 )
+const b = createClosure<[boolean|string], boolean>(
+  isBooleanOrString,
+  (raw) => Boolean(raw)
+)
 
 c(real(5).value)
 r(5)
 r(real(5).value)
 r(complex([1,2]).value)
 c('5', 4)
+b('true')
+b(false)
 
 const u: unknown = 5
 isNumericOrString(u) && Number(u)
