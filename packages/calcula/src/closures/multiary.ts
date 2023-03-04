@@ -1,4 +1,4 @@
-import { method, multi, Multi, _ } from '@arrows/multimethod'
+import { fromMulti, method, multi, Multi, _ } from '@arrows/multimethod'
 import { Writer, writer } from '../monads/writer'
 import { 
   Particle, Operation, interleave
@@ -12,7 +12,7 @@ import {
   Real, Complex, Boolean, NaN,
   real, complex, boolean, nan, 
   isPrimitive, 
-  isReal, isComplex, isBoolean, isNil, isNaN
+  isReal, isComplex, isBoolean, isNil, isNaN, isComplexInfinity
 } from '../primitives'
 import { variable } from '../variable'
 import { Exponentiation, isExponentiation, raise } from '../arithmetic'
@@ -111,6 +111,10 @@ export const areReal = matchGuard(isReal),
 export type ToRawFn<I extends TreeNode, M> =
   (value: Writer<I, Operation>) => M
 
+type GenerateFn = Multi
+  & ((p: Writer<TreeNode, Operation>, rest: Writer<TreeNode, Operation>[]) => Action<TreeNode>)
+
+
 export const multiary = <T extends MultiaryNode>(
   name: string, species: Species, genus: Genera
 ) => {
@@ -141,12 +145,27 @@ export const multiary = <T extends MultiaryNode>(
     whenComplex: Handle<[number, number], Complex>,
     whenBoolean: Handle<boolean, Boolean>
   ) => {
-    return (...extensions: WhenFn[]) => {
+    return (...replacements: ReplaceFn[]) => {
+      const generate: GenerateFn = multi(
+        (p: Writer<TreeNode, Operation>, _rest: Writer<TreeNode, Operation>[]) => p,
+        replace(
+          p => (isReal(p) 
+            && !Number.isFinite(p.value.value) 
+            && !Number.isNaN(p.value.value))
+            || (isComplex(p) && isComplexInfinity(p)),
+          (p, _rest) => [[p], 'infinite absorption']
+        )(create),
+        replace(
+          p => isNaN(p) || isNil(p),
+          (p, _rest) => [[p], 'incalculable']
+        )(create),
+        ...replacements.map(r => r(create)),
+        replace(_p => true, (p, rest) => [[p, ...rest], undefined])(create)
+      )
       return (...considerations: ConsiderFn[]): MultiaryNodeMetaTuple<T> => {
         const combineTerms = createCombineTerms(logFunctional, ...considerations)
         const fn: MultiaryFn<T> = multi(
           // Insert other edge cases here
-          ...extensions.map(extension => extension(logFunctional)),
           when(
             (operands: Writer<TreeNode, Operation>[]) =>
               operands.some(isComplex) && operands.every(isPrimitive),
@@ -194,11 +213,10 @@ export const multiary = <T extends MultiaryNode>(
                 initialOperands.flatMap(n => [...cleave(n)])
               )
               const primitives = operands.filter(isPrimitive)
-              operands = [fn(...primitives), ...operands.filter(m => !isPrimitive(m))]
-          
-              return operands.length < 2 
-                ? [operands[0], undefined]
-                : create(...operands)        
+              if(primitives.length > 0){
+                operands = [fn(...primitives), ...operands.filter(m => !isPrimitive(m))]
+              }
+              return generate(operands[0], operands.slice(1))
             }
           )
         )
@@ -286,6 +304,23 @@ const consider = <M extends TreeNode, N extends TreeNode>(
 
 type ConsiderFn = ReturnType<typeof consider>
 
+const replace = <T extends MultiaryNode>(
+  predicate: ((p: Writer<TreeNode, Operation>) => boolean),
+  correspondingFn: ((p: Writer<TreeNode, Operation>, rest: Writer<TreeNode, Operation>[]) => [Writer<TreeNode, Operation>[], string|undefined])
+) => 
+  (create: MultiaryCreateFn<T>) =>
+    method(predicate, (p: Writer<TreeNode, Operation>, rest: Writer<TreeNode, Operation>[]): Action<TreeNode> => {
+      const [operands, action] = correspondingFn(p, rest)
+      if(operands.length > 1){
+        const [result, defaultAction] = create(...operands)
+        return [result, action ?? defaultAction]
+      } else {
+        return [operands[0], 'reduced to singular operand']
+      }
+    })
+
+type ReplaceFn = ReturnType<typeof replace>
+
 type Addition = Multiary<Species.add, Genera.arithmetic>
 const [add, isAddition, $add] = multiary<Addition>(
   '+', Species.add, Genera.arithmetic
@@ -293,7 +328,13 @@ const [add, isAddition, $add] = multiary<Addition>(
   (...addends) => real(addends.reduce((p,c) => p+c)),
   (...addends) => complex(addends.reduce((p,c) => [p[0]+c[0], p[1]+c[1]])),
   (...addends) => boolean(addends.reduce((p,c) => (p || c) && !(p && c)))
-)()(
+)(
+  replace(
+    p => (isReal(p) && p.value.value === 0)
+      || (isComplex(p) && p.value.a === 0 && p.value.b === 0),
+    (_p, rest) => [rest, 'additive identity']
+  )  
+)(
   // 1st: deepEquals between a and all other addends.
   // => Ex.: x + x + x => 3 * x
   consider(
@@ -339,7 +380,18 @@ const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
     ]
   )),
   (...operands) => boolean(operands.reduce((p,c) => p && c))
-)()(
+)(
+  replace(
+    p => (isReal(p) && p.value.value === 0)
+      || (isComplex(p) && p.value.a === 0 && p.value.b === 0),
+    (p, _rest) => [[p], 'zero absorption']
+  ),
+  replace(
+    p => (isReal(p) && p.value.value === 1)
+      || (isComplex(p) && p.value.a === 1 && p.value.b === 0),
+    (_p, rest) => [rest, 'multiplicative identity']
+  )
+)(
   // 1st: deepEquals between m and all other multiplicands.
   // => Ex.: x * x * x => x^3
   consider(
@@ -384,3 +436,25 @@ multiply(boolean(true), real(3))
 multiply(real(5), variable('x'))
 multiply(real(2), real(3), real(4), real(5))
 multiply(real(5), nan)
+
+// Some odd tests for changing `primitive`.
+// Note that this would cause `complex` to read better =>
+// `complex(1, 2)` vs `complex([1, 2])`
+const foo = <Params extends any[], Fields extends {}>(
+  convert: ((...raw: Params) => Fields)
+) => 
+  (...raw: Params) => convert(...raw)
+
+const bar = foo<[number], {raw: number}>((raw) => ({raw}))
+const baz = foo<[number, number], {raw: {a: number, b: number}}>(
+  (a, b) => ({raw: {a, b}})
+)
+const qux = foo<[boolean], {raw: boolean}>((raw) => ({raw}))
+const quux = foo<[number, string], {raw: {a: number, b: string}}>(
+  (a, b) => ({raw: {a, b}})
+)
+
+bar(1).raw
+baz(1, 2).raw.a
+qux(false).raw
+quux(5, 'ten').raw.b
