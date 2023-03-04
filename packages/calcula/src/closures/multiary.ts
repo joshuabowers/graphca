@@ -458,3 +458,43 @@ bar(1).raw
 baz(1, 2).raw.a
 qux(false).raw
 quux(5, 'ten').raw.b
+
+const isNumericOrString = (v: unknown): v is number|string =>
+  typeof v === 'number' || typeof v === 'string'
+
+const areNumericOrString = (...v: unknown[]): boolean => v.every(isNumericOrString)
+
+type GuardFn = (...v: unknown[]) => boolean
+
+type Closure<Params extends any[], O> = Multi
+  & ((...raw: Params) => O)
+  & ((r: Real) => O)
+  & ((c: Complex) => O)
+
+const createClosure = <Params extends any[], Fields extends {}>(
+  guard: GuardFn,
+  convert: ((...raw: Params) => Fields)
+): Closure<Params, {raw: Fields}> => {
+  const fn: Closure<Params, {raw: Fields}> = multi(
+    method(guard, (...raw: Params) => {})
+  )
+  return fn
+}
+
+const r = createClosure<[number|string], number>(
+  isNumericOrString,
+  (raw) => Number(raw)
+)
+const c = createClosure<[number|string, number|string], {a: number, b: number}>(
+  areNumericOrString,
+  (a, b) => ({a: Number(a), b: Number(b)})
+)
+
+c(real(5).value)
+r(5)
+r(real(5).value)
+r(complex([1,2]).value)
+c('5', 4)
+
+const u: unknown = 5
+isNumericOrString(u) && Number(u)
