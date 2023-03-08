@@ -64,8 +64,8 @@ describe('invoke', () => {
 
     it('returns complex numbers directly', () => {
       expectToEqualWithSnapshot(
-        invoke()(complex([1, 5]))(),
-        complex([1, 5])
+        invoke()(complex(1, 5))(),
+        complex(1, 5)
       )
     })
 

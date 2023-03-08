@@ -23,35 +23,35 @@ export type Cotangent = Trigonometric<Species.cot>
 export const [sin, isSine, $sin] = unary<Sine>(
   'sin', Notation.prefix, Species.sin, Genera.trigonometric
 )(
-  r => real(Math.sin(r.value.value)),
-  c => complex([
-    Math.sin(c.value.a) * Math.cosh(c.value.b),
-    Math.cos(c.value.a) * Math.sinh(c.value.b)
-  ]),
-  b => boolean(real(Math.sin(b.value.value ? 1 : 0))),
+  r => real(Math.sin(r.value.raw)),
+  c => complex(
+    Math.sin(c.value.raw.a) * Math.cosh(c.value.raw.b),
+    Math.cos(c.value.raw.a) * Math.sinh(c.value.raw.b)
+  ),
+  b => boolean(real(Math.sin(b.value.raw ? 1 : 0))),
 )()
 
 export const [cos, isCosine, $cos] = unary<Cosine>(
   'cos', Notation.prefix, Species.cos, Genera.trigonometric
 )(
-  r => real(Math.cos(r.value.value)), 
-  c => complex([
-    Math.cos(c.value.a) * Math.cosh(c.value.b),
-    -Math.sin(c.value.a) * Math.sinh(c.value.b)
-  ]),
-  b => boolean(real(Math.cos(b.value.value ? 1 : 0))),
+  r => real(Math.cos(r.value.raw)), 
+  c => complex(
+    Math.cos(c.value.raw.a) * Math.cosh(c.value.raw.b),
+    -Math.sin(c.value.raw.a) * Math.sinh(c.value.raw.b)
+  ),
+  b => boolean(real(Math.cos(b.value.raw ? 1 : 0))),
 )()
 
 export const [tan, isTangent, $tan] = unary<Tangent>(
   'tan', Notation.prefix, Species.tan, Genera.trigonometric
 )(
-  r => real(Math.tan(r.value.value)),
+  r => real(Math.tan(r.value.raw)),
   c => {
-    const divisor = Math.cos(2 * c.value.a) + Math.cosh(2 * c.value.b)
-    return complex([
-      Math.sin(2 * c.value.a) / divisor,
-      Math.sinh(2 * c.value.b) / divisor    
-    ])
+    const divisor = Math.cos(2 * c.value.raw.a) + Math.cosh(2 * c.value.raw.b)
+    return complex(
+      Math.sin(2 * c.value.raw.a) / divisor,
+      Math.sinh(2 * c.value.raw.b) / divisor    
+    )
   },
   b => boolean(real(Math.tan(b.value ? 1 : 0))),
 )()

@@ -37,15 +37,15 @@ describe('factorial', () => {
 
   it('returns complex 1 for an input of complex 0', () => {
     expectToEqualWithSnapshot(
-      factorial(complex([0, 0])),
-      complex([1, 0])
+      factorial(complex(0, 0)),
+      complex(1, 0)
     )
   })
 
   it('returns the factorial for a integer complex', () => {
     expectToEqualWithSnapshot(
-      factorial(complex([2, 0])),
-      complex([2, 0])
+      factorial(complex(2, 0)),
+      complex(2, 0)
     )
   })
 
@@ -61,7 +61,7 @@ describe('factorial', () => {
   })
 
   it('returns a shifted gamma for non-integer complex numbers', () => {
-    expectCloseTo(factorial(complex([1, 1])), gamma(complex([2, 1])), 10)
+    expectCloseTo(factorial(complex(1, 1)), gamma(complex(2, 1)), 10)
   })
 
   it('returns a Factorial node for unbound variables', () => {

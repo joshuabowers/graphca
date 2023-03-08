@@ -23,35 +23,35 @@ export type HyperbolicCotangent = Hyperbolic<Species.coth>
 export const [cosh, isHyperbolicCosine, $cosh] = unary<HyperbolicCosine>(
   'cosh', Notation.prefix, Species.cosh, Genera.hyperbolic
 )(
-  r => real(Math.cosh(r.value.value)), 
-  c => complex([
-    Math.cosh(c.value.a) * Math.cos(c.value.b),
-    Math.sinh(c.value.a) * Math.sin(c.value.b)
-  ]),
+  r => real(Math.cosh(r.value.raw)), 
+  c => complex(
+    Math.cosh(c.value.raw.a) * Math.cos(c.value.raw.b),
+    Math.sinh(c.value.raw.a) * Math.sin(c.value.raw.b)
+  ),
   b => boolean(cosh(real(b)))
 )() as UnaryNodeMetaTuple<HyperbolicCosine, void>
 
 export const [sinh, isHyperbolicSine, $sinh] = unary<HyperbolicSine>(
   'sinh', Notation.prefix, Species.sinh, Genera.hyperbolic
 )(
-  r => real(Math.sinh(r.value.value)),
-  c => complex([
-    Math.sinh(c.value.a) * Math.cos(c.value.b),
-    Math.cosh(c.value.a) * Math.sin(c.value.b)
-  ]),
+  r => real(Math.sinh(r.value.raw)),
+  c => complex(
+    Math.sinh(c.value.raw.a) * Math.cos(c.value.raw.b),
+    Math.cosh(c.value.raw.a) * Math.sin(c.value.raw.b)
+  ),
   b => boolean(sinh(real(b))),
 )() as UnaryNodeMetaTuple<HyperbolicSine, void>
 
 export const [tanh, isHyperbolicTangent, $tanh] = unary<HyperbolicTangent>(
   'tanh', Notation.prefix, Species.tanh, Genera.hyperbolic
 )(
-  r => real(Math.tanh(r.value.value)),
+  r => real(Math.tanh(r.value.raw)),
   c => {
-    const divisor = Math.cosh(2 * c.value.a) + Math.cos(2 * c.value.b)
-    return complex([
-      Math.sinh(2 * c.value.a) / divisor,
-      Math.sin(2 * c.value.b) / divisor
-    ])
+    const divisor = Math.cosh(2 * c.value.raw.a) + Math.cos(2 * c.value.raw.b)
+    return complex(
+      Math.sinh(2 * c.value.raw.a) / divisor,
+      Math.sin(2 * c.value.raw.b) / divisor
+    )
   },
   b => boolean(tanh(real(b))),
 )() as UnaryNodeMetaTuple<HyperbolicTangent, void>

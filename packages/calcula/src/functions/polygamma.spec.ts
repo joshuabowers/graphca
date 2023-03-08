@@ -28,8 +28,8 @@ describe('polygamma', () => {
 
     it('calculates an approximate value for complex numbers for m=1', () => {
       expectCloseTo(
-        polygamma(real(1), complex([0, 100])),
-        complex([-0.0000499999999, -0.0099998333299]),
+        polygamma(real(1), complex(0, 100)),
+        complex(-0.0000499999999, -0.0099998333299),
         10
       )
     })
@@ -56,8 +56,8 @@ describe('polygamma', () => {
 
     it('uses a recurrence relation to calculate for a mapped large complex', () => {
       expectCloseTo(
-        polygamma(real(1), complex([1, 1])),
-        complex([0.463000096622, -0.794233542759]),
+        polygamma(real(1), complex(1, 1)),
+        complex(0.463000096622, -0.794233542759),
         10
       )
     })
@@ -79,8 +79,8 @@ describe('digamma', () => {
 
     it('calculates an approximate value for complex numbers', () => {
       expectCloseTo(
-        digamma(complex([0, 10])), 
-        complex([2.3034192636714, 1.6207963267948]), 
+        digamma(complex(0, 10)), 
+        complex(2.3034192636714, 1.6207963267948), 
         10
       )
     })
@@ -99,8 +99,8 @@ describe('digamma', () => {
 
     it('uses a recurrence relation to calculate for a mapped large complex', () => {
       expectCloseTo(
-        digamma(complex([1, 1])),
-        complex([0.094650320622, 1.076674047468]),
+        digamma(complex(1, 1)),
+        complex(0.094650320622, 1.076674047468),
         10
       )
     })

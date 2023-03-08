@@ -1,20 +1,20 @@
 import { Species } from '../utility/tree'
 import { Real, primitive, when } from '../closures/primitive'
-import { isNumber } from '../utility/valuePredicates'
+import { isNumericOrString } from '../utility/valuePredicates'
 import { numeric } from '../utility/numeric'
 import { nan } from './nan'
 export { Real }
 
 export const [real, isReal, $real] = 
-  primitive<number, {value: number}, Real>(
-  isNumber,
-  value => ({value}),
+  primitive<[number|string], number, Real>(
+  isNumericOrString,
+  value => Number(value),
   Species.real,
-  r => numeric(r.value)
+  r => numeric(r.raw)
 )(
-  r => r.value,
-  c => c.a,
-  b => b.value ? 1 : 0
+  r => [r.raw],
+  c => [c.raw.a],
+  b => [b.raw ? 1 : 0]
 )(
   when(Number.isNaN, [nan, 'incalculable'])
 )

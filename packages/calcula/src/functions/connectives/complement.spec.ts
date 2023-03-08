@@ -41,14 +41,14 @@ describe('not', () => {
 
   it('yields false for non-zero complex inputs', () => {
     expectToEqualWithSnapshot(
-      not(complex([1, 0])),
+      not(complex(1, 0)),
       boolean(false)
     )
   })
 
   it('yields true for complex 0', () => {
     expectToEqualWithSnapshot(
-      not(complex([0, 0])),
+      not(complex(0, 0)),
       boolean(true)
     )
   })

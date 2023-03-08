@@ -13,12 +13,12 @@ export type Conjunction = Connective<Species.and>
 export const [and, isConjunction, $and] = binary<Conjunction, Boolean>(
   Unicode.and, Notation.infix, Species.and, Genera.connective
 )(
-  (l, r) => boolean(l.value.value !== 0 && r.value.value !== 0),
+  (l, r) => boolean(l.value.raw !== 0 && r.value.raw !== 0),
   (l, r) => boolean(
-    (l.value.a !== 0 || l.value.b !== 0) 
-    && (r.value.a !== 0 || r.value.b !== 0)
+    (l.value.raw.a !== 0 || l.value.raw.b !== 0) 
+    && (r.value.raw.a !== 0 || r.value.raw.b !== 0)
   ), 
-  (l, r) => boolean(l.value.value && r.value.value)
+  (l, r) => boolean(l.value.raw && r.value.raw)
 )(
   when(
     [_, isValue(boolean(true))], 

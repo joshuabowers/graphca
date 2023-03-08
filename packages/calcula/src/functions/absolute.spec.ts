@@ -26,8 +26,8 @@ describe('abs', () => {
 
   it('returns a Writer<Complex> for a complex input', () => {
     expectToEqualWithSnapshot(
-      abs(complex([1, 2])),
-      complex([2.23606797749979, 0])
+      abs(complex(1, 2)),
+      complex(2.23606797749979, 0)
     )
   })
 

@@ -75,18 +75,18 @@ export const differentiate: DifferentiateFn = multi(
     (o: unknown, e: unknown) => isTreeNode(o) && isReal(o) && isTreeNode(e),
     (o: Writer<Real, Operation>, e: Writer<TreeNode, Operation>) => {
         let d: Writer<TreeNode, Operation> = e
-        for(let i = 0; i < o.value.value; i++) {
+        for(let i = 0; i < o.value.raw; i++) {
           d = differentiate(d)
         }
         return writer(d, ...logFunctionalNth(
-          `calculated ${parameterName(o.value.value, 0)} derivative`, o, e
+          `calculated ${parameterName(o.value.raw, 0)} derivative`, o, e
         ))
     }
   ),
 
   // Primitives
   when(isReal, [real(0), 'derivative of a real']),
-  when(isComplex, [complex([0, 0]), 'derivative of a complex number']),
+  when(isComplex, [complex(0, 0), 'derivative of a complex number']),
   when(isBoolean, [boolean(false), 'derivative of a boolean']),
   when(isNil, [nan, 'derivative of nil']),
   when(isNaN, [nan, 'derivative of NaN']),

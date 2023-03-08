@@ -29,21 +29,21 @@ describe('raise', () => {
   })
 
   it('calculates the value of raising one complex to another', () => {
-    expectCloseTo(raise(complex([0, 1]), complex([0, 1])), complex([0.20787957635076, 0]), 10)
+    expectCloseTo(raise(complex(0, 1), complex(0, 1)), complex(0.20787957635076, 0), 10)
   })
 
   it('calculates the value of raising a real to a complex number', () => {
-    expectCloseTo(raise(real(-2), complex([3, 4])), complex([0.000026020793185, -0.000010062701000]), 10)
+    expectCloseTo(raise(real(-2), complex(3, 4)), complex(0.000026020793185, -0.000010062701000), 10)
   })
 
   it('calculates the value of raising a complex number to a real', () => {
-    expectCloseTo(raise(complex([2, 3]), real(5)), complex([122, -597]), 10)
+    expectCloseTo(raise(complex(2, 3), real(5)), complex(122, -597), 10)
   })
 
   it('calculates the complex square root', () => {
     expectCloseTo(
-      raise(complex([2, 3]), real(0.5)), 
-      complex([1.67414922803554, 0.89597747612983]), 
+      raise(complex(2, 3), real(0.5)), 
+      complex(1.67414922803554, 0.89597747612983), 
       10
     )
   })
@@ -99,7 +99,7 @@ describe('raise', () => {
   
   it('returns the value of a logarithm if raising similar base to it', () => {
     expectToEqualWithSnapshot(
-      raise(complex([0, 1]), log(complex([0, 1]), variable('x'))),
+      raise(complex(0, 1), log(complex(0, 1), variable('x'))),
       variable('x')
     )
   })
@@ -139,17 +139,17 @@ describe('reciprocal', () => {
 
   it('raises complex 1 to -1 correctly', () => {
     expectToEqualWithSnapshot(
-      reciprocal(complex([1, 0])),
-      complex([1, 0])
+      reciprocal(complex(1, 0)),
+      complex(1, 0)
     )
   })
 
   it('calculates a complex reciprocal correctly', () => {
-    expectCloseTo(reciprocal(complex([1, 1])), complex([0.5, -0.5]), 10)
+    expectCloseTo(reciprocal(complex(1, 1)), complex(0.5, -0.5), 10)
   })
 
   it('calculates a reciprocal of complex 0 correctly', () => {
-    expectCloseTo(reciprocal(complex([0, 0])), complex([Infinity, 0]), 10)
+    expectCloseTo(reciprocal(complex(0, 0)), complex(Infinity, 0), 10)
   })
 })
 
@@ -162,7 +162,7 @@ describe('square', () => {
   })
 
   it('calculates the proper square of a complex number', () => {
-    expectCloseTo(square(complex([1, 1])), complex([0, 2]), 10)
+    expectCloseTo(square(complex(1, 1)), complex(0, 2), 10)
   })
 })
 
@@ -175,10 +175,10 @@ describe('sqrt', () => {
   })
 
   it('calculates the proper sqrt of a complex number', () => {
-    expectCloseTo(sqrt(complex([1, 1])), complex([1.098684113467, 0.455089860562]), 10)
+    expectCloseTo(sqrt(complex(1, 1)), complex(1.098684113467, 0.455089860562), 10)
   })
 
   it('calculates the complex sqrt of a complex number', () => {
-    expectCloseTo(sqrt(complex([3, 1])), complex([1.755317301824, 0.284848784593]), 10)
+    expectCloseTo(sqrt(complex(3, 1)), complex(1.755317301824, 0.284848784593), 10)
   })
 })

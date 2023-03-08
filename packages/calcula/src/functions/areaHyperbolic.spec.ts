@@ -27,7 +27,7 @@ describe('acosh', () => {
   })
 
   it('calculates the area hyperbolic cosine of a complex number', () => {
-    expectCloseTo(acosh(complex([2, 1])), complex([1.469351744368, 0.507356303217]), 10)
+    expectCloseTo(acosh(complex(2, 1)), complex(1.469351744368, 0.507356303217), 10)
   })
 
   it('generates an AreaHyperbolicCosine node of a variable expression', () => {
@@ -55,7 +55,7 @@ describe('asinh', () => {
   })
 
   it('calculates the area hyperbolic sine of a complex number', () => {
-    expectCloseTo(asinh(complex([0, 1])), complex([0, 1.57079632679]), 7)
+    expectCloseTo(asinh(complex(0, 1)), complex(0, 1.57079632679), 7)
   })
 
   it('generates an AreaHyperbolicSine node of a variable expression', () => {
@@ -83,7 +83,7 @@ describe('atanh', () => {
   })
 
   it('calculates the area hyperbolic tangent of a complex number', () => {
-    expectCloseTo(atanh(complex([0, 1])), complex([0, 0.78539816339]), 10)
+    expectCloseTo(atanh(complex(0, 1)), complex(0, 0.78539816339), 10)
   })
 
   it('generates an AreaHyperbolicTangent node of a variable expression', () => {
@@ -114,7 +114,7 @@ describe('asech', () => {
   })
 
   it('calculates the area hyperbolic secant of a complex number', () => {
-    expectCloseTo(asech(complex([0, 1])), complex([0.88137358701, -1.57079632679]), 10)
+    expectCloseTo(asech(complex(0, 1)), complex(0.88137358701, -1.57079632679), 10)
   })
 
   it('generates an AreaHyperbolicSecant node of a variable expression', () => {
@@ -142,7 +142,7 @@ describe('acsch', () => {
   })
 
   it('calculates the area hyperbolic cosecant of a complex number', () => {
-    expectCloseTo(acsch(complex([0, 1])), complex([0, -1.57079632679]), 7)
+    expectCloseTo(acsch(complex(0, 1)), complex(0, -1.57079632679), 7)
   })
 
   it('generates an AreaHyperbolicCosecant node of a variable expression', () => {
@@ -170,7 +170,7 @@ describe('acoth', () => {
   })
 
   it('calculates the area hyperbolic cotangent of a complex number', () => {
-    expectCloseTo(acoth(complex([0, 1])), complex([0, -0.78539816339]), 10)
+    expectCloseTo(acoth(complex(0, 1)), complex(0, -0.78539816339), 10)
   })
 
   it('generates an AreaHyperbolicCotangent node of a variable expression', () => {

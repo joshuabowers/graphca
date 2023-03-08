@@ -47,9 +47,9 @@ type AdditionWithPrimitive = Addition & {
 export const [add, isAddition, $add] = binary<Addition>(
   '+', Notation.infix, Species.add, Genera.arithmetic
 )(
-  (l, r) => real(l.value.value + r.value.value),
-  (l, r) => complex([l.value.a + r.value.a, l.value.b + r.value.b]), 
-  (l, r) => boolean((l.value.value || r.value.value) && !(l.value.value && r.value.value)), 
+  (l, r) => real(l.value.raw + r.value.raw),
+  (l, r) => complex(l.value.raw.a + r.value.raw.a, l.value.raw.b + r.value.raw.b), 
+  (l, r) => boolean((l.value.raw || r.value.raw) && !(l.value.raw && r.value.raw)), 
 )(
   when(
     [

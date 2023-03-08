@@ -29,7 +29,7 @@ describe('equals', () => {
 
   it('returns true for two equal complexes', () => {
     expectToEqualWithSnapshot(
-      equals(complex([1,1]), complex([1,1])),
+      equals(complex(1,1), complex(1,1)),
       boolean(true)
     )
   })
@@ -77,7 +77,7 @@ describe('notEquals', () => {
 
   it('returns false for two equal complexes', () => {
     expectToEqualWithSnapshot(
-      notEquals(complex([1,1]), complex([1,1])),
+      notEquals(complex(1,1), complex(1,1)),
       boolean(false)
     )
   })
@@ -139,14 +139,14 @@ describe('lessThan', () => {
 
   it('returns true for two complexes ordered by length', () => {
     expectToEqualWithSnapshot(
-      lessThan(complex([1, 1]), complex([5, 5])),
+      lessThan(complex(1, 1), complex(5, 5)),
       boolean(true)
     )
   })
 
   it('returns false for two complexes not ordered by length', () => {
     expectToEqualWithSnapshot(
-      lessThan(complex([5, 5]), complex([1, 1])),
+      lessThan(complex(5, 5), complex(1, 1)),
       boolean(false)
     )
   })
@@ -194,14 +194,14 @@ describe('greaterThan', () => {
 
   it('returns false for two complexes ordered by length', () => {
     expectToEqualWithSnapshot(
-      greaterThan(complex([1, 1]), complex([5, 5])),
+      greaterThan(complex(1, 1), complex(5, 5)),
       boolean(false)
     )
   })
 
   it('returns true for two complexes not ordered by length', () => {
     expectToEqualWithSnapshot(
-      greaterThan(complex([5, 5]), complex([1, 1])),
+      greaterThan(complex(5, 5), complex(1, 1)),
       boolean(true)
     )
   })
@@ -249,14 +249,14 @@ describe('lessThanEquals', () => {
 
   it('returns true for two complexes ordered by length', () => {
     expectToEqualWithSnapshot(
-      lessThanEquals(complex([1, 1]), complex([5, 5])),
+      lessThanEquals(complex(1, 1), complex(5, 5)),
       boolean(true)
     )
   })
 
   it('returns false for two complexes not ordered by length', () => {
     expectToEqualWithSnapshot(
-      lessThanEquals(complex([5, 5]), complex([1, 1])),
+      lessThanEquals(complex(5, 5), complex(1, 1)),
       boolean(false)
     )
   })
@@ -304,14 +304,14 @@ describe('greaterThanEquals', () => {
 
   it('returns false for two complexes ordered by length', () => {
     expectToEqualWithSnapshot(
-      greaterThanEquals(complex([1, 1]), complex([5, 5])),
+      greaterThanEquals(complex(1, 1), complex(5, 5)),
       boolean(false)
     )
   })
 
   it('returns true for two complexes not ordered by length', () => {
     expectToEqualWithSnapshot(
-      greaterThanEquals(complex([5, 5]), complex([1, 1])),
+      greaterThanEquals(complex(5, 5), complex(1, 1)),
       boolean(true)
     )
   })

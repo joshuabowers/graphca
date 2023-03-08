@@ -58,7 +58,7 @@ describe('or', () => {
 
   it('casts complexes to booleans, 0 => false, non-zero => true', () => {
     expectToEqualWithSnapshot(
-      or(complex([5, 0]), complex([0, 0])),
+      or(complex(5, 0), complex(0, 0)),
       boolean(true)
     )
   })

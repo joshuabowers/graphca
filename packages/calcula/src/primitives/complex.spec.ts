@@ -6,9 +6,9 @@ import { expectToEqualWithSnapshot } from '../utility/expectations'
 
 describe('$complex', () => {
   it('returns a Complex for a numeric pair parameter', () => {
-    expect($complex([1, 2])).toEqual({
+    expect($complex(1, 2)).toEqual({
       clade: Clades.primitive, genus: undefined, species: Species.complex, 
-      a: 1, b: 2      
+      raw: {a: 1, b: 2}
     })
   })
 })
@@ -16,25 +16,25 @@ describe('$complex', () => {
 describe('complex', () => {
   it('returns a Writer<Complex> for a number pair input', () => {
     expectToEqualWithSnapshot(
-      complex([1, 2]), $complex([1, 2])
+      complex(1, 2), $complex(1, 2)
     )
   })
 
   it('returns a Writer<Complex> for a real input', () => {
     expectToEqualWithSnapshot(
-      complex(real(5)), $complex([5, 0])
+      complex(real(5)), $complex(5, 0)
     )
   })
 
   it('returns a Writer<Complex> for a complex input', () => {
     expectToEqualWithSnapshot(
-      complex(complex([1, 2])), $complex([1, 2])
+      complex(complex(1, 2)), $complex(1, 2)
     )
   })
 
   it('returns a Writer<Complex> for a boolean input', () => {
     expectToEqualWithSnapshot(
-      complex(boolean(true)), complex([1, 0])
+      complex(boolean(true)), complex(1, 0)
     )
   })
 })

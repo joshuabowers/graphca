@@ -28,15 +28,15 @@ describe('log', () => {
   })
 
   it('calculates the complex log of a complex value', () => {
-    expectCloseTo(log(complex([0, 1]), complex([1, 2])), complex([0.7048327646991, -0.5122999987267]), 10)
+    expectCloseTo(log(complex(0, 1), complex(1, 2)), complex(0.7048327646991, -0.5122999987267), 10)
   })
 
   it('calculates a complex log of a real value', () => {
-    expectCloseTo(log(complex([0, 1]), real(10)), complex([0, -1.465871197758]), 10)
+    expectCloseTo(log(complex(0, 1), real(10)), complex(0, -1.465871197758), 10)
   })
 
   it('calculates a real log of a complex value', () => {
-    expectCloseTo(log(real(10), complex([0, 1])), complex([0, 0.6821881769209]), 10)
+    expectCloseTo(log(real(10), complex(0, 1)), complex(0, 0.6821881769209), 10)
   })
 
   it('returns an expression for unbound subtrees', () => {
@@ -73,13 +73,13 @@ describe('lb', () => {
 describe('ln', () => {
   it('calculates the base e logarithm of complex 0', () => {
     expectToEqualWithSnapshot(
-      ln(complex([0, 0])),
-      complex([-Infinity, 0])
+      ln(complex(0, 0)),
+      complex(-Infinity, 0)
     )
   })
 
   it('calculates the natural logarithm of a complex', () => {
-    expectCloseTo(ln(complex([3.79890743995, 2.1117859405])), complex([1.4693517444, 0.50735630322]), 10)
+    expectCloseTo(ln(complex(3.79890743995, 2.1117859405)), complex(1.4693517444, 0.50735630322), 10)
   })
 
   it('returns the exponent of a natural exponential', () => {

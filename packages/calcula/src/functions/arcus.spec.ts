@@ -25,7 +25,7 @@ describe('acos', () => {
   })
 
   it('calculates the arcus cosine of a complex number', () => {
-    expectCloseTo(acos(complex([0, 1])), complex([1.57079632679, -0.881373587]), 10)
+    expectCloseTo(acos(complex(0, 1)), complex(1.57079632679, -0.881373587), 10)
   })
 
   it('generates an arcus cosine node for a variable expression', () => {
@@ -51,7 +51,7 @@ describe('asin', () => {
   })
 
   it('calculates the arcus sine of a complex number', () => {
-    expectCloseTo(asin(complex([0, 1])), complex([0, 0.881373587]), 10)
+    expectCloseTo(asin(complex(0, 1)), complex(0, 0.881373587), 10)
   })
 
   it('generates an arcus sine node for a variable expression', () => {
@@ -77,7 +77,7 @@ describe('atan', () => {
   })
 
   it('calculates the arcus tangent of a complex number', () => {
-    expectCloseTo(atan(complex([0, 1])), complex([0, Infinity]), 10)
+    expectCloseTo(atan(complex(0, 1)), complex(0, Infinity), 10)
   })
 
   it('generates an arcus tangent node for a variable expression', () => {
@@ -106,7 +106,7 @@ describe('asec', () => {
   })
 
   it('calculates the arcus secant of a complex number', () => {
-    expectCloseTo(asec(complex([0, 1])), complex([1.57079632679, 0.881373587]), 10)
+    expectCloseTo(asec(complex(0, 1)), complex(1.57079632679, 0.881373587), 10)
   })
 
   it('generates an arcus secant node for a variable expression', () => {
@@ -132,7 +132,7 @@ describe('acsc', () => {
   })
 
   it('calculates the arcus cosecant of a complex number', () => {
-    expectCloseTo(acsc(complex([0, 1])), complex([0, -0.881373587]), 10)
+    expectCloseTo(acsc(complex(0, 1)), complex(0, -0.881373587), 10)
   })
 
   it('generates an arcus cosecant node for a variable expression', () => {
@@ -158,7 +158,7 @@ describe('acot', () => {
   })
 
   it('calculates the arcus cotangent of a complex number', () => {
-    expectCloseTo(acot(complex([1, 1])), complex([0.553574358897, -0.402359478108]), 10)
+    expectCloseTo(acot(complex(1, 1)), complex(0.553574358897, -0.402359478108), 10)
   })
 
   it('generates an arcus cotangent node for a variable expression', () => {

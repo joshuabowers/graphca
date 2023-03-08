@@ -28,7 +28,7 @@ describe('gamma', () => {
   })
 
   it('calculates the value of the gamma function for complex numbers', () => {
-    expectCloseTo(gamma(complex([1, 1])), complex([0.498015668118, -0.154949828301]), 10)
+    expectCloseTo(gamma(complex(1, 1)), complex(0.498015668118, -0.154949828301), 10)
   })
 
   it('generates a Gamma node for unbound variables', () => {

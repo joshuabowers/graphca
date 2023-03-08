@@ -15,11 +15,11 @@ describe('deepEquals', () => {
   })
 
   it('returns true for equivalent complex inputs', () => {
-    expect(deepEquals(complex([5, 5]), complex([5, 5]))).toBeTruthy()
+    expect(deepEquals(complex(5, 5), complex(5, 5))).toBeTruthy()
   })
 
   it('returns false for inequivalent complex inputs', () => {
-    expect(deepEquals(complex([0, 0]), complex([5, 5]))).toBeFalsy()
+    expect(deepEquals(complex(0, 0), complex(5, 5))).toBeFalsy()
   })
 
   it('returns true for equivalent booleans', () => {

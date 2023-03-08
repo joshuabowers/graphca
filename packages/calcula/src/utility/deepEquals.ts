@@ -36,9 +36,11 @@ export type DeepEqualsFn = Multi
   & EqualsFn<TreeNode>
 
 export const deepEquals: DeepEqualsFn = multi(
-  caseOf<Real>(Species.real)((l, r) => l.value === r.value),
-  caseOf<Complex>(Species.complex)((l, r) => l.a === r.a && l.b === r.b),
-  caseOf<Boolean>(Species.boolean)((l, r) => l.value === r.value),
+  caseOf<Real>(Species.real)((l, r) => l.raw === r.raw),
+  caseOf<Complex>(Species.complex)(
+    (l, r) => l.raw.a === r.raw.a && l.raw.b === r.raw.b
+  ),
+  caseOf<Boolean>(Species.boolean)((l, r) => l.raw === r.raw),
   caseOf<Nil>(Species.nil)(true),
   caseOf<NaN>(Species.nan)(false),
   caseOf<Variable>(Species.variable)((l, r) => l.name === r.name && deepEquals(l.binding, r.binding)),

@@ -27,7 +27,7 @@ describe('differentiate', () => {
 
   describe('of complex numbers', () => {
     it('is 0', () => {
-      expect(differentiate(complex([1, 1])).value).toEqual(complex([0, 0]).value)
+      expect(differentiate(complex(1, 1)).value).toEqual(complex(0, 0).value)
     })
   })
 

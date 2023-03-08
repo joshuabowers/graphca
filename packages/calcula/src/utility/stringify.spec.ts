@@ -21,7 +21,7 @@ describe('stringify', () => {
     })
   
     it('converts complex numbers to strings', () => {
-      expect(stringify(complex([2, -3]))).toEqual(`2-3${Unicode.i}`)
+      expect(stringify(complex(2, -3))).toEqual(`2-3${Unicode.i}`)
     })
   
     it('converts variables to strings', () => {

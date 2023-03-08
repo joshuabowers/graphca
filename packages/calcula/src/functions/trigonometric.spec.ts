@@ -28,7 +28,7 @@ describe('cos', () => {
   })
 
   it('returns a complex value when given complex', () => {
-    expectCloseTo(cos(complex([1, 2])), complex([2.032723007019, -3.051897799151]), 10)
+    expectCloseTo(cos(complex(1, 2)), complex(2.032723007019, -3.051897799151), 10)
   })
 
   it('returns an expression when given non-constant', () => {
@@ -57,7 +57,7 @@ describe('sin', () => {
   })
 
   it('returns a complex value when given complex', () => {
-    expectCloseTo(sin(complex([1, 2])), complex([3.16577851321616, 1.95960104142160]), 10)
+    expectCloseTo(sin(complex(1, 2)), complex(3.16577851321616, 1.95960104142160), 10)
   })
 
   it('returns a expression when given non-constant', () => {
@@ -86,7 +86,7 @@ describe('tan', () => {
   })
 
   it('returns a complex value when given complex', () => {
-    expectCloseTo(tan(complex([1, 2])), complex([0.033812826079, 1.014793616146]), 10)
+    expectCloseTo(tan(complex(1, 2)), complex(0.033812826079, 1.014793616146), 10)
   })
 
   it('returns a expression when given non-constant', () => {
@@ -116,7 +116,7 @@ describe('sec', () => {
   })
 
   it('returns a complex value when given complex', () => {
-    expectCloseTo(sec(complex([1, 2])), complex([0.15117629826, 0.22697367539]), 10)
+    expectCloseTo(sec(complex(1, 2)), complex(0.15117629826, 0.22697367539), 10)
   })
 
   it('returns a expression when given non-constant', () => {
@@ -146,7 +146,7 @@ describe('csc', () => {
   })
 
   it('returns a complex value when given complex', () => {
-    expectCloseTo(csc(complex([1, 2])), complex([0.228375065599, -0.141363021612]), 10)
+    expectCloseTo(csc(complex(1, 2)), complex(0.228375065599, -0.141363021612), 10)
   })
 
   it('returns a expression when given non-constant', () => {
@@ -175,7 +175,7 @@ describe('cot', () => {
   })
 
   it('returns a complex value when given complex', () => {
-    expectCloseTo(cot(complex([1, 2])), complex([0.0327977555337, -0.9843292264581]), 10)
+    expectCloseTo(cot(complex(1, 2)), complex(0.0327977555337, -0.9843292264581), 10)
   })
 
   it('returns a expression when given non-constant', () => {

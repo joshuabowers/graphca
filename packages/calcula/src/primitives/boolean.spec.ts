@@ -8,7 +8,7 @@ describe('$boolean', () => {
   it('returns a Boolean for a system boolean parameter', () => {
     expect($boolean(true)).toEqual({
       clade: Clades.primitive, genus: undefined, species: Species.boolean, 
-      value: true
+      raw: true
     })
   })
 })
@@ -28,7 +28,7 @@ describe('boolean', () => {
 
   it('returns a Writer<Boolean> for a complex input', () => {
     expectToEqualWithSnapshot(
-      boolean(complex([1, 2])), $boolean(true)
+      boolean(complex(1, 2)), $boolean(true)
     )
   })
 

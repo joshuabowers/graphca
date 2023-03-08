@@ -11,21 +11,22 @@ export type Exponentiation = Binary<Species.raise, Genera.arithmetic>
 export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
   '^', Notation.infix, Species.raise, Genera.arithmetic
 )(
-  (l, r) => real(l.value.value ** r.value.value),
+  (l, r) => real(l.value.raw ** r.value.raw),
   (l, r) => {
-    const p = Math.hypot(l.value.a, l.value.b), arg = Math.atan2(l.value.b, l.value.a)
-    const dLnP = r.value.b * Math.log(p), cArg = r.value.a * arg
-    const multiplicand = (p ** r.value.a) * Math.exp(-r.value.b * arg)
-    return complex([
+    const p = Math.hypot(l.value.raw.a, l.value.raw.b), 
+      arg = Math.atan2(l.value.raw.b, l.value.raw.a)
+    const dLnP = r.value.raw.b * Math.log(p), cArg = r.value.raw.a * arg
+    const multiplicand = (p ** r.value.raw.a) * Math.exp(-r.value.raw.b * arg)
+    return complex(
       multiplicand * Math.cos(dLnP + cArg),
       multiplicand * Math.sin(dLnP + cArg)
-    ])
+    )
   },
-  (l, r) => boolean(l.value.value || !r.value.value)
+  (l, r) => boolean(l.value.raw || !r.value.raw)
 )(
   when(
-    [isValue(complex([0, 0])), isValue(real(-1))], 
-    [complex([Infinity, 0]), 'division by complex zero']
+    [isValue(complex(0, 0)), isValue(real(-1))], 
+    [complex(Infinity, 0), 'division by complex zero']
   ),
   when(
     [isValue(real(0)), isValue(real(-1))], 

@@ -1,16 +1,16 @@
 import { Species } from '../utility/tree'
 import { Boolean, primitive } from '../closures/primitive'
-import { isBoolean as isSystemBoolean } from '../utility/valuePredicates'
+import { isBooleanOrString } from '../utility/valuePredicates'
 export { Boolean }
 
 export const [boolean, isBoolean, $boolean] = 
-  primitive<boolean, {value: boolean}, Boolean>(
-  isSystemBoolean,
-  value => ({value}),
+  primitive<[boolean], boolean, Boolean>(
+  isBooleanOrString,
+  value => value,
   Species.boolean,
-  b => b.value.toString()
+  b => b.raw.toString()
 )(
-  r => r.value !== 0,
-  c => c.a !== 0 || c.b !== 0,
-  b => b.value
+  r => [r.raw !== 0],
+  c => [c.raw.a !== 0 || c.raw.b !== 0],
+  b => [b.raw]
 )()

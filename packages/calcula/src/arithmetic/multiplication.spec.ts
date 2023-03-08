@@ -29,36 +29,36 @@ describe('multiply', () => {
 
     it('is the product of two complexes', () => {
       expectToEqualWithSnapshot(
-        multiply(complex([2,3]), complex([3,4])),
-        complex([-6,17])
+        multiply(complex(2,3), complex(3,4)),
+        complex(-6,17)
       )
     })
 
     it('is the product of mixed inputs', () => {
       expectToEqualWithSnapshot(
-        multiply(complex([2,3]), real(5)),
-        complex([10,15])
+        multiply(complex(2,3), real(5)),
+        complex(10,15)
       )
     })
 
     it('multiplies complex infinity against complex 1 correctly', () => {
       expectToEqualWithSnapshot(
-        multiply(ComplexInfinity, complex([1,0])),
-        complex([Infinity, 0])
+        multiply(ComplexInfinity, complex(1,0)),
+        complex(Infinity, 0)
       )
     })
 
     it('multiplies a complex wrapped real by a pure imaginary correctly', () => {
       expectToEqualWithSnapshot(
-        multiply(complex([Infinity, 0]), complex([0, 3])),
-        complex([0, Infinity])
+        multiply(complex(Infinity, 0), complex(0, 3)),
+        complex(0, Infinity)
       )
     })
 
     it('multiplies a pure imaginary by a complex wrapped real correctly', () => {
       expectToEqualWithSnapshot(
-        multiply(complex([0, 3]), complex([Infinity, 0])),
-        complex([0, Infinity])
+        multiply(complex(0, 3), complex(Infinity, 0)),
+        complex(0, Infinity)
       )
     })
   })
@@ -73,8 +73,8 @@ describe('multiply', () => {
 
     it('reorder a complex right multiplicand to the left', () => {
       expectToEqualWithSnapshot(
-        multiply(variable('x'), complex([0, 1])),
-        $multiply(complex([0, 1]), variable('x'))[0]
+        multiply(variable('x'), complex(0, 1)),
+        $multiply(complex(0, 1), variable('x'))[0]
       )
     })
   })
@@ -147,8 +147,8 @@ describe('multiply', () => {
   describe('when dealing with nested multiplications with primitives', () => {
     it('multiplies primitives across nested multiplications', () => {
       expectToEqualWithSnapshot(
-        multiply(real(5), multiply(variable('x'), complex([1, 1]))),
-        multiply(complex([5, 5]), variable('x'))
+        multiply(real(5), multiply(variable('x'), complex(1, 1))),
+        multiply(complex(5, 5), variable('x'))
       )
     })
   })
@@ -419,36 +419,36 @@ describe('divide', () => {
   // NOTE: Result should be `0.2-0.4i`, but imprecision of floating point math
   it('properly calculates real / complex division', () => {
     expectToEqualWithSnapshot(
-      divide(real(1), complex([1, 2])),
-      complex([0.20000000000000004, -0.39999999999999997])
+      divide(real(1), complex(1, 2)),
+      complex(0.20000000000000004, -0.39999999999999997)
     )
   })
 
   it('properly handles dividing complex 0 by another complex', () => {
     expectToEqualWithSnapshot(
-      divide(complex([0, 0]), complex([0, 2])),
-      complex([0, 0])
+      divide(complex(0, 0), complex(0, 2)),
+      complex(0, 0)
     )
   })
 
   it('properly handles dividing a complex by complex 0', () => {
     expectToEqualWithSnapshot(
-      divide(complex([0, 2]), complex([0, 0])), 
-      complex([0, Infinity])
+      divide(complex(0, 2), complex(0, 0)), 
+      complex(0, Infinity)
     )
   })
 
   it('properly divides a complex value by complex 1', () => {
     expectToEqualWithSnapshot(
-      divide(complex([2, 0]), complex([1, 0])), 
-      complex([2, 0])
+      divide(complex(2, 0), complex(1, 0)), 
+      complex(2, 0)
     )
   })
 
   it('properly divides complex negative infinity by complex 1', () => {
     expectToEqualWithSnapshot(
-      divide(complex([-Infinity, 0]), complex([1, 0])), 
-      complex([-Infinity, 0])
+      divide(complex(-Infinity, 0), complex(1, 0)), 
+      complex(-Infinity, 0)
     )
   })
 

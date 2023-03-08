@@ -57,16 +57,16 @@ const numeric: NumericFn = multi(
 export type StringifyFn = (expression: Writer<TreeNode, Operation>) => string
 
 export const stringify: StringifyFn = multi(
-  when(isReal, r => numeric(r.value.value)), //r.value.value.toString()),
+  when(isReal, r => numeric(r.value.raw)), //r.value.value.toString()),
   when(
     isComplex, 
     c => isComplexInfinity(c) ? Unicode.complexInfinity : `${
-      numeric(c.value.a)
-    }${c.value.b >= 0 ? '+' : ''}${
-      numeric(c.value.b)
+      numeric(c.value.raw.a)
+    }${c.value.raw.b >= 0 ? '+' : ''}${
+      numeric(c.value.raw.b)
     }${Unicode.i}`
   ),
-  when(isBoolean, b => b.value.value.toString()),
+  when(isBoolean, b => b.value.raw.toString()),
   when(isNil, _ => 'nil'),
   when(isNaN, _ => 'NaN'),
   when(isVariable, v => v.value.name),

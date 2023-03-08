@@ -19,19 +19,19 @@ type MultiplicationOfRightExponential = Multiplication & {
 }
 
 const isComplexWrapped = (v: Writer<TreeNode, Operation>): v is Writer<Complex, Operation> => 
-  isComplex(v) && v.value.b === 0
+  isComplex(v) && v.value.raw.b === 0
 const isImaginary = (v: Writer<TreeNode, Operation>): v is Writer<Complex, Operation> => 
-  isComplex(v) && v.value.a === 0
+  isComplex(v) && v.value.raw.a === 0
 
 export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
   '*', Notation.infix, Species.multiply, Genera.arithmetic
 )(
-  (l, r) => real(l.value.value * r.value.value),
-  (l, r) => complex([
-    (l.value.a * r.value.a) - (l.value.b * r.value.b),
-    (l.value.a * r.value.b) + (l.value.b * r.value.a)
-  ]),
-  (l, r) => boolean(l.value.value && r.value.value)
+  (l, r) => real(l.value.raw * r.value.raw),
+  (l, r) => complex(
+    (l.value.raw.a * r.value.raw.a) - (l.value.raw.b * r.value.raw.b),
+    (l.value.raw.a * r.value.raw.b) + (l.value.raw.b * r.value.raw.a)
+  ),
+  (l, r) => boolean(l.value.raw && r.value.raw)
 )(
   when(
     [l => l.value.clade !== Clades.primitive, isPrimitive],
@@ -39,26 +39,26 @@ export const [multiply, isMultiplication, $multiply] = binary<Multiplication>(
   ),
   when<Complex, Complex>(
     [isComplexWrapped, isComplexWrapped], 
-    (l, r) => [complex([l.value.a * r.value.a, 0]), 'complex multiplication']
+    (l, r) => [complex(l.value.raw.a * r.value.raw.a, 0), 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isComplexWrapped, isImaginary],
-    (l, r) => [complex([0, l.value.a * r.value.b]), 'complex multiplication']
+    (l, r) => [complex(0, l.value.raw.a * r.value.raw.b), 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isImaginary, isComplexWrapped],
-    (l, r) => [complex([0, l.value.b * r.value.a]), 'complex multiplication']
+    (l, r) => [complex(0, l.value.raw.b * r.value.raw.a), 'complex multiplication']
   ),
   when<Complex, Complex>(
     [isComplex, isComplexWrapped],
-    (l, r) => [complex([l.value.a * r.value.a, 0]), 'complex multiplication']
+    (l, r) => [complex(l.value.raw.a * r.value.raw.a, 0), 'complex multiplication']
   ),
   when([isValue(real(0)), isValue(real(Infinity))], [nan, 'incalculable']),
   when([isValue(real(Infinity)), isValue(real(0))], [nan, 'incalculable']),
   when([isValue(real(0)), _], [real(0), 'zero absorption']),
-  when([isValue(complex([0, 0])), _], [complex([0, 0]), 'zero absorption']),
+  when([isValue(complex(0, 0)), _], [complex(0, 0), 'zero absorption']),
   when([isValue(real(1)), _], (_l, r) => [r, 'multiplicative identity']),
-  when([isValue(complex([1, 0])), _], (_l, r) => [r, 'multiplicative identity']),
+  when([isValue(complex(1, 0)), _], (_l, r) => [r, 'multiplicative identity']),
   when([isValue(real(Infinity)), _], [real(Infinity), 'infinite absorption']),
   when([isValue(real(-Infinity)), _], [real(-Infinity), 'infinite absorption']),
   when<TreeNode, Multiplication>(

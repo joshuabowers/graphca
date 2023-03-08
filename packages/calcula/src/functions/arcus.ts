@@ -23,13 +23,13 @@ export type ArcusCosecant = Arcus<Species.acsc>
 export type ArcusSecant = Arcus<Species.asec>
 export type ArcusCotangent = Arcus<Species.acot>
 
-const i = complex([0, 1])
+const i = complex(0, 1)
 const halfPi = real(Math.PI/2)
 
 export const [acos, isArcusCosine, $acos] = unary<ArcusCosine>(
   'acos', Notation.prefix, Species.acos, Genera.arcus
 )(
-  r => real(Math.acos(r.value.value)),
+  r => real(Math.acos(r.value.raw)),
   c => subtract(halfPi, asin(c)), 
   b => b,
 )()
@@ -37,7 +37,7 @@ export const [acos, isArcusCosine, $acos] = unary<ArcusCosine>(
 export const [asin, isArcusSine, $asin] = unary<ArcusSine>(
   'asin', Notation.prefix, Species.asin, Genera.arcus
 )(
-  r => real(Math.asin(r.value.value)),
+  r => real(Math.asin(r.value.raw)),
   c => {
     const iz = multiply(i, c)
     const distance = sqrt(subtract(real(1), square(c)))
@@ -49,9 +49,9 @@ export const [asin, isArcusSine, $asin] = unary<ArcusSine>(
 export const [atan, isArcusTangent, $atan] = unary<ArcusTangent>(
   'atan', Notation.prefix, Species.atan, Genera.arcus
 )(
-  r => real(Math.atan(r.value.value)),
+  r => real(Math.atan(r.value.raw)),
   c => {
-    const nHalfI = complex([0, -0.5])
+    const nHalfI = complex(0, -0.5)
     const inz = subtract(i, c)
     const ipz = add(i, c)
     const ratio = divide(inz, ipz)

@@ -25,7 +25,7 @@ describe('cosh', () => {
   })
   
   it('calculates the hyperbolic cosine of a complex number', () => {
-    expectCloseTo(cosh(complex([0, 1])), complex([0.540302305868, 0]), 10)
+    expectCloseTo(cosh(complex(0, 1)), complex(0.540302305868, 0), 10)
   })
 
   it('returns a hyperbolic cosine node if not valuable', () => {
@@ -51,7 +51,7 @@ describe('sinh', () => {
   })
 
   it('calculates the hyperbolic sine of a complex number', () => {
-    expectCloseTo(sinh(complex([0, 1])), complex([0, 0.841470984807]), 10)
+    expectCloseTo(sinh(complex(0, 1)), complex(0, 0.841470984807), 10)
   })
 
   it('returns a hyperbolic sine node if not valuable', () => {
@@ -77,7 +77,7 @@ describe('tanh', () => {
   })
 
   it('calculates the hyperbolic tangent of a complex number', () => {
-    expectCloseTo(tanh(complex([0, 1])), complex([0, 1.557407724654]), 10)
+    expectCloseTo(tanh(complex(0, 1)), complex(0, 1.557407724654), 10)
   })
 
   it('returns a hyperbolic tangent node if not valuable', () => {
@@ -106,7 +106,7 @@ describe('sech', () => {
   })
 
   it('calculates the hyperbolic secant of a complex number', () => {
-    expectCloseTo(sech(complex([0, 1])), complex([1.850815717680, 0]), 10)
+    expectCloseTo(sech(complex(0, 1)), complex(1.850815717680, 0), 10)
   })
 
   it('returns a hyperbolic secant node if not valuable', () => {
@@ -132,7 +132,7 @@ describe('csch', () => {
   })
 
   it('calculates the hyperbolic cosecant of a complex number', () => {
-    expectCloseTo(csch(complex([0, 1])), complex([0, -1.188395105778]), 10)
+    expectCloseTo(csch(complex(0, 1)), complex(0, -1.188395105778), 10)
   })
 
   it('returns a hyperbolic cosecant node if not valuable', () => {
@@ -158,7 +158,7 @@ describe('coth', () => {
   })
 
   it('calculates the hyperbolic cotangent of a complex number', () => {
-    expectCloseTo(coth(complex([0, 1])), complex([0, -0.642092615934]), 10)
+    expectCloseTo(coth(complex(0, 1)), complex(0, -0.642092615934), 10)
   })
 
   it('returns a hyperbolic cotangent node if not valuable', () => {

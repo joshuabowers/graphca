@@ -14,8 +14,8 @@ import { Unicode } from "../Unicode"
 const isPIN = (n: number) => n > 0 && n <= 15 && Number.isInteger(n)
 
 const isPositiveInteger = (e: Writer<TreeNode, Operation>) =>
-  (isReal(e) && isPIN(e.value.value))
-  || (isComplex(e) && e.value.b === 0 && isPIN(e.value.a))
+  (isReal(e) && isPIN(e.value.raw))
+  || (isComplex(e) && e.value.raw.b === 0 && isPIN(e.value.raw.a))
 
 
 export type Predicate<T extends TreeNode> = (t: T) => boolean
@@ -25,8 +25,8 @@ export type ConstantPredicate = Multi
   & Predicate<Complex>  
 
 const isSmall: ConstantPredicate = multi(
-  method(isReal, (r: Writer<Real, Operation>) => r.value.value < 0.5),
-  method(isComplex, (c: Writer<Complex, Operation>) => c.value.a < 0.5),
+  method(isReal, (r: Writer<Real, Operation>) => r.value.raw < 0.5),
+  method(isComplex, (c: Writer<Complex, Operation>) => c.value.raw.a < 0.5),
   method(false)
 )
 
@@ -81,8 +81,8 @@ export const [gamma, isGamma, $gamma] = unary<Gamma>(
     t => [factorial(subtract(t, real(1))), 'computing gamma via factorial']
   ),
   when(
-    t => (isReal(t) && t.value.value < 0.5)
-      || (isComplex(t) && t.value.a < 0.5),
+    t => (isReal(t) && t.value.raw < 0.5)
+      || (isComplex(t) && t.value.raw.a < 0.5),
     t => [gammaReflection(t), 'gamma reflection for small value']
   )
 )

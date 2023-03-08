@@ -101,8 +101,8 @@ describe('add', () => {
   
     it('returns a Writer<Complex> for two complex inputs', () => {
       expectToEqualWithSnapshot(
-        add(complex([1, 2]), complex([3, 4])),
-        complex([4, 6])
+        add(complex(1, 2), complex(3, 4)),
+        complex(4, 6)
       )
     })
   
@@ -115,8 +115,8 @@ describe('add', () => {
 
     it('returns a complex for a [real, complex] pair', () => {
       expectToEqualWithSnapshot(
-        add(real(5), complex([0, 5])),
-        complex([5, 5])
+        add(real(5), complex(0, 5)),
+        complex(5, 5)
       )
     })
   
@@ -189,8 +189,8 @@ describe('add', () => {
 
     it('casts primitives to minimize complexity', () => {
       expectToEqualWithSnapshot(
-        add(add(variable('x'), real(1)), complex([0, 1])),
-        $add(variable('x'), complex([1, 1]))[0]
+        add(add(variable('x'), real(1)), complex(0, 1)),
+        $add(variable('x'), complex(1, 1))[0]
       )
     })
   })
@@ -297,15 +297,15 @@ describe('subtract', () => {
 
   it('returns 0 if subtracting a complex from itself', () => {
     expectToEqualWithSnapshot(
-      subtract(complex([0, 1]), complex([0, 1])),
-      complex([0, 0])
+      subtract(complex(0, 1), complex(0, 1)),
+      complex(0, 0)
     )
   })
 
   it('properly subtracts a real from a complex', () => {
     expectToEqualWithSnapshot(
-      subtract(complex([2, 1]), real(1)),
-      complex([1, 1])
+      subtract(complex(2, 1), real(1)),
+      complex(1, 1)
     )
   })
 

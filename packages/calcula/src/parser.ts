@@ -195,10 +195,10 @@ variable:
 
 complex:
 | <n>${subtractionOperators}? <a>real ${additionOperators} <b>real? $i ${({n, a, b}) => {
-  return complex([(n ? -1 : 1) * a.value.value, b?.value.value ?? 1])
+  return complex((n ? -1 : 1) * a.value.raw, b?.value.raw ?? 1)
 }}
-| <n>${subtractionOperators}? <a>real ${subtractionOperators} <b>real? $i ${({n, a, b}) => complex([(n ? -1 : 1) * a.value.value, -(b?.value.value ?? 1)])}
-| <n>${subtractionOperators}? <b>real? $i ${({n, b}) => complex([0, (n ? -1 : 1) * (b?.value.value ?? 1)])}
+| <n>${subtractionOperators}? <a>real ${subtractionOperators} <b>real? $i ${({n, a, b}) => complex((n ? -1 : 1) * a.value.raw, -(b?.value.raw ?? 1))}
+| <n>${subtractionOperators}? <b>real? $i ${({n, b}) => complex(0, (n ? -1 : 1) * (b?.value.raw ?? 1))}
 
 real:
 | <value>$real ${({value}) => real(Number(value))}

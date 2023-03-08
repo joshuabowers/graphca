@@ -25,8 +25,8 @@ describe('permute', () => {
 
   it('calculates the permutation for complex numbers', () => {
     expectCloseTo(
-      permute(complex([0, 5]), complex([1, 1])), 
-      complex([-0.927726831821, 0.060010755560]), 
+      permute(complex(0, 5), complex(1, 1)), 
+      complex(-0.927726831821, 0.060010755560), 
       10
     )
   })
@@ -57,8 +57,8 @@ describe('combine', () => {
 
   it('calculates the combination for complex numbers', () => {
     expectCloseTo(
-      combine(complex([0, 5]), complex([1, 1])),
-      complex([-1.075594610779, 0.657018673056]),
+      combine(complex(0, 5), complex(1, 1)),
+      complex(-1.075594610779, 0.657018673056),
       10
     )
   })

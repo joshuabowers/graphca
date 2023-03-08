@@ -150,8 +150,8 @@ export const multiary = <T extends MultiaryNode>(
         (p: Writer<TreeNode, Operation>, _rest: Writer<TreeNode, Operation>[]) => p,
         replace(
           p => (isReal(p) 
-            && !Number.isFinite(p.value.value) 
-            && !Number.isNaN(p.value.value))
+            && !Number.isFinite(p.value.raw) 
+            && !Number.isNaN(p.value.raw))
             || (isComplex(p) && isComplexInfinity(p)),
           (p, _rest) => [[p], 'infinite absorption']
         )(create),
@@ -193,18 +193,18 @@ export const multiary = <T extends MultiaryNode>(
           ),
           when(
             areReal, 
-            handled(r => r.value.value, whenReal, Species.real)
+            handled(r => r.value.raw, whenReal, Species.real)
           ),
           when(
             areComplex, 
             handled(
-              ({value: {a, b}}) => [a, b] as [number, number], 
+              ({value: {raw: {a, b}}}) => [a, b] as [number, number], 
               whenComplex, Species.complex
             )
           ),
           when(
             areBoolean, 
-            handled(b => b.value.value, whenBoolean, Species.boolean)
+            handled(b => b.value.raw, whenBoolean, Species.boolean)
           ),
           when(
             undefined,
@@ -326,12 +326,12 @@ const [add, isAddition, $add] = multiary<Addition>(
   '+', Species.add, Genera.arithmetic
 )(
   (...addends) => real(addends.reduce((p,c) => p+c)),
-  (...addends) => complex(addends.reduce((p,c) => [p[0]+c[0], p[1]+c[1]])),
+  (...addends) => complex(...addends.reduce((p,c) => [p[0]+c[0], p[1]+c[1]])),
   (...addends) => boolean(addends.reduce((p,c) => (p || c) && !(p && c)))
 )(
   replace(
-    p => (isReal(p) && p.value.value === 0)
-      || (isComplex(p) && p.value.a === 0 && p.value.b === 0),
+    p => (isReal(p) && p.value.raw === 0)
+      || (isComplex(p) && p.value.raw.a === 0 && p.value.raw.b === 0),
     (_p, rest) => [rest, 'additive identity']
   )  
 )(
@@ -373,7 +373,7 @@ const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
 )(
   // Primitive Handler block
   (...operands) => real(operands.reduce((p,c) => p*c)),
-  (...operands) => complex(operands.reduce(
+  (...operands) => complex(...operands.reduce(
     (p,c) => [
       (p[0]*c[0]) - (p[1]*c[1]),
       (p[0]*c[1]) + (p[1]*c[0])
@@ -382,13 +382,13 @@ const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
   (...operands) => boolean(operands.reduce((p,c) => p && c))
 )(
   replace(
-    p => (isReal(p) && p.value.value === 0)
-      || (isComplex(p) && p.value.a === 0 && p.value.b === 0),
+    p => (isReal(p) && p.value.raw === 0)
+      || (isComplex(p) && p.value.raw.a === 0 && p.value.raw.b === 0),
     (p, _rest) => [[p], 'zero absorption']
   ),
   replace(
-    p => (isReal(p) && p.value.value === 1)
-      || (isComplex(p) && p.value.a === 1 && p.value.b === 0),
+    p => (isReal(p) && p.value.raw === 1)
+      || (isComplex(p) && p.value.raw.a === 1 && p.value.raw.b === 0),
     (_p, rest) => [rest, 'multiplicative identity']
   )
 )(
@@ -431,7 +431,7 @@ const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
 )
 
 multiply(real(5), real(10))
-multiply(complex([1, 2]), real(5))
+multiply(complex(1, 2), real(5))
 multiply(boolean(true), real(3))
 multiply(real(5), variable('x'))
 multiply(real(2), real(3), real(4), real(5))
@@ -500,10 +500,14 @@ const b = createClosure<[boolean|string], boolean>(
 c(real(5).value)
 r(5)
 r(real(5).value)
-r(complex([1,2]).value)
+r(complex(1,2).value)
 c('5', 4)
 b('true')
 b(false)
 
 const u: unknown = 5
 isNumericOrString(u) && Number(u)
+
+real(5)
+
+complex(1, 2).value

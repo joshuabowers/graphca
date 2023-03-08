@@ -17,9 +17,9 @@ export type Complement = Unary<Species.not, Genera.connective>
 export const [not, isComplement, $not] = unary<Complement, Boolean>(
   Unicode.not, Notation.prefix, Species.not, Genera.connective
 )(
-  r => boolean(r.value.value === 0),
-  c => boolean(c.value.a === 0 && c.value.b === 0), 
-  b => boolean(!b.value.value) 
+  r => boolean(r.value.raw === 0),
+  c => boolean(c.value.raw.a === 0 && c.value.raw.b === 0), 
+  b => boolean(!b.value.raw) 
 )(
   // NOTE: Cannot use derived isSpecies guards as they are not defined
   // by this point.

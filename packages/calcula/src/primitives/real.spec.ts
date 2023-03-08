@@ -8,7 +8,7 @@ describe('$real', () => {
   it('returns a Real given a numeric parameter', () => {
     expect($real(5)).toEqual({
       clade: Clades.primitive, genus: undefined, species: Species.real, 
-      value: 5
+      raw: 5
     })
   })
 })
@@ -28,7 +28,7 @@ describe('real', () => {
 
   it('returns a Writer<Real> for a complex input', () => {
     expectToEqualWithSnapshot(
-      real(complex([1, 2])), $real(1)
+      real(complex(1, 2)), $real(1)
     )
   })
 

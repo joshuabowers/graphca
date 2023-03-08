@@ -26,7 +26,7 @@ export type AreaHyperbolicCotangent = AreaHyperbolic<Species.acoth>
 export const [acosh, isAreaHyperbolicCosine, $acosh] = unary<AreaHyperbolicCosine>(
   'acosh', Notation.prefix, Species.acosh, Genera.areaHyperbolic
 )(
-  r => real(Math.acosh(r.value.value)),
+  r => real(Math.acosh(r.value.raw)),
   c => ln(add(
     c, 
     multiply(
@@ -40,7 +40,7 @@ export const [acosh, isAreaHyperbolicCosine, $acosh] = unary<AreaHyperbolicCosin
 export const [asinh, isAreaHyperbolicSine, $asinh] = unary<AreaHyperbolicSine>(
   'asinh', Notation.prefix, Species.asinh, Genera.areaHyperbolic
 )(
-  r => real(Math.asinh(r.value.value)), 
+  r => real(Math.asinh(r.value.raw)), 
   c => ln(add(
     sqrt(add(square(c), real(1))),
     c
@@ -51,7 +51,7 @@ export const [asinh, isAreaHyperbolicSine, $asinh] = unary<AreaHyperbolicSine>(
 export const [atanh, isAreaHyperbolicTangent, $atanh] = unary<AreaHyperbolicTangent>(
   'atanh', Notation.prefix, Species.atanh, Genera.areaHyperbolic
 )(
-  r => real(Math.atanh(r.value.value)), 
+  r => real(Math.atanh(r.value.raw)), 
   c => multiply(
     real(0.5),
     ln(divide(

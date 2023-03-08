@@ -12,13 +12,13 @@ export const expectCloseTo: ExpectCloseTo = multi(
   method(
     [isReal, isReal, _], 
     (actual: Writer<Real, Operation>, expected: Writer<Real, Operation>, precision: number) => 
-      expect(actual.value.value).toBeCloseTo(expected.value.value, precision)
+      expect(actual.value.raw).toBeCloseTo(expected.value.raw, precision)
   ),
   method(
     [isComplex, isComplex, _],
     (actual: Writer<Complex, Operation>, expected: Writer<Complex, Operation>, precision: number) => {
-      expect(actual.value.a).toBeCloseTo(expected.value.a, precision)
-      expect(actual.value.b).toBeCloseTo(expected.value.b, precision)
+      expect(actual.value.raw.a).toBeCloseTo(expected.value.raw.a, precision)
+      expect(actual.value.raw.b).toBeCloseTo(expected.value.raw.b, precision)
     }
   )
 )
