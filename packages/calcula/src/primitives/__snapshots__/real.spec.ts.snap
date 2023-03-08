@@ -36,6 +36,19 @@ exports[`real of special values correctly logs positive infinity 1`] = `
 ]
 `;
 
+exports[`real of special values rewrites numeric NaN with Writer<NaN> 1`] = `
+[
+  [
+    "NaN",
+    "incalculable",
+  ],
+  [
+    "NaN",
+    "not a number",
+  ],
+]
+`;
+
 exports[`real returns a Writer<Real> for a boolean input 1`] = `
 [
   [

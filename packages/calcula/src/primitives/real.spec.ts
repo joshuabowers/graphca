@@ -2,6 +2,7 @@ import { Clades, Species } from '../utility/tree'
 import { real, $real } from './real'
 import { boolean } from './boolean'
 import { complex } from './complex'
+import { nan } from './nan'
 import { expectToEqualWithSnapshot } from '../utility/expectations'
 
 describe('$real', () => {
@@ -63,10 +64,10 @@ describe('real', () => {
       )
     })
 
-    // it('rewrites numeric NaN with Writer<NaN>', () => {
-    //   expectToEqualWithSnapshot(
-    //     real(NaN), nan
-    //   )
-    // })
+    it('rewrites numeric NaN with Writer<NaN>', () => {
+      expectToEqualWithSnapshot(
+        real(NaN), nan
+      )
+    })
   })
 })

@@ -147,7 +147,11 @@ exports[`asech calculates the area hyperbolic secant of a real value 1`] = `
   ],
   [
     "NaN",
-    "created real",
+    "incalculable",
+  ],
+  [
+    "NaN",
+    "not a number",
   ],
 ]
 `;

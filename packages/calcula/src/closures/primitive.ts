@@ -1,7 +1,6 @@
 import { method, multi, fromMulti, Multi } from '@arrows/multimethod'
 import { Writer, bind, writer } from '../monads/writer'
 import { Operation, operation, Action } from '../utility/operation'
-// import { CastFn } from '../utility/typings'
 import { 
   TreeNode, Clades, Species, isClade, TreeNodeGuardFn, isSpecies 
 } from '../utility/tree'
@@ -36,21 +35,17 @@ export type PrimitiveFn<Params extends any[], T extends PrimitiveNode> = Multi
 export type CreateFn<Params extends any[], T extends PrimitiveNode> = 
   (...params: Params) => T
 
+export type WhenFn<Params extends any[]> =
+  (
+    guardFn: ((...params: Params) => boolean), 
+    correspondingFn: Action<TreeNode> | ((...params: Params) => Action<TreeNode>)
+  ) => typeof method
+
 export type PrimitiveMetaTuple<Params extends any[], T extends PrimitiveNode> = [
   PrimitiveFn<Params, T>,
   TreeNodeGuardFn<T>,
   CreateFn<Params, T>
 ]
-
-export const when = <Params, Fields, T extends PrimitiveNode & Fields>(
-  predicate: ((params: Params) => boolean) | GuardFn,
-  fn: Action<TreeNode>
-) => 
-  method(predicate, (params: Params|T) => {
-
-  })
-
-export type WhenFn = typeof when
 
 export const primitive = <
   Params extends any[], 
@@ -82,6 +77,14 @@ export const primitive = <
           operation([toString(value)], action)
         )
       })
+  const when: WhenFn<Params> = (guardFn, correspondingFn) => 
+    method(guardFn, (...params: Params) => {
+      const [result, action] = typeof correspondingFn === 'function' 
+        ? correspondingFn(...params) : correspondingFn
+      return writer(
+        result, operation(params.map(p => p.toString()), action)
+      )
+    })
   return (
     whenReal: HandleFn<Real>,
     whenComplex: HandleFn<Complex>,
@@ -104,11 +107,14 @@ export const primitive = <
       method(Species.boolean, handle(whenBoolean))
     )
     return (
-      ...methods: (typeof method)[]
-    ): PrimitiveMetaTuple<Params, T> => [
-      methods.length > 0 ? fromMulti(...methods)(fn) : fn,
-      isSpecies<T>(species),
-      create
-    ]
-  }  
+      extensions?: ((when: WhenFn<Params>) => (typeof method)[])
+    ): PrimitiveMetaTuple<Params, T> => {
+      const methods = extensions?.(when)
+      return [
+        methods && methods.length > 0 ? fromMulti(...methods)(fn) : fn,
+        isSpecies<T>(species),
+        create
+      ]
+    }
+  }
 }
