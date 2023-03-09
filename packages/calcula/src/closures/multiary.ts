@@ -78,16 +78,32 @@ export const walk = <T extends MultiaryNode>(guardFn: TreeNodeGuardFn<T>) =>
 
 export type WalkCleaveFn = ReturnType<typeof walk>
 
+export enum SortOrder {
+  ascending,
+  descending
+}
+
 /**
  * Sorts data by first converting each item via mutate; the mutated values
- * are sorted by ascending order.
+ * are sorted by ascending order by default, but can be changed by order.
  * @param data An array to sort; values are passed to mutate
  * @param mutate A function which produces a comparable value
+ * @param order A value indicating sort direction
  * @returns data sorted by the results of mutate
  */
-export const sortBy = <T>(data: T[], mutate: ((t: T) => number)): T[] => {
+export const sortBy = <T>(
+  data: T[], 
+  mutate: ((t: T) => number), 
+  order: SortOrder = SortOrder.ascending
+): T[] => {
   const mapped = data.map((v, i) => ({i, value: mutate(v)}))
-  mapped.sort((a, b) => b.value - a.value)
+  type Item = (typeof mapped)[number]
+  const comparator = order === SortOrder.ascending 
+    ? (a: Item, b: Item) => b.value - a.value
+    : (a: Item, b: Item) => a.value - b.value
+    
+  mapped.sort(comparator)
+  
   return mapped.map(v => data[v.i])
 }
 
@@ -128,17 +144,11 @@ export type ToRawFn<I extends TreeNode, M> =
 type GenerateFn = Multi
   & ((p: Writer<TreeNode, Operation>, rest: Writer<TreeNode, Operation>[]) => Action<TreeNode>)
 
-export enum SortOrder {
-  ascending,
-  descending
-}
-
 export const multiary = <T extends MultiaryNode>(
   name: string, species: Species, genus: Genera, sortOrder: SortOrder
 ) => {
   const create: MultiaryCreateFn<T> = (...operands) => {
-    let sorted = sortBy(operands, degree)
-    if(sortOrder === SortOrder.descending){ sorted = sorted.reverse() }
+    let sorted = sortBy(operands, degree, sortOrder)
     const n = ({clade: Clades.multiary, species, genus, operands: sorted}) as T
     return [n, `created ${species.toLocaleLowerCase()}`]
   }
