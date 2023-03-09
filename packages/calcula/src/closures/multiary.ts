@@ -8,6 +8,8 @@ import {
   isClade, isSpecies, TreeNodeGuardFn, isTreeNode
 } from '../utility/tree'
 import { processLogs, LogFunctionalFn } from '../utility/processLogs'
+import { UnaryFn } from './unary'
+import { BinaryFn } from './binary'
 import {
   Real, Complex, Boolean, NaN,
   real, complex, boolean, nan, 
@@ -15,7 +17,7 @@ import {
   isReal, isComplex, isBoolean, isNil, isNaN, isComplexInfinity
 } from '../primitives'
 import { variable } from '../variable'
-import { Exponentiation, isExponentiation, raise } from '../arithmetic'
+import { Exponentiation, isExponentiation, raise, reciprocal } from '../arithmetic'
 import { deepEquals } from '../utility/deepEquals'
 import { degree } from '../arithmetic/degree'
 
@@ -103,7 +105,7 @@ export const sortBy = <T>(
     : (a: Item, b: Item) => a.value - b.value
     
   mapped.sort(comparator)
-  
+
   return mapped.map(v => data[v.i])
 }
 
@@ -351,6 +353,40 @@ const replace = <T extends MultiaryNode>(
 
 type ReplaceFn = ReturnType<typeof replace>
 
+/**
+ * Generates a new unary function from a multiary function. MultiaryNode's
+ * created from the unary closure will have 'boundOperands' inserted into
+ * their operands array alongside their singular argument.
+ * @param fn a basis multiary fn to derive from
+ * @returns a unary function which generates the multiary with boundOperands
+ */
+export const unaryFrom = <T extends MultiaryNode>(fn: MultiaryFn<T>) =>
+  (...boundOperands: Writer<TreeNode, Operation>[]): UnaryFn<T> =>
+    multi(
+      method(
+        (e: Writer<TreeNode, Operation>) => fn(...boundOperands, e)
+      )
+    )
+
+export type OperandMapFn = 
+  undefined | ((n: Writer<TreeNode, Operation>) => Writer<TreeNode, Operation>)
+
+/**
+ * Generates a new binary function from a multiary function. MultiaryNode's
+ * create from the binary closure will have their two operands passed through
+ * the left and right map functions, should those be present.
+ * @param fn a basis multiary fn to derive from
+ * @returns a binary function which maps its arguments
+ */
+export const binaryFrom = <T extends MultiaryNode>(fn: MultiaryFn<T>) =>
+  (leftMapFn: OperandMapFn, rightMapFn: OperandMapFn): BinaryFn<T> =>
+    multi(
+      method(
+        (l: Writer<TreeNode, Operation>, r: Writer<TreeNode, Operation>) =>
+          fn(leftMapFn?.(l) ?? l, rightMapFn?.(r) ?? r)
+      )
+    )
+
 type Addition = Multiary<Species.add, Genera.arithmetic>
 const [add, isAddition, $add] = multiary<Addition>(
   '+', Species.add, Genera.arithmetic, SortOrder.descending
@@ -396,6 +432,8 @@ const [add, isAddition, $add] = multiary<Addition>(
   // => Ex.: 2*x + 3*x => 5*x
   // consider<Multiplication, Multiplication>()
 )
+
+export const subtract = binaryFrom(add)(undefined, o => negate(o))
 
 type Multiplication = Multiary<Species.multiply, Genera.arithmetic>
 const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
@@ -460,9 +498,8 @@ const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
   )
 )
 
-multiply(real(5), real(10))
-multiply(complex(1, 2), real(5))
-multiply(boolean(true), real(3))
-multiply(real(5), variable('x'))
-multiply(real(2), real(3), real(4), real(5))
-multiply(real(5), nan)
+const fromMultiply = unaryFrom(multiply)
+export const double = fromMultiply(real(2))
+export const negate = fromMultiply(real(-1))
+
+export const divide = binaryFrom(multiply)(undefined, o => reciprocal(o))
