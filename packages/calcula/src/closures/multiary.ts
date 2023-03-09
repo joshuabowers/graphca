@@ -1,4 +1,4 @@
-import { fromMulti, method, multi, Multi, _ } from '@arrows/multimethod'
+import { method, multi, Multi, _ } from '@arrows/multimethod'
 import { Writer, writer } from '../monads/writer'
 import { 
   Particle, Operation, interleave
@@ -17,6 +17,7 @@ import {
 import { variable } from '../variable'
 import { Exponentiation, isExponentiation, raise } from '../arithmetic'
 import { deepEquals } from '../utility/deepEquals'
+import { degree } from '../arithmetic/degree'
 
 export type MultiaryNode = TreeNode & {
   readonly clade: Clades.multiary,
@@ -77,6 +78,19 @@ export const walk = <T extends MultiaryNode>(guardFn: TreeNodeGuardFn<T>) =>
 
 export type WalkCleaveFn = ReturnType<typeof walk>
 
+/**
+ * Sorts data by first converting each item via mutate; the mutated values
+ * are sorted by ascending order.
+ * @param data An array to sort; values are passed to mutate
+ * @param mutate A function which produces a comparable value
+ * @returns data sorted by the results of mutate
+ */
+export const sortBy = <T>(data: T[], mutate: ((t: T) => number)): T[] => {
+  const mapped = data.map((v, i) => ({i, value: mutate(v)}))
+  mapped.sort((a, b) => b.value - a.value)
+  return mapped.map(v => data[v.i])
+}
+
 export type CaseFn<T, R = T> = 
   (...params: Writer<T, Operation>[]) => Writer<R, Operation>
 
@@ -114,12 +128,18 @@ export type ToRawFn<I extends TreeNode, M> =
 type GenerateFn = Multi
   & ((p: Writer<TreeNode, Operation>, rest: Writer<TreeNode, Operation>[]) => Action<TreeNode>)
 
+export enum SortOrder {
+  ascending,
+  descending
+}
 
 export const multiary = <T extends MultiaryNode>(
-  name: string, species: Species, genus: Genera
+  name: string, species: Species, genus: Genera, sortOrder: SortOrder
 ) => {
   const create: MultiaryCreateFn<T> = (...operands) => {
-    const n = ({clade: Clades.multiary, species, genus, operands}) as T
+    let sorted = sortBy(operands, degree)
+    if(sortOrder === SortOrder.descending){ sorted = sorted.reverse() }
+    const n = ({clade: Clades.multiary, species, genus, operands: sorted}) as T
     return [n, `created ${species.toLocaleLowerCase()}`]
   }
   const guard = isSpecies<T>(species)
@@ -323,7 +343,7 @@ type ReplaceFn = ReturnType<typeof replace>
 
 type Addition = Multiary<Species.add, Genera.arithmetic>
 const [add, isAddition, $add] = multiary<Addition>(
-  '+', Species.add, Genera.arithmetic
+  '+', Species.add, Genera.arithmetic, SortOrder.descending
 )(
   (...addends) => real(addends.reduce((p,c) => p+c)),
   (...addends) => complex(...addends.reduce((p,c) => [p[0]+c[0], p[1]+c[1]])),
@@ -369,7 +389,7 @@ const [add, isAddition, $add] = multiary<Addition>(
 
 type Multiplication = Multiary<Species.multiply, Genera.arithmetic>
 const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
-  '*', Species.multiply, Genera.arithmetic
+  '*', Species.multiply, Genera.arithmetic, SortOrder.ascending
 )(
   // Primitive Handler block
   (...operands) => real(operands.reduce((p,c) => p*c)),
