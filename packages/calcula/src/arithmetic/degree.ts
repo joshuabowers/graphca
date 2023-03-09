@@ -1,45 +1,58 @@
 import { method, multi, Multi } from '@arrows/multimethod'
-import { is } from './is'
-import { Base } from './Expression'
-import { Real } from './real'
-import { Complex } from './complex'
-import { Variable } from './variable'
-import { Unary } from './unary'
-import { Addition } from './addition'
-import { Multiplication } from './multiplication'
-import { Exponentiation } from './exponentiation'
-import { Logarithm } from './logarithmic'
+import { Writer } from '../monads/writer'
+import { Operation } from '../utility/operation'
+import { TreeNode, TreeNodeGuardFn } from '../utility/tree'
+import { isReal, isComplex, isBoolean } from '../primitives'
+import { isVariable } from '../variable'
+import { isUnary } from '../closures/unary'
+import { isAddition } from './addition'
+import { isMultiplication } from './multiplication'
+import { isExponentiation } from './exponentiation'
+import { isLogarithm } from '../functions'
 
 export type DegreeFn = Multi 
-  & ((expression: Real) => number)
-  & ((expression: Complex) => number)
-  & ((expression: Variable) => number)
-  & ((expression: Multiplication) => number)
-  & ((expression: Exponentiation) => number)
-  & ((expression: Unary) => number)
-  & ((expression: Base) => number)
+  & ((node: Writer<TreeNode, Operation>) => number)
 
-export type SubDegreeFn = Multi
-  & ((expression: Real) => number)
-  & ((expression: Complex) => number)
-  & ((expression: Variable) => number)
-  & ((expression: Base) => number)
+const when = <T extends TreeNode>(
+  guardFn: TreeNodeGuardFn<T>,
+  fn: number | ((node: Writer<T, Operation>) => number)
+) =>
+  method(guardFn, (t: Writer<T, Operation>) => {
+    return typeof fn === 'function' ? fn(t) : fn
+  })
 
-const subDegree: SubDegreeFn = multi(
-  method(is(Real), (r: Real) => r.value),
-  method(is(Complex), (c: Complex) => Math.hypot(c.a, c.b)),
-  method(is(Variable), Infinity),
-  method(is(Base), 0)
+export const subDegree: DegreeFn = multi(
+  when(isReal, r => r.value.raw),
+  when(isComplex, c => Math.hypot(c.value.raw.a, c.value.raw.b)),
+  when(isVariable, Infinity),
+  method(0)
 )
 
 export const degree: DegreeFn = multi(
-  method(is(Real), 0),
-  method(is(Complex), 0),
-  method(is(Variable), 1),
-  method(is(Addition), (e: Addition) => Math.max(degree(e.left), degree(e.right))),
-  method(is(Multiplication), (e: Multiplication) => degree(e.left) + degree(e.right)),
-  method(is(Exponentiation), (e: Exponentiation) => subDegree(e.right)),
-  method(is(Logarithm), 0),
-  method(is(Unary), 1),
-  method(is(Base), 0)
+  method(
+    (v: Writer<TreeNode, Operation>) => 
+      (isReal(v) && v.value.raw === 0)
+      || (isComplex(v) && v.value.raw.a === 0 && v.value.raw.b === 0)
+      || (isBoolean(v) && v.value.raw === false), 
+    -Infinity
+  ),
+  when(isReal, 0),
+  when(isComplex, 0),
+  when(isBoolean, 0),
+  when(isVariable, 1),
+  when(
+    isAddition, 
+    e => Math.max(degree(e.value.left), degree(e.value.right))
+  ),
+  when(
+    isMultiplication,
+    e => degree(e.value.left) + degree(e.value.right)
+  ),
+  when(
+    isExponentiation,
+    e => subDegree(e.value.right)
+  ),
+  when(isLogarithm, 0),
+  when(isUnary, 1),
+  method(0)
 )
