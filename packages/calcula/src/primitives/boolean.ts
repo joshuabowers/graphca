@@ -4,9 +4,9 @@ import { isBooleanOrString } from '../utility/valuePredicates'
 export { Boolean }
 
 export const [boolean, isBoolean, $boolean] = 
-  primitive<[boolean], boolean, Boolean>(
+  primitive<[boolean|string], boolean, Boolean>(
   isBooleanOrString,
-  value => value,
+  value => Boolean(value),
   Species.boolean,
   b => b.raw.toString()
 )(
