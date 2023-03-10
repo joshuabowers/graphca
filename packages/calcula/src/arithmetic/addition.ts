@@ -121,6 +121,7 @@ import {
   Multiplication, isMultiplication, 
   multiply, negate 
 } from './multiplication'
+// import { degree } from './degree'
 
 export type Addition = Multiary<Species.add, Genera.arithmetic>
 

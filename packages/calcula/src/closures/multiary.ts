@@ -150,8 +150,8 @@ export const multiary = <T extends MultiaryNode>(
   sortOrder: SortOrder
 ) => {
   const create: MultiaryCreateFn<T> = (...operands) => {
-    // const sorted = sortBy(operands, sortMutate, sortOrder)
-    const sorted = operands
+    const sorted = sortBy(operands, degree, sortOrder)
+    // const sorted = operands
     const n = ({clade: Clades.multiary, species, genus, operands: sorted}) as T
     return [n, `created ${species.toLocaleLowerCase()}`]
   }

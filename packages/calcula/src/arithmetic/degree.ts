@@ -1,14 +1,12 @@
 import { method, multi, Multi } from '@arrows/multimethod'
 import { Writer } from '../monads/writer'
 import { Operation } from '../utility/operation'
-import { TreeNode, TreeNodeGuardFn } from '../utility/tree'
+import { TreeNode, TreeNodeGuardFn, isSpecies, Species } from '../utility/tree'
 import { isReal, isComplex, isBoolean } from '../primitives'
 import { isVariable } from '../variable'
-import { isUnary } from '../closures/unary'
-import { isAddition } from './addition'
-import { isMultiplication } from './multiplication'
-import { isExponentiation } from './exponentiation'
-import { isLogarithm } from '../functions'
+import { isUnary, UnaryNode } from '../closures/unary'
+import { BinaryNode } from '../closures/binary'
+import { MultiaryNode } from '../closures/multiary'
 
 export type DegreeFn = Multi 
   & ((node: Writer<TreeNode, Operation>) => number)
@@ -28,6 +26,12 @@ export const subDegree: DegreeFn = multi(
   method(0)
 )
 
+/**
+ * Calculates the degree qua order of the expression passed to it: that
+ * is, a value indicating the overall relative contribution of the node
+ * to the value of the broader expression it might exist within.
+ * @returns A number ranging between -Infinity and Infinity
+ */
 export const degree: DegreeFn = multi(
   method(
     (v: Writer<TreeNode, Operation>) => 
@@ -40,21 +44,23 @@ export const degree: DegreeFn = multi(
   when(isComplex, 0),
   when(isBoolean, 0),
   when(isVariable, 1),
+  // NB: raw isSpecies calls used instead of generated closures due to
+  // multiary making use of degree for operand sorting; the following
+  // four constructs all rely upon multiary, either directly or indirectly,
+  // to define themselves.
   when(
-    isAddition, 
-    // e => Math.max(degree(e.value.left), degree(e.value.right))
+    isSpecies<MultiaryNode>(Species.add),
     e => e.value.operands.reduce((p, c) => Math.max(p, degree(c)), -Infinity)
   ),
   when(
-    isMultiplication,
-    // e => degree(e.value.left) + degree(e.value.right)
+    isSpecies<MultiaryNode>(Species.multiply),
     e => e.value.operands.reduce((p, c) => p + degree(c), 0)
   ),
   when(
-    isExponentiation,
+    isSpecies<BinaryNode>(Species.raise),
     e => subDegree(e.value.right)
   ),
-  when(isLogarithm, 0),
+  when(isSpecies<UnaryNode>(Species.log), 0),
   when(isUnary, 1),
   method(0)
 )

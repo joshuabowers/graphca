@@ -422,6 +422,7 @@ import {
   Exponentiation, isExponentiation, 
   raise, reciprocal 
 } from './exponentiation'
+// import { degree } from './degree'
 
 export type Multiplication = Multiary<Species.multiply, Genera.arithmetic>
 export const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
