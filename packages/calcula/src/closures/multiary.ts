@@ -4,7 +4,7 @@ import {
   Particle, Operation, interleave
 } from '../utility/operation'
 import { 
-  TreeNode, Clades, Genera, Species,
+  TreeNode, Clades, Genera, Species, SortOrder,
   isClade, isSpecies, TreeNodeGuardFn, isTreeNode
 } from '../utility/tree'
 import { processLogs, LogFunctionalFn } from '../utility/processLogs'
@@ -16,9 +16,6 @@ import {
   isPrimitive, 
   isReal, isComplex, isBoolean, isNil, isNaN, isComplexInfinity
 } from '../primitives'
-import { variable } from '../variable'
-import { Exponentiation, isExponentiation, raise, reciprocal } from '../arithmetic'
-import { deepEquals } from '../utility/deepEquals'
 import { degree } from '../arithmetic/degree'
 
 export type MultiaryNode = TreeNode & {
@@ -38,8 +35,8 @@ export type OperandPredicate<T> =
   | typeof _
 
 export type Predicate<T> = 
-  | ((operands: Writer<unknown, Operation>[]) => operands is Writer<T, Operation>[])
-  | ((operands: Writer<TreeNode, Operation>[]) => boolean)
+  // | ((operands: Writer<unknown, Operation>[]) => operands is Writer<T, Operation>[])
+  | ((...operands: Writer<TreeNode, Operation>[]) => boolean)
   | OperandPredicate<T>[]
 
 export type Action<T> = [T|Writer<T, Operation>, string|undefined]
@@ -80,10 +77,7 @@ export const walk = <T extends MultiaryNode>(guardFn: TreeNodeGuardFn<T>) =>
 
 export type WalkCleaveFn = ReturnType<typeof walk>
 
-export enum SortOrder {
-  ascending,
-  descending
-}
+export type SortMutateFn<T> = (t: T) => number
 
 /**
  * Sorts data by first converting each item via mutate; the mutated values
@@ -95,7 +89,7 @@ export enum SortOrder {
  */
 export const sortBy = <T>(
   data: T[], 
-  mutate: ((t: T) => number), 
+  mutate: SortMutateFn<T>, 
   order: SortOrder = SortOrder.ascending
 ): T[] => {
   const mapped = data.map((v, i) => ({i, value: mutate(v)}))
@@ -132,8 +126,12 @@ export type MultiaryNodeMetaTuple<T extends MultiaryNode> = [
   MultiaryCreateFn<T>
 ]
 
+// export const matchGuard = <T extends TreeNode>(guard: TreeNodeGuardFn<T>) =>
+//   (params: Writer<unknown, Operation>[]): params is Writer<T, Operation>[] =>
+//     params.every(p => isTreeNode(p) && guard(p))
+
 export const matchGuard = <T extends TreeNode>(guard: TreeNodeGuardFn<T>) =>
-  (params: Writer<unknown, Operation>[]): params is Writer<T, Operation>[] =>
+  (...params: Writer<unknown, Operation>[]) =>
     params.every(p => isTreeNode(p) && guard(p))
 
 export const areReal = matchGuard(isReal),
@@ -147,10 +145,13 @@ type GenerateFn = Multi
   & ((p: Writer<TreeNode, Operation>, rest: Writer<TreeNode, Operation>[]) => Action<TreeNode>)
 
 export const multiary = <T extends MultiaryNode>(
-  name: string, species: Species, genus: Genera, sortOrder: SortOrder
+  name: string, species: Species, genus: Genera, 
+  // sortMutate: SortMutateFn<Writer<TreeNode, Operation>>, 
+  sortOrder: SortOrder
 ) => {
   const create: MultiaryCreateFn<T> = (...operands) => {
-    let sorted = sortBy(operands, degree, sortOrder)
+    // const sorted = sortBy(operands, sortMutate, sortOrder)
+    const sorted = operands
     const n = ({clade: Clades.multiary, species, genus, operands: sorted}) as T
     return [n, `created ${species.toLocaleLowerCase()}`]
   }
@@ -199,45 +200,49 @@ export const multiary = <T extends MultiaryNode>(
         const fn: MultiaryFn<T> = multi(
           // Insert other edge cases here
           when(
-            (operands: Writer<TreeNode, Operation>[]) =>
-              operands.some(isComplex) && operands.every(isPrimitive),
+            (...operands: Writer<TreeNode, Operation>[]) =>
+              operands.some(isComplex) 
+              && operands.some(v => isReal(v) || isBoolean(v))
+              && operands.every(isPrimitive),
             (...operands) => [fn(
               ...operands.filter(isComplex), 
               ...operands.filter(o => isPrimitive(o) && !isComplex(o)).map(
                 o => isReal(o) ? complex(o) : isBoolean(o) ? complex(o) : nan
               )
             ), 'cast non-complex operands to complex']
-          ),
+          )(logFunctional),
           when(
-            (operands: Writer<TreeNode, Operation>[]) =>
-              operands.some(isReal) && operands.every(isPrimitive),
+            (...operands: Writer<TreeNode, Operation>[]) =>
+              operands.some(isReal) 
+              && operands.some(isBoolean) 
+              && operands.every(isPrimitive),
             (...operands) => [fn(
               ...operands.filter(isReal),
               ...operands.filter(o => isPrimitive(o) && !isReal(o)).map(
                 o => isBoolean(o) ? real(o) : nan
               )
             ), 'cast non-real operands to real']
-          ),
+          )(logFunctional),
           when(
-            (operands: Writer<TreeNode, Operation>[]) =>
+            (...operands: Writer<TreeNode, Operation>[]) =>
               operands.some(o => isNil(o) || isNaN(o)),
             [nan, 'not a number']
-          ),
-          when(
+          )(logFunctional),
+          when<Real>(
             areReal, 
             handled(r => r.value.raw, whenReal, Species.real)
-          ),
-          when(
+          )(logFunctional),
+          when<Complex>(
             areComplex, 
             handled(
               ({value: {raw: {a, b}}}) => [a, b] as [number, number], 
               whenComplex, Species.complex
             )
-          ),
-          when(
+          )(logFunctional),
+          when<Boolean>(
             areBoolean, 
             handled(b => b.value.raw, whenBoolean, Species.boolean)
-          ),
+          )(logFunctional),
           when(
             undefined,
             (...initialOperands: Writer<TreeNode, Operation>[]) => {
@@ -250,7 +255,7 @@ export const multiary = <T extends MultiaryNode>(
               }
               return generate(operands[0], operands.slice(1))
             }
-          )
+          )(logFunctional)
         )
         return [fn, guard, create]
       }
@@ -310,7 +315,7 @@ type ConsiderationExecFn = (
   operands: Writer<TreeNode, Operation>[]
 ) => AlterationsTuple
 
-const consider = <M extends TreeNode, N extends TreeNode>(
+export const consider = <M extends TreeNode, N extends TreeNode>(
   predicate: CombineTermsPredicateFn<TreeNode, N>,
   correspondingFn: CombineTermsCorrespondingFn<M, N>
 ) => (logFunctional: LogFunctionalFn): ConsiderationExecFn =>
@@ -336,7 +341,7 @@ const consider = <M extends TreeNode, N extends TreeNode>(
 
 type ConsiderFn = ReturnType<typeof consider>
 
-const replace = <T extends MultiaryNode>(
+export const replace = <T extends MultiaryNode>(
   predicate: ((p: Writer<TreeNode, Operation>) => boolean),
   correspondingFn: ((p: Writer<TreeNode, Operation>, rest: Writer<TreeNode, Operation>[]) => [Writer<TreeNode, Operation>[], string|undefined])
 ) => 
@@ -386,120 +391,3 @@ export const binaryFrom = <T extends MultiaryNode>(fn: MultiaryFn<T>) =>
           fn(leftMapFn?.(l) ?? l, rightMapFn?.(r) ?? r)
       )
     )
-
-type Addition = Multiary<Species.add, Genera.arithmetic>
-const [add, isAddition, $add] = multiary<Addition>(
-  '+', Species.add, Genera.arithmetic, SortOrder.descending
-)(
-  (...addends) => real(addends.reduce((p,c) => p+c)),
-  (...addends) => complex(...addends.reduce((p,c) => [p[0]+c[0], p[1]+c[1]])),
-  (...addends) => boolean(addends.reduce((p,c) => (p || c) && !(p && c)))
-)(
-  replace(
-    p => (isReal(p) && p.value.raw === 0)
-      || (isComplex(p) && p.value.raw.a === 0 && p.value.raw.b === 0),
-    (_p, rest) => [rest, 'additive identity']
-  )  
-)(
-  // 1st: deepEquals between a and all other addends.
-  // => Ex.: x + x + x => 3 * x
-  consider(
-    deepEquals,
-    (a, copies) => [
-      multiply(a, real(1 + copies.length)), 
-      'combine equivalent sub-expressions'
-    ]
-  ),
-  // 2nd: deepEquals between `a` and multiplication addends multiplicands
-  // => Ex.: x + 2*x => 3*x
-  consider<TreeNode, Multiplication>(
-    (a, b) => isMultiplication(b) && b.value.operands.some(m => deepEquals(a, m)),
-    (a, copies) => [
-      multiply(a, add(real(1), ...copies.map(b => multiply(...b.value.operands.filter(m => deepEquals(a, m)))))),
-      'factor common sub-expression'
-    ]
-  ),
-  // TODO: Need more thought on what these need to be doing.
-  // 3rd: deepEquals between multiplication `a` multiplicands and other addends
-  // => Ex.: 2*x + x => 3*x
-  // consider<Multiplication, TreeNode>(
-  //   (a, b) => isMultiplication(a) && a.value.operands.some(m => deepEquals(m, b)),
-  //   (a, copies) => [
-  //     multiply(a, add(multiply(a.value.operands.filter()), real(copies.length)))
-  //   ]
-  // ),
-  // 4th: deepEquals between multiplication addends multiplicands
-  // => Ex.: 2*x + 3*x => 5*x
-  // consider<Multiplication, Multiplication>()
-)
-
-export const subtract = binaryFrom(add)(undefined, o => negate(o))
-
-type Multiplication = Multiary<Species.multiply, Genera.arithmetic>
-const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
-  '*', Species.multiply, Genera.arithmetic, SortOrder.ascending
-)(
-  // Primitive Handler block
-  (...operands) => real(operands.reduce((p,c) => p*c)),
-  (...operands) => complex(...operands.reduce(
-    (p,c) => [
-      (p[0]*c[0]) - (p[1]*c[1]),
-      (p[0]*c[1]) + (p[1]*c[0])
-    ]
-  )),
-  (...operands) => boolean(operands.reduce((p,c) => p && c))
-)(
-  replace(
-    p => (isReal(p) && p.value.raw === 0)
-      || (isComplex(p) && p.value.raw.a === 0 && p.value.raw.b === 0),
-    (p, _rest) => [[p], 'zero absorption']
-  ),
-  replace(
-    p => (isReal(p) && p.value.raw === 1)
-      || (isComplex(p) && p.value.raw.a === 1 && p.value.raw.b === 0),
-    (_p, rest) => [rest, 'multiplicative identity']
-  )
-)(
-  // 1st: deepEquals between m and all other multiplicands.
-  // => Ex.: x * x * x => x^3
-  consider(
-    deepEquals,
-    (m, copies) => [
-      raise(m, real(1 + copies.length)), 
-      'combine equivalent sub-expressions'
-    ]
-  ),
-  // 2nd: deepEquals between m and exponentiation multiplicands bases.
-  // => Ex.: x * x^2 => x^3
-  consider<TreeNode, Exponentiation>(
-    (m, n) => isExponentiation(n) && deepEquals(m, n.value.left),
-    (m, copies) => [
-      raise(m, add(real(1), ...copies.map(n => n.value.right))), 
-      'combine sub-expressions where one is the base of other exponentiations'
-    ]
-  ),
-  // 3rd: isExponentiation(m) and deepEquals m base with other multiplicands.
-  // => Ex.: x^2 * x => x^3
-  consider<Exponentiation, TreeNode>(
-    (m, n) => isExponentiation(m) && deepEquals(m.value.left, n),
-    (m, copies) => [
-      raise(m.value.left, add(m.value.right, real(copies.length))), 
-      'combine sub-expressions where the base of an exponentiation equals other operands'
-    ]
-  ),
-  // 4th: isExponentiation(m) and deepEquals m base with other exponentiation bases.
-  // => Ex.: x^2 * x^3 => x^5
-  consider<Exponentiation, Exponentiation>(
-    (m, n) => isExponentiation(m) && isExponentiation(n) && deepEquals(m.value.left, n.value.right),
-    (m, copies) => [
-      raise(m.value.left, add(m.value.right, ...copies.map(n => n.value.right))), 
-      'combine sub-expression exponentiations which have equivalent bases'
-    ]
-  )
-)
-
-const fromMultiply = unaryFrom(multiply)
-export const double = fromMultiply(real(2))
-export const negate = fromMultiply(real(-1))
-
-export const divide = binaryFrom(multiply)(undefined, o => reciprocal(o))

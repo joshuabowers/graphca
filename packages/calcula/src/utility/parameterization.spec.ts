@@ -1,5 +1,6 @@
 import { variable } from '../variable'
 import { add } from '../arithmetic'
+import { raise } from '../arithmetic'
 import { cos } from '../functions/trigonometric'
 import { parameterize } from './parameterization'
 
@@ -9,11 +10,17 @@ describe('parameterize', () => {
   })
 
   it('returns variables within binaries', () => {
-    expect(parameterize(add(variable('x'), variable('y')))).toEqual(new Set(['x', 'y']))
+    expect(parameterize(raise(variable('x'), variable('y')))).toEqual(new Set(['x', 'y']))
   })
 
   it('returns variables within unary functions', () => {
     expect(parameterize(cos(variable('x')))).toEqual(new Set('x'))
+  })
+
+  it('returns variables within multiary functions', () => {
+    expect(
+      parameterize(add(variable('x'), variable('y'), variable('z')))
+    ).toEqual(new Set(['x', 'y', 'z']))
   })
 
   it('returns a single name for a variable encountered twice', () => {

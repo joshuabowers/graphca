@@ -84,8 +84,8 @@ describe('$add', () => {
     expect(
       $add(unit(variable('x').value), unit(variable('y').value))[0]
     ).toEqual({
-      clade: Clades.binary, genus: Genera.arithmetic, species: Species.add,
-      left: unit(variable('x').value), right: unit(variable('y').value)
+      clade: Clades.multiary, genus: Genera.arithmetic, species: Species.add,
+      operands: [unit(variable('x').value), unit(variable('y').value)]
     })
   })
 })

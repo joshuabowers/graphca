@@ -55,7 +55,8 @@ export const [raise, isExponentiation, $raise] = binary<Exponentiation>(
   when<Multiplication, TreeNode>(
     (l, _r) => isMultiplication(l),
     (l, r) => [
-      multiply(raise(l.value.left, r), raise(l.value.right, r)), 
+      // multiply(raise(l.value.left, r), raise(l.value.right, r)), 
+      multiply(...l.value.operands.map(v => raise(v, r))),
       'exponential distribution'
     ]
   )

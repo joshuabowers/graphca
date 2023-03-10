@@ -4,6 +4,7 @@ import { TreeNode } from "./tree"
 import { isVariable } from '../variable'
 import { isUnary } from '../closures/unary'
 import { isBinary } from '../closures/binary'
+import { isMultiary } from '../closures/multiary'
 
 function *findVariables(expression: Writer<TreeNode, Operation>): IterableIterator<string>{
   if(isVariable(expression)){
@@ -13,6 +14,10 @@ function *findVariables(expression: Writer<TreeNode, Operation>): IterableIterat
   } else if(isBinary(expression)){
     yield *findVariables(expression.value.left)
     yield *findVariables(expression.value.right)
+  } else if(isMultiary(expression)){
+    for(let o of expression.value.operands){
+      yield *findVariables(o)
+    }
   }
 }
 

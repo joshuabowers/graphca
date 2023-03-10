@@ -5,6 +5,7 @@ import { TreeNode, Species, isSpecies, TreeNodeGuardFn } from './tree'
 import { Real, Complex, Boolean, Nil, NaN } from '../primitives'
 import { UnaryNode, isUnary } from '../closures/unary'
 import { BinaryNode, isBinary } from '../closures/binary'
+import { MultiaryNode, isMultiary } from '../closures/multiary'
 import { Variable } from '../variable'
 
 export const areSpeciesEqual = <T extends TreeNode, U extends TreeNode>(
@@ -23,6 +24,17 @@ const caseOf = <T extends TreeNode>(species: Species | TreeNodeGuardFn<T>) => {
     )
 }
 
+const every = (
+  l: Writer<TreeNode, Operation>[], 
+  r: Writer<TreeNode, Operation>[]
+): boolean => {
+  if(l.length !== r.length){ return false }
+  for(let i = 0; i < l.length; i++){
+    if(!deepEquals(l[i], r[i])){ return false }
+  }
+  return true
+}
+
 export type EqualsFn<T extends TreeNode> = (left: Writer<T, Operation>, right: Writer<T, Operation>) => boolean
 export type DeepEqualsFn = Multi
   & EqualsFn<Real>
@@ -33,6 +45,7 @@ export type DeepEqualsFn = Multi
   & EqualsFn<Variable>
   & EqualsFn<UnaryNode>
   & EqualsFn<BinaryNode>
+  & EqualsFn<MultiaryNode>
   & EqualsFn<TreeNode>
 
 export const deepEquals: DeepEqualsFn = multi(
@@ -47,6 +60,9 @@ export const deepEquals: DeepEqualsFn = multi(
   caseOf<UnaryNode>(isUnary)((l, r) => deepEquals(l.expression, r.expression)),
   caseOf<BinaryNode>(isBinary)(
     (l, r) => deepEquals(l.left, r.left) && deepEquals(l.right, r.right)
+  ),
+  caseOf<MultiaryNode>(isMultiary)(
+    (l, r) => every(l.operands, r.operands)
   ),
   method(false)
 )

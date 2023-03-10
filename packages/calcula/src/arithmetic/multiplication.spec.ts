@@ -12,8 +12,8 @@ describe('$multiply', () => {
     expect(
       $multiply(unit(variable('x').value), unit(variable('y').value))[0]
     ).toEqual({
-      clade: Clades.binary, genus: Genera.arithmetic, species: Species.multiply,
-      left: unit(variable('x').value), right: unit(variable('y').value)
+      clade: Clades.multiary, genus: Genera.arithmetic, species: Species.multiply,
+      operands: [unit(variable('x').value), unit(variable('y').value)]
     })
   })
 })

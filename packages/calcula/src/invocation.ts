@@ -8,6 +8,7 @@ import { TreeNode, TreeNodeGuardFn, Species } from "./utility/tree"
 import { PrimitiveNode } from './primitives'
 import { UnaryNode, UnaryFn } from './closures/unary'
 import { BinaryNode, BinaryFn } from './closures/binary'
+import { MultiaryNode, MultiaryFn } from './closures/multiary'
 import { 
   Real, Complex, Boolean,
   isReal, isComplex, isBoolean 
@@ -77,6 +78,12 @@ const constant = <T extends PrimitiveNode>(): CorrespondingFn<T> =>
     n, `evaluating ${n.value.species.toLocaleLowerCase()}`
   ]
 
+const multiary = <T extends MultiaryNode>(m: MultiaryFn<T>): CorrespondingFn<T> =>
+  scope => (e: W.Writer<MultiaryNode, Operation>): Action<T> => [
+    m(...e.value.operands.map(o => evaluate(s => o)(scope))),
+    'looking for variables to substitute in expression'
+  ]
+
 const binary = <T extends BinaryNode, R>(b: BinaryFn<T, R>): CorrespondingFn<T> =>
   scope => (e: W.Writer<BinaryNode, Operation>): Action<T> => [
     b(evaluate(s => e.value.left)(scope), evaluate(s => e.value.right)(scope)), 
@@ -114,8 +121,8 @@ const evaluate: EvaluateFn = multi(
     } variable ${v.value.name}`
   ]),
 
-  when(isAddition, binary(add)),
-  when(isMultiplication, binary(multiply)),
+  when(isAddition, multiary(add)),
+  when(isMultiplication, multiary(multiply)),
   when(isExponentiation, binary(raise)),
   when(isLogarithm, binary(log)),
 

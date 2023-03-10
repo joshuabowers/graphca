@@ -9,6 +9,7 @@ import {
 import { isVariable } from '../variable'
 import { UnaryNode } from '../closures/unary'
 import { BinaryNode } from '../closures/binary'
+import { MultiaryNode } from '../closures/multiary'
 import { isAddition, isMultiplication, isExponentiation } from '../arithmetic'
 import { 
   isLogarithm, isPermutation, isCombination,
@@ -31,6 +32,10 @@ type ToString<T extends TreeNode> = (expression: Writer<T, Operation>) => string
 
 const when = <T extends TreeNode>(guard: TreeNodeGuardFn<T>, fn: ToString<T>) =>
   method(guard, fn)
+
+const multiary = (operator: string) =>
+  (e: Writer<MultiaryNode, Operation>) =>
+    `(${e.value.operands.map(o => stringify(o)).join(operator)})`
 
 const binaryInfix = (operator: string) => 
   (e: Writer<BinaryNode, Operation>) =>
@@ -70,8 +75,8 @@ export const stringify: StringifyFn = multi(
   when(isNil, _ => 'nil'),
   when(isNaN, _ => 'NaN'),
   when(isVariable, v => v.value.name),
-  when(isAddition, binaryInfix('+')),
-  when(isMultiplication, binaryInfix('*')),
+  when(isAddition, multiary('+')),
+  when(isMultiplication, multiary('*')),
   when(isExponentiation, binaryInfix('^')),
   when(isLogarithm, binary('log')),
   when(isPermutation, binary('P')),

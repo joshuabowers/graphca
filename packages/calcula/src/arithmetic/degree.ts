@@ -42,11 +42,13 @@ export const degree: DegreeFn = multi(
   when(isVariable, 1),
   when(
     isAddition, 
-    e => Math.max(degree(e.value.left), degree(e.value.right))
+    // e => Math.max(degree(e.value.left), degree(e.value.right))
+    e => e.value.operands.reduce((p, c) => Math.max(p, degree(c)), -Infinity)
   ),
   when(
     isMultiplication,
-    e => degree(e.value.left) + degree(e.value.right)
+    // e => degree(e.value.left) + degree(e.value.right)
+    e => e.value.operands.reduce((p, c) => p + degree(c), 0)
   ),
   when(
     isExponentiation,

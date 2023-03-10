@@ -94,13 +94,20 @@ export const differentiate: DifferentiateFn = multi(
 
   // Arithmetic
   when(isAddition, e => [ 
-    add(differentiate(e.value.left), differentiate(e.value.right)),
+    // add(differentiate(e.value.left), differentiate(e.value.right)),
+    add(...e.value.operands.map(o => differentiate(o))),
     'derivative of an addition'
   ]),
   when(isMultiplication, e => [
     add(
-      multiply(differentiate(e.value.left), e.value.right),
-      multiply(e.value.left, differentiate(e.value.right))
+      // multiply(differentiate(e.value.left), e.value.right),
+      // multiply(e.value.left, differentiate(e.value.right))
+      ...e.value.operands.map(
+        o => multiply(
+          differentiate(o), 
+          ...e.value.operands.filter(n => n !== o)
+        )
+      )
     ),
     'derivative of a multiplication'
   ]),

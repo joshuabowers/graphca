@@ -112,6 +112,11 @@ export enum Notation {
   postfix
 }
 
+export enum SortOrder {
+  ascending,
+  descending
+}
+
 export type TreeNode = {
   readonly clade: Clades,
   readonly genus?: Genera,

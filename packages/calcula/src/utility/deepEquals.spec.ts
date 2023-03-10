@@ -3,6 +3,7 @@ import { variable } from '../variable'
 import { abs } from '../functions/absolute'
 import { sin } from '../functions/trigonometric'
 import { add, multiply } from '../arithmetic'
+import { permute, combine } from '../functions/combinatorics'
 import { deepEquals } from './deepEquals'
 
 describe('deepEquals', () => {
@@ -60,19 +61,40 @@ describe('deepEquals', () => {
 
   it('returns true for equivalent binary functions', () => {
     expect(deepEquals(
-      add(variable('x'), real(5)),
-      add(variable('x'), real(5))
+      combine(variable('x'), real(5)),
+      combine(variable('x'), real(5))
     )).toBeTruthy()
   })
 
   it('returns false for equivalent binary functions with inequivalent children', () =>{
     expect(deepEquals(
-      add(variable('x'), real(5)),
-      add(variable('y'), real(10))
+      combine(variable('x'), real(5)),
+      combine(variable('y'), real(10))
     )).toBeFalsy()
   })
 
   it('returns false for inequivalent binary functions', () => {
+    expect(deepEquals(
+      combine(variable('x'), variable('y')),
+      permute(variable('x'), variable('y'))
+    )).toBeFalsy()
+  })
+
+  it('returns true for equivalent multiary functions', () => {
+    expect(deepEquals(
+      add(variable('x'), variable('y'), variable('z')),
+      add(variable('x'), variable('y'), variable('z'))
+    ))
+  })
+
+  it('returns false for equivalent multiary functions with inequivalent children', () => {
+    expect(deepEquals(
+      add(variable('x'), real(5)),
+      add(variable('y'), real(10))
+    ))
+  })
+
+  it('returns false for inequivalent multiary functions', () => {
     expect(deepEquals(
       add(variable('x'), variable('y')),
       multiply(variable('x'), variable('y'))
