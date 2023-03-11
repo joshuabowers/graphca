@@ -1396,34 +1396,6 @@ exports[`divide handles division by zero correctly 1`] = `
   ],
   [
     "(x*∞)",
-    "reorder operands",
-  ],
-  [
-    "(∞*x)",
-    "identified multiplication",
-  ],
-  [
-    "([∞]*x)",
-    "processing left operand",
-  ],
-  [
-    "∞",
-    "created real",
-  ],
-  [
-    "({∞}*[x])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "x",
-    "referenced variable",
-  ],
-  [
-    "(∞*{x})",
-    "processed right operand",
-  ],
-  [
-    "(∞*x)",
     "infinite absorption",
   ],
   [
@@ -1822,7 +1794,7 @@ exports[`divide properly handles dividing complex 0 by another complex 1`] = `
   ],
   [
     "(0+0𝒊*3.061616997868383e-17-0.5𝒊)",
-    "zero absorption",
+    "complex multiplication",
   ],
   [
     "0+0𝒊",
@@ -5584,7 +5556,7 @@ exports[`multiply when given a primitive and a not primitive reorder a complex r
   ],
   [
     "(x*0+1𝒊)",
-    "reorder operands",
+    "created multiplication",
   ],
   [
     "(0+1𝒊*x)",
@@ -5612,7 +5584,7 @@ exports[`multiply when given a primitive and a not primitive reorder a complex r
   ],
   [
     "(0+1𝒊*x)",
-    "created multiplication",
+    "reordered operands",
   ],
 ]
 `;
@@ -5645,7 +5617,7 @@ exports[`multiply when given a primitive and a not primitive reorders a real rig
   ],
   [
     "(x*5)",
-    "reorder operands",
+    "created multiplication",
   ],
   [
     "(5*x)",
@@ -5673,7 +5645,7 @@ exports[`multiply when given a primitive and a not primitive reorders a real rig
   ],
   [
     "(5*x)",
-    "created multiplication",
+    "reordered operands",
   ],
 ]
 `;

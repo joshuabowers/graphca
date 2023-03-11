@@ -383,34 +383,6 @@ exports[`add when dealing with the additive identity returns the right operand i
   ],
   [
     "(0+x)",
-    "reorder operands",
-  ],
-  [
-    "(x+0)",
-    "identified addition",
-  ],
-  [
-    "([x]+0)",
-    "processing left operand",
-  ],
-  [
-    "x",
-    "referenced variable",
-  ],
-  [
-    "({x}+[0])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "0",
-    "created real",
-  ],
-  [
-    "(x+{0})",
-    "processed right operand",
-  ],
-  [
-    "(x+0)",
     "additive identity",
   ],
   [
@@ -2235,44 +2207,20 @@ exports[`subtract returns the negated right when subtracting from 0 1`] = `
     "created multiplication",
   ],
   [
+    "(-1*x)",
+    "reordered operands",
+  ],
+  [
     "(0+{(-1*x)})",
     "processed right operand",
   ],
   [
     "(0+(-1*x))",
-    "reorder operands",
-  ],
-  [
-    "((-1*x)+0)",
-    "identified addition",
-  ],
-  [
-    "([(-1*x)]+0)",
-    "processing left operand",
-  ],
-  [
-    "(-1*x)",
-    "created multiplication",
-  ],
-  [
-    "({(-1*x)}+[0])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "0",
-    "created real",
-  ],
-  [
-    "((-1*x)+{0})",
-    "processed right operand",
-  ],
-  [
-    "((-1*x)+0)",
     "additive identity",
   ],
   [
     "(-1*x)",
-    "created multiplication",
+    "reordered operands",
   ],
 ]
 `;

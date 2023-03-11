@@ -1,7 +1,7 @@
 import { method, multi, Multi, _ } from '@arrows/multimethod'
-import { Writer, writer } from '../monads/writer'
+import { Writer, writer, curate } from '../monads/writer'
 import { 
-  Particle, Operation, interleave
+  Particle, Operation, interleave, operation, context
 } from '../utility/operation'
 import { 
   TreeNode, Clades, Genera, Species, SortOrder,
@@ -35,7 +35,6 @@ export type OperandPredicate<T> =
   | typeof _
 
 export type Predicate<T> = 
-  // | ((operands: Writer<unknown, Operation>[]) => operands is Writer<T, Operation>[])
   | ((...operands: Writer<TreeNode, Operation>[]) => boolean)
   | OperandPredicate<T>[]
 
@@ -51,7 +50,9 @@ export const when = <T extends TreeNode>(
 ) =>
   (logFunctional: LogFunctionalFn) => {
     const handle = (...operands: Writer<T, Operation>[]) => {
-      const [result, action] = typeof fn === 'function' ? fn(...operands) : fn
+      const [result, action] = typeof fn === 'function' 
+        ? fn(...operands.map(o => curate(o))) 
+        : fn
       return action 
         ? writer(result, ...logFunctional(action, ...operands))
         : result
@@ -126,10 +127,6 @@ export type MultiaryNodeMetaTuple<T extends MultiaryNode> = [
   MultiaryCreateFn<T>
 ]
 
-// export const matchGuard = <T extends TreeNode>(guard: TreeNodeGuardFn<T>) =>
-//   (params: Writer<unknown, Operation>[]): params is Writer<T, Operation>[] =>
-//     params.every(p => isTreeNode(p) && guard(p))
-
 export const matchGuard = <T extends TreeNode>(guard: TreeNodeGuardFn<T>) =>
   (...params: Writer<unknown, Operation>[]) =>
     params.every(p => isTreeNode(p) && guard(p))
@@ -146,20 +143,25 @@ type GenerateFn = Multi
 
 export const multiary = <T extends MultiaryNode>(
   name: string, species: Species, genus: Genera, 
-  // sortMutate: SortMutateFn<Writer<TreeNode, Operation>>, 
   sortOrder: SortOrder
 ) => {
   const create: MultiaryCreateFn<T> = (...operands) => {
     const sorted = sortBy(operands, degree, sortOrder)
-    // const sorted = operands
     const n = ({clade: Clades.multiary, species, genus, operands: sorted}) as T
-    return [n, `created ${species.toLocaleLowerCase()}`]
+    const result = sorted.some((s, i) => s !== operands[i])
+      ? writer(n, operation(toParticles(
+          ...operands.map(o => context(o, -1))), 'reordered operands'
+        ))
+      : n
+    return [result, `created ${species.toLocaleLowerCase()}`]
   }
   const guard = isSpecies<T>(species)
   const cleave = walk(guard)
 
   const toParticles = (...operands: Particle[][]): Particle[] =>
-    ['(', ...interleave(operands, name), ')']
+    operands.length > 1 
+      ? ['(', ...interleave(operands, name), ')']
+      : operands[0]
   const logFunctional = processLogs(toParticles, species)
 
   const handled = <I extends TreeNode, M, O extends TreeNode>(
@@ -205,23 +207,21 @@ export const multiary = <T extends MultiaryNode>(
               && operands.some(v => isReal(v) || isBoolean(v))
               && operands.every(isPrimitive),
             (...operands) => [fn(
-              ...operands.filter(isComplex), 
-              ...operands.filter(o => isPrimitive(o) && !isComplex(o)).map(
-                o => isReal(o) ? complex(o) : isBoolean(o) ? complex(o) : nan
+              ...operands.map(
+                o => isReal(o) ? complex(o) : isBoolean(o) ? complex(o) : o
               )
-            ), 'cast non-complex operands to complex']
+            ), undefined]
           )(logFunctional),
           when(
             (...operands: Writer<TreeNode, Operation>[]) =>
               operands.some(isReal) 
-              && operands.some(isBoolean) 
+              && operands.some(isBoolean)
               && operands.every(isPrimitive),
             (...operands) => [fn(
-              ...operands.filter(isReal),
-              ...operands.filter(o => isPrimitive(o) && !isReal(o)).map(
-                o => isBoolean(o) ? real(o) : nan
+              ...operands.map(
+                o => isBoolean(o) ? real(o) : o
               )
-            ), 'cast non-real operands to real']
+            ), undefined]
           )(logFunctional),
           when(
             (...operands: Writer<TreeNode, Operation>[]) =>
@@ -251,7 +251,10 @@ export const multiary = <T extends MultiaryNode>(
               )
               const primitives = operands.filter(isPrimitive)
               if(primitives.length > 0){
-                operands = [fn(...primitives), ...operands.filter(m => !isPrimitive(m))]
+                operands = [
+                  primitives.length > 1 ? fn(...primitives) : primitives[0], 
+                  ...operands.filter(m => !isPrimitive(m))
+                ]
               }
               return generate(operands[0], operands.slice(1))
             }
@@ -352,7 +355,7 @@ export const replace = <T extends MultiaryNode>(
         const [result, defaultAction] = create(...operands)
         return [result, action ?? defaultAction]
       } else {
-        return [operands[0], 'reduced to singular operand']
+        return [operands[0], action ?? 'reduced to singular operand']
       }
     })
 

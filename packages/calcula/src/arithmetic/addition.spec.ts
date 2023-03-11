@@ -1,4 +1,4 @@
-import { unit } from '../monads/writer'
+import { isWriter, unit } from '../monads/writer'
 import { expectToEqualWithSnapshot } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { real, complex, boolean, nil, nan } from '../primitives'
@@ -81,8 +81,9 @@ import { double, multiply, negate } from './multiplication'
 
 describe('$add', () => {
   it('generates an Addition for a pair of TreeNode inputs', () => {
+    const actual = $add(unit(variable('x').value), unit(variable('y').value))[0]
     expect(
-      $add(unit(variable('x').value), unit(variable('y').value))[0]
+      isWriter(actual) ? actual.value : actual
     ).toEqual({
       clade: Clades.multiary, genus: Genera.arithmetic, species: Species.add,
       operands: [unit(variable('x').value), unit(variable('y').value)]

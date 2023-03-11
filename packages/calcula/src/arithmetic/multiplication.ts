@@ -408,10 +408,11 @@
 // export const double = fromMultiply(real(2))
 
 // export const divide = binaryFrom(multiply)(undefined, r => reciprocal(r))
+import { Multi, multi, method, _ } from '@arrows/multimethod'
 import { TreeNode, Species, Genera, SortOrder } from '../utility/tree'
 import { 
   real, complex, boolean,
-  isReal, isComplex
+  isReal, isComplex, Complex
 } from '../primitives'
 import { 
   Multiary, multiary, replace, consider, unaryFrom, binaryFrom
@@ -422,7 +423,29 @@ import {
   Exponentiation, isExponentiation, 
   raise, reciprocal 
 } from './exponentiation'
-// import { degree } from './degree'
+
+type ComplexPair = [number, number]
+type ComplexPairGuard = ((c: ComplexPair) => boolean) | typeof _
+type GuardFn = undefined
+  | [ComplexPairGuard, ComplexPairGuard]
+
+const isComplexWrapped = (c: ComplexPair) => c[1] === 0
+const isImaginary = (c: ComplexPair) => c[0] === 0
+
+const when = (guard: GuardFn, fn: ((p: ComplexPair, c: ComplexPair) => ComplexPair)) => 
+  guard ? method(guard, fn) : method(fn)
+
+type HandleComplexFn = Multi & ((p: ComplexPair, c: ComplexPair) => ComplexPair)
+const handleComplex: HandleComplexFn = multi(
+  when([isComplexWrapped, isComplexWrapped], (p, c) => [p[0]*c[0], 0]),
+  when([isComplexWrapped, isImaginary], (p, c) => [0, p[0]*c[1]]),
+  when([isImaginary, isComplexWrapped], (p, c) => [0, p[1]*c[0]]),
+  // when([_, isComplexWrapped], (p, c) => [p[0]*c[0], 0]),
+  when(undefined, (p, c) => [
+    (p[0]*c[0]) - (p[1]*c[1]),
+    (p[0]*c[1]) + (p[1]*c[0])
+  ])
+)
 
 export type Multiplication = Multiary<Species.multiply, Genera.arithmetic>
 export const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
@@ -430,12 +453,7 @@ export const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
 )(
   // Primitive Handler block
   (...operands) => real(operands.reduce((p,c) => p*c)),
-  (...operands) => complex(...operands.reduce(
-    (p,c) => [
-      (p[0]*c[0]) - (p[1]*c[1]),
-      (p[0]*c[1]) + (p[1]*c[0])
-    ]
-  )),
+  (...operands) => complex(...operands.reduce(handleComplex)),
   (...operands) => boolean(operands.reduce((p,c) => p && c))
 )(
   replace(

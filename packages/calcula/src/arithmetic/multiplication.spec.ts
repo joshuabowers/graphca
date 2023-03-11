@@ -1,4 +1,4 @@
-import { unit } from '../monads/writer'
+import { isWriter, unit } from '../monads/writer'
 import { expectToEqualWithSnapshot } from '../utility/expectations'
 import { Clades, Genera, Species } from '../utility/tree'
 import { ComplexInfinity } from '../primitives/complex'
@@ -9,8 +9,9 @@ import { raise, square, reciprocal } from './exponentiation'
 
 describe('$multiply', () => {
   it('generates a Multiplication for a pair of TreeNode inputs', () => {
+    const actual = $multiply(unit(variable('x').value), unit(variable('y').value))[0]
     expect(
-      $multiply(unit(variable('x').value), unit(variable('y').value))[0]
+      isWriter(actual) ? actual.value : actual
     ).toEqual({
       clade: Clades.multiary, genus: Genera.arithmetic, species: Species.multiply,
       operands: [unit(variable('x').value), unit(variable('y').value)]
