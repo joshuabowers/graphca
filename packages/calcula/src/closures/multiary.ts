@@ -62,14 +62,26 @@ export const when = <T extends TreeNode>(
 
 export type WhenFn = ReturnType<typeof when>
 
+export const infuse = <
+  P extends MultiaryNode, 
+  C extends TreeNode
+>(parent: Writer<P, Operation>, child: Writer<C, Operation>, index: number) =>
+  writer(
+    child.value, 
+    parent.log[1+index*2]
+  )
+
 export type Handle<I, O extends TreeNode> = 
   (...params: I[]) => Writer<O, Operation>
 
 export const walk = <T extends MultiaryNode>(guardFn: TreeNodeGuardFn<T>) =>
   function *cleave(node: Writer<TreeNode, Operation>): IterableIterator<Writer<TreeNode, Operation>>{
     if(guardFn(node)){
-      for(let operand of node.value.operands){
-        yield *cleave(operand)
+      // for(let operand of node.value.operands){
+      //   yield *cleave(operand)
+      // }
+      for(let i = 0; i < node.value.operands.length; i++){
+        yield *cleave(infuse(node, node.value.operands[i], i))
       }
     } else {
       yield node
@@ -96,8 +108,8 @@ export const sortBy = <T>(
   const mapped = data.map((v, i) => ({i, value: mutate(v)}))
   type Item = (typeof mapped)[number]
   const comparator = order === SortOrder.ascending 
-    ? (a: Item, b: Item) => b.value - a.value
-    : (a: Item, b: Item) => a.value - b.value
+    ? (a: Item, b: Item) => a.value - b.value
+    : (a: Item, b: Item) => b.value - a.value
     
   mapped.sort(comparator)
 
@@ -150,7 +162,7 @@ export const multiary = <T extends MultiaryNode>(
     const n = ({clade: Clades.multiary, species, genus, operands: sorted}) as T
     const result = sorted.some((s, i) => s !== operands[i])
       ? writer(n, operation(toParticles(
-          ...operands.map(o => context(o, -1))), 'reordered operands'
+          ...sorted.map(o => context(o, -1))), 'reordered operands'
         ))
       : n
     return [result, `created ${species.toLocaleLowerCase()}`]

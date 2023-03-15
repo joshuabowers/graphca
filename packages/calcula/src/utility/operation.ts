@@ -55,10 +55,15 @@ import { Writer } from "../monads/writer"
 
 export type Particle = string | Particle[]
 
-export interface Operation {
+// export interface Operation {
+//   particles: Particle[]
+//   action: string
+// }
+
+export type Operation = {
   particles: Particle[]
   action: string
-}
+} | Operation[]
 
 export type Action<T> = [T|Writer<T, Operation>, string]
 export type CaseFn<I> = (input: I) => Action<I>
@@ -66,8 +71,19 @@ export type CaseFn<I> = (input: I) => Action<I>
 export const operation = (particles: Particle[], action: string): Operation =>
   ({particles, action})
 
-export const context = <T>(node: Writer<T, Operation>, version: number): Particle[] =>
-  node.log.at(version)?.particles ?? ['never']
+const subContext = (entry: Operation|undefined, version: number): Particle[] => {
+  if(!entry){ return ['never'] }
+  if(Array.isArray(entry)){
+    const v = entry.at(version)
+    return [...subContext(v, 0), '=>', ...subContext(v, -1)]
+  } else {
+    return entry.particles
+  }
+}
+
+export const context = <T>(node: Writer<T, Operation>, version: number): Particle[] => 
+  subContext(node.log.at(version), 0)
+  // return Array.isArray(entry) ? [entry[0].particles, entry] : entry ? entry.particles : ['never'] 
 
 /**
  * Flattens and joins the argument into a string. Note that, due to type

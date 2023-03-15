@@ -178,35 +178,11 @@ exports[`add reorders primitives to the right 1`] = `
   ],
   [
     "(5+x)",
-    "reorder operands",
-  ],
-  [
-    "(x+5)",
-    "identified addition",
-  ],
-  [
-    "([x]+5)",
-    "processing left operand",
-  ],
-  [
-    "x",
-    "referenced variable",
-  ],
-  [
-    "({x}+[5])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "5",
-    "created real",
-  ],
-  [
-    "(x+{5})",
-    "processed right operand",
-  ],
-  [
-    "(x+5)",
     "created addition",
+  ],
+  [
+    "(x+5)",
+    "reordered operands",
   ],
 ]
 `;
@@ -984,6 +960,10 @@ exports[`add when given nested additions with primitives combines primitives on 
     "created addition",
   ],
   [
+    "(x+5)",
+    "reordered operands",
+  ],
+  [
     "({(x+5)}+[10])",
     "processed left operand; processing right operand",
   ],
@@ -997,63 +977,11 @@ exports[`add when given nested additions with primitives combines primitives on 
   ],
   [
     "((x+5)+10)",
-    "additive associativity",
-  ],
-  [
-    "(x+(5+10))",
-    "identified addition",
-  ],
-  [
-    "([x]+(5+10))",
-    "processing left operand",
-  ],
-  [
-    "x",
-    "referenced variable",
-  ],
-  [
-    "({x}+[(5+10)])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "(5+10)",
-    "identified addition",
-  ],
-  [
-    "([5]+10)",
-    "processing left operand",
-  ],
-  [
-    "5",
-    "created real",
-  ],
-  [
-    "({5}+[10])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "10",
-    "created real",
-  ],
-  [
-    "(5+{10})",
-    "processed right operand",
-  ],
-  [
-    "(5+10)",
-    "real addition",
-  ],
-  [
-    "15",
-    "created real",
-  ],
-  [
-    "(x+{15})",
-    "processed right operand",
+    "created addition",
   ],
   [
     "(x+15)",
-    "created addition",
+    "reordered operands",
   ],
 ]
 `;

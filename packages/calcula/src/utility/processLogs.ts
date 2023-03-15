@@ -81,7 +81,7 @@ export const processLogs: ProcessLogsFn = (toParticles, species) =>
                     )
                 haveProcessed.push(current)
                 i++
-                return [...e.log, currentOp]
+                return [e.log, currentOp]
               }
             ).flat(1),
           ] : []

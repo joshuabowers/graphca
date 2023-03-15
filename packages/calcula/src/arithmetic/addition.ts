@@ -143,7 +143,7 @@ export const [add, isAddition, $add] = multiary<Addition>(
   consider(
     deepEquals,
     (a, copies) => [
-      multiply(a, real(1 + copies.length)), 
+      multiply(real(1 + copies.length), a), 
       'combine equivalent sub-expressions'
     ]
   ),

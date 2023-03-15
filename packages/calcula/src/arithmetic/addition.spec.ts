@@ -177,21 +177,24 @@ describe('add', () => {
     it('combines primitives on the right', () => {
       expectToEqualWithSnapshot(
         add(add(variable('x'), real(5)), real(10)),
-        $add(variable('x'), real(15))[0]
+        // $add(variable('x'), real(15))[0]
+        $add(variable('x'), add(real(5), real(10)))[0]
       )
     })
 
     it('reorders primitives before combining them', () => {
       expectToEqualWithSnapshot(
         add(real(5), add(real(10), variable('x'))),
-        $add(variable('x'), real(15))[0]
+        // $add(variable('x'), real(15))[0]
+        $add(variable('x'), add(real(5), real(10)))[0]
       )
     })
 
     it('casts primitives to minimize complexity', () => {
       expectToEqualWithSnapshot(
         add(add(variable('x'), real(1)), complex(0, 1)),
-        $add(variable('x'), complex(1, 1))[0]
+        // $add(variable('x'), complex(1, 1))[0]
+        $add(variable('x'), add(real(1), complex(0, 1)))[0]
       )
     })
   })
