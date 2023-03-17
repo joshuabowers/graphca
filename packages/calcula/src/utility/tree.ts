@@ -129,18 +129,31 @@ export type DerivedNode<T extends ((...args: any[]) => any)> =
 export type TreeNodeGuardFn<T extends TreeNode> = 
   (value: Writer<TreeNode, Operation>) => value is Writer<T, Operation>
 
-// values should be Writer<TreeNode>, narrowed to Writer<T>
-export const isClade = <T extends TreeNode>(clade: Clades) =>
+export const isTreeGuard = <T extends TreeNode>(fn: ((value: Writer<TreeNode, Operation>) => boolean)) =>
   (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
-    value?.value.clade === clade
+    fn(value)
+
+export const isClade = <T extends TreeNode>(clade: Clades) =>
+  isTreeGuard<T>(value => value?.value.clade === clade)
 
 export const isGenus = <T extends TreeNode>(genus: Genera) =>
-  (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
-    value?.value.genus === genus
+  isTreeGuard<T>(value => value?.value.genus === genus)
 
 export const isSpecies = <T extends TreeNode>(species: Species) =>
-  (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
-    value?.value.species === species
+  isTreeGuard<T>(value => value?.value.species === species)
+
+// values should be Writer<TreeNode>, narrowed to Writer<T>
+// export const isClade = <T extends TreeNode>(clade: Clades) =>
+//   (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
+//     value?.value.clade === clade
+
+// export const isGenus = <T extends TreeNode>(genus: Genera) =>
+//   (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
+//     value?.value.genus === genus
+
+// export const isSpecies = <T extends TreeNode>(species: Species) =>
+//   (value: Writer<TreeNode, Operation>): value is Writer<T, Operation> =>
+//     value?.value.species === species
 
 export const isTreeNode = <T extends TreeNode>(value: unknown): value is Writer<T, Operation> =>
   isWriter(value) && typeof value.value === 'object' 

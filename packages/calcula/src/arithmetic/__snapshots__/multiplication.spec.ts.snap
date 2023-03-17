@@ -5539,16 +5539,20 @@ exports[`multiply when given a primitive and a not primitive reorder a complex r
     "processing left operand",
   ],
   [
-    "x",
-    "referenced variable",
+    [
+      "x",
+      "referenced variable",
+    ],
   ],
   [
     "({x}*[0+1𝒊])",
     "processed left operand; processing right operand",
   ],
   [
-    "0+1𝒊",
-    "created complex",
+    [
+      "0+1𝒊",
+      "created complex",
+    ],
   ],
   [
     "(x*{0+1𝒊})",
@@ -5557,30 +5561,6 @@ exports[`multiply when given a primitive and a not primitive reorder a complex r
   [
     "(x*0+1𝒊)",
     "created multiplication",
-  ],
-  [
-    "(0+1𝒊*x)",
-    "identified multiplication",
-  ],
-  [
-    "([0+1𝒊]*x)",
-    "processing left operand",
-  ],
-  [
-    "0+1𝒊",
-    "created complex",
-  ],
-  [
-    "({0+1𝒊}*[x])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "x",
-    "referenced variable",
-  ],
-  [
-    "(0+1𝒊*{x})",
-    "processed right operand",
   ],
   [
     "(0+1𝒊*x)",
@@ -5600,16 +5580,20 @@ exports[`multiply when given a primitive and a not primitive reorders a real rig
     "processing left operand",
   ],
   [
-    "x",
-    "referenced variable",
+    [
+      "x",
+      "referenced variable",
+    ],
   ],
   [
     "({x}*[5])",
     "processed left operand; processing right operand",
   ],
   [
-    "5",
-    "created real",
+    [
+      "5",
+      "created real",
+    ],
   ],
   [
     "(x*{5})",
@@ -5618,30 +5602,6 @@ exports[`multiply when given a primitive and a not primitive reorders a real rig
   [
     "(x*5)",
     "created multiplication",
-  ],
-  [
-    "(5*x)",
-    "identified multiplication",
-  ],
-  [
-    "([5]*x)",
-    "processing left operand",
-  ],
-  [
-    "5",
-    "created real",
-  ],
-  [
-    "({5}*[x])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "x",
-    "referenced variable",
-  ],
-  [
-    "(5*{x})",
-    "processed right operand",
   ],
   [
     "(5*x)",
@@ -5661,20 +5621,24 @@ exports[`multiply when given two primitives is the product of mixed inputs 1`] =
     "processing left operand",
   ],
   [
-    "2+3𝒊",
-    "created complex",
+    [
+      "2+3𝒊",
+      "created complex",
+    ],
   ],
   [
     "({2+3𝒊}*[5])",
     "processed left operand; processing right operand",
   ],
   [
-    "5",
-    "created real",
-  ],
-  [
-    "5+0𝒊",
-    "cast to Complex from Real",
+    [
+      "5",
+      "created real",
+    ],
+    [
+      "5+0𝒊",
+      "cast to Complex from Real",
+    ],
   ],
   [
     "(2+3𝒊*{5+0𝒊})",
@@ -5702,16 +5666,20 @@ exports[`multiply when given two primitives is the product of two complexes 1`] 
     "processing left operand",
   ],
   [
-    "2+3𝒊",
-    "created complex",
+    [
+      "2+3𝒊",
+      "created complex",
+    ],
   ],
   [
     "({2+3𝒊}*[3+4𝒊])",
     "processed left operand; processing right operand",
   ],
   [
-    "3+4𝒊",
-    "created complex",
+    [
+      "3+4𝒊",
+      "created complex",
+    ],
   ],
   [
     "(2+3𝒊*{3+4𝒊})",
@@ -5739,16 +5707,20 @@ exports[`multiply when given two primitives is the product of two reals 1`] = `
     "processing left operand",
   ],
   [
-    "2",
-    "created real",
+    [
+      "2",
+      "created real",
+    ],
   ],
   [
     "({2}*[3])",
     "processed left operand; processing right operand",
   ],
   [
-    "3",
-    "created real",
+    [
+      "3",
+      "created real",
+    ],
   ],
   [
     "(2*{3})",
@@ -5776,16 +5748,20 @@ exports[`multiply when given two primitives multiplies a complex wrapped real by
     "processing left operand",
   ],
   [
-    "∞+0𝒊",
-    "created complex",
+    [
+      "∞+0𝒊",
+      "created complex",
+    ],
   ],
   [
     "({∞+0𝒊}*[0+3𝒊])",
     "processed left operand; processing right operand",
   ],
   [
-    "0+3𝒊",
-    "created complex",
+    [
+      "0+3𝒊",
+      "created complex",
+    ],
   ],
   [
     "(∞+0𝒊*{0+3𝒊})",
@@ -5813,16 +5789,20 @@ exports[`multiply when given two primitives multiplies a pure imaginary by a com
     "processing left operand",
   ],
   [
-    "0+3𝒊",
-    "created complex",
+    [
+      "0+3𝒊",
+      "created complex",
+    ],
   ],
   [
     "({0+3𝒊}*[∞+0𝒊])",
     "processed left operand; processing right operand",
   ],
   [
-    "∞+0𝒊",
-    "created complex",
+    [
+      "∞+0𝒊",
+      "created complex",
+    ],
   ],
   [
     "(0+3𝒊*{∞+0𝒊})",
