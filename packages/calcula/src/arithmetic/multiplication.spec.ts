@@ -80,7 +80,7 @@ describe('multiply', () => {
     })
   })
 
-  describe('when dealing with 0, 1, or (+/-)Infinity', () => {
+  describe('when dealing with special numbers', () => {
     it('is NaN if given 0 and Infinity', () => {
       expectToEqualWithSnapshot(
         multiply(real(0), real(Infinity)),

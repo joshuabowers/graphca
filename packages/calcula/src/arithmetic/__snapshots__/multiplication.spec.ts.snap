@@ -1542,48 +1542,56 @@ exports[`divide properly divides a complex value by complex 1 1`] = `
     "processing left operand",
   ],
   [
-    "2+0𝒊",
-    "created complex",
+    [
+      "2+0𝒊",
+      "created complex",
+    ],
   ],
   [
     "({2+0𝒊}*[(1+0𝒊^-1)])",
     "processed left operand; processing right operand",
   ],
   [
-    "(1+0𝒊^-1)",
-    "identified exponentiation",
-  ],
-  [
-    "([1+0𝒊]^-1)",
-    "processing left operand",
-  ],
-  [
-    "1+0𝒊",
-    "created complex",
-  ],
-  [
-    "({1+0𝒊}^[-1])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "-1",
-    "created real",
-  ],
-  [
-    "-1+0𝒊",
-    "cast to Complex from Real",
-  ],
-  [
-    "(1+0𝒊^{-1+0𝒊})",
-    "processed right operand",
-  ],
-  [
-    "(1+0𝒊^-1+0𝒊)",
-    "complex exponentiation",
-  ],
-  [
-    "1+0𝒊",
-    "created complex",
+    [
+      "(1+0𝒊^-1)",
+      "identified exponentiation",
+    ],
+    [
+      "([1+0𝒊]^-1)",
+      "processing left operand",
+    ],
+    [
+      [
+        "1+0𝒊",
+        "created complex",
+      ],
+    ],
+    [
+      "({1+0𝒊}^[-1])",
+      "processed left operand; processing right operand",
+    ],
+    [
+      [
+        "-1",
+        "created real",
+      ],
+      [
+        "-1+0𝒊",
+        "cast to Complex from Real",
+      ],
+    ],
+    [
+      "(1+0𝒊^{-1+0𝒊})",
+      "processed right operand",
+    ],
+    [
+      "(1+0𝒊^-1+0𝒊)",
+      "complex exponentiation",
+    ],
+    [
+      "1+0𝒊",
+      "created complex",
+    ],
   ],
   [
     "(2+0𝒊*{1+0𝒊})",
@@ -1611,48 +1619,56 @@ exports[`divide properly divides complex negative infinity by complex 1 1`] = `
     "processing left operand",
   ],
   [
-    "-∞+0𝒊",
-    "created complex",
+    [
+      "-∞+0𝒊",
+      "created complex",
+    ],
   ],
   [
     "({-∞+0𝒊}*[(1+0𝒊^-1)])",
     "processed left operand; processing right operand",
   ],
   [
-    "(1+0𝒊^-1)",
-    "identified exponentiation",
-  ],
-  [
-    "([1+0𝒊]^-1)",
-    "processing left operand",
-  ],
-  [
-    "1+0𝒊",
-    "created complex",
-  ],
-  [
-    "({1+0𝒊}^[-1])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "-1",
-    "created real",
-  ],
-  [
-    "-1+0𝒊",
-    "cast to Complex from Real",
-  ],
-  [
-    "(1+0𝒊^{-1+0𝒊})",
-    "processed right operand",
-  ],
-  [
-    "(1+0𝒊^-1+0𝒊)",
-    "complex exponentiation",
-  ],
-  [
-    "1+0𝒊",
-    "created complex",
+    [
+      "(1+0𝒊^-1)",
+      "identified exponentiation",
+    ],
+    [
+      "([1+0𝒊]^-1)",
+      "processing left operand",
+    ],
+    [
+      [
+        "1+0𝒊",
+        "created complex",
+      ],
+    ],
+    [
+      "({1+0𝒊}^[-1])",
+      "processed left operand; processing right operand",
+    ],
+    [
+      [
+        "-1",
+        "created real",
+      ],
+      [
+        "-1+0𝒊",
+        "cast to Complex from Real",
+      ],
+    ],
+    [
+      "(1+0𝒊^{-1+0𝒊})",
+      "processed right operand",
+    ],
+    [
+      "(1+0𝒊^-1+0𝒊)",
+      "complex exponentiation",
+    ],
+    [
+      "1+0𝒊",
+      "created complex",
+    ],
   ],
   [
     "(-∞+0𝒊*{1+0𝒊})",
@@ -1680,44 +1696,52 @@ exports[`divide properly handles dividing a complex by complex 0 1`] = `
     "processing left operand",
   ],
   [
-    "0+2𝒊",
-    "created complex",
+    [
+      "0+2𝒊",
+      "created complex",
+    ],
   ],
   [
     "({0+2𝒊}*[(0+0𝒊^-1)])",
     "processed left operand; processing right operand",
   ],
   [
-    "(0+0𝒊^-1)",
-    "identified exponentiation",
-  ],
-  [
-    "([0+0𝒊]^-1)",
-    "processing left operand",
-  ],
-  [
-    "0+0𝒊",
-    "created complex",
-  ],
-  [
-    "({0+0𝒊}^[-1])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "-1",
-    "created real",
-  ],
-  [
-    "(0+0𝒊^{-1})",
-    "processed right operand",
-  ],
-  [
-    "(0+0𝒊^-1)",
-    "division by complex zero",
-  ],
-  [
-    "∞+0𝒊",
-    "created complex",
+    [
+      "(0+0𝒊^-1)",
+      "identified exponentiation",
+    ],
+    [
+      "([0+0𝒊]^-1)",
+      "processing left operand",
+    ],
+    [
+      [
+        "0+0𝒊",
+        "created complex",
+      ],
+    ],
+    [
+      "({0+0𝒊}^[-1])",
+      "processed left operand; processing right operand",
+    ],
+    [
+      [
+        "-1",
+        "created real",
+      ],
+    ],
+    [
+      "(0+0𝒊^{-1})",
+      "processed right operand",
+    ],
+    [
+      "(0+0𝒊^-1)",
+      "division by complex zero",
+    ],
+    [
+      "∞+0𝒊",
+      "created complex",
+    ],
   ],
   [
     "(0+2𝒊*{∞+0𝒊})",
@@ -1745,48 +1769,56 @@ exports[`divide properly handles dividing complex 0 by another complex 1`] = `
     "processing left operand",
   ],
   [
-    "0+0𝒊",
-    "created complex",
+    [
+      "0+0𝒊",
+      "created complex",
+    ],
   ],
   [
     "({0+0𝒊}*[(0+2𝒊^-1)])",
     "processed left operand; processing right operand",
   ],
   [
-    "(0+2𝒊^-1)",
-    "identified exponentiation",
-  ],
-  [
-    "([0+2𝒊]^-1)",
-    "processing left operand",
-  ],
-  [
-    "0+2𝒊",
-    "created complex",
-  ],
-  [
-    "({0+2𝒊}^[-1])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "-1",
-    "created real",
-  ],
-  [
-    "-1+0𝒊",
-    "cast to Complex from Real",
-  ],
-  [
-    "(0+2𝒊^{-1+0𝒊})",
-    "processed right operand",
-  ],
-  [
-    "(0+2𝒊^-1+0𝒊)",
-    "complex exponentiation",
-  ],
-  [
-    "3.061616997868383e-17-0.5𝒊",
-    "created complex",
+    [
+      "(0+2𝒊^-1)",
+      "identified exponentiation",
+    ],
+    [
+      "([0+2𝒊]^-1)",
+      "processing left operand",
+    ],
+    [
+      [
+        "0+2𝒊",
+        "created complex",
+      ],
+    ],
+    [
+      "({0+2𝒊}^[-1])",
+      "processed left operand; processing right operand",
+    ],
+    [
+      [
+        "-1",
+        "created real",
+      ],
+      [
+        "-1+0𝒊",
+        "cast to Complex from Real",
+      ],
+    ],
+    [
+      "(0+2𝒊^{-1+0𝒊})",
+      "processed right operand",
+    ],
+    [
+      "(0+2𝒊^-1+0𝒊)",
+      "complex exponentiation",
+    ],
+    [
+      "3.061616997868383e-17-0.5𝒊",
+      "created complex",
+    ],
   ],
   [
     "(0+0𝒊*{3.061616997868383e-17-0.5𝒊})",
@@ -1814,44 +1846,52 @@ exports[`divide results in a division of the two real arguments 1`] = `
     "processing left operand",
   ],
   [
-    "10",
-    "created real",
+    [
+      "10",
+      "created real",
+    ],
   ],
   [
     "({10}*[(5^-1)])",
     "processed left operand; processing right operand",
   ],
   [
-    "(5^-1)",
-    "identified exponentiation",
-  ],
-  [
-    "([5]^-1)",
-    "processing left operand",
-  ],
-  [
-    "5",
-    "created real",
-  ],
-  [
-    "({5}^[-1])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "-1",
-    "created real",
-  ],
-  [
-    "(5^{-1})",
-    "processed right operand",
-  ],
-  [
-    "(5^-1)",
-    "real exponentiation",
-  ],
-  [
-    "0.2",
-    "created real",
+    [
+      "(5^-1)",
+      "identified exponentiation",
+    ],
+    [
+      "([5]^-1)",
+      "processing left operand",
+    ],
+    [
+      [
+        "5",
+        "created real",
+      ],
+    ],
+    [
+      "({5}^[-1])",
+      "processed left operand; processing right operand",
+    ],
+    [
+      [
+        "-1",
+        "created real",
+      ],
+    ],
+    [
+      "(5^{-1})",
+      "processed right operand",
+    ],
+    [
+      "(5^-1)",
+      "real exponentiation",
+    ],
+    [
+      "0.2",
+      "created real",
+    ],
   ],
   [
     "(10*{0.2})",
@@ -1879,16 +1919,20 @@ exports[`double returns a Writer<Multiplication> for variable inputs 1`] = `
     "processing left operand",
   ],
   [
-    "2",
-    "created real",
+    [
+      "2",
+      "created real",
+    ],
   ],
   [
     "({2}*[x])",
     "processed left operand; processing right operand",
   ],
   [
-    "x",
-    "referenced variable",
+    [
+      "x",
+      "referenced variable",
+    ],
   ],
   [
     "(2*{x})",
@@ -1912,16 +1956,20 @@ exports[`double returns a Writer<Real> for real inputs 1`] = `
     "processing left operand",
   ],
   [
-    "2",
-    "created real",
+    [
+      "2",
+      "created real",
+    ],
   ],
   [
     "({2}*[5])",
     "processed left operand; processing right operand",
   ],
   [
-    "5",
-    "created real",
+    [
+      "5",
+      "created real",
+    ],
   ],
   [
     "(2*{5})",
@@ -5528,6 +5576,379 @@ exports[`multiply when dealing with nested multiplications with primitives multi
 ]
 `;
 
+exports[`multiply when dealing with special numbers is NaN if given 0 and Infinity 1`] = `
+[
+  [
+    "(0*∞)",
+    "identified multiplication",
+  ],
+  [
+    "([0]*∞)",
+    "processing left operand",
+  ],
+  [
+    [
+      "0",
+      "created real",
+    ],
+  ],
+  [
+    "({0}*[∞])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "∞",
+      "created real",
+    ],
+  ],
+  [
+    "(0*{∞})",
+    "processed right operand",
+  ],
+  [
+    "(0*∞)",
+    "real multiplication",
+  ],
+  [
+    "NaN",
+    "incalculable",
+  ],
+  [
+    "NaN",
+    "not a number",
+  ],
+]
+`;
+
+exports[`multiply when dealing with special numbers is infinity if left is infinity 1`] = `
+[
+  [
+    "(∞*x)",
+    "identified multiplication",
+  ],
+  [
+    "([∞]*x)",
+    "processing left operand",
+  ],
+  [
+    [
+      "∞",
+      "created real",
+    ],
+  ],
+  [
+    "({∞}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "x",
+      "referenced variable",
+    ],
+  ],
+  [
+    "(∞*{x})",
+    "processed right operand",
+  ],
+  [
+    "(∞*x)",
+    "infinite absorption",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with special numbers is infinity if right is infinity 1`] = `
+[
+  [
+    "(x*∞)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*∞)",
+    "processing left operand",
+  ],
+  [
+    [
+      "x",
+      "referenced variable",
+    ],
+  ],
+  [
+    "({x}*[∞])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "∞",
+      "created real",
+    ],
+  ],
+  [
+    "(x*{∞})",
+    "processed right operand",
+  ],
+  [
+    "(x*∞)",
+    "infinite absorption",
+  ],
+  [
+    "∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with special numbers is negative infinity if left is negative infinity 1`] = `
+[
+  [
+    "(-∞*x)",
+    "identified multiplication",
+  ],
+  [
+    "([-∞]*x)",
+    "processing left operand",
+  ],
+  [
+    [
+      "-∞",
+      "created real",
+    ],
+  ],
+  [
+    "({-∞}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "x",
+      "referenced variable",
+    ],
+  ],
+  [
+    "(-∞*{x})",
+    "processed right operand",
+  ],
+  [
+    "(-∞*x)",
+    "infinite absorption",
+  ],
+  [
+    "-∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with special numbers is negative infinity if right is negative infinity 1`] = `
+[
+  [
+    "(x*-∞)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*-∞)",
+    "processing left operand",
+  ],
+  [
+    [
+      "x",
+      "referenced variable",
+    ],
+  ],
+  [
+    "({x}*[-∞])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "-∞",
+      "created real",
+    ],
+  ],
+  [
+    "(x*{-∞})",
+    "processed right operand",
+  ],
+  [
+    "(x*-∞)",
+    "infinite absorption",
+  ],
+  [
+    "-∞",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with special numbers is real 0 if the left is real 0 1`] = `
+[
+  [
+    "(0*x)",
+    "identified multiplication",
+  ],
+  [
+    "([0]*x)",
+    "processing left operand",
+  ],
+  [
+    [
+      "0",
+      "created real",
+    ],
+  ],
+  [
+    "({0}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "x",
+      "referenced variable",
+    ],
+  ],
+  [
+    "(0*{x})",
+    "processed right operand",
+  ],
+  [
+    "(0*x)",
+    "zero absorption",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with special numbers is real 0 if the right is real 0 1`] = `
+[
+  [
+    "(x*0)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*0)",
+    "processing left operand",
+  ],
+  [
+    [
+      "x",
+      "referenced variable",
+    ],
+  ],
+  [
+    "({x}*[0])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "0",
+      "created real",
+    ],
+  ],
+  [
+    "(x*{0})",
+    "processed right operand",
+  ],
+  [
+    "(x*0)",
+    "zero absorption",
+  ],
+  [
+    "0",
+    "created real",
+  ],
+]
+`;
+
+exports[`multiply when dealing with special numbers is the left if the right is 1 1`] = `
+[
+  [
+    "(x*1)",
+    "identified multiplication",
+  ],
+  [
+    "([x]*1)",
+    "processing left operand",
+  ],
+  [
+    [
+      "x",
+      "referenced variable",
+    ],
+  ],
+  [
+    "({x}*[1])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "1",
+      "created real",
+    ],
+  ],
+  [
+    "(x*{1})",
+    "processed right operand",
+  ],
+  [
+    "(x*1)",
+    "multiplicative identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
+exports[`multiply when dealing with special numbers is the right if the left is 1 1`] = `
+[
+  [
+    "(1*x)",
+    "identified multiplication",
+  ],
+  [
+    "([1]*x)",
+    "processing left operand",
+  ],
+  [
+    [
+      "1",
+      "created real",
+    ],
+  ],
+  [
+    "({1}*[x])",
+    "processed left operand; processing right operand",
+  ],
+  [
+    [
+      "x",
+      "referenced variable",
+    ],
+  ],
+  [
+    "(1*{x})",
+    "processed right operand",
+  ],
+  [
+    "(1*x)",
+    "multiplicative identity",
+  ],
+  [
+    "x",
+    "referenced variable",
+  ],
+]
+`;
+
 exports[`multiply when given a primitive and a not primitive reorder a complex right multiplicand to the left 1`] = `
 [
   [
@@ -5867,16 +6288,20 @@ exports[`negate results in a real with negative value, when real 1`] = `
     "processing left operand",
   ],
   [
-    "-1",
-    "created real",
+    [
+      "-1",
+      "created real",
+    ],
   ],
   [
     "({-1}*[1])",
     "processed left operand; processing right operand",
   ],
   [
-    "1",
-    "created real",
+    [
+      "1",
+      "created real",
+    ],
   ],
   [
     "(-1*{1})",
@@ -5904,16 +6329,20 @@ exports[`negate returns a Writer<Multiplication> for variable inputs 1`] = `
     "processing left operand",
   ],
   [
-    "-1",
-    "created real",
+    [
+      "-1",
+      "created real",
+    ],
   ],
   [
     "({-1}*[x])",
     "processed left operand; processing right operand",
   ],
   [
-    "x",
-    "referenced variable",
+    [
+      "x",
+      "referenced variable",
+    ],
   ],
   [
     "(-1*{x})",

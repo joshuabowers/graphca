@@ -161,16 +161,20 @@ exports[`add reorders primitives to the right 1`] = `
     "processing left operand",
   ],
   [
-    "5",
-    "created real",
+    [
+      "5",
+      "created real",
+    ],
   ],
   [
     "({5}+[x])",
     "processed left operand; processing right operand",
   ],
   [
-    "x",
-    "referenced variable",
+    [
+      "x",
+      "referenced variable",
+    ],
   ],
   [
     "(5+{x})",
@@ -272,16 +276,20 @@ exports[`add returns a Writer<Addition> for variable input 1`] = `
     "processing left operand",
   ],
   [
-    "x",
-    "referenced variable",
+    [
+      "x",
+      "referenced variable",
+    ],
   ],
   [
     "({x}+[y])",
     "processed left operand; processing right operand",
   ],
   [
-    "y",
-    "referenced variable",
+    [
+      "y",
+      "referenced variable",
+    ],
   ],
   [
     "(x+{y})",
@@ -305,16 +313,20 @@ exports[`add when dealing with the additive identity returns the left operand if
     "processing left operand",
   ],
   [
-    "x",
-    "referenced variable",
+    [
+      "x",
+      "referenced variable",
+    ],
   ],
   [
     "({x}+[0])",
     "processed left operand; processing right operand",
   ],
   [
-    "0",
-    "created real",
+    [
+      "0",
+      "created real",
+    ],
   ],
   [
     "(x+{0})",
@@ -342,16 +354,20 @@ exports[`add when dealing with the additive identity returns the right operand i
     "processing left operand",
   ],
   [
-    "0",
-    "created real",
+    [
+      "0",
+      "created real",
+    ],
   ],
   [
     "({0}+[x])",
     "processed left operand; processing right operand",
   ],
   [
-    "x",
-    "referenced variable",
+    [
+      "x",
+      "referenced variable",
+    ],
   ],
   [
     "(0+{x})",
@@ -1529,16 +1545,20 @@ exports[`add when given pairs of primitives returns a Writer<Boolean> for two bo
     "processing left operand",
   ],
   [
-    "true",
-    "created boolean",
+    [
+      "true",
+      "created boolean",
+    ],
   ],
   [
     "({true}+[false])",
     "processed left operand; processing right operand",
   ],
   [
-    "false",
-    "created boolean",
+    [
+      "false",
+      "created boolean",
+    ],
   ],
   [
     "(true+{false})",
@@ -1566,16 +1586,20 @@ exports[`add when given pairs of primitives returns a Writer<Complex> for two co
     "processing left operand",
   ],
   [
-    "1+2𝒊",
-    "created complex",
+    [
+      "1+2𝒊",
+      "created complex",
+    ],
   ],
   [
     "({1+2𝒊}+[3+4𝒊])",
     "processed left operand; processing right operand",
   ],
   [
-    "3+4𝒊",
-    "created complex",
+    [
+      "3+4𝒊",
+      "created complex",
+    ],
   ],
   [
     "(1+2𝒊+{3+4𝒊})",
@@ -1603,16 +1627,20 @@ exports[`add when given pairs of primitives returns a Writer<Real> for two real 
     "processing left operand",
   ],
   [
-    "1",
-    "created real",
+    [
+      "1",
+      "created real",
+    ],
   ],
   [
     "({1}+[2])",
     "processed left operand; processing right operand",
   ],
   [
-    "2",
-    "created real",
+    [
+      "2",
+      "created real",
+    ],
   ],
   [
     "(1+{2})",
@@ -1791,48 +1819,56 @@ exports[`subtract returns 0 if subtracting a complex from itself 1`] = `
     "processing left operand",
   ],
   [
-    "0+1𝒊",
-    "created complex",
+    [
+      "0+1𝒊",
+      "created complex",
+    ],
   ],
   [
     "({0+1𝒊}+[(-1*0+1𝒊)])",
     "processed left operand; processing right operand",
   ],
   [
-    "(-1*0+1𝒊)",
-    "identified multiplication",
-  ],
-  [
-    "([-1]*0+1𝒊)",
-    "processing left operand",
-  ],
-  [
-    "-1",
-    "created real",
-  ],
-  [
-    "-1+0𝒊",
-    "cast to Complex from Real",
-  ],
-  [
-    "({-1+0𝒊}*[0+1𝒊])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "0+1𝒊",
-    "created complex",
-  ],
-  [
-    "(-1+0𝒊*{0+1𝒊})",
-    "processed right operand",
-  ],
-  [
-    "(-1+0𝒊*0+1𝒊)",
-    "complex multiplication",
-  ],
-  [
-    "0-1𝒊",
-    "created complex",
+    [
+      "(-1*0+1𝒊)",
+      "identified multiplication",
+    ],
+    [
+      "([-1]*0+1𝒊)",
+      "processing left operand",
+    ],
+    [
+      [
+        "-1",
+        "created real",
+      ],
+      [
+        "-1+0𝒊",
+        "cast to Complex from Real",
+      ],
+    ],
+    [
+      "({-1+0𝒊}*[0+1𝒊])",
+      "processed left operand; processing right operand",
+    ],
+    [
+      [
+        "0+1𝒊",
+        "created complex",
+      ],
+    ],
+    [
+      "(-1+0𝒊*{0+1𝒊})",
+      "processed right operand",
+    ],
+    [
+      "(-1+0𝒊*0+1𝒊)",
+      "complex multiplication",
+    ],
+    [
+      "0-1𝒊",
+      "created complex",
+    ],
   ],
   [
     "(0+1𝒊+{0-1𝒊})",
@@ -2034,44 +2070,52 @@ exports[`subtract returns a Writer<Real> for two real inputs 1`] = `
     "processing left operand",
   ],
   [
-    "4",
-    "created real",
+    [
+      "4",
+      "created real",
+    ],
   ],
   [
     "({4}+[(-1*5)])",
     "processed left operand; processing right operand",
   ],
   [
-    "(-1*5)",
-    "identified multiplication",
-  ],
-  [
-    "([-1]*5)",
-    "processing left operand",
-  ],
-  [
-    "-1",
-    "created real",
-  ],
-  [
-    "({-1}*[5])",
-    "processed left operand; processing right operand",
-  ],
-  [
-    "5",
-    "created real",
-  ],
-  [
-    "(-1*{5})",
-    "processed right operand",
-  ],
-  [
-    "(-1*5)",
-    "real multiplication",
-  ],
-  [
-    "-5",
-    "created real",
+    [
+      "(-1*5)",
+      "identified multiplication",
+    ],
+    [
+      "([-1]*5)",
+      "processing left operand",
+    ],
+    [
+      [
+        "-1",
+        "created real",
+      ],
+    ],
+    [
+      "({-1}*[5])",
+      "processed left operand; processing right operand",
+    ],
+    [
+      [
+        "5",
+        "created real",
+      ],
+    ],
+    [
+      "(-1*{5})",
+      "processed right operand",
+    ],
+    [
+      "(-1*5)",
+      "real multiplication",
+    ],
+    [
+      "-5",
+      "created real",
+    ],
   ],
   [
     "(4+{-5})",
