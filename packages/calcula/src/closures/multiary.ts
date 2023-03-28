@@ -7,7 +7,7 @@ import {
   TreeNode, Clades, Genera, Species, SortOrder,
   isClade, isSpecies, TreeNodeGuardFn, isTreeNode
 } from '../utility/tree'
-import { processLogs, LogFunctionalFn } from '../utility/processLogs'
+import { processLogs, LogFunctionalFn, ToParticlesFn } from '../utility/processLogs'
 import { UnaryFn } from './unary'
 import { BinaryFn } from './binary'
 import {
@@ -67,16 +67,62 @@ const otherwise = (fn: CorrespondingFn<TreeNode>) =>
     cleave: WalkCleaveFn, 
     combineTerms: CombineTermsFn
   ) =>
+    /**
+     * Observation: otherwise conducts a number of mutations to the list of
+     * {initial} operands it is passed in an effort to look for partial
+     * rewrites which may be applicable. Each of these steps needs to be
+     * logged (and, indeed, might actually require information to be bubbled
+     * up to this layer, or have elements of the logging pushed to those layers).
+     * 
+     * Notionally, there are three steps being performed by otherwise which
+     * conduct mutations:
+     * 1. cleave, which transforms nested self-similar multiary nodes into
+     *    a flatter list of operands
+     * 2. combineTerms, which takes the cloven nodes and attempts to look for
+     *    reductions, and
+     * 3. fn, a callback which performs further checks and alterations.
+     * 
+     * Logging cleave directly is questionable: while it might be useful for
+     * debugging things, it doesn't add much to the overall generated story the
+     * logs tell. That said, cleave might need to infuse the appropriate operands
+     * with history, which might be tricky if the logs are irregular.
+     * 
+     * combineTerms is built on consider; it should likely be doing its own
+     * logging, but that might not be practical. However, the actions generated
+     * by consider might read better in the logs if they identify the beginning
+     * of the transformative process, rather than the end.
+     * 
+     * fn does do its own logging, but there might be need to revisit what is
+     * going on there.
+     * 
+     * It might be desirable to introduce an Operation[] of logs that otherwise
+     * is directly generating, which is inserted into the response writer. This
+     * log array would be updated if a given operation, such as cleave, changes
+     * the operands list it is operating on.
+     */
     method((...initial: Writer<TreeNode, Operation>[]) => {
+      const cloven = initial.flatMap(n => [...cleave(n)])
+      if(cloven.length > initial.length){
+        console.dir(`[otherwise] initial: ${initial.length}; cloven: ${cloven.length}`)
+      }
       const operands = combineTerms(
-        initial.flatMap(n => [...cleave(n)])
+        // initial.flatMap(n => [...cleave(n)])
+        cloven
       )
+      if(operands.length === 1){
+        console.log(`[otherwise] singular operands logs: ${operands[0].log.length}`)
+      }
       const [result, action] = typeof fn === 'function' 
         ? fn(...operands.map(curate)) 
         : fn
       return writer(
         result,
-        ...logFunctional(action ?? 'term combination', ...operands)
+        ...(operands.length === 1 
+          ? operands[0].log
+          : logFunctional(action ?? 'term combination', ...initial)
+        )
+        // ...logFunctional('REDUCED', ...operands)
+        // ...operands.map(o => o.log)
       )
     })
 
@@ -231,6 +277,7 @@ export const multiary = <T extends MultiaryNode>(
       return (...considerations: ConsiderFn[]): MultiaryNodeMetaTuple<T> => {
         const combineTerms = createCombineTerms(
           logFunctional, 
+          toParticles,
           ...considerations,
           consider(
             (m, n) => isPrimitive(m) && isPrimitive(n),
@@ -344,9 +391,11 @@ type CombineTermsCorrespondingFn<M extends TreeNode, N extends TreeNode> =
   // ((m: Writer<M, Operation>, copies: Writer<N, Operation>[]) => Action<TreeNode>)
 
 const createCombineTerms = (
-  logFunctional: LogFunctionalFn, ...caseFns: ConsiderFn[]
+  logFunctional: LogFunctionalFn, 
+  toParticles: ToParticlesFn,
+  ...caseFns: ConsiderFn[]
 ) => {
-  const considerations = caseFns.map(c => c(logFunctional))
+  const considerations = caseFns.map(c => c(logFunctional, toParticles))
   return (initialOperands: Writer<TreeNode, Operation>[]) => {
     let unchecked = [...initialOperands]
     let operands = [...initialOperands]
@@ -382,7 +431,10 @@ type ConsiderationExecFn = (
 export const consider = <M extends TreeNode, N extends TreeNode>(
   predicate: CombineTermsPredicateFn<TreeNode, N>,
   correspondingFn: CombineTermsCorrespondingFn<M, N>
-) => (logFunctional: LogFunctionalFn): ConsiderationExecFn =>
+) => (
+  logFunctional: LogFunctionalFn,
+  toParticles: ToParticlesFn
+): ConsiderationExecFn =>
   (m, operands) => {
     // NOTE: `m` may exist in `operands`, but `copies` should not have a
     // duplicate of that value; hence `m !== n`, to filter that edge case.
@@ -391,6 +443,8 @@ export const consider = <M extends TreeNode, N extends TreeNode>(
       n => m !== n && predicate(m, n as Writer<N, Operation>)
     )
     if(copies.length > 0){
+      // create, with \? action, a node representing the base functionality,
+      // bind on it, and return that as the result of this function.
       const [result, action] = correspondingFn(
         curate(m) as Writer<M, Operation>, 
         copies.map(curate) as Writer<N, Operation>[]
@@ -399,8 +453,17 @@ export const consider = <M extends TreeNode, N extends TreeNode>(
       //   throw new Error('`consider`: undefined `action` for given result') 
       // }
       return [
+        result,
         // writer(result, operation(context(result, 0), action)),
-        writer(result, ...logFunctional(action, m, ...copies)),
+        // writer(result, ...logFunctional(action, m, ...copies)),
+        // writer(
+        //   result, 
+        //   operation(
+        //     toParticles(context(m, 0), ...copies.map(c => context(c, 0))), 
+        //     action
+        //   ),
+        //   // ...logFunctional('reduced', m, ...copies)
+        // ),
         // isWriter(result) && !action
         //   ? result
         //   : writer(result, ...logFunctional(action ?? 'NEVER', m, ...copies)), 

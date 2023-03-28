@@ -497,7 +497,7 @@ export const [multiply, isMultiplication, $multiply] = multiary<Multiplication>(
   // 4th: isExponentiation(m) and deepEquals m base with other exponentiation bases.
   // => Ex.: x^2 * x^3 => x^5
   consider<Exponentiation, Exponentiation>(
-    (m, n) => isExponentiation(m) && isExponentiation(n) && deepEquals(m.value.left, n.value.right),
+    (m, n) => isExponentiation(m) && isExponentiation(n) && deepEquals(m.value.left, n.value.left),
     (m, copies) => [
       raise(m.value.left, add(m.value.right, ...copies.map(n => n.value.right))), 
       'combine sub-expression exponentiations which have equivalent bases'
